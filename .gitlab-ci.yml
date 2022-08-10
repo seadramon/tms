@@ -1,0 +1,89 @@
+stages:
+  - build
+  - deploy
+.tech:
+  tags:
+    - tech
+.runner:
+  tags:
+    - ssa2-contabo
+.php-fpm:
+  only:
+    changes:
+      - phpfpm.Dockerfile
+.asset: 
+  only:
+    changes:
+      - public/*
+.conf:
+  only:
+    changes:
+      - vhost.conf
+.master-job: 
+  only:
+    - main
+.production-job:
+  extends: 
+    - .runner
+    - .master-job
+.default-job:
+  extends: 
+    - .runner
+    - .master-job
+build base image:
+  extends: 
+    - .production-job
+    - .php-fpm
+  stage: build
+  script: 
+    - docker build -f phpfpm.Dockerfile -t fpm-tms .
+build laravel production:
+  extends: .production-job
+  stage: build
+  script:
+    - docker-compose up -d --build tms
+composer install production:
+  extends: .production-job
+  stage: deploy
+  script:
+    - docker exec tms bash -c "composer install;php artisan optimize:clear; php artisan optimize"
+    - docker exec tms bash -c "ip route add 10.6.1/24 via 172.23.0.5"
+publish asset production:
+  extends: 
+    - .production-job
+    - .asset
+  stage: deploy
+  script:
+    - mkdir -p /docker-source/nginx/www/tms
+    - cp -R public /docker-source/nginx/www/tms
+publish .conf:
+  extends: 
+    - .production-job
+    - .conf
+  stage: deploy
+  script:
+    - cp vhost.conf /docker-source/nginx/conf.d/tms.conf 
+    - docker restart nginx 
+# success_notification:
+#   extends: .default-job
+#   stage: .post
+#   script:
+#     - wget https://git.semarsakti.com/choirul/configuration/-/raw/master/slack/notify.sh
+#     - chmod +x notify.sh
+#     - ./notify.sh success $SLACK_WEBHOOK_URL
+#   when: on_success
+# failure_notification:
+#   extends: .runner
+#   stage: .post
+#   script:
+#     - wget https://git.semarsakti.com/choirul/configuration/-/raw/master/slack/notify.sh
+#     - chmod +x notify.sh
+#     - ./notify.sh failure $SLACK_WEBHOOK_URL
+#   when: on_failure
+# start_notification:
+#   extends: .runner
+#   stage: .pre
+#   script:
+#     - wget https://git.semarsakti.com/choirul/configuration/-/raw/master/slack/notify.sh
+#     - chmod +x notify.sh
+#     - ./notify.sh start $SLACK_WEBHOOK_URL

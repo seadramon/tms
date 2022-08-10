@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  tms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tms_image
+    container_name: tms
+    restart: unless-stopped
+    tty: true
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./local.ini:/usr/local/etc/php/conf.d/local.ini
+      - /storage/tms:/var/www/tms/storage/app
+    networks:
+      - intra_net
+  tms_wton:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tms_wton_image
+    container_name: tms_wton
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./local.ini:/usr/local/etc/php/conf.d/local.ini
+      - /storage/tms:/var/www/tms/storage/app
+    networks:
+      - intra_net
+
+networks:
+  intra_net:
+    name: internal_network
