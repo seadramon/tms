@@ -24,6 +24,7 @@
 		<!--begin::Global Stylesheets Bundle(used by all pages)-->
 		<link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+        @yield('css')
 		<!--end::Global Stylesheets Bundle-->
 	</head>
 	<!--end::Head-->
@@ -269,7 +270,7 @@
 						<div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
 							<!--begin::Logo image-->
 							<a href="../../demo1/dist/index.html">
-								<img alt="Logo" src="assets/media/logos/default-dark.svg" class="h-25px app-sidebar-logo-default" />
+								<img alt="Logo" src="{{ asset('assets/media/logos/tms1.png') }}" class="h-55px app-sidebar-logo-default" />
 								<img alt="Logo" src="assets/media/logos/default-small.svg" class="h-20px app-sidebar-logo-minimize" />
 							</a>
 							<!--end::Logo image-->
@@ -489,7 +490,7 @@
 		<!--begin::Custom Javascript(used by this page)-->
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
-        
+        @yield('js')
             
 	</body>
 	<!--end::Body-->
