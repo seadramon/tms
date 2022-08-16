@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Sp3Controller;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('testing');
+});
+
+Route::group(['prefix' => '/sp3', 'as' => 'sp3.'], function(){
+    Route::post('/destroy', [Sp3Controller::class, 'destroy'])->name('destroy');
+    Route::get('/data', [Sp3Controller::class, 'data'])->name('data');
+    Route::resource('/',  Sp3Controller::class)->except([
+        'destroy'
+    ])->parameters(['' => 'sp3']);
 });
