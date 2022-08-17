@@ -24,12 +24,12 @@
                 <div class="card-body">
                     <div class="form-group row">
                         <div class="col-lg-6 custom-form">
-                            <label class="form-label col-sm-3 custom-label">Wilayah</label>
+                            <label class="form-label col-sm-3 custom-label">Unit Kerja</label>
                             {!! Form::select('pat', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pat']) !!}
                         </div>
                         
                         <div class="col-lg-6 custom-form">
-                            <label class="form-label col-sm-3 custom-label">PBB Muat</label>
+                            <label class="form-label col-sm-3 custom-label">Lokasi Muat</label>
                             {!! Form::select('pbbMuat', ['' => 'Semua'], null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pbbMuat']) !!}
                         </div>
                     </div>

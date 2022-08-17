@@ -36,7 +36,7 @@ class Sp3Controller extends Controller
 
         $rangeCutOff = [
             'sd'    => 's/d',
-            'di'    => 'di'
+            'di'    => '='
         ];
 
         $monthCutOff = [
@@ -64,6 +64,9 @@ class Sp3Controller extends Controller
         $query = Sp3::with('vendor')->select('*');
 
         return DataTables::eloquent($query)
+                ->editColumn('tgl_sp3', function ($model) {
+                    return date('d-m-Y', strtotime($model->tgl_sp3));
+                })
                 ->addColumn('menu', function ($model) {
                     $edit = '<div class="btn-group">
                                 <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -80,8 +83,8 @@ class Sp3Controller extends Controller
                             </div>';
 
                     return $edit;
-            })
-            ->rawColumns(['menu'])
-            ->toJson();
+                })
+                ->rawColumns(['menu'])
+                ->toJson();
     }
 }

@@ -29,22 +29,9 @@
 	<!--begin::Body-->
 	<body data-kt-name="metronic" id="kt_body" class="page-loading-enabled page-loading header-tablet-and-mobile-fixed aside-enabled">
 		<!--begin::Theme mode setup on page load-->
-		<script>
-		if ( document.documentElement ) { 
-			const defaultThemeMode = "system"; 
-			const name = document.body.getAttribute("data-kt-name"); 
-			let themeMode = localStorage.getItem("kt_" + ( name !== null ? name + "_" : "" ) + "theme_mode_value"); 
-			if ( themeMode === null ) { 
-				if ( defaultThemeMode === "system" ) { 
-					themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; 
-				} else { 
-					themeMode = defaultThemeMode; 
-				} 
-			} 
-			document.documentElement.setAttribute("data-theme", themeMode); 
-		}
-		</script>
+		
 		<!--end::Theme mode setup on page load-->
+		
 		<!--begin::loader-->
 		<div class="page-loader flex-column">
 			<img alt="Logo" class="max-h-75px" src="{{ asset('assets/media/logos/tms.png') }}" />
@@ -78,10 +65,10 @@
 									<!--begin::Info-->
 									<div class="flex-grow-1 me-2">
 										<!--begin::Username-->
-										<a href="#" class="text-white text-hover-primary fs-6 fw-bold">Paul Melone</a>
+										<a href="#" class="text-white text-hover-primary fs-6 fw-bold">{{ session('TMP_FULLNAME') }}</a>
 										<!--end::Username-->
 										<!--begin::Description-->
-										<span class="text-gray-600 fw-semibold d-block fs-8 mb-1">Python Dev</span>
+										<span class="text-gray-600 fw-semibold d-block fs-8 mb-1">{{ session('TMP_WILAYAH') }}</span>
 										<!--end::Description-->
 										<!--begin::Label-->
 										<div class="d-flex align-items-center text-success fs-9">
@@ -126,11 +113,6 @@
 							<!--end::Wrapper-->
 						</div>
 						<!--end::User-->
-						<!--begin::Aside search-->
-						<div class="aside-search py-5">
-							
-						</div>
-						<!--end::Aside search-->
 						<!--end::Aside user-->
 					</div>
 					<!--end::Aside Toolbarl-->
@@ -354,10 +336,6 @@
 		<script src="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js') }}"></script>
 		<!--end::Vendors Javascript-->
 		<!--begin::Custom Javascript(used by this page)-->
-		<script src="{{ asset('assets/js/widgets.bundle.js') }}"></script>
-		<script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
-		<script src="{{ asset('assets/js/custom/apps/chat/chat.js') }}"></script>
-		<script src="{{ asset('assets/js/custom/utilities/modals/users-search.js') }}"></script>
 		<!--end::Custom Javascript-->
 		@yield('js')
 		<!--end::Javascript-->
