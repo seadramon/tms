@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sp3Controller;
+use App\Http\Middleware\EnsureSessionIsValid;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +15,10 @@ use App\Http\Controllers\Sp3Controller;
 |
 */
 
-Route::get('/', function () {
-    return view('testing');
-});
+Route::middleware([EnsureSessionIsValid::class])->group(function () {
+    Route::get('/', function () {
+        return view('testing');
+    });
 
 Route::group(['prefix' => '/sp3', 'as' => 'sp3.'], function(){
     Route::post('/destroy', [Sp3Controller::class, 'destroy'])->name('destroy');
