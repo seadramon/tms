@@ -32,11 +32,11 @@ class EnsureSessionIsValid
 
     private function generateSession($session_id)
     {
-        $log = DB::table('usradm.usr_log')->where('wbsesid', $session_id)->whereNull('logout')->first();
+        $log = DB::connection('oracle-usradm')->table('usr_log')->where('wbsesid', $session_id)->whereNull('logout')->first();
         if(!$log){
             return redirect()->away(env('LOGIN_URL'));
         }
-        $detail = DB::table('usradm.usr_log_d1')->where('wbsesid', $session_id)->get()->mapWithKeys(function($item){ return [$item->wbvarname => $item->wbvarvalue]; })->all();
+        $detail = DB::connection('oracle-usradm')->table('usr_log_d1')->where('wbsesid', $session_id)->get()->mapWithKeys(function($item){ return [$item->wbvarname => $item->wbvarvalue]; })->all();
         Session::put($detail);
     }
 }
