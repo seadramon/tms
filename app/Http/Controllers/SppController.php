@@ -62,8 +62,11 @@ class SppController extends Controller
                         $ret = round(($a / $b) * 100);
                     }
                 }
+                if($ret > 100){
+                    $ret = 100;
+                }
 
-                return $ret;
+                return $ret . '%';
             })
             ->addColumn('vol', function($model) {
                 $res = "";
@@ -75,7 +78,7 @@ class SppController extends Controller
                     $res = $sptb / $sppb;
                 }
 
-                return $res;
+                return $res . '%';
             })
             ->addColumn('menu', function ($model) {
                 $edit = '<div class="btn-group">
