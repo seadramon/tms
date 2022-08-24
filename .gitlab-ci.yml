@@ -46,7 +46,7 @@ composer install production:
   extends: .production-job
   stage: deploy
   script:
-    - docker exec tms bash -c "composer install;php artisan optimize:clear; php artisan optimize"
+    - docker exec tms bash -c "composer install;php artisan optimize:clear"
     - docker exec tms bash -c "ip route add 10.6.1/24 via 172.23.0.5"
 publish asset production:
   extends: 

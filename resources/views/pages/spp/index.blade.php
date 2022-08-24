@@ -22,24 +22,11 @@
                     </div>
                 </div>
 
-                <?php /*<div class="card-body">
-                    <div class="form-group row">
-                        <div class="col-lg-6 custom-form">
-                            <label class="form-label col-sm-3 custom-label">Unit Kerja</label>
-                            {!! Form::select('pat', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pat']) !!}
-                        </div>
-                        
-                        <div class="col-lg-6 custom-form">
-                            <label class="form-label col-sm-3 custom-label">Lokasi Muat</label>
-                            {!! Form::select('pbbMuat', ['' => 'Semua'], null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pbbMuat']) !!}
-                        </div>
-                    </div>
-                </div>*/?>
-
                 <div class="card-body py-5">
                     <table id="tabel_spp" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                         <thead>
                             <tr class="fw-semibold fs-6 text-muted">
+                                <th rowspan="2" class="hidden">NO SPP</th>
                                 <th rowspan="2">NO SPP</th>
                                 <th rowspan="2">NPP</th>
                                 <th rowspan="2">NO SPPRB</th>
@@ -122,6 +109,7 @@
                 stateSave: true,
                 ajax: "{{ route('spp.data') }}",
                 columns: [
+                    {data: 'created_date', name: 'created_date', defaultContent: '-', class: "hidden"},
                     {data: 'no_sppb', name: 'no_sppb', defaultContent: '-'},
                     {data: 'spprb.no_npp', name: 'spprb.no_npp', defaultContent: '-',orderable: false, searchable: false},
                     {data: 'no_spprb', name: 'no_spprb', defaultContent: '-'},
