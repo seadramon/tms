@@ -12,7 +12,8 @@
         "laravel/tinker": "^2.7",
         "yajra/laravel-datatables-oracle": "^10.1",
         "yajra/laravel-oci8": "^9.0",
-        "laravelcollective/html": "^6.3"
+        "laravelcollective/html": "^6.3",
+        "php-flasher/flasher-toastr-laravel": "^1.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

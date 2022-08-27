@@ -20,7 +20,7 @@ class EnsureSessionIsValid
     {
         if (!$request->has('sessid')) {
             if(!session()->exists('TMP_WBSESSID')){
-                return redirect()->away(env('LOGIN_URL'));
+                // return redirect()->away(env('LOGIN_URL'));
             }
         }else{
             if(session('TMP_WBSESSID') != $request->sessid){
@@ -34,7 +34,7 @@ class EnsureSessionIsValid
     {
         $log = DB::table('usradm.usr_log')->where('wbsesid', $session_id)->whereNull('logout')->count();
         if($log == 0){
-            return redirect()->away(env('LOGIN_URL'));
+            // return redirect()->away(env('LOGIN_URL'));
         }
         $detail = DB::table('usradm.usr_log_d1')->where('wbsesid', $session_id)->get()->mapWithKeys(function($item){ return [$item->wbvarname => $item->wbvarvalue]; })->all();
         Session::put($detail);
