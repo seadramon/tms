@@ -236,19 +236,18 @@ class Sp3Controller extends Controller
 
                 $msNoDokumen->update([
                     'seq'           =>  $newSequence,
-                    'updated_by'    => session('TMP_KDWIL') ?? '1A',
-                    'updated_date'  => date('Y-m-d'),
+                    'updated_by'    => session('TMP_NIP') ?? '12345',
+                    'updated_date'  => date('Y-m-d H:i:s'),
                 ]);
             }else{
-                $newSequence = '9999';
+                $newSequence = '0001';
 
                 $msNoDokumenData = new MsNoDokumen();
                 $msNoDokumenData->tahun = date('Y');
                 $msNoDokumenData->no_dokumen = $noDokumen;
                 $msNoDokumenData->seq = $newSequence;
-                $msNoDokumenData->created_by = session('TMP_KDWIL') ?? '1A';
-                $msNoDokumenData->created_date = date('Y-m-d');
-                $msNoDokumenData->updated_date = date('Y-m-d');
+                $msNoDokumenData->created_by = session('TMP_NIP') ?? '12345';
+                $msNoDokumenData->created_date = date('Y-m-d H:i:s');
                 $msNoDokumenData->save();
             }
 
@@ -269,22 +268,22 @@ class Sp3Controller extends Controller
             $sp3->jarak_km = $request->jarak_pesanan;
             $sp3->ppn = $request->ppn ? (float)($request->ppn / 100) : 0;
             $sp3->keterangan = $request->keterangan;
-            $sp3->created_by = session('TMP_KDWIL') ?? '1A';
-            $sp3->created_date = date('Y-m-d');
+            $sp3->created_by = session('TMP_NIP') ?? '12345';
+            $sp3->created_date = date('Y-m-d H:i:s');
             $sp3->kd_pat = session('TMP_KDWIL') ?? '1A';
             $sp3->save();
 
             $sp3Pic = new Sp3Pic();
             $sp3Pic->no_sp3 = $noSp3;
-            $sp3Pic->employee_id = $request->pic ?? '123';
+            $sp3Pic->employee_id = $request->pic;
             $sp3Pic->save();
 
-            for($i=0; $i < 1; $i++){
+            for($i=0; $i < count($request->unit); $i++){
                 $sp3D = new Sp3D();
                 $sp3D->no_sp3 = $noSp3;
                 $sp3D->no_npp = $request->no_npp[$i];
-                $sp3D->pat_to = $request->unit[$i] ?? '2A';
-                $sp3D->kd_produk = $request->tipe[$i];
+                $sp3D->pat_to = $request->unit[$i];
+                $sp3D->kd_produk = $request->kd_produk[$i];
                 $sp3D->jarak_km = $request->jarak_pekerjaan[$i];
                 $sp3D->vol_awal = $request->vol_btg[$i];
                 $sp3D->vol_akhir = $request->vol_btg[$i];
@@ -296,11 +295,13 @@ class Sp3Controller extends Controller
                 $sp3D->save();
             }
 
-            $sp3D2Id = Sp3D2::max('id') ?? 1;
+            $sp3D2Id = Sp3D2::max('id') ?? 0;
 
             foreach(($request->material_tambahan ?? []) as $material){
+                $sp3D2Id++;
+
                 $sp3D2 = new Sp3D2();
-                $sp3D2->id = $sp3D2Id++;
+                $sp3D2->id = $sp3D2Id;
                 $sp3D2->no_sp3 = $noSp3;
                 $sp3D2->material = $material['material'];
                 $sp3D2->spesifikasi = $material['spesifikasi'];

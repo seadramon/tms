@@ -173,27 +173,27 @@
                 @foreach($detailPesanan as $key => $pesanan)
                     <tr class="detail_pekerjaan" id="detail_pekerjaan_{{ $key }}">
                         <td>
-                            {!! Form::select('unit[]', $unit, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'unit_' . $key, 'row-id'=>$key]) !!}
+                            {!! Form::select('unit[]', $unit, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'unit_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
                         <td>
                             {!! Form::hidden('kd_produk[]', $pesanan->produk->kd_produk, []) !!}
-                            {!! Form::text('tipe[]', $pesanan->produk->tipe, ['class'=>'form-control', 'id'=>'tipe_' . $key, 'row-id'=>$key]) !!}
+                            {!! Form::text('tipe[]', $pesanan->produk->tipe, ['class'=>'form-control', 'id'=>'tipe_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
                         <td>
-                            {!! Form::number('jarak_pekerjaan[]', null, ['class'=>'form-control', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key]) !!}
+                            {!! Form::number('jarak_pekerjaan[]', null, ['class'=>'form-control', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
                         <td>
-                            {!! Form::number('vol_btg[]', null, ['class'=>'form-control vol_btg', 'id'=>'vol_btg_' . $key, 'max'=>(float)$pesanan->vol_konfirmasi ?? 0, 'row-id'=>$key]) !!}
+                            {!! Form::number('vol_btg[]', null, ['class'=>'form-control vol_btg', 'id'=>'vol_btg_' . $key, 'max'=>(float)$pesanan->vol_konfirmasi ?? 0, 'row-id'=>$key, 'required']) !!}
                             <input type="hidden" id="vol_btg_max_{{ $key }}" value="{{ (float)$pesanan->vol_konfirmasi ?? 0 }}">
                         </td>
                         <td>
-                            {!! Form::number('vol_ton[]', null, ['class'=>'form-control vol_ton', 'id'=>'vol_ton_' . $key, 'row-id'=>$key]) !!}
+                            {!! Form::number('vol_ton[]', null, ['class'=>'form-control vol_ton', 'id'=>'vol_ton_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
                         <td>
-                            {!! Form::select('satuan[]', $satuan, null, ['class'=>'form-control form-select-solid satuan', 'data-control'=>'select2', 'id'=>'satuan_' . $key, 'row-id'=>$key]) !!}
+                            {!! Form::select('satuan[]', $satuan, null, ['class'=>'form-control form-select-solid satuan', 'data-control'=>'select2', 'id'=>'satuan_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
                         <td>
-                            {!! Form::number('harsat[]', null, ['class'=>'form-control harsat', 'id'=>'harsat_' . $key, 'row-id'=>$key]) !!}
+                            {!! Form::number('harsat[]', null, ['class'=>'form-control harsat', 'id'=>'harsat_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
                         <td>
                             {!! Form::text('jumlah[]', null, ['class'=>'form-control', 'id'=>'jumlah_' . $key, 'row-id'=>$key, 'readonly']) !!}
