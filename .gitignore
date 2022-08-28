@@ -1,3 +1,4 @@
+!.gitignore
 /node_modules
 /public/build
 /public/hot
@@ -14,3 +15,6 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+scripts/
+docker-compose.yml
+Dockerfile
