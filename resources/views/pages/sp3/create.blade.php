@@ -44,6 +44,12 @@
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <script src="{{ asset('assets/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
 <script type="text/javascript">
+    var target = document.querySelector("#kt_body");
+            
+    var blockUI = new KTBlockUI(target, {
+        message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Loading data...</div>',
+    });
+    
     $(document).ready(function() {
         $("#alert-box1").hide();
     });
@@ -91,6 +97,12 @@
                 type: "POST",
                 data: data,
                 dataType: 'json',
+                beforeSend: function() {
+                    blockUI.block();
+                },
+                complete: function() {
+                    blockUI.release();
+                },
                 success: function(result) {
                     console.log(result);
                     $('#box2').html(result.html);

@@ -10,6 +10,7 @@ class Sp3 extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['no_sp3'];
     protected $table = 'sp3_h';
     protected $primaryKey = 'no_sp3';
     protected $keyType = 'string';
