@@ -6,15 +6,14 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vendor extends Model
+class MsNoDokumen extends Model
 {
     use HasFactory;
 
-    protected $table = 'vendor';
-    protected $primaryKey = 'vendor_id';
-	protected $keyType = 'string';
-	public $incrementing = false;
-
+    protected $table = 'ms_no_dokumen';
+    protected $primaryKey = 'no_dokumen';
+    protected $keyType = 'string';
+    
     const CREATED_AT = 'created_date';
-    const UPDATED_AT = 'last_update_date';
+    const UPDATED_AT = 'updated_date';
 }

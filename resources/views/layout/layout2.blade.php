@@ -202,6 +202,12 @@
 												</span>
 												<span class="menu-title">Data</span>
 											</a>
+											<a class="menu-link" href="{{ route('sp3.create') }}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Tambah</span>
+											</a>
 											<!--end:Menu link-->
 										</div>
 										<!--end:Menu item-->
