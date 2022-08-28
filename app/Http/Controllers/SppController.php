@@ -163,7 +163,7 @@ class SppController extends Controller
                     'sppb_d.vol', 'vsr.kd_produk')
                 ->where('vsr.spprblast', $noSpprb)
                 ->where('vsr.no_npp', $noNpp)
-                ->take(3)
+                // ->take(3)
                 ->get();
 
             $listDetailPesanan = $this->detailPesananHtml($sqldtlPesanan);

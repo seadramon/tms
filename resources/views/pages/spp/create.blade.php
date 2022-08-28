@@ -52,7 +52,6 @@
 
 							<div class="col-lg-9">
 								<div class="form-group">
-									040/PI/SPPRB/III/WP-I/21P01
 									<label class="fs-6 fw-bold mt-2 mb-3">No SPPRB</label>
 									<select class="form-select select2spprb" data-control="select2" data-placeholder="Pilih SPPRB" data-allow-clear="true" name="no_spprb"></select>
 								</div>	
