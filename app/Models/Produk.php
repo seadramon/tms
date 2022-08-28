@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SppbD extends Model
+class Produk extends Model
 {
     use HasFactory;
 
-    protected $table = 'SPPB_D';
-    protected $primaryKey = 'no_sppb';
+    protected $table = 'tb_produk';
+    protected $primaryKey = 'kd_produk';
 	protected $keyType = 'string';
 	public $incrementing = false;
-	public $timestamps = false;
-
 }

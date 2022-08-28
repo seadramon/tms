@@ -14,6 +14,9 @@ class SppbH extends Model
 	protected $keyType = 'string';
 	public $incrementing = false;
 
+    const CREATED_AT = 'created_date';
+    const UPDATED_AT = 'last_update_date';
+
     public function spprb()
     {
     	return $this->belongsTo(SpprbH::class, 'no_spprb', 'no_spprb');

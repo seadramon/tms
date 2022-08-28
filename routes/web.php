@@ -18,6 +18,7 @@ use App\Http\Middleware\EnsureSessionIsValid;
 
 Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::get('/', function () {
+    	// dd(session()->all());
         return view('testing');
     });
 
@@ -31,9 +32,14 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	Route::group(['prefix' => '/spp', 'as' => 'spp.'], function(){
 	    Route::post('/destroy', [SppController::class, 'destroy'])->name('destroy');
+	    Route::post('/draft', [SppController::class, 'createDraft'])->name('draft');
 	    Route::get('/data', [SppController::class, 'data'])->name('data');
 	    Route::resource('/',  SppController::class)->except([
 	        'destroy'
 	    ])->parameters(['' => 'spp']);
+	});
+
+	Route::group(['prefix' => '/select2', 'as' => 'select2.'], function(){
+		Route::get('/spprb',	[SppController::class, 'getSpprb'])->name('spprb');
 	});
 });

@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SppbD extends Model
+class VSpprbRi extends Model
 {
     use HasFactory;
 
-    protected $table = 'SPPB_D';
-    protected $primaryKey = 'no_sppb';
+    protected $table = 'v_spprb_ri';
+    protected $primaryKey = 'pat_to';
 	protected $keyType = 'string';
 	public $incrementing = false;
-	public $timestamps = false;
 
+	public function produk()
+	{
+		return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
+	}
 }
