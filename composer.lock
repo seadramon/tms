@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8525ffe1d817097c2f28556e8ef370c9",
+    "content-hash": "761acc435f50a4d4da1478f689afb921",
     "packages": [
         {
             "name": "brick/math",
@@ -891,6 +891,18 @@
         },
         {
             "name": "laravel/framework",
+<<<<<<< HEAD
+            "version": "v9.25.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/framework.git",
+                "reference": "e8af8c2212e3717757ea7f459a655a2e9e771109"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/e8af8c2212e3717757ea7f459a655a2e9e771109",
+                "reference": "e8af8c2212e3717757ea7f459a655a2e9e771109",
+=======
             "version": "v9.26.1",
             "source": {
                 "type": "git",
@@ -901,6 +913,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/1ccfb91afee7a351b09ba1f1b97739096a3ad1cf",
                 "reference": "1ccfb91afee7a351b09ba1f1b97739096a3ad1cf",
+>>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -1067,7 +1080,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
+<<<<<<< HEAD
+            "time": "2022-08-16T16:36:05+00:00"
+=======
             "time": "2022-08-23T19:00:07+00:00"
+>>>>>>> main
         },
         {
             "name": "laravel/sanctum",
@@ -6901,6 +6918,18 @@
         },
         {
             "name": "phpunit/phpunit",
+<<<<<<< HEAD
+            "version": "9.5.22",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/phpunit.git",
+                "reference": "e329ac6e8744f461518272612a479fde958752fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e329ac6e8744f461518272612a479fde958752fe",
+                "reference": "e329ac6e8744f461518272612a479fde958752fe",
+=======
             "version": "9.5.23",
             "source": {
                 "type": "git",
@@ -6911,6 +6940,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/888556852e7e9bbeeedb9656afe46118765ade34",
                 "reference": "888556852e7e9bbeeedb9656afe46118765ade34",
+>>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -6983,7 +7013,11 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
+<<<<<<< HEAD
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.22"
+=======
                 "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.23"
+>>>>>>> main
             },
             "funding": [
                 {
@@ -6995,7 +7029,11 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
+            "time": "2022-08-20T08:25:46+00:00"
+=======
             "time": "2022-08-22T14:01:36+00:00"
+>>>>>>> main
         },
         {
             "name": "sebastian/cli-parser",
