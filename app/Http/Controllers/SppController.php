@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pat;
+use App\Models\Produk;
 use App\Models\SppbH;
 use App\Models\SppbD;
 use App\Models\SpprbH;
 use App\Models\Sp3;
 use App\Models\SptbD;
+use App\Models\VSpprbRi;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
 use DB;
@@ -120,7 +122,15 @@ class SppController extends Controller
      */
     public function create()
     {
-        //
+        $jenis = [
+            '' => '-Pilih Jenis-',
+            'Pesanan Wilayah' => 'Pesanan Wilayah',
+            'Pesanan Lain-lain' => 'Pesanan Lain-lain'
+        ];
+
+        return view('pages.spp.create', [
+            'jenis' => $jenis
+        ]);
     }
 
     /**
@@ -129,53 +139,239 @@ class SppController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function createDraft(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            
+            Validator::make($request->all(), [
+                'jenis'   => 'required',
+                'no_npp'   => 'required',
+                'no_spprb'   => 'required'
+            ])->validate();
+
+            $params = explode("|", $request->no_spprb);
+            $noSpprb = $params[0];
+            $noNpp = $params[1];
+
+            // 040/PI/SPPRB/III/WP-I/21P01
+            $sqldtlPesanan = DB::table('v_spprb_ri vsr')
+                ->join('tb_produk', 'vsr.kd_produk', '=', 'tb_produk.kd_produk')
+                ->join('sppb_h', 'sppb_h.no_spprb', '=', 'vsr.spprblast')
+                ->join('sppb_d', 'sppb_h.no_sppb', '=', 'sppb_d.no_sppb')
+                ->select('tb_produk.tipe', 'tb_produk.ket', 'vsr.vol_spprb', 'tb_produk.vol_m3', 
+                    'sppb_d.vol', 'vsr.kd_produk')
+                ->where('vsr.spprblast', $noSpprb)
+                ->where('vsr.no_npp', $noNpp)
+                // ->take(3)
+                ->get();
+
+            $listDetailPesanan = $this->detailPesananHtml($sqldtlPesanan);
+            $rencanaProduk = $this->rencanaProdukHtml($sqldtlPesanan);
+
+            $sqlNpp = DB::table('v_spprb_ri vsr')
+                ->join('npp', 'npp.no_npp', '=', 'vsr.no_npp')
+                ->join('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
+                ->join('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
+                ->where('vsr.spprblast', $noSpprb)
+                ->where('vsr.no_npp', $noNpp)
+                ->select('npp.nama_proyek', 'npp.nama_pelanggan', 'vsr.no_npp', 'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec')
+                ->first();
+
+            $sqlPat = DB::table('v_spprb_ri vsr')
+                ->join('tb_pat', 'tb_pat.kd_pat', '=', 'vsr.pat_to')
+                ->where('vsr.spprblast', $noSpprb)
+                ->where('vsr.no_npp', $noNpp)
+                ->select('tb_pat.ket', 'vsr.pat_to', 'tb_pat.singkatan')
+                ->first();
+
+            $sp3 = DB::table('SP3_D')
+                ->where('no_npp', $noNpp)
+                ->where('pat_to', $sqlPat->pat_to)
+                ->max('jarak_km');
+
+            return response()->json([
+                'result' => 'success',
+                'tblPesanan' => $listDetailPesanan,
+                'npp' => $sqlNpp,
+                'pat' => $sqlPat,
+                'jarak' => $sp3,
+                'rencanaProd' => $rencanaProduk,
+                'noSpprb' => $noSpprb
+            ])->setStatusCode(200, 'OK');
+        } catch(Exception $e) {
+            return response()->json(['result' => $e->getMessage()])->setStatusCode(500, 'ERROR');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    private function rencanaProdukHtml($data)
     {
-        //
+        $ret = "";
+
+        if (count($data) > 0) {
+            $i = 1;
+
+            foreach ($data as $row) {
+                $ret .= "<tr>";
+                $ret .= "<td>" .$i. "</td>";
+                $ret .= "<td>" .$row->tipe. "</td>";
+                $ret .= "<td><input type='text' name='rencana[$i][kd_produk]' value='$row->kd_produk' class='form-control'></td>";
+                $ret .= "<td><input type='number' name='rencana[$i][saat_ini]' data-sblmbtg='$row->vol' data-urutan='$i' class='form-control saat-ini' onkeyup='sdSaatIni($row->vol, $i)' id='id-saatini-$i'></td>";
+                $ret .= "<td><input type='number' name='rencana[$i][sd_saat_ini]' id='id-sdsaatini-$i' class='form-control' disabled></td>";
+
+                $ret .= "<td><input type='text' name='rencana[$i][ket]' class='form-control'></td>";
+                $ret .= "<td><input class='form-check-input' name='rencana[$i][segmental]' type='checkbox' value='1' id='flexCheckDefault'/></td>";
+                $ret .= "<td><input type='number' name='rencana[$i][jml_segmen]' class='form-control'></td>";
+
+                $ret .= "</tr>";
+                $i++;
+            }
+        }
+
+        return $ret;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    private function detailPesananHtml($data) 
     {
-        //
+        $ret = "";
+        if (count($data) > 0) {
+
+            foreach ($data as $row) {
+                $ret .= "<tr>";
+                $ret .= "<td>" .$row->tipe. "</td>";
+
+                $volm3 = !empty($row->vol_m3)?$row->vol_m3:1;
+                $pesananVolBtg = $row->vol_spprb;
+                $pesananVolTon = $row->vol_spprb * $volm3 * 2.5;
+                $sppSebelumVolBtg = $row->vol;
+                $sppSebelumVolTon = $row->vol * $volm3 * 2.5;
+                $sisaBtg = $pesananVolBtg - $sppSebelumVolBtg;
+                $sisaTon = $pesananVolTon - $sppSebelumVolTon;
+                if ($pesananVolBtg > 0) {
+                    $persen = $sisaBtg / $pesananVolBtg;
+                }
+
+                $ret .= "<td>". $pesananVolBtg ."</td>";
+                $ret .= "<td>". $pesananVolTon ."</td>";
+                $ret .= "<td>". $sppSebelumVolBtg ."</td>";
+                $ret .= "<td>". $sppSebelumVolTon ."</td>";
+
+                $ret .= "<td>". $sisaBtg ."</td>";
+                $ret .= "<td>". $sisaTon ."</td>";
+                $ret .= "<td>". round($persen, 2) ."</td>";
+
+                $ret .= "</tr>";
+            }
+
+        } else {
+            $ret = "<tr colspan='8'>Data tidak ditemukan</tr>";
+        }
+
+        return $ret;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function store(Request $request, FlasherInterface $flasher)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            if ($request->rencana) {
+                $jadwal = [];
+                $rencana = $request->rencana;
+                $kdProduk = $request->rencana[1]['kd_produk'];
+                $noSppb = $this->generateSppb($kdProduk, session('TMP_KDWIL'));
+
+                if (!empty($request->jadwal)) {
+                    $jadwal = explode(" - ", $request->jadwal);
+                }
+
+                $data = new SppbH;
+                $data->no_sppb = $noSppb;
+                $data->no_spprb = $request->no_spprb;
+                $data->tujuan = $request->tujuan;
+                $data->rit = $request->rit;
+                $data->jarak_km = $request->jarak_km;
+                $data->catatan = $request->catatan;
+                $data->jadwal1 = !empty($jadwal[0])?date('Y-m-d', strtotime($jadwal[0])):date('Y-m-d', strtotime('-3 day', time()));
+                $data->jadwal2 = !empty($jadwal[1])?date('Y-m-d', strtotime($jadwal[1])):date('Y-m-d');
+                $data->tgl_sppb = date('Y-m-d');
+                $data->created_by = session('TMP_NIP');
+
+                $data->save();
+
+                foreach ($rencana as $row) {
+                    $detail = new SppbD;
+
+                    $detail->kd_produk = $row['kd_produk'];
+                    $detail->vol = $row['saat_ini'];
+                    $detail->ket = $row['ket'];
+                    $detail->segmental = !empty($row['segmental'])?$row['segmental']:'0';
+                    $detail->jml_segmen = $row['jml_segmen'];
+
+                    $data->detail()->save($detail);
+                }
+
+                DB::commit();
+                $flasher->addSuccess('Data telah berhasil disimpan!');
+            } else {
+                $flasher->addError('Detail Rencana Produk dikirim kosong.');
+            }
+        } catch(Exception $e) {
+            DB::rollback();
+            $flasher->addError('Terjadi error silahkan coba beberapa saat lagi.');
+        }
+
+        return redirect()->route('spp.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+
+    public function getSpprb(Request $request)
     {
-        //
+        $term = trim($request->q);
+
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+
+        $tags = DB::table('v_spprb_ri vsr')
+            ->selectRaw("vsr.spprblast, vsr.NO_NPP,
+                vsr.SPPRBLAST || ' | ' || vsr.NO_NPP || ' | ' || npp.NAMA_PROYEK as name")
+            ->join('npp', 'vsr.no_npp', '=', 'npp.no_npp')
+            ->where(function($query) use($term){
+                $query->where('vsr.spprblast', 'like', "%$term%")
+                    ->orWhere('vsr.no_npp', 'like', "%$term%")
+                    ->orWhere('npp.nama_proyek', 'like', "%$term%");
+            })
+            ->groupBy('vsr.SPPRBLAST', 'vsr.NO_NPP', 'npp.NAMA_PROYEK')
+            ->limit(5)->get();
+
+        $formatted_tags = [];
+
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->spprblast.'|'.$tag->no_npp, 'text' => $tag->name];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+
+    private function generateSppb($kdProduk, $patSingkatan)
+    {
+        $produk = DB::table('view_master_produk')->where('kd_produk', $kdProduk)->first();
+        $singkatan = !empty($produk)?$produk->singkatan2:'RT';
+        $tahun = date('Y');
+
+        $maks = SppbH::whereRaw("no_sppb like '%/$singkatan/%/$tahun'")->max('no_sppb');
+
+        if (!empty($maks)) {
+            $maks = substr($maks, 0, 4);
+
+            $urutan = sprintf('%04d', $maks + 1);
+        } else {
+            $urutan = sprintf('%04d', 1);
+        }
+
+        $noSppb = $urutan.'/SPPB/'.$singkatan.'/'.$patSingkatan.'/'.date('m').'/'.date('Y');
+
+        return $noSppb;
     }
 }

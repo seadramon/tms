@@ -18,7 +18,7 @@
                     <h3 class="card-title">LIST SPP</h3>
                     <div class="card-toolbar">
                         <a href="#" class="btn btn-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Monitor Approval</a>&nbsp;
-                        <a href="#" class="btn btn-success" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah SPP</a>
+                        <a href="{{ route('spp.create') }}" class="btn btn-success" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah SPP</a>
                     </div>
                 </div>
 

@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vendor extends Model
+class Produk extends Model
 {
     use HasFactory;
 
-    protected $table = 'vendor';
-    protected $primaryKey = 'vendor_id';
+    protected $table = 'tb_produk';
+    protected $primaryKey = 'kd_produk';
 	protected $keyType = 'string';
 	public $incrementing = false;
 

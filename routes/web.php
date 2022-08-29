@@ -18,6 +18,7 @@ use App\Http\Middleware\EnsureSessionIsValid;
 
 Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::get('/', function () {
+    	// dd(session()->all());
         return view('testing');
     });
 
@@ -25,15 +26,23 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::post('/destroy', [Sp3Controller::class, 'destroy'])->name('destroy');
 	    Route::get('/data', [Sp3Controller::class, 'data'])->name('data');
 	    Route::resource('/',  Sp3Controller::class)->except([
-	        'destroy'
+	        'show', 'destroy'
 	    ])->parameters(['' => 'sp3']);
+		Route::get('/search-npp', [Sp3Controller::class, 'searchNpp'])->name('search-npp');
+		Route::get('/search-pic', [Sp3Controller::class, 'searchPic'])->name('search-pic');
+		Route::post('/get-data-box2', [Sp3Controller::class, 'getDataBox2'])->name('get-data-box2');
 	});
 
 	Route::group(['prefix' => '/spp', 'as' => 'spp.'], function(){
 	    Route::post('/destroy', [SppController::class, 'destroy'])->name('destroy');
+	    Route::post('/draft', [SppController::class, 'createDraft'])->name('draft');
 	    Route::get('/data', [SppController::class, 'data'])->name('data');
 	    Route::resource('/',  SppController::class)->except([
 	        'destroy'
 	    ])->parameters(['' => 'spp']);
+	});
+
+	Route::group(['prefix' => '/select2', 'as' => 'select2.'], function(){
+		Route::get('/spprb',	[SppController::class, 'getSpprb'])->name('spprb');
 	});
 });
