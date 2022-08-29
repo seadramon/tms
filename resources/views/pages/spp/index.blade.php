@@ -15,7 +15,7 @@
         <div class="col-12 mb-md-5 mb-xl-10">
             <div class="card shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">LIST Kontrak / SPP / SPK</h3>
+                    <h3 class="card-title">LIST SPP</h3>
                     <div class="card-toolbar">
                         <a href="#" class="btn btn-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Monitor Approval</a>&nbsp;
                         <a href="#" class="btn btn-success" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah SPP</a>
