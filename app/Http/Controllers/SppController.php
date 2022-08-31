@@ -156,9 +156,9 @@ class SppController extends Controller
 
             // 040/PI/SPPRB/III/WP-I/21P01
             $sqldtlPesanan = DB::table('v_spprb_ri vsr')
-                ->join('tb_produk', 'vsr.kd_produk', '=', 'tb_produk.kd_produk')
-                ->join('sppb_h', 'sppb_h.no_spprb', '=', 'vsr.spprblast')
-                ->join('sppb_d', 'sppb_h.no_sppb', '=', 'sppb_d.no_sppb')
+                ->leftJoin('tb_produk', 'vsr.kd_produk', '=', 'tb_produk.kd_produk')
+                ->leftJoin('sppb_h', 'sppb_h.no_spprb', '=', 'vsr.spprblast')
+                ->leftJoin('sppb_d', 'sppb_h.no_sppb', '=', 'sppb_d.no_sppb')
                 ->select('tb_produk.tipe', 'tb_produk.ket', 'vsr.vol_spprb', 'tb_produk.vol_m3', 
                     'sppb_d.vol', 'vsr.kd_produk')
                 ->where('vsr.spprblast', $noSpprb)
@@ -170,16 +170,16 @@ class SppController extends Controller
             $rencanaProduk = $this->rencanaProdukHtml($sqldtlPesanan);
 
             $sqlNpp = DB::table('v_spprb_ri vsr')
-                ->join('npp', 'npp.no_npp', '=', 'vsr.no_npp')
-                ->join('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
-                ->join('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
+                ->leftJoin('npp', 'npp.no_npp', '=', 'vsr.no_npp')
+                ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
+                ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
                 ->where('vsr.spprblast', $noSpprb)
                 ->where('vsr.no_npp', $noNpp)
                 ->select('npp.nama_proyek', 'npp.nama_pelanggan', 'vsr.no_npp', 'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec')
                 ->first();
 
             $sqlPat = DB::table('v_spprb_ri vsr')
-                ->join('tb_pat', 'tb_pat.kd_pat', '=', 'vsr.pat_to')
+                ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'vsr.pat_to')
                 ->where('vsr.spprblast', $noSpprb)
                 ->where('vsr.no_npp', $noNpp)
                 ->select('tb_pat.ket', 'vsr.pat_to', 'tb_pat.singkatan')
@@ -248,7 +248,7 @@ class SppController extends Controller
                 $sisaBtg = $pesananVolBtg - $sppSebelumVolBtg;
                 $sisaTon = $pesananVolTon - $sppSebelumVolTon;
                 if ($pesananVolBtg > 0) {
-                    $persen = $sisaBtg / $pesananVolBtg;
+                    $persen = $sisaBtg / $pesananVolBtg * 100;
                 }
 
                 $ret .= "<td>". $pesananVolBtg ."</td>";
@@ -359,6 +359,7 @@ class SppController extends Controller
         $produk = DB::table('view_master_produk')->where('kd_produk', $kdProduk)->first();
         $singkatan = !empty($produk)?$produk->singkatan2:'RT';
         $tahun = date('Y');
+        $pat = Pat::where('kd_pat', $patSingkatan)->first();
 
         $maks = SppbH::whereRaw("no_sppb like '%/$singkatan/%/$tahun'")->max('no_sppb');
 
@@ -370,7 +371,7 @@ class SppController extends Controller
             $urutan = sprintf('%04d', 1);
         }
 
-        $noSppb = $urutan.'/SPPB/'.$singkatan.'/'.$patSingkatan.'/'.date('m').'/'.date('Y');
+        $noSppb = $urutan.'/SPPB/'.$singkatan.'/'.($pat->singkatan ?? 'XX').'/'.date('m').'/'.date('Y');
 
         return $noSppb;
     }

@@ -60,7 +60,7 @@
 						<div class="aside-user d-flex align-items-sm-center justify-content-center py-5">
 							<!--begin::Symbol-->
 							<div class="symbol symbol-50px">
-								<img src="assets/media/avatars/300-1.jpg" alt="" />
+								<img src="{{asset('assets/media/avatars/300-1.jpg')}}" alt="" />
 							</div>
 							<!--end::Symbol-->
 							<!--begin::Wrapper-->

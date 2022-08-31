@@ -65,7 +65,7 @@
                 return {
                     results: $.map(data, function (item) {
                         return {
-                            text: item.no_npp,
+                            text: item.no_npp + ' | ' + item.nama_proyek,
                             id: item.no_npp
                         }
                     })
@@ -138,8 +138,8 @@
                     return {
                         results: $.map(data, function (item) {
                             return {
-                                text: item.kd_pat + ' - ' + item.first_name + ' ' + (item.last_name ?? ''),
-                                id: item.kd_pat
+                                text: item.employee_id + ' - ' + item.first_name + ' ' + (item.last_name ?? ''),
+                                id: item.employee_id
                             }
                         })
                     };

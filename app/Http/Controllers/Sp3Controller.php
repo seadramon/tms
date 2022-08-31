@@ -124,16 +124,20 @@ class Sp3Controller extends Controller
 
     public function searchNpp(Request $request)
     {
-        return Npp::where('kd_pat', session('TMP_KDWIL') ?? '1A')
-            ->where('no_npp', 'LIKE', '%' . $request->q . '%')
-            ->get();
+        $query = Npp::where('no_npp', 'LIKE', '%' . $request->q . '%');
+        if(session('TMP_KDWIL') != '0A'){
+            $query->where('kd_pat', session('TMP_KDWIL') ?? '1A');
+        }
+        return $query->get();
     }
 
     public function searchPic(Request $request)
     {
         return Personal::select( 'kd_pat', 'employee_id', 'first_name', 'last_name')
             ->where('ST', 1)
-            ->where('kd_pat', 'LIKE', '%' . $request->q . '%')
+            ->where('employee_id', 'LIKE', '%' . $request->q . '%')
+            ->orWhere('first_name', 'LIKE', '%' . $request->q . '%')
+            ->orWhere('last_name', 'LIKE', '%' . $request->q . '%')
             ->get();
     }
 
@@ -144,6 +148,18 @@ class Sp3Controller extends Controller
         $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
             ->where('no_npp', $parameters['no_npp'])
             ->get();
+
+        $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
+        $sp3D = Sp3D::whereNoNpp($parameters['no_npp'])
+            ->whereIn('kd_produk', $kd_produks)
+            ->get()
+            ->sortByDesc('no_sp3')
+            ->groupBy([
+                'kd_produk', function ($item) {
+                    return substr($item->no_sp3, 0, -3);
+                }
+            ], true);
+        
 
         $npp = Npp::with(['infoPasar.region'])
             ->where('no_npp', $parameters['no_npp'])
@@ -170,9 +186,13 @@ class Sp3Controller extends Controller
 
         $VSpprbRi = VSpprbRi::where('no_npp', $parameters['no_npp'])->first();
 
-        $jarak = Sp3D::where('pat_to', $VSpprbRi?->pat_to)
-            ->where('no_npp', $VSpprbRi?->no_npp)
-            ->max('jarak_km');
+        if($VSpprbRi){
+            $jarak = Sp3D::where('pat_to', $VSpprbRi->pat_to)
+                ->where('no_npp', $VSpprbRi->no_npp)
+                ->max('jarak_km');
+        }else{
+            $jarak = 0;
+        }
 
         $unit = Pat::where('kd_pat', 'LIKE', '2%')
             ->orWhere('kd_pat', 'LIKE', '4%')
@@ -184,7 +204,7 @@ class Sp3Controller extends Controller
         $unit = ["" => "Pilih Unit"] + $unit;
 
         $satuan = [
-            "" => "Pilih Satuan",
+            "" => "Pilih",
             "btg" => "BTG",
             "ton" => "TON",
         ];
@@ -207,6 +227,7 @@ class Sp3Controller extends Controller
             'unit',
             'satuan',
             'ppn',
+            'sp3D',
         ))->render();
         
         return response()->json( array('success' => true, 'html'=> $html) );
@@ -281,7 +302,7 @@ class Sp3Controller extends Controller
             for($i=0; $i < count($request->unit); $i++){
                 $sp3D = new Sp3D();
                 $sp3D->no_sp3 = $noSp3;
-                $sp3D->no_npp = $request->no_npp[$i];
+                $sp3D->no_npp = $request->no_npp;
                 $sp3D->pat_to = $request->unit[$i];
                 $sp3D->kd_produk = $request->kd_produk[$i];
                 $sp3D->jarak_km = $request->jarak_pekerjaan[$i];
