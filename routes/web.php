@@ -31,6 +31,8 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('/search-npp', [Sp3Controller::class, 'searchNpp'])->name('search-npp');
 		Route::get('/search-pic', [Sp3Controller::class, 'searchPic'])->name('search-pic');
 		Route::post('/get-data-box2', [Sp3Controller::class, 'getDataBox2'])->name('get-data-box2');
+		Route::get('/approve/{type}/{no_sp3}', [Sp3Controller::class, 'showApprove'])->name('approve')->where('no_sp3', '(.*)');
+		Route::post('/approve', [Sp3Controller::class, 'storeApprove'])->name('approve');
 	});
 
 	Route::group(['prefix' => '/spp', 'as' => 'spp.'], function(){

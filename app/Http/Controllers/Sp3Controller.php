@@ -89,7 +89,7 @@ class Sp3Controller extends Controller
                                 <li><a class="dropdown-item" href="#">View</a></li>
                                 <li><a class="dropdown-item" href="#">Edit</a></li>
                                 <li><a class="dropdown-item" href="#">Adendum</a></li>
-                                <li><a class="dropdown-item" href="#">Approve</a></li>
+                                <li><a class="dropdown-item" href="' . route('sp3.approve', [!$model->app1 ? 'first' : 'second', $model->no_sp3]) . '">Approve</a></li>
                                 <li><a class="dropdown-item" href="#">Print</a></li>
                                 <li><a class="dropdown-item" href="#">Hapus</a></li>
                             </ul>
@@ -125,9 +125,11 @@ class Sp3Controller extends Controller
     public function searchNpp(Request $request)
     {
         $query = Npp::where('no_npp', 'LIKE', '%' . $request->q . '%');
+
         if(session('TMP_KDWIL') != '0A'){
             $query->where('kd_pat', session('TMP_KDWIL') ?? '1A');
         }
+        
         return $query->get();
     }
 
@@ -150,6 +152,7 @@ class Sp3Controller extends Controller
             ->get();
 
         $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
+        
         $sp3D = Sp3D::whereNoNpp($parameters['no_npp'])
             ->whereIn('kd_produk', $kd_produks)
             ->get()
@@ -159,7 +162,6 @@ class Sp3Controller extends Controller
                     return substr($item->no_sp3, 0, -3);
                 }
             ], true);
-        
 
         $npp = Npp::with(['infoPasar.region'])
             ->where('no_npp', $parameters['no_npp'])
@@ -337,6 +339,61 @@ class Sp3Controller extends Controller
             DB::rollback();
             $flasher->addError('An error has occurred please try again later.');
         }
+
+        return redirect()->route('sp3.index');
+    }
+
+    public function showApprove($type, $noSp3)
+    {
+        $data = Sp3::find($noSp3);
+
+        $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+            ->where('no_npp', $data->no_npp)
+            ->get();
+
+        $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
+    
+        $sp3D = Sp3D::whereNoNpp($data->no_npp)
+            ->whereIn('kd_produk', $kd_produks)
+            ->get()
+            ->sortByDesc('no_sp3')
+            ->groupBy([
+                'kd_produk', function ($item) {
+                    return substr($item->no_sp3, 0, -3);
+                }
+            ], true);
+
+        $kondisiPenyerahan = [
+            'L' => 'LOKO', 
+            'F' => 'FRANKO', 
+            'T' => 'TERPASANG', 
+            'D' => 'DISPENSASI'
+        ];
+
+        $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($data->no_npp, -1))];
+
+        return view('pages.sp3.approve', compact(
+            'data', 'detailPesanan', 'sp3D', 'kondisiPenyerahanDipilih', 'type'
+        ));
+    }
+
+    public function storeApprove(Request $request)
+    {
+        $data = Sp3::find($request->no_sp3);
+
+        if($request->type == 'first'){
+            $data->app1 = 1;
+            $data->app1_empid = session('TMP_NIP') ?? '12345';
+            $data->app1_jbt = session('TMP_KDJBT') ?? '12345';
+            $data->app1_date = date('Y-m-d H:i:s');
+        }else{
+            $data->app2 = 1;
+            $data->app2_empid = session('TMP_NIP') ?? '12345';
+            $data->app2_jbt = session('TMP_KDJBT') ?? '12345';
+            $data->app2_date = date('Y-m-d H:i:s');
+        }
+
+        $data->save();
 
         return redirect()->route('sp3.index');
     }

@@ -15,4 +15,9 @@ class Sp3Pic extends Model
     protected $keyType = 'string';
     public $timestamps = false;
     public $incrementing = false;
+
+    public function employee()
+    {
+        return $this->belongsTo(Personal::class, 'employee_id', 'employee_id');
+    }
 }
