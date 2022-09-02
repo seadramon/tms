@@ -132,7 +132,7 @@
         minYear: 1901,
         autoApply: true,
         locale: {
-            format: 'YYYY-MM-DD'
+            format: 'DD-MM-YYYY'
         }
     });
 
@@ -142,7 +142,7 @@
         minDate: new Date(),
         autoApply: true,
         locale: {
-            format: 'YYYY-MM-DD'
+            format: 'DD-MM-YYYY'
         }
     });
 

@@ -26,10 +26,10 @@ class MasterDriverController extends Controller
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_lahir', function ($model) {
-                    return Carbon::parse($model->tgl_lahir)->diff(Carbon::now())->y . 'tahun';
+                    return Carbon::parse($model->tgl_lahir)->diff(Carbon::now())->y . ' tahun';
                 })
                 ->editColumn('tgl_bergabung', function ($model) {
-                    return Carbon::parse($model->tgl_bergabung)->diff(Carbon::now())->y . 'tahun';
+                    return Carbon::parse($model->tgl_bergabung)->diff(Carbon::now())->y . ' tahun';
                 })
                 ->addColumn('menu', function ($model) {
                     $column = '<div class="btn-group">
@@ -147,11 +147,11 @@ class MasterDriverController extends Controller
 
             $driver->vendor_id = 'WBP004';
             $driver->nama = $request->nama;
-            $driver->tgl_lahir = $request->tgl_lahir;
+            $driver->tgl_lahir = Carbon::createFromFormat('d-m-Y', $request->tgl_lahir)->format('Y-m-d');
             $driver->no_hp = $request->no_hp;
             $driver->sim_jenis = $request->sim_jenis;
-            $driver->sim_expired = $request->sim_expired;
-            $driver->tgl_bergabung = $request->tgl_bergabung;
+            $driver->sim_expired = Carbon::createFromFormat('d-m-Y', $request->sim_expired)->format('Y-m-d');
+            $driver->tgl_bergabung = Carbon::createFromFormat('d-m-Y', $request->tgl_bergabung)->format('Y-m-d');
             $driver->save();
 
             if ($request->hasFile('foto_sim')) {
