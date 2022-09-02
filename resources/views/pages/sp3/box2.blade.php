@@ -102,7 +102,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">PIC</label>
-                <select class="form-control search-pic" name="pic" id="pic" required></select>
+                <select class="form-control search-pic" name="pic" id="pic" multiple required></select>
             </div>
 
             <div class="form-group col-lg-6">
@@ -140,7 +140,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Kondisi Penyerahan</label>
-                {!! Form::select('kondisi_penyerahan', $kondisiPenyerahan, $kondisiPenyerahanDipilih, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kondisi_penyerahan']) !!}
+                {!! Form::text('kondisi_penyerahan', $kondisiPenyerahanDipilih, ['class'=>'form-control', 'id'=>'kondisi_penyerahan', 'readonly']) !!}
             </div>
 
             <div class="form-group col-lg-6">
@@ -150,7 +150,12 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Jarak</label>
-                {!! Form::text('jarak_pesanan', $jarak, ['class'=>'form-control', 'id'=>'jarak', 'readonly']) !!}
+                {!! Form::number('jarak_pesanan', $jarak, ['class'=>'form-control', 'id'=>'jarak_pesanan', 'required']) !!}
+            </div>
+
+            <div class="form-group col-lg-6">
+                <label class="form-label">Harga Satuan Ritase</label>
+                {!! Form::number('harga_satuan_ritase', 0, ['class'=>'form-control', 'id'=>'harga_satuan_ritase']) !!}
             </div>
         </div>
         
@@ -180,8 +185,8 @@
                             {!! Form::hidden('kd_produk[]', $pesanan->produk->kd_produk, []) !!}
                             {!! Form::text('tipe[]', $pesanan->produk->tipe, ['class'=>'form-control', 'id'=>'tipe_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
-                        <td style="width: 7%;">
-                            {!! Form::number('jarak_pekerjaan[]', null, ['class'=>'form-control', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key, 'required']) !!}
+                        <td style="width: 9%;">
+                            {!! Form::number('jarak_pekerjaan[]', $jarak, ['class'=>'form-control jarak_pekerjaan', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
                         <td style="width: 10%;">
                             {!! Form::number('vol_btg[]', null, ['class'=>'form-control vol_btg', 'id'=>'vol_btg_' . $key, 'max'=>(float)$pesanan->vol_konfirmasi ?? 0, 'row-id'=>$key, 'required']) !!}
@@ -218,6 +223,13 @@
                     <th colspan="7" style="text-align: right;">PPN</th>
                     <td>
                         {!! Form::select('ppn', $ppn, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'ppn']) !!}
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th colspan="7" style="text-align: right;">PPH</th>
+                    <td>
+                        {!! Form::select('pph', $ppn, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph']) !!}
                     </td>
                     <td></td>
                 </tr>

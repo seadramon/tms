@@ -15,7 +15,7 @@
     <div class="row g-5 g-xl-8">
         <!--begin::Col-->
         <div class="col-12 mb-md-5 mb-xl-10">
-            {!! Form::open(['url' => route('sp3.approve'), 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
+            {!! Form::open(['url' => route('sp3.store-approve'), 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
 
             <div id="box1" style="margin-bottom: 20px">
                 <div class="card shadow-sm">
@@ -149,7 +149,7 @@
                 
                             <div class="form-group col-lg-6">
                                 <label class="form-label">PIC</label>
-                                {!! Form::text('pic', $data->pic->employee->employee_id . ' - ' . $data->pic->employee->first_name . ' - ' . ($data->pic->employee->last_name ?? ''), ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('pic', implode(',', $listPic), ['class'=>'form-control', 'disabled']) !!}
                             </div>
                 
                             <div class="form-group col-lg-6">

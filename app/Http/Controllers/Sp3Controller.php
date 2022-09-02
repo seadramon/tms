@@ -89,7 +89,7 @@ class Sp3Controller extends Controller
                                 <li><a class="dropdown-item" href="#">View</a></li>
                                 <li><a class="dropdown-item" href="#">Edit</a></li>
                                 <li><a class="dropdown-item" href="#">Adendum</a></li>
-                                <li><a class="dropdown-item" href="' . route('sp3.approve', [!$model->app1 ? 'first' : 'second', $model->no_sp3]) . '">Approve</a></li>
+                                <li><a class="dropdown-item" href="' . route('sp3.get-approve', [!$model->app1 ? 'first' : 'second', $model->no_sp3]) . '">Approve</a></li>
                                 <li><a class="dropdown-item" href="#">Print</a></li>
                                 <li><a class="dropdown-item" href="#">Hapus</a></li>
                             </ul>
@@ -135,7 +135,7 @@ class Sp3Controller extends Controller
 
     public function searchPic(Request $request)
     {
-        return Personal::select( 'kd_pat', 'employee_id', 'first_name', 'last_name')
+        return Personal::select('employee_id', 'first_name', 'last_name')
             ->where('ST', 1)
             ->where('employee_id', 'LIKE', '%' . $request->q . '%')
             ->orWhere('first_name', 'LIKE', '%' . $request->q . '%')
@@ -184,7 +184,7 @@ class Sp3Controller extends Controller
             'D' => 'DISPENSASI'
         ];
 
-        $kondisiPenyerahanDipilih = strtoupper(substr($parameters['no_npp'], -1));
+        $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($parameters['no_npp'], -1))];
 
         $VSpprbRi = VSpprbRi::where('no_npp', $parameters['no_npp'])->first();
 
@@ -290,16 +290,19 @@ class Sp3Controller extends Controller
             $sp3->rit = $request->rit;
             $sp3->jarak_km = $request->jarak_pesanan;
             $sp3->ppn = $request->ppn ? (float)($request->ppn / 100) : 0;
+            $sp3->pph = $request->pph ? (float)($request->pph / 100) : 0;
             $sp3->keterangan = $request->keterangan;
             $sp3->created_by = session('TMP_NIP') ?? '12345';
             $sp3->created_date = date('Y-m-d H:i:s');
             $sp3->kd_pat = session('TMP_KDWIL') ?? '1A';
             $sp3->save();
 
-            $sp3Pic = new Sp3Pic();
-            $sp3Pic->no_sp3 = $noSp3;
-            $sp3Pic->employee_id = $request->pic;
-            $sp3Pic->save();
+            foreach($request->pic as $pic){
+                $sp3Pic = new Sp3Pic();
+                $sp3Pic->no_sp3 = $noSp3;
+                $sp3Pic->employee_id = $pic;
+                $sp3Pic->save();
+            }
 
             for($i=0; $i < count($request->unit); $i++){
                 $sp3D = new Sp3D();
@@ -372,8 +375,14 @@ class Sp3Controller extends Controller
 
         $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($data->no_npp, -1))];
 
+        $listPic = [];
+
+        foreach($data->pic as $pic){
+            $listPic[] = $pic->employee->employee_id . ' - ' . $pic->employee->first_name . ($pic->employee->last_name ? ' - ' . $pic->employee->last_name : '');
+        }
+        
         return view('pages.sp3.approve', compact(
-            'data', 'detailPesanan', 'sp3D', 'kondisiPenyerahanDipilih', 'type'
+            'data', 'detailPesanan', 'sp3D', 'kondisiPenyerahanDipilih', 'type', 'listPic'
         ));
     }
 

@@ -164,9 +164,7 @@
             calculateJumlah(rowId);
         });
 
-        $('#ppn').on('change', function(){
-            let rowId = $(this).attr('row-id');
-
+        $('#ppn, #pph').on('change', function(){
             calculateTotal();
         });
 
@@ -198,7 +196,8 @@
 
         function calculateTotal(){
             let ppn = parseFloat($('#subtotal').val()) * parseFloat($('#ppn').val() / 100);
-            let total = parseFloat($('#subtotal').val()) + parseFloat(ppn);
+            let pph = parseFloat($('#subtotal').val()) * parseFloat($('#pph').val() / 100);
+            let total = parseFloat($('#subtotal').val()) + parseFloat(ppn) + parseFloat(pph);
 
             $('#total').val(total);
         }
@@ -225,6 +224,20 @@
 				$(this).slideUp(deleteElement);
 			}
 		});
+
+        $('#jarak_pesanan').on('change', function(){
+            $('.jarak_pekerjaan').each(function(){
+                $(this).val($('#jarak_pesanan').val());
+            });
+        });
+
+        $('#harga_satuan_ritase').on('change', function(){
+            $('.harsat').each(function(){
+                $(this).val($('#harga_satuan_ritase').val());
+            });
+
+            $('.harsat').trigger('change');
+        });
     }
 </script>
 @endsection

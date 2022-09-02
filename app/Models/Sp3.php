@@ -56,7 +56,7 @@ class Sp3 extends Model
 
     public function pic()
     {
-        return $this->belongsTo(Sp3Pic::class, 'no_sp3', 'no_sp3');
+        return $this->hasMany(Sp3Pic::class, 'no_sp3', 'no_sp3');
     }
 
     public function kontrak()
