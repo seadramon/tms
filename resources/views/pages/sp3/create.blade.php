@@ -15,11 +15,7 @@
     <div class="row g-5 g-xl-8">
         <!--begin::Col-->
         <div class="col-12 mb-md-5 mb-xl-10">
-            @if (isset($data))
-                {!! Form::model($data, ['route' => ['sp3.update', $data->id], 'class' => 'form', 'method' => 'put', 'enctype' => 'multipart/form-data']) !!}
-            @else
-                {!! Form::open(['url' => route('sp3.store'), 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
-            @endif
+            {!! Form::open(['url' => route('sp3.store'), 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
 
             <div id="box1" style="margin-bottom: 20px">
                 @include('pages.sp3.box1')
@@ -104,13 +100,11 @@
                     blockUI.release();
                 },
                 success: function(result) {
-                    console.log(result);
                     $('#box2').html(result.html);
 
                     box2();
                 },
                 error: function(result) {
-                    console.log(result)
                 }
             });
         }
@@ -156,8 +150,6 @@
             let volBtgMax = parseFloat($('#vol_btg_max_' + rowId).val());
 
             if(volBtg && volBtg > volBtgMax){
-                console.log(volBtg + ' - ' + volBtgMax);
-                console.log(rowId);
                 alert('Nilai Vol (Btg) Pekerjaan tidak Boleh lebih dari Vol (Btg) Pesanan!');
 
                 $('#vol_btg_' + rowId).val(0);
