@@ -306,9 +306,9 @@ $( document ).ready(function() {
 			error: function (err) {
 				$("#draft_submit").removeAttr("data-kt-indicator");
 				if (err.status == 422) {
-					flasher.error(err.responseJSON.message);
+					// flasher.error(err.responseJSON.message);
 				} else {
-					flasher.error("Data gagal ditambahkan");
+					// flasher.error("Data gagal ditambahkan");
 				}
 
 				blockUI.release();

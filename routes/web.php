@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sp3Controller;
 use App\Http\Controllers\SppController;
 use App\Http\Controllers\SppApprovalController;
+use App\Http\Controllers\MasterDriverController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 /*
@@ -32,6 +33,8 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('/search-npp', [Sp3Controller::class, 'searchNpp'])->name('search-npp');
 		Route::get('/search-pic', [Sp3Controller::class, 'searchPic'])->name('search-pic');
 		Route::post('/get-data-box2', [Sp3Controller::class, 'getDataBox2'])->name('get-data-box2');
+		Route::get('/approve/{type}/{no_sp3}', [Sp3Controller::class, 'showApprove'])->name('get-approve')->where('no_sp3', '(.*)');
+		Route::post('/approve', [Sp3Controller::class, 'storeApprove'])->name('store-approve');
 	});
 
 	Route::group(['prefix' => '/spp', 'as' => 'spp.'], function(){
@@ -51,5 +54,13 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	Route::group(['prefix' => '/select2', 'as' => 'select2.'], function(){
 		Route::get('/spprb',	[SppController::class, 'getSpprb'])->name('spprb');
+	});
+
+	Route::group(['prefix' => '/master-driver', 'as' => 'master-driver.'], function(){
+	    Route::post('/destroy', [MasterDriverController::class, 'destroy'])->name('destroy');
+	    Route::get('/data', [MasterDriverController::class, 'data'])->name('data');
+	    Route::resource('/',  MasterDriverController::class)->except([
+	        'show', 'destroy'
+	    ])->parameters(['' => 'sp3']);
 	});
 });

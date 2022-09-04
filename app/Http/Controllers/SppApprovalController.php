@@ -154,9 +154,9 @@ class SppApprovalController extends Controller
     private function getDataSpprb($noSpprb, $noNpp)
     {
         $dtlPesanan = DB::table('v_spprb_ri vsr')
-            ->join('tb_produk', 'vsr.kd_produk', '=', 'tb_produk.kd_produk')
-            ->join('sppb_h', 'sppb_h.no_spprb', '=', 'vsr.spprblast')
-            ->join('sppb_d', function($join) {
+            ->leftJoin('tb_produk', 'vsr.kd_produk', '=', 'tb_produk.kd_produk')
+            ->leftJoin('sppb_h', 'sppb_h.no_spprb', '=', 'vsr.spprblast')
+            ->leftJoin('sppb_d', function($join) {
                 $join->on('sppb_h.no_sppb', '=', 'sppb_d.no_sppb')
                     ->on('vsr.kd_produk', '=', 'sppb_d.kd_produk');
             })
@@ -167,16 +167,16 @@ class SppApprovalController extends Controller
             ->get();
 
         $sqlNpp = DB::table('v_spprb_ri vsr')
-            ->join('npp', 'npp.no_npp', '=', 'vsr.no_npp')
-            ->join('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
-            ->join('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
+            ->leftJoin('npp', 'npp.no_npp', '=', 'vsr.no_npp')
+            ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
+            ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
             ->where('vsr.spprblast', $noSpprb)
             ->where('vsr.no_npp', $noNpp)
             ->select('npp.nama_proyek', 'npp.nama_pelanggan', 'vsr.no_npp', 'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec')
             ->first();
 
         $sqlPat = DB::table('v_spprb_ri vsr')
-            ->join('tb_pat', 'tb_pat.kd_pat', '=', 'vsr.pat_to')
+            ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'vsr.pat_to')
             ->where('vsr.spprblast', $noSpprb)
             ->where('vsr.no_npp', $noNpp)
             ->select('tb_pat.ket', 'vsr.pat_to', 'tb_pat.singkatan')

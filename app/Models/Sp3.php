@@ -23,4 +23,49 @@ class Sp3 extends Model
     {
     	return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');
     }
+
+    public function npp()
+    {
+        return $this->belongsTo(Npp::class, 'no_npp', 'no_npp')->where('kd_pat', session('TMP_KDWIL') ?? '1A');
+    }
+
+    public function jenisPekerjaan()
+    {
+        return $this->belongsTo(JenisPekerjaan::class, 'kd_jpekerjaan', 'kd_jpekerjaan');
+    }
+
+    public function detailPesanan()
+    {
+        return $this->hasMany(MonOp::class, 'no_npp', 'no_npp');
+    }
+    
+    public function sp3D()
+    {
+        return $this->hasMany(Sp3D::class, 'no_sp3', 'no_sp3');
+    }
+
+    public function sp3D2()
+    {
+        return $this->hasMany(Sp3D2::class, 'no_sp3', 'no_sp3');
+    }
+    
+    public function ban()
+    {
+        return $this->belongsTo(Ban::class, 'no_ban', 'no_ban');
+    }
+
+    public function pic()
+    {
+        return $this->hasMany(Sp3Pic::class, 'no_sp3', 'no_sp3');
+    }
+
+    public function kontrak()
+    {
+        return $this->belongsTo(Kontrak::class, 'no_kontrak_induk', 'no_kontrak');
+    }
+
+    public function vSpprbRi()
+    {
+        return $this->belongsTo('App\Models\View\VSpprbRi', 'no_npp', 'no_npp');
+    }
 }

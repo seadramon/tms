@@ -7,7 +7,7 @@
         <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
             <thead>
                 <tr>
-                    <th rowspan="2" style="vertical-align: middle;">Nama / Tipe Produk</th>
+                    <th rowspan="2" style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
                     <th colspan="2">Pesanan</th>
                     <th colspan="2">Total SP3/SPK Sebelumnya</th>
                     <th colspan="2">Volume Sisa</th>
@@ -27,14 +27,15 @@
                     @php
                         $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
                         $pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
-                        $sp3dVolBtg     = $pesanan->sp3D?->first()?->vol_akhir ?? 0;
-                        $sp3dVolTon     = $pesanan->sp3D?->first()?->vol_ton_akhir ?? 0;
+                        $sp3dVolBtg     = $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; });
+                        $sp3dVolTon     = $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; });
                         $sisaVolBtg     = $pesananVolBtg - $sp3dVolBtg;
                         $sisaVolTon     = $pesananVolTon - $sp3dVolTon;
                     @endphp
                     
                     <tr>
-                        <td>{{ $pesanan->produk->tipe }}</td>
+                        <td style="text-align: left">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
+                        {{-- <td>{{ $pesanan->kd_produk_konfirmasi }} {{$pesanan->produk->vol_m3 ?? 0}}</td> --}}
                         <td>{{ $pesananVolBtg }}</td>
                         <td>{{ $pesananVolTon }}</td>
                         <td>{{ $sp3dVolBtg }}</td>
@@ -101,7 +102,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">PIC</label>
-                <select class="form-control search-pic" name="pic" id="pic" required></select>
+                <select class="form-control search-pic" name="pic" id="pic" multiple required></select>
             </div>
 
             <div class="form-group col-lg-6">
@@ -139,7 +140,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Kondisi Penyerahan</label>
-                {!! Form::select('kondisi_penyerahan', $kondisiPenyerahan, $kondisiPenyerahanDipilih, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kondisi_penyerahan']) !!}
+                {!! Form::text('kondisi_penyerahan', $kondisiPenyerahanDipilih, ['class'=>'form-control', 'id'=>'kondisi_penyerahan', 'readonly']) !!}
             </div>
 
             <div class="form-group col-lg-6">
@@ -149,7 +150,12 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Jarak</label>
-                {!! Form::text('jarak_pesanan', $jarak, ['class'=>'form-control', 'id'=>'jarak', 'readonly']) !!}
+                {!! Form::number('jarak_pesanan', $jarak, ['class'=>'form-control', 'id'=>'jarak_pesanan', 'required']) !!}
+            </div>
+
+            <div class="form-group col-lg-6">
+                <label class="form-label">Harga Satuan Ritase</label>
+                {!! Form::number('harga_satuan_ritase', 0, ['class'=>'form-control', 'id'=>'harga_satuan_ritase']) !!}
             </div>
         </div>
         
@@ -179,27 +185,27 @@
                             {!! Form::hidden('kd_produk[]', $pesanan->produk->kd_produk, []) !!}
                             {!! Form::text('tipe[]', $pesanan->produk->tipe, ['class'=>'form-control', 'id'=>'tipe_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
-                        <td>
-                            {!! Form::number('jarak_pekerjaan[]', null, ['class'=>'form-control', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key, 'required']) !!}
+                        <td style="width: 9%;">
+                            {!! Form::number('jarak_pekerjaan[]', $jarak, ['class'=>'form-control jarak_pekerjaan', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
-                        <td>
+                        <td style="width: 10%;">
                             {!! Form::number('vol_btg[]', null, ['class'=>'form-control vol_btg', 'id'=>'vol_btg_' . $key, 'max'=>(float)$pesanan->vol_konfirmasi ?? 0, 'row-id'=>$key, 'required']) !!}
                             <input type="hidden" id="vol_btg_max_{{ $key }}" value="{{ (float)$pesanan->vol_konfirmasi ?? 0 }}">
                         </td>
-                        <td>
+                        <td style="width: 10%;">
                             {!! Form::number('vol_ton[]', null, ['class'=>'form-control vol_ton', 'id'=>'vol_ton_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
                         <td>
                             {!! Form::select('satuan[]', $satuan, null, ['class'=>'form-control form-select-solid satuan', 'data-control'=>'select2', 'id'=>'satuan_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
-                        <td>
+                        <td style="width: 10%;">
                             {!! Form::number('harsat[]', null, ['class'=>'form-control harsat', 'id'=>'harsat_' . $key, 'row-id'=>$key, 'required']) !!}
                         </td>
-                        <td>
+                        <td style="width: 10%;">
                             {!! Form::text('jumlah[]', null, ['class'=>'form-control', 'id'=>'jumlah_' . $key, 'row-id'=>$key, 'readonly']) !!}
                         </td>
-                        <td>
-                            <button class="btn btn-danger btn-sm delete_pekerjaan" id="delete_pekerjaan_{{ $key }}" row-id={{ $key }}>
+                        <td style="vertical-align: middle; padding-left: 0px;">
+                            <button class="btn btn-danger btn-sm delete_pekerjaan" id="delete_pekerjaan_{{ $key }}" row-id={{ $key }} style="padding: 5px 6px;">
                                 <span class="bi bi-trash"></span>
                             </button>
                         </td>
@@ -217,6 +223,13 @@
                     <th colspan="7" style="text-align: right;">PPN</th>
                     <td>
                         {!! Form::select('ppn', $ppn, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'ppn']) !!}
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th colspan="7" style="text-align: right;">PPH</th>
+                    <td>
+                        {!! Form::select('pph', $ppn, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph']) !!}
                     </td>
                     <td></td>
                 </tr>

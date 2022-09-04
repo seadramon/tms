@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Views\VSpprbRi;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,6 @@ class MonOp extends Model
 
     public function vSpprbRi()
     {
-        return $this->belongsTo(Views\VSpprbRi::class, 'no_npp', 'no_npp');
+        return $this->belongsTo(VSpprbRi::class, 'no_npp', 'no_npp');
     }
 }

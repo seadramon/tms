@@ -89,7 +89,7 @@ class Sp3Controller extends Controller
                                 <li><a class="dropdown-item" href="#">View</a></li>
                                 <li><a class="dropdown-item" href="#">Edit</a></li>
                                 <li><a class="dropdown-item" href="#">Adendum</a></li>
-                                <li><a class="dropdown-item" href="#">Approve</a></li>
+                                <li><a class="dropdown-item" href="' . route('sp3.get-approve', [!$model->app1 ? 'first' : 'second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>
                                 <li><a class="dropdown-item" href="#">Print</a></li>
                                 <li><a class="dropdown-item" href="#">Hapus</a></li>
                             </ul>
@@ -124,16 +124,22 @@ class Sp3Controller extends Controller
 
     public function searchNpp(Request $request)
     {
-        return Npp::where('kd_pat', session('TMP_KDWIL') ?? '1A')
-            ->where('no_npp', 'LIKE', '%' . $request->q . '%')
-            ->get();
+        $query = Npp::where('no_npp', 'LIKE', '%' . $request->q . '%');
+
+        if(session('TMP_KDWIL') != '0A'){
+            $query->where('kd_pat', session('TMP_KDWIL') ?? '1A');
+        }
+        
+        return $query->get();
     }
 
     public function searchPic(Request $request)
     {
-        return Personal::select( 'kd_pat', 'employee_id', 'first_name', 'last_name')
+        return Personal::select('employee_id', 'first_name', 'last_name')
             ->where('ST', 1)
-            ->where('kd_pat', 'LIKE', '%' . $request->q . '%')
+            ->where('employee_id', 'LIKE', '%' . $request->q . '%')
+            ->orWhere('first_name', 'LIKE', '%' . $request->q . '%')
+            ->orWhere('last_name', 'LIKE', '%' . $request->q . '%')
             ->get();
     }
 
@@ -144,6 +150,18 @@ class Sp3Controller extends Controller
         $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
             ->where('no_npp', $parameters['no_npp'])
             ->get();
+
+        $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
+        
+        $sp3D = Sp3D::whereNoNpp($parameters['no_npp'])
+            ->whereIn('kd_produk', $kd_produks)
+            ->get()
+            ->sortByDesc('no_sp3')
+            ->groupBy([
+                'kd_produk', function ($item) {
+                    return substr($item->no_sp3, 0, -3);
+                }
+            ], true);
 
         $npp = Npp::with(['infoPasar.region'])
             ->where('no_npp', $parameters['no_npp'])
@@ -166,13 +184,17 @@ class Sp3Controller extends Controller
             'D' => 'DISPENSASI'
         ];
 
-        $kondisiPenyerahanDipilih = strtoupper(substr($parameters['no_npp'], -1));
+        $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($parameters['no_npp'], -1))];
 
         $VSpprbRi = VSpprbRi::where('no_npp', $parameters['no_npp'])->first();
 
-        $jarak = Sp3D::where('pat_to', $VSpprbRi?->pat_to)
-            ->where('no_npp', $VSpprbRi?->no_npp)
-            ->max('jarak_km');
+        if($VSpprbRi){
+            $jarak = Sp3D::where('pat_to', $VSpprbRi->pat_to)
+                ->where('no_npp', $VSpprbRi->no_npp)
+                ->max('jarak_km');
+        }else{
+            $jarak = 0;
+        }
 
         $unit = Pat::where('kd_pat', 'LIKE', '2%')
             ->orWhere('kd_pat', 'LIKE', '4%')
@@ -184,7 +206,7 @@ class Sp3Controller extends Controller
         $unit = ["" => "Pilih Unit"] + $unit;
 
         $satuan = [
-            "" => "Pilih Satuan",
+            "" => "Pilih",
             "btg" => "BTG",
             "ton" => "TON",
         ];
@@ -207,6 +229,7 @@ class Sp3Controller extends Controller
             'unit',
             'satuan',
             'ppn',
+            'sp3D',
         ))->render();
         
         return response()->json( array('success' => true, 'html'=> $html) );
@@ -267,21 +290,24 @@ class Sp3Controller extends Controller
             $sp3->rit = $request->rit;
             $sp3->jarak_km = $request->jarak_pesanan;
             $sp3->ppn = $request->ppn ? (float)($request->ppn / 100) : 0;
+            $sp3->pph = $request->pph ? (float)($request->pph / 100) : 0;
             $sp3->keterangan = $request->keterangan;
             $sp3->created_by = session('TMP_NIP') ?? '12345';
             $sp3->created_date = date('Y-m-d H:i:s');
             $sp3->kd_pat = session('TMP_KDWIL') ?? '1A';
             $sp3->save();
 
-            $sp3Pic = new Sp3Pic();
-            $sp3Pic->no_sp3 = $noSp3;
-            $sp3Pic->employee_id = $request->pic;
-            $sp3Pic->save();
+            foreach($request->pic as $pic){
+                $sp3Pic = new Sp3Pic();
+                $sp3Pic->no_sp3 = $noSp3;
+                $sp3Pic->employee_id = $pic;
+                $sp3Pic->save();
+            }
 
             for($i=0; $i < count($request->unit); $i++){
                 $sp3D = new Sp3D();
                 $sp3D->no_sp3 = $noSp3;
-                $sp3D->no_npp = $request->no_npp[$i];
+                $sp3D->no_npp = $request->no_npp;
                 $sp3D->pat_to = $request->unit[$i];
                 $sp3D->kd_produk = $request->kd_produk[$i];
                 $sp3D->jarak_km = $request->jarak_pekerjaan[$i];
@@ -316,6 +342,68 @@ class Sp3Controller extends Controller
             DB::rollback();
             $flasher->addError('An error has occurred please try again later.');
         }
+
+        return redirect()->route('sp3.index');
+    }
+
+    public function showApprove($type, $noSp3)
+    {
+        $noSp3 = str_replace('|', '/', $noSp3);
+        $data = Sp3::find($noSp3);
+
+        $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+            ->where('no_npp', $data->no_npp)
+            ->get();
+
+        $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
+    
+        $sp3D = Sp3D::whereNoNpp($data->no_npp)
+            ->whereIn('kd_produk', $kd_produks)
+            ->get()
+            ->sortByDesc('no_sp3')
+            ->groupBy([
+                'kd_produk', function ($item) {
+                    return substr($item->no_sp3, 0, -3);
+                }
+            ], true);
+
+        $kondisiPenyerahan = [
+            'L' => 'LOKO', 
+            'F' => 'FRANKO', 
+            'T' => 'TERPASANG', 
+            'D' => 'DISPENSASI'
+        ];
+
+        $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($data->no_npp, -1))];
+
+        $listPic = [];
+
+        foreach($data->pic as $pic){
+            $listPic[] = $pic->employee->employee_id . ' - ' . $pic->employee->first_name . ($pic->employee->last_name ? ' - ' . $pic->employee->last_name : '');
+        }
+        
+        return view('pages.sp3.approve', compact(
+            'data', 'detailPesanan', 'sp3D', 'kondisiPenyerahanDipilih', 'type', 'listPic'
+        ));
+    }
+
+    public function storeApprove(Request $request)
+    {
+        $data = Sp3::find($request->no_sp3);
+
+        if($request->type == 'first'){
+            $data->app1 = 1;
+            $data->app1_empid = session('TMP_NIP') ?? '12345';
+            $data->app1_jbt = session('TMP_KDJBT') ?? '12345';
+            $data->app1_date = date('Y-m-d H:i:s');
+        }else{
+            $data->app2 = 1;
+            $data->app2_empid = session('TMP_NIP') ?? '12345';
+            $data->app2_jbt = session('TMP_KDJBT') ?? '12345';
+            $data->app2_date = date('Y-m-d H:i:s');
+        }
+
+        $data->save();
 
         return redirect()->route('sp3.index');
     }
