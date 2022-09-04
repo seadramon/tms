@@ -184,7 +184,6 @@
 												<th>Kode Produk</th>
 												<th>Saat Ini</th>
 												<th>S.d Saat ini</th>
-												<th>%</th>
 												@if ($approval == 'first')
 													<th>Vol Approval 1</th>
 												@elseif ($approval == 'second')
@@ -208,19 +207,18 @@
 													<td>{{ $detail->kd_produk }}</td>
 													<td>{{ $detail->vol }}</td>
 													<td>{{ $detail->vol + $arrVol[$row->kd_produk] }}</td>
-													<td>{{ 'AUTO' }}</td>
 													@if ($approval == 'first')
 														<td>
 															{!! Form::number("rencana[$detail->kd_produk][app1_vol]", null, ['class'=>'form-control']) !!}
 														</td>
 													@elseif ($approval == 'second')
-														<td style="text-align: right;">{{ $detail->app1_vol }}</td>
+														<td>{{ $detail->app1_vol }}</td>
 														<td>
 															{!! Form::number("rencana[$detail->kd_produk][app2_vol]", null, ['class'=>'form-control']) !!}
 														</td>
 													@elseif ($approval == 'third')
-														<td style="text-align: right;">{{ $detail->app1_vol }}</td>
-														<td style="text-align: right;">{{ $detail->app2_vol }}</td>
+														<td>{{ $detail->app1_vol }}</td>
+														<td>{{ $detail->app2_vol }}</td>
 														<td>
 															{!! Form::number("rencana[$detail->kd_produk][app3_vol]", null, ['class'=>'form-control']) !!}
 														</td>

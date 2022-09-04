@@ -105,6 +105,15 @@ class SppController extends Controller
                         ]);
                         $caption = "Approve Third";
                         break;
+                    default:
+                        $approve = "";
+                        $caption = "";
+                        break;
+                }
+                if ($approve!="") {
+                    $approval = '<li><a class="dropdown-item" href="'.$approve.'">'. $caption .'</a></li>';
+                } else {
+                    $approval = "";
                 }
 // dd($approve);
                 $edit = '<div class="btn-group">
@@ -115,7 +124,7 @@ class SppController extends Controller
                             <li><a class="dropdown-item" href="#">View</a></li>
                             <li><a class="dropdown-item" href="#">Edit</a></li>
                             <li><a class="dropdown-item" href="#">Adendum</a></li>
-                            <li><a class="dropdown-item" href="'.$approve.'">'. $caption .'</a></li>
+                            '.$approval.'
                             <li><a class="dropdown-item" href="#">Print</a></li>
                             <li><a class="dropdown-item" href="#">Hapus</a></li>
                         </ul>

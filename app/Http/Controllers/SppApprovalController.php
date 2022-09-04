@@ -93,7 +93,7 @@ class SppApprovalController extends Controller
 
                 $data->catatan_app2 = $request->catatan_app2;
                 $data->app2 = '1';
-                // $data->app2_jbt = str_replace("JBT", "", session('TMP_KDJBT'));
+                $data->app2_jbt = str_replace("JBT", "", session('TMP_KDJBT'));
                 $data->app2_empid = session('TMP_NIP');
                 $data->app2_date = date('Y-m-d');
                 $data->save();
@@ -105,9 +105,25 @@ class SppApprovalController extends Controller
                             'app2_vol' => $value['app2_vol']
                         ]);
                 }
-
             } elseif ($request->approvalNum == 'third') {
-                # code...
+                $next = "";
+
+                $data = SppbH::find($request->no_sppb);
+
+                $data->catatan_app3 = $request->catatan_app3;
+                $data->app3 = '1';
+                $data->app3_jbt = str_replace("JBT", "", session('TMP_KDJBT'));
+                $data->app3_empid = session('TMP_NIP');
+                $data->app3_date = date('Y-m-d');
+                $data->save();
+
+                foreach ($request->rencana as $key => $value) {
+                    SppbD::where('no_sppb', $request->no_sppb)
+                        ->where('kd_produk', $key)
+                        ->update([
+                            'app3_vol' => $value['app3_vol']
+                        ]);
+                }
             }
 
     	    DB::commit();

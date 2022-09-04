@@ -99,6 +99,6 @@
 <div class="col-lg-12">
 	<div class="form-group">
 		<label class="fs-6 fw-bold mt-2 mb-3">Keterangan Approval MWP</label>
-		{!! Form::textarea('catatan_app3', null, ['class'=>'form-control form-control-solid', 'id'=>'catatan_app3', 'rows' => '5']) !!}
+		{!! Form::textarea('catatan_app3', null, ['class'=>'form-control', 'id'=>'catatan_app3', 'rows' => '5']) !!}
 	</div>	
 </div>
