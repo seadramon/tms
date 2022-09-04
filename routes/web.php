@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sp3Controller;
 use App\Http\Controllers\SppController;
+use App\Http\Controllers\MasterDriverController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 /*
@@ -46,5 +47,13 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	Route::group(['prefix' => '/select2', 'as' => 'select2.'], function(){
 		Route::get('/spprb',	[SppController::class, 'getSpprb'])->name('spprb');
+	});
+
+	Route::group(['prefix' => '/master-driver', 'as' => 'master-driver.'], function(){
+	    Route::post('/destroy', [MasterDriverController::class, 'destroy'])->name('destroy');
+	    Route::get('/data', [MasterDriverController::class, 'data'])->name('data');
+	    Route::resource('/',  MasterDriverController::class)->except([
+	        'show', 'destroy'
+	    ])->parameters(['' => 'sp3']);
 	});
 });
