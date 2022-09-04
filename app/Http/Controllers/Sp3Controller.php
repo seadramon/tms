@@ -89,7 +89,7 @@ class Sp3Controller extends Controller
                                 <li><a class="dropdown-item" href="#">View</a></li>
                                 <li><a class="dropdown-item" href="#">Edit</a></li>
                                 <li><a class="dropdown-item" href="#">Adendum</a></li>
-                                <li><a class="dropdown-item" href="' . route('sp3.get-approve', [!$model->app1 ? 'first' : 'second', $model->no_sp3]) . '">Approve</a></li>
+                                <li><a class="dropdown-item" href="' . route('sp3.get-approve', [!$model->app1 ? 'first' : 'second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>
                                 <li><a class="dropdown-item" href="#">Print</a></li>
                                 <li><a class="dropdown-item" href="#">Hapus</a></li>
                             </ul>
@@ -348,6 +348,7 @@ class Sp3Controller extends Controller
 
     public function showApprove($type, $noSp3)
     {
+        $noSp3 = str_replace('|', '/', $noSp3);
         $data = Sp3::find($noSp3);
 
         $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
