@@ -198,7 +198,6 @@
 										</thead>
 										<tbody id="rencanaProd">
 											<?php $i = 1; ?>
-											{{ $data->no_sppb }}
 											@if (!empty($data->detail))
 												@foreach($data->detail as $detail)
 												<tr>
