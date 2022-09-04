@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sp3Controller;
 use App\Http\Controllers\SppController;
+use App\Http\Controllers\SppApprovalController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 /*
@@ -40,6 +41,12 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::resource('/',  SppController::class)->except([
 	        'destroy'
 	    ])->parameters(['' => 'spp']);
+	});
+
+	Route::group(['prefix' => '/spp-approve', 'as' => 'spp-approve.'], function(){
+		Route::get('{urutan}/{nosppb}',			[SppApprovalController::class, 'approval'])->name('approval');
+
+		Route::post('/store',	[SppApprovalController::class, 'store'])->name('store');
 	});
 
 	Route::group(['prefix' => '/select2', 'as' => 'select2.'], function(){

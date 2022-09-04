@@ -83,6 +83,30 @@ class SppController extends Controller
                 return $res . '%';
             })
             ->addColumn('menu', function ($model) {
+                switch (true) {
+                    case ($model->app == 0):
+                        $approve = route('spp-approve.approval', [
+                            'urutan' => 'first', 
+                            'nosppb' => str_replace("/", "&", $model->no_sppb)
+                        ]);
+                        $caption = "Approve First";
+                        break;
+                    case ($model->app == 1 && $model->app2 == 0):
+                        $approve = route('spp-approve.approval', [
+                            'urutan' => 'second', 
+                            'nosppb' => str_replace("/", "&", $model->no_sppb)
+                        ]);
+                        $caption = "Approve Second";
+                        break;
+                    case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0):
+                        $approve = route('spp-approve.approval', [
+                            'urutan' => 'third', 
+                            'nosppb' => str_replace("/", "&", $model->no_sppb)
+                        ]);
+                        $caption = "Approve Third";
+                        break;
+                }
+// dd($approve);
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Action
@@ -91,7 +115,7 @@ class SppController extends Controller
                             <li><a class="dropdown-item" href="#">View</a></li>
                             <li><a class="dropdown-item" href="#">Edit</a></li>
                             <li><a class="dropdown-item" href="#">Adendum</a></li>
-                            <li><a class="dropdown-item" href="#">Approve</a></li>
+                            <li><a class="dropdown-item" href="'.$approve.'">'. $caption .'</a></li>
                             <li><a class="dropdown-item" href="#">Print</a></li>
                             <li><a class="dropdown-item" href="#">Hapus</a></li>
                         </ul>
@@ -158,7 +182,10 @@ class SppController extends Controller
             $sqldtlPesanan = DB::table('v_spprb_ri vsr')
                 ->join('tb_produk', 'vsr.kd_produk', '=', 'tb_produk.kd_produk')
                 ->join('sppb_h', 'sppb_h.no_spprb', '=', 'vsr.spprblast')
-                ->join('sppb_d', 'sppb_h.no_sppb', '=', 'sppb_d.no_sppb')
+                ->join('sppb_d', function($join) {
+                    $join->on('sppb_h.no_sppb', '=', 'sppb_d.no_sppb')
+                        ->on('vsr.kd_produk', '=', 'sppb_d.kd_produk');
+                })
                 ->select('tb_produk.tipe', 'tb_produk.ket', 'vsr.vol_spprb', 'tb_produk.vol_m3', 
                     'sppb_d.vol', 'vsr.kd_produk')
                 ->where('vsr.spprblast', $noSpprb)

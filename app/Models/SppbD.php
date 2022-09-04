@@ -15,4 +15,8 @@ class SppbD extends Model
 	public $incrementing = false;
 	public $timestamps = false;
 
+	public function produk()
+	{
+		return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
+	}
 }
