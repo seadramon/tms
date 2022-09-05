@@ -214,7 +214,7 @@
         }
 
         $('#material_tambahan').repeater({
-			initEmpty: false,
+			initEmpty: true,
 
 			show: function () {
 				$(this).slideDown();

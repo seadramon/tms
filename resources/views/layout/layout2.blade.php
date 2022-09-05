@@ -27,6 +27,9 @@
 			.hidden {
 				display: none!important;
 			}
+			.decimal {
+				text-align: right!important;
+			}
 		</style>
 		@yield('css')
 	</head>
@@ -423,6 +426,34 @@
 		<!--end::Vendors Javascript-->
 		<!--begin::Custom Javascript(used by this page)-->
 		<!--end::Custom Javascript-->
+		<script type="text/javascript">
+			$(document).on('keyup', '.decimal', function(){
+				var val = $(this).val().replace(",","");
+				if(isNaN(val)){
+					val = val.replace(/[^0-9\.]/g,'');
+					if(val.split('.').length>2){
+						val =val.replace(/\.+$/,"");
+					}
+				}
+				if(val.split('.').length > 1){
+					$(this).val(format(val, '.', val.split('.')[1].length)); 
+				}else{
+					$(this).val(format(val, '.', 0)); 
+				}
+				
+			});
+			function format(n, sep, decimals) {
+				n = parseFloat(n);
+				sep = sep || "."; // Default to period as decimal separator
+				decimals = decimals || 0; // Default to 2 decimals
+				text = n.toLocaleString().split(sep)[0];
+				if(decimals > 0){
+					text += sep + n.toFixed(decimals).split(sep)[1];
+				}
+		
+				return text;
+			}
+		</script>
 		@yield('js')
 		<!--end::Javascript-->
 	</body>

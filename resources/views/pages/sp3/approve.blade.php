@@ -61,47 +61,49 @@
                     </div>
                 
                     <div class="card-body">
-                        <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2" style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
-                                    <th colspan="2">Pesanan</th>
-                                    <th colspan="2">Total SP3/SPK Sebelumnya</th>
-                                    <th colspan="2">Volume Sisa</th>
-                                </tr>
-                                
-                                <tr>
-                                    <th>Vol (Btg)</th>
-                                    <th>Vol (Ton)</th>
-                                    <th>Vol (Btg)</th>
-                                    <th>Vol (Ton)</th>
-                                    <th>Vol (Btg)</th>
-                                    <th>Vol (Ton)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($detailPesanan as $pesanan)
-                                    @php
-                                        $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
-                                        $pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
-                                        $sp3dVolBtg     = in_array($pesanan->kd_produk_konfirmasi, $sp3D->toArray()) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
-                                        $sp3dVolTon     = in_array($pesanan->kd_produk_konfirmasi, $sp3D->toArray()) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;
-                                        $sisaVolBtg     = $pesananVolBtg - $sp3dVolBtg;
-                                        $sisaVolTon     = $pesananVolTon - $sp3dVolTon;
-                                    @endphp
+                        <div class="hover-scroll-overlay-y h-400px px-5">
+                            <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
+                                        <th colspan="2">Pesanan</th>
+                                        <th colspan="2">Total SP3/SPK Sebelumnya</th>
+                                        <th colspan="2">Volume Sisa</th>
+                                    </tr>
                                     
                                     <tr>
-                                        <td class="text-left">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
-                                        <td>{{ $pesananVolBtg }}</td>
-                                        <td>{{ $pesananVolTon }}</td>
-                                        <td>{{ $sp3dVolBtg }}</td>
-                                        <td>{{ $sp3dVolTon }}</td>
-                                        <td>{{ $sisaVolBtg }}</td>
-                                        <td>{{ $sisaVolTon }}</td>
+                                        <th>Vol (Btg)</th>
+                                        <th>Vol (Ton)</th>
+                                        <th>Vol (Btg)</th>
+                                        <th>Vol (Ton)</th>
+                                        <th>Vol (Btg)</th>
+                                        <th>Vol (Ton)</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="">
+                                    @foreach($detailPesanan as $pesanan)
+                                        @php
+                                            $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
+                                            $pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
+                                            $sp3dVolBtg     = in_array($pesanan->kd_produk_konfirmasi, $sp3D->toArray()) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
+                                            $sp3dVolTon     = in_array($pesanan->kd_produk_konfirmasi, $sp3D->toArray()) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;
+                                            $sisaVolBtg     = $pesananVolBtg - $sp3dVolBtg;
+                                            $sisaVolTon     = $pesananVolTon - $sp3dVolTon;
+                                        @endphp
+                                        
+                                        <tr>
+                                            <td class="text-left">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
+                                            <td class="text-left">{{ nominal($pesananVolBtg) }}</td>
+                                            <td>{{ nominal($pesananVolTon) }}</td>
+                                            <td>{{ nominal($sp3dVolBtg) }}</td>
+                                            <td>{{ nominal($sp3dVolTon) }}</td>
+                                            <td>{{ nominal($sisaVolBtg) }}</td>
+                                            <td>{{ nominal($sisaVolTon) }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                 
                         <br><br>
                 
@@ -185,77 +187,79 @@
                         
                         <br><br>
                 
-                        <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
-                            <thead>
-                                <tr>
-                                    <th>Unit</th>
-                                    <th>Tipe</th>
-                                    <th>Jarak (KM)</th>
-                                    <th>Vol (Btg)</th>
-                                    <th>Vol (Ton)</th>
-                                    <th>Satuan</th>
-                                    <th>Harsat / [Btg/Ton]</th>
-                                    <th>Jumlah</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($data->sp3D as $sp3D)
-                                    @php 
-                                        $jumlah = $sp3D->sat_harsat == 'btg' ? ($sp3D->harsat_awal * $sp3D->vol_awal) : ($sp3D->harsat_awal * $sp3D->vol_ton_awal);
-                                        $subtotal = ($subtotal ?? 0) + $jumlah;
-                                    @endphp
-
-                                    <tr class="detail_pekerjaan">
-                                        <td>
-                                            {!! Form::text('unit[]', $sp3D->pat_to, ['class'=>'form-control', 'disabled']) !!}
-                                        </td>
-                                        <td>
-                                            {!! Form::text('kd_produk[]', $sp3D->kd_produk, ['class'=>'form-control', 'disabled']) !!}
-                                        </td>
-                                        <td style="width: 7%;">
-                                            {!! Form::text('kd_produk[]', $sp3D->jarak_km, ['class'=>'form-control', 'disabled']) !!}
-                                        </td>
-                                        <td style="width: 10%;">
-                                            {!! Form::text('vol_btg[]', $sp3D->vol_awal, ['class'=>'form-control', 'disabled']) !!}
-                                        </td>
-                                        <td style="width: 10%;">
-                                            {!! Form::text('vol_ton[]', $sp3D->vol_ton_awal, ['class'=>'form-control', 'disabled']) !!}
-                                        </td>
-                                        <td>
-                                            {!! Form::text('satuan[]', $sp3D->sat_harsat, ['class'=>'form-control', 'disabled']) !!}
-                                        </td>
-                                        <td style="width: 10%;">
-                                            {!! Form::text('harsat[]', $sp3D->harsat_awal, ['class'=>'form-control', 'disabled']) !!}
-                                        </td>
-                                        <td style="width: 10%;">
-                                            {!! Form::text('jumlah[]', $jumlah, ['class'=>'form-control', 'disabled']) !!}
-                                        </td>
+                        <div class="hover-scroll-overlay-y h-400px px-5">
+                            <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <th>Unit</th>
+                                        <th>Tipe</th>
+                                        <th>Jarak (KM)</th>
+                                        <th>Vol (Btg)</th>
+                                        <th>Vol (Ton)</th>
+                                        <th>Satuan</th>
+                                        <th>Harsat / [Btg/Ton]</th>
+                                        <th>Jumlah</th>
                                     </tr>
-                                @endforeach
-                
+                                </thead>
+                                <tbody>
+                                    @foreach($data->sp3D as $sp3D)
+                                        @php 
+                                            $jumlah = $sp3D->sat_harsat == 'btg' ? ($sp3D->harsat_awal * $sp3D->vol_awal) : ($sp3D->harsat_awal * $sp3D->vol_ton_awal);
+                                            $subtotal = ($subtotal ?? 0) + $jumlah;
+                                        @endphp
+
+                                        <tr class="detail_pekerjaan">
+                                            <td style="width: 7%;">
+                                                {!! Form::text('unit[]', $sp3D->pat_to, ['class'=>'form-control', 'disabled']) !!}
+                                            </td>
+                                            <td style="width: 12%;">
+                                                {!! Form::text('kd_produk[]', $sp3D->kd_produk, ['class'=>'form-control', 'disabled']) !!}
+                                            </td>
+                                            <td style="width: 7%;">
+                                                {!! Form::text('jarak[]', $sp3D->jarak_km, ['class'=>'form-control', 'disabled']) !!}
+                                            </td>
+                                            <td style="width: 10%;">
+                                                {!! Form::text('vol_btg[]', $sp3D->vol_awal, ['class'=>'form-control decimal', 'disabled']) !!}
+                                            </td>
+                                            <td style="width: 10%;">
+                                                {!! Form::text('vol_ton[]', $sp3D->vol_ton_awal, ['class'=>'form-control decimal', 'disabled']) !!}
+                                            </td>
+                                            <td style="width: 7%;">
+                                                {!! Form::text('satuan[]', $sp3D->sat_harsat, ['class'=>'form-control', 'disabled']) !!}
+                                            </td>
+                                            <td style="width: 12%;">
+                                                {!! Form::text('harsat[]', $sp3D->harsat_awal, ['class'=>'form-control decimal', 'disabled']) !!}
+                                            </td>
+                                            <td style="width: 12%;">
+                                                {!! Form::text('jumlah[]', $jumlah, ['class'=>'form-control decimal', 'disabled']) !!}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="px-5">
+                            <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
                                 <tr>
-                                    <th colspan="7" style="text-align: right;">Subtotal</th>
-                                    <td>
-                                        {!! Form::text('subtotal', $subtotal, ['class'=>'form-control', 'disabled']) !!}
+                                    <td colspan="7" style="text-align: right; width: 70%">Subtotal</td>
+                                    <td style="width: 30%;">
+                                        {!! Form::text('subtotal', $subtotal, ['class'=>'form-control decimal', 'disabled']) !!}
                                     </td>
-                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <th colspan="7" style="text-align: right;">PPN</th>
-                                    <td>
-                                        {!! Form::text('ppn', $data->ppn == '0.11' ? '11%' : '0%', ['class'=>'form-control', 'disabled']) !!}
+                                    <td colspan="7" style="text-align: right; width: 70%">PPN</td>
+                                    <td style="width: 30%;">
+                                        {!! Form::text('ppn', $data->ppn == '0.11' ? '11%' : '0%', ['class'=>'form-control decimal text-right', 'disabled']) !!}
                                     </td>
-                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <th colspan="7" style="text-align: right;">Total</th>
-                                    <td>
-                                        {!! Form::text('total', $data->ppn ? ($subtotal * $data->ppn) : $subtotal, ['class'=>'form-control', 'disabled']) !!}
+                                    <td colspan="7" style="text-align: right; width: 70%">Total</td>
+                                    <td style="width: 30%;">
+                                        {!! Form::text('total', $data->ppn ? ($subtotal * $data->ppn) : $subtotal, ['class'=>'form-control decimal text-right', 'disabled']) !!}
                                     </td>
-                                    <td></td>
                                 </tr>
-                            </tbody>
-                        </table>
+                            </table>
+                        </div>
                 
                         <br><br>
                 
@@ -421,4 +425,14 @@
     <!--end::Row-->
 </div>
 <!--end::Content container-->
+@endsection
+@section('css')
+    
+@endsection
+@section('js')
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".decimal").trigger('keyup');
+    })
+</script>
 @endsection

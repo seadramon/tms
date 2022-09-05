@@ -381,7 +381,6 @@ class Sp3Controller extends Controller
         foreach($data->pic as $pic){
             $listPic[] = $pic->employee->employee_id . ' - ' . $pic->employee->first_name . ($pic->employee->last_name ? ' - ' . $pic->employee->last_name : '');
         }
-        
         return view('pages.sp3.approve', compact(
             'data', 'detailPesanan', 'sp3D', 'kondisiPenyerahanDipilih', 'type', 'listPic'
         ));
