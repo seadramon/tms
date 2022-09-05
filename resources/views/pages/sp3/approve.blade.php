@@ -284,7 +284,7 @@
                 
                         <div class="form-group">
                             <label class="form-label">Keterangan</label>
-                            <textarea id="keterangan" rows="5" class="col-md-12">{{ $data->keterangan }}</textarea>
+                            <textarea id="keterangan" rows="5" class="col-md-12" disabled>{{ $data->keterangan }}</textarea>
                         </div>
                 
                         <br><br>
