@@ -26,7 +26,7 @@ class Sp3 extends Model
 
     public function npp()
     {
-        return $this->belongsTo(Npp::class, 'no_npp', 'no_npp')->where('kd_pat', session('TMP_KDWIL') ?? '1A');
+        return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
     }
 
     public function jenisPekerjaan()

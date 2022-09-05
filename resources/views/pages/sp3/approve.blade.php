@@ -30,7 +30,7 @@
                         <div class="form-group row">
                             <div class="col-lg-6 custom-form">
                                 <label class="form-label col-sm-3 custom-label">NPP</label>
-                                {!! Form::text('no_npp', $data->npp->no_npp . ' | ' . $data->npp->nama_proyek, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('no_npp', $data->npp?->no_npp . ' | ' . $data->npp?->nama_proyek, ['class'=>'form-control', 'disabled']) !!}
                             </div>
                             
                             <div class="col-lg-6 custom-form">
@@ -42,12 +42,12 @@
                         <div class="form-group row">
                             <div class="col-lg-6 custom-form">
                                 <label class="form-label col-sm-3 custom-label">Vendor</label>
-                                {!! Form::text('vendor', $data->vendor->nama, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('vendor', $data->vendor?->nama, ['class'=>'form-control', 'disabled']) !!}
                             </div>
                 
                             <div class="col-lg-6 custom-form">
                                 <label class="form-label col-sm-3 custom-label">Pekerjaan</label>
-                                {!! Form::text('kd_pekerjaan', $data->jenisPekerjaan->ket, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('kd_pekerjaan', $data->jenisPekerjaan?->ket, ['class'=>'form-control', 'disabled']) !!}
                             </div>
                         </div>
                     </div>
@@ -84,8 +84,8 @@
                                     @php
                                         $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
                                         $pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
-                                        $sp3dVolBtg     = $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; });
-                                        $sp3dVolTon     = $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; });
+                                        $sp3dVolBtg     = in_array($pesanan->kd_produk_konfirmasi, $sp3D->toArray()) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
+                                        $sp3dVolTon     = in_array($pesanan->kd_produk_konfirmasi, $sp3D->toArray()) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;
                                         $sisaVolBtg     = $pesananVolBtg - $sp3dVolBtg;
                                         $sisaVolTon     = $pesananVolTon - $sp3dVolTon;
                                     @endphp
@@ -108,18 +108,18 @@
                         <div class="row">
                             <div class="form-group col-lg-12">
                                 <label class="form-label">Proyek</label>
-                                {!! Form::text('proyek', $data->npp->nama_proyek, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('proyek', $data->npp?->nama_proyek, ['class'=>'form-control', 'disabled']) !!}
                             </div>
                 
                             <div class="form-group col-lg-6">
                                 <label class="form-label">Pelanggan</label>
-                                {!! Form::text('pelanggan', $data->npp->nama_pelanggan, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('pelanggan', $data->npp?->nama_pelanggan, ['class'=>'form-control', 'disabled']) !!}
                 
                             </div>
                             
                             <div class="form-group col-lg-3">
                                 <label class="form-label">Tujuan</label>
-                                {!! Form::text('region', $data->npp->infoPasar?->region?->kabupaten_name . ', ' . $data->npp->infoPasar?->region?->kecamatan_name, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('region', $data->npp?->infoPasar?->region?->kabupaten_name . ', ' . $data->npp?->infoPasar?->region?->kecamatan_name, ['class'=>'form-control', 'disabled']) !!}
                             </div>
 
                             <div class="form-group col-lg-3">
@@ -139,7 +139,7 @@
                 
                             <div class="form-group col-lg-6">
                                 <label class="form-label">Nama Pihak Kedua / Vendor</label>
-                                {!! Form::text('vendor', $data->vendor->nama, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('vendor', $data->vendor?->nama, ['class'=>'form-control', 'disabled']) !!}
                             </div>
                 
                             <div class="form-group col-lg-6">
