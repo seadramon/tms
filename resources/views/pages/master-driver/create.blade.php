@@ -46,7 +46,7 @@
                             <label class="form-label">Tanggal Lahir</label>
                             <div class="col-lg-12">
                                 <div class="input-group date">
-                                    {!! Form::text('tgl_lahir', null, ['class'=>'form-control datepicker', 'id'=>'tgl_lahir']) !!}
+                                    {!! Form::text('tgl_lahir', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->tgl_lahir)->format('d-m-Y') : null, ['class'=>'form-control datepicker', 'id'=>'tgl_lahir']) !!}
                                     <div class="input-group-append">
                                         <span class="input-group-text" style="display: block">
                                             <i class="la la-calendar-check-o"></i>
@@ -75,7 +75,7 @@
                             <label class="form-label">Tanggal SIM Kadaluarsa</label>
                             <div class="col-lg-12">
                                 <div class="input-group date">
-                                    {!! Form::text('sim_expired', null, ['class'=>'form-control', 'id'=>'sim_expired']) !!}
+                                    {!! Form::text('sim_expired', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->sim_expired)->format('d-m-Y') : null, ['class'=>'form-control', 'id'=>'sim_expired']) !!}
                                     <div class="input-group-append">
                                         <span class="input-group-text" style="display: block">
                                             <i class="la la-calendar-check-o"></i>
@@ -89,7 +89,7 @@
                             <label class="form-label">Tanggal Bergabung</label>
                             <div class="col-lg-12">
                                 <div class="input-group date">
-                                    {!! Form::text('tgl_bergabung', null, ['class'=>'form-control datepicker', 'id'=>'tgl_bergabung']) !!}
+                                    {!! Form::text('tgl_bergabung', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->tgl_bergabung)->format('d-m-Y') : null, ['class'=>'form-control datepicker', 'id'=>'tgl_bergabung']) !!}
                                     <div class="input-group-append">
                                         <span class="input-group-text" style="display: block">
                                             <i class="la la-calendar-check-o"></i>
