@@ -5,6 +5,7 @@ use App\Http\Controllers\Sp3Controller;
 use App\Http\Controllers\SppController;
 use App\Http\Controllers\SppApprovalController;
 use App\Http\Controllers\MasterDriverController;
+use App\Http\Controllers\MasterArmadaController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 /*
@@ -61,6 +62,14 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::get('/data', [MasterDriverController::class, 'data'])->name('data');
 	    Route::resource('/',  MasterDriverController::class)->except([
 	        'show', 'destroy'
-	    ])->parameters(['' => 'sp3']);
+	    ])->parameters(['' => 'master-driver']);
+	});
+
+	Route::group(['prefix' => '/master-armada', 'as' => 'master-armada.'], function(){
+	    Route::post('/destroy', [MasterArmadaController::class, 'destroy'])->name('destroy');
+	    Route::get('/data', [MasterArmadaController::class, 'data'])->name('data');
+	    Route::resource('/',  MasterArmadaController::class)->except([
+	        'show', 'destroy'
+	    ])->parameters(['' => 'master-armada']);
 	});
 });
