@@ -188,7 +188,7 @@ class SppController extends Controller
             $noNpp = $params[1];
 
             // 040/PI/SPPRB/III/WP-I/21P01
-            $sqldtlPesanan = DB::table('v_spprb_ri vsr')
+            $dtlPesanan = DB::table('v_spprb_ri vsr')
                 ->leftJoin('tb_produk', 'vsr.kd_produk', '=', 'tb_produk.kd_produk')
                 ->leftJoin('sppb_h', 'sppb_h.no_spprb', '=', 'vsr.spprblast')
                 ->leftJoin('sppb_d', function($join) {
@@ -199,11 +199,8 @@ class SppController extends Controller
                     'sppb_d.vol', 'vsr.kd_produk')
                 ->where('vsr.spprblast', $noSpprb)
                 ->where('vsr.no_npp', $noNpp)
-                // ->take(3)
+                ->take(3)
                 ->get();
-
-            $listDetailPesanan = $this->detailPesananHtml($sqldtlPesanan);
-            $rencanaProduk = $this->rencanaProdukHtml($sqldtlPesanan);
 
             $sqlNpp = DB::table('v_spprb_ri vsr')
                 ->leftJoin('npp', 'npp.no_npp', '=', 'vsr.no_npp')
@@ -226,97 +223,30 @@ class SppController extends Controller
                 ->where('pat_to', $sqlPat->pat_to)
                 ->max('jarak_km');
 
-            return response()->json([
+            return view('pages.spp.box2', [
                 'result' => 'success',
-                'tblPesanan' => $listDetailPesanan,
+                'tblPesanan' => $dtlPesanan,
                 'npp' => $sqlNpp,
                 'pat' => $sqlPat,
                 'jarak' => $sp3,
-                'rencanaProd' => $rencanaProduk,
                 'noSpprb' => $noSpprb
-            ])->setStatusCode(200, 'OK');
+            ])->render();
         } catch(Exception $e) {
             return response()->json(['result' => $e->getMessage()])->setStatusCode(500, 'ERROR');
         }
-    }
-
-    private function rencanaProdukHtml($data)
-    {
-        $ret = "";
-
-        if (count($data) > 0) {
-            $i = 1;
-
-            foreach ($data as $row) {
-                $ret .= "<tr>";
-                $ret .= "<td>" .$i. "</td>";
-                $ret .= "<td>" .$row->tipe. "</td>";
-                $ret .= "<td><input type='text' name='rencana[$i][kd_produk]' value='$row->kd_produk' class='form-control'></td>";
-                $ret .= "<td><input type='number' name='rencana[$i][saat_ini]' data-sblmbtg='$row->vol' data-urutan='$i' class='form-control saat-ini' onkeyup='sdSaatIni($row->vol, $i)' id='id-saatini-$i'></td>";
-                $ret .= "<td><input type='number' name='rencana[$i][sd_saat_ini]' id='id-sdsaatini-$i' class='form-control' disabled></td>";
-
-                $ret .= "<td><input type='text' name='rencana[$i][ket]' class='form-control'></td>";
-                $ret .= "<td><input class='form-check-input' name='rencana[$i][segmental]' type='checkbox' value='1' id='flexCheckDefault'/></td>";
-                $ret .= "<td><input type='number' name='rencana[$i][jml_segmen]' class='form-control'></td>";
-
-                $ret .= "</tr>";
-                $i++;
-            }
-        }
-
-        return $ret;
-    }
-
-    private function detailPesananHtml($data) 
-    {
-        $ret = "";
-        if (count($data) > 0) {
-
-            foreach ($data as $row) {
-                $ret .= "<tr>";
-                $ret .= "<td>" .$row->tipe. "</td>";
-
-                $volm3 = !empty($row->vol_m3)?$row->vol_m3:1;
-                $pesananVolBtg = $row->vol_spprb;
-                $pesananVolTon = $row->vol_spprb * $volm3 * 2.5;
-                $sppSebelumVolBtg = $row->vol;
-                $sppSebelumVolTon = $row->vol * $volm3 * 2.5;
-                $sisaBtg = $pesananVolBtg - $sppSebelumVolBtg;
-                $sisaTon = $pesananVolTon - $sppSebelumVolTon;
-                if ($pesananVolBtg > 0) {
-                    $persen = $sisaBtg / $pesananVolBtg * 100;
-                }
-
-                $ret .= "<td>". $pesananVolBtg ."</td>";
-                $ret .= "<td>". $pesananVolTon ."</td>";
-                $ret .= "<td>". $sppSebelumVolBtg ."</td>";
-                $ret .= "<td>". $sppSebelumVolTon ."</td>";
-
-                $ret .= "<td>". $sisaBtg ."</td>";
-                $ret .= "<td>". $sisaTon ."</td>";
-                $ret .= "<td>". round($persen, 2) ."</td>";
-
-                $ret .= "</tr>";
-            }
-
-        } else {
-            $ret = "<tr colspan='8'>Data tidak ditemukan</tr>";
-        }
-
-        return $ret;
     }
 
     public function store(Request $request, FlasherInterface $flasher)
     {
         try {
             DB::beginTransaction();
-
+// dd($request->all());
             if ($request->rencana) {
                 $jadwal = [];
                 $rencana = $request->rencana;
                 $kdProduk = $request->rencana[1]['kd_produk'];
                 $noSppb = $this->generateSppb($kdProduk, session('TMP_KDWIL'));
-
+// dd(strlen($noSppb));
                 if (!empty($request->jadwal)) {
                     $jadwal = explode(" - ", $request->jadwal);
                 }
