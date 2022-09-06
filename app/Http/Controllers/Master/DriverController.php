@@ -1,23 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Master;
 
+use App\Http\Controllers\Controller;
 use App\Models\Driver;
 use App\Models\Vendor;
 use Carbon\Carbon;
+use Exception;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
-use DB;
-use Session;
-use Storage;
-use Validator;
 
-class MasterDriverController extends Controller
+class DriverController extends Controller
 {
     public function index(){
-        return view('pages.master-driver.index');
+        return view('pages.master.driver.index');
     }
 
     public function data()
@@ -30,6 +31,9 @@ class MasterDriverController extends Controller
                 })
                 ->editColumn('tgl_bergabung', function ($model) {
                     return Carbon::parse($model->tgl_bergabung)->diff(Carbon::now())->y . ' tahun';
+                })
+                ->editColumn('sim_expired', function ($model) {
+                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->sim_expired)->format('d-m-Y');
                 })
                 ->addColumn('menu', function ($model) {
                     $column = '<div class="btn-group">
@@ -58,7 +62,7 @@ class MasterDriverController extends Controller
             
         $jenisSim = ["" => "Pilih Jenis SIM"] + $jenisSim;
 
-        return view('pages.master-driver.create', compact(
+        return view('pages.master.driver.create', compact(
             'jenisSim'
         ));
     }
@@ -127,7 +131,7 @@ class MasterDriverController extends Controller
             
         $jenisSim = ["" => "Pilih Jenis SIM"] + $jenisSim;
 
-        return view('pages.master-driver.create', compact(
+        return view('pages.master.driver.create', compact(
             'data', 'jenisSim'
         ));
     }

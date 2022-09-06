@@ -20,10 +20,8 @@ use App\Models\Vendor;
 use App\Models\Views\VSpprbRi;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
-use DB;
-use Session;
-use Validator;
-use Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class Sp3Controller extends Controller
 {
@@ -116,9 +114,10 @@ class Sp3Controller extends Controller
             ->toArray();
             
         $jenisPekerjaan = ["" => "Pilih Pekerjaan"] + $jenisPekerjaan;
+        $sat_harsat = ["volumne" => "Volume", "ritase" => "Ritase"];
 
         return view('pages.sp3.create', compact(
-            'vendor', 'jenisPekerjaan'
+            'vendor', 'jenisPekerjaan', 'sat_harsat'
         ));
     }
 
@@ -137,9 +136,9 @@ class Sp3Controller extends Controller
     {
         return Personal::select('employee_id', 'first_name', 'last_name')
             ->where('ST', 1)
-            ->where('employee_id', 'LIKE', '%' . $request->q . '%')
-            ->orWhere('first_name', 'LIKE', '%' . $request->q . '%')
-            ->orWhere('last_name', 'LIKE', '%' . $request->q . '%')
+            ->where(DB::raw('LOWER(employee_id)'), 'LIKE', '%' . $request->q . '%')
+            ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', '%' . $request->q . '%')
+            ->orWhere(DB::raw('LOWER(last_name)'), 'LIKE', '%' . $request->q . '%')
             ->get();
     }
 
@@ -215,22 +214,32 @@ class Sp3Controller extends Controller
             "0" => "0%",
             "11" => "11%",
         ];
+        $pph = DB::table('tb_pph_d')->leftJoin('tb_pph_h', 'tb_pph_d.pph_id', '=', 'tb_pph_h.pph_id')
+            ->select('tb_pph_d.pph_id', 'tb_pph_d.ket', 'tb_pph_h.pph_nama','tb_pph_d.value')
+            ->get()
+            ->mapWithKeys(function($item){ 
+                return [$item->pph_id . '|' . $item->value => $item->pph_nama . ' [' . $item->value . '%]'];
+            })
+            ->all();
+        $pph = ["0|0" => "0%"] + $pph;
 
-        $html = view('pages.sp3.box2', compact(
-            'detailPesanan',
-            'npp',
-            'ban',
-            'kontrak',
-            'vendor',
-            'kondisiPenyerahan',
-            'kondisiPenyerahanDipilih',
-            'VSpprbRi',
-            'jarak',
-            'unit',
-            'satuan',
-            'ppn',
-            'sp3D',
-        ))->render();
+        $html = view('pages.sp3.box2', [
+            'detailPesanan' => $detailPesanan,
+            'npp' => $npp,
+            'ban' => $ban,
+            'kontrak' => $kontrak,
+            'vendor' => $vendor,
+            'kondisiPenyerahan' => $kondisiPenyerahan,
+            'kondisiPenyerahanDipilih' => $kondisiPenyerahanDipilih,
+            'VSpprbRi' => $VSpprbRi,
+            'jarak' => $jarak,
+            'unit' => $unit,
+            'satuan' => $satuan,
+            'ppn' => $ppn,
+            'pph' => $pph,
+            'sp3D' => $sp3D,
+            'sat_harsat' => $request->sat_harsat,
+        ])->render();
         
         return response()->json( array('success' => true, 'html'=> $html) );
     }
@@ -275,19 +284,23 @@ class Sp3Controller extends Controller
             }
 
             $noSp3 = $noDokumen . '.' . $newSequence . '/' . date('Y') . 'P00';
+            $pph = explode('|', $request->pph);
 
             $sp3 = new Sp3();
             $sp3->no_sp3 = $noSp3;
             $sp3->no_npp = $request->no_npp;
             $sp3->vendor_id = $vendor->vendor_id;
+            $sp3->satuan_harsat = $vendor->sat_harsat;
             $sp3->alamat_vendor = $vendor->alamat;
             $sp3->kd_jpekerjaan = $request->kd_jpekerjaan;
-            $sp3->tgl_sp3 = $request->tgl_sp3;
+            $sp3->tgl_sp3 = date('Y-m-d', strtotime($request->tgl_sp3));
             $sp3->no_ban = $request->no_ban;
             $sp3->no_kontrak_induk = $request->no_kontrak_induk;
-            $sp3->jadwal1 = $request->jadwal1;
-            $sp3->jadwal2 = $request->jadwal2;
+            $sp3->jadwal1 = date('Y-m-d', strtotime($request->jadwal1));
+            $sp3->jadwal2 = date('Y-m-d', strtotime($request->jadwal2));
             $sp3->rit = $request->rit;
+            $sp3->pph = $pph[1];
+            $sp3->pph_id = $pph[0];
             $sp3->jarak_km = $request->jarak_pesanan;
             $sp3->ppn = $request->ppn ? (float)($request->ppn / 100) : 0;
             $sp3->pph = $request->pph ? (float)($request->pph / 100) : 0;

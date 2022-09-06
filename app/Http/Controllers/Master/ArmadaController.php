@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Master;
 
+use App\Http\Controllers\Controller;
 use App\Models\Armada;
 use App\Models\Driver;
-use App\Models\Vendor;
 use Carbon\Carbon;
+use Exception;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
-use DB;
-use Session;
-use Storage;
-use Validator;
 
-class MasterArmadaController extends Controller
+class ArmadaController extends Controller
 {
     public function index(){
-        return view('pages.master-armada.index');
+        return view('pages.master.armada.index');
     }
 
     public function data()
@@ -93,7 +93,7 @@ class MasterArmadaController extends Controller
 
         $driver = ["" => "Pilih Driver"] + $driver;
 
-        return view('pages.master-armada.create', compact(
+        return view('pages.master.armada.create', compact(
             'jenis', 'detail', 'tahun', 'status', 'driver'
         ));
     }
@@ -261,7 +261,7 @@ class MasterArmadaController extends Controller
 
         $driver = ["" => "Pilih Driver"] + $driver;
 
-        return view('pages.master-armada.create', compact(
+        return view('pages.master.armada.create', compact(
             'jenis', 'detail', 'tahun', 'status', 'driver', 'data'
         ));
     }

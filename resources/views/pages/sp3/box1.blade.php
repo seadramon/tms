@@ -32,6 +32,12 @@
                 {!! Form::select('kd_jpekerjaan', $jenisPekerjaan, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_jpekerjaan']) !!}
             </div>
         </div>
+        <div class="form-group row">
+            <div class="col-lg-6 custom-form">
+                <label class="form-label col-sm-3 custom-label">Satuan HarSat</label>
+                {!! Form::select('sat_harsat', $sat_harsat, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'sat_harsat']) !!}
+            </div>
+        </div>
     </div>
 
     <div class="card-footer" style="text-align: right;">

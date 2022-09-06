@@ -27,6 +27,9 @@
                             <tr class="fw-semibold fs-6 text-muted">
                                 <th>Nama</th>
                                 <th>Usia</th>
+                                <th>Hp</th>
+                                <th>SIM</th>
+                                <th>SIM Expired</th>
                                 <th>Masa Kerja</th>
                                 <th>Menu</th>
                             </tr>
@@ -97,6 +100,9 @@
 	            columns: [
 	                {data: 'nama', name: 'nama', defaultContent: '-'},
 	                {data: 'tgl_lahir', name: 'tgl_lahir', defaultContent: '-'},
+	                {data: 'no_hp', name: 'no_hp', defaultContent: '-'},
+	                {data: 'sim_jenis', name: 'sim_jenis', defaultContent: '-'},
+	                {data: 'sim_expired', name: 'sim_expired', defaultContent: '-'},
 	                {data: 'tgl_bergabung', name: 'tgl_bergabung', defaultContent: '-'},
 	                {data: 'menu', orderable: false, searchable: false}
 	            ],

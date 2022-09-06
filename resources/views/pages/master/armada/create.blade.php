@@ -93,7 +93,7 @@
 
                         <div class="form-group col-lg-3">
                             <label class="form-label">&nbsp;</label>
-                            {!! Form::text('stnk_not_verified', 'NOT VERIFIED YET', ['class'=>'form-control', 'id'=>'stnk_not_verified', 'disabled']) !!}
+                            {{-- {!! Form::text('stnk_not_verified', 'NOT VERIFIED YET', ['class'=>'form-control', 'id'=>'stnk_not_verified', 'disabled']) !!} --}}
                         </div>
 
                         <div class="form-group col-lg-3">
@@ -122,7 +122,7 @@
                         
                         <div class="form-group col-lg-3">
                             <label class="form-label">&nbsp;</label>
-                            {!! Form::text('kir_head_not_verified', 'NOT VERIFIED YET', ['class'=>'form-control', 'id'=>'kir_head_not_verified', 'disabled']) !!}
+                            {{-- {!! Form::text('kir_head_not_verified', 'NOT VERIFIED YET', ['class'=>'form-control', 'id'=>'kir_head_not_verified', 'disabled']) !!} --}}
                         </div>
 
                         <div class="form-group col-lg-3">
@@ -151,7 +151,7 @@
 
                         <div class="form-group col-lg-3">
                             <label class="form-label">&nbsp;</label>
-                            {!! Form::text('kir_trailer_not_verified', 'NOT VERIFIED YET', ['class'=>'form-control', 'id'=>'kir_trailer_not_verified', 'disabled']) !!}
+                            {{-- {!! Form::text('kir_trailer_not_verified', 'NOT VERIFIED YET', ['class'=>'form-control', 'id'=>'kir_trailer_not_verified', 'disabled']) !!} --}}
                         </div>
 
                         <div class="form-group col-lg-3">
@@ -180,7 +180,7 @@
 
                         <div class="form-group col-lg-3">
                             <label class="form-label">&nbsp;</label>
-                            {!! Form::text('pajak_not_verified', 'NOT VERIFIED YET', ['class'=>'form-control', 'id'=>'pajak_not_verified', 'disabled']) !!}
+                            {{-- {!! Form::text('pajak_not_verified', 'NOT VERIFIED YET', ['class'=>'form-control', 'id'=>'pajak_not_verified', 'disabled']) !!} --}}
                         </div>
                     </div>
                 </div>
@@ -216,7 +216,7 @@
     $('.form-select-solid').select2();
 
     Inputmask({
-        "regex" : "([A-Z]{1,2}) ([0-9]{1,4}) ([A-Z]{0,3})"
+        "regex" : "([A-Z][A-Z]{1,2}) ([0-9]{1,4}) ([A-Z]{0,3})"
     }).mask("#nopol");
 
     $(".datepicker").daterangepicker({
@@ -229,19 +229,20 @@
         }
     }).on("change", function (e) {
         getNextExpiredDate($(this).attr('id'))
-    });
+    }).val('');
 
     function getNextExpiredDate(id){
         var date = $("#" + id).val();
-        var day = date.substr(0, 2);
-        var month = date.substr(3, 2);
-        var year = date.substr(6,4);
-
-        var nextExpiredDate = day + '-' + month + '-' + (parseInt(year)+5);
-
         var idExpired = "#" + id + '_expired';
-
-        $(idExpired).val(nextExpiredDate);
+        if(date == ''){
+            $(idExpired).val('');
+        }else{
+            var day = date.substr(0, 2);
+            var month = date.substr(3, 2);
+            var year = date.substr(6,4);
+            var nextExpiredDate = day + '-' + month + '-' + (parseInt(year)+5);
+            $(idExpired).val(nextExpiredDate);
+        }
     }
 </script>
 @endsection

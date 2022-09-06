@@ -37,12 +37,12 @@
 							?>
 							<tr>
 								<td>{{ $row->tipe }}</td>
-								<td>{{ $pesananVolBtg }}</td>
-								<td>{{ $pesananVolTon }}</td>
-								<td>{{ $sppSebelumVolBtg }}</td>
-								<td>{{ $sppSebelumVolTon }}</td>
-								<td>{{ $sisaBtg }}</td>
-								<td>{{ $sisaTon }}</td>
+								<td>{{ nominal($pesananVolBtg) }}</td>
+								<td>{{ nominal($pesananVolTon) }}</td>
+								<td>{{ nominal($sppSebelumVolBtg) }}</td>
+								<td>{{ nominal($sppSebelumVolTon) }}</td>
+								<td>{{ nominal($sisaBtg) }}</td>
+								<td>{{ nominal($sisaTon) }}</td>
 								<td>{{ round($persen, 2) }}</td>
 							</tr>
 						@endforeach
@@ -131,13 +131,13 @@
 								<td>{{ $i }}</td>							
 								<td>{{ $row->tipe }}</td>							
 								<td>
-									<input type="text" name="rencana[{{$i}}][kd_produk]" value="{{$row->kd_produk}}" class="form-control">
+									<input type="text" name="rencana[{{$i}}][kd_produk]" value="{{$row->kd_produk}}" class="form-control" readonly>
 								</td>							
 								<td>
-									<input type="number" name="rencana[{{$i}}][saat_ini]" data-sblmbtg="{{$row->vol}}" data-urutan="{{$i}}" class="form-control saat-ini" onkeyup="sdSaatIni({{$row->vol}}, {{$i}})" id="id-saatini-{{$i}}">
+									<input type="text" name="rencana[{{$i}}][saat_ini]" data-sblmbtg="{{$row->vol}}" data-urutan="{{$i}}" class="form-control saat-ini decimal" onkeyup="sdSaatIni({{$row->vol}}, {{$i}})" id="id-saatini-{{$i}}">
 								</td>				
 								<td>
-									<input type="number" name="rencana[{{$i}}][sd_saat_ini]" id="id-sdsaatini-{{$i}}" class="form-control" disabled>
+									<input type="number" name="rencana[{{$i}}][sd_saat_ini]" id="id-sdsaatini-{{$i}}" class="form-control" readonly>
 								</td>			
 								<td>
 									<input type="text" name="rencana[{{$i}}][ket]" class="form-control">
@@ -146,7 +146,7 @@
 									<input class="form-check-input" name="rencana[{{$i}}][segmental]" type="checkbox" value="1" id="flexCheckDefault"/>
 								</td>							
 								<td>
-									<input type="number" name="rencana[{{$i}}][jml_segmen]" class="form-control">
+									<input type="text" name="rencana[{{$i}}][jml_segmen]" class="form-control decimal">
 								</td>							
 							</tr>
 
@@ -178,7 +178,11 @@
 </div>
 
 <script type="text/javascript">
-	$("#daterange").daterangepicker();
+	$("#daterange").daterangepicker({
+		locale: {
+            format: 'DD-MM-YYYY'
+		}
+	});
 	
 	function sdSaatIni(vol, urutan) {
 	console.log(vol);

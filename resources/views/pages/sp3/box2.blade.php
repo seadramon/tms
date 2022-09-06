@@ -156,11 +156,12 @@
                 <label class="form-label">Jarak</label>
                 {!! Form::number('jarak_pesanan', $jarak, ['class'=>'form-control', 'id'=>'jarak_pesanan', 'required']) !!}
             </div>
-
+            @if ($sat_harsat == 'ritase')
             <div class="form-group col-lg-6">
                 <label class="form-label">Harga Satuan Ritase</label>
-                {!! Form::number('harga_satuan_ritase', 0, ['class'=>'form-control', 'id'=>'harga_satuan_ritase']) !!}
+                {!! Form::number('harga_satuan_ritase', 0, ['class'=>'form-control decimal', 'id'=>'harga_satuan_ritase']) !!}
             </div>
+            @endif
         </div>
         
         <br><br>
@@ -173,8 +174,10 @@
                     <th style="width: 12%;">Jarak (KM)</th>
                     <th style="width: 13%;">Vol (Btg)</th>
                     <th style="width: 13%;">Vol (Ton)</th>
+                    @if ($sat_harsat != 'ritase')
                     <th style="width: 10%;">Satuan</th>
-                    <th style="width: 15%;">Harsat / [Btg/Ton]</th>
+                    @endif
+                    <th style="width: 15%;">Harsat {{ $sat_harsat == 'volume' ? '[Btg/Ton]' : 'Rit' }}[Btg/Ton]</th>
                     <th style="width: 10%;">Jumlah</th>
                     <th style="width: 3%;"></th>
                 </tr>
@@ -227,7 +230,7 @@
             <tr>
                 <th style="text-align: right; width: 72%">Subtotal</th>
                 <td style="width: 25%">
-                    {!! Form::text('subtotal', null, ['class'=>'form-control', 'id'=>'subtotal', 'readonly']) !!}
+                    {!! Form::text('subtotal', null, ['class'=>'form-control decimal', 'id'=>'subtotal', 'readonly']) !!}
                 </td>
                 <td style="width: 3%"></td>
             </tr>
@@ -241,14 +244,14 @@
             <tr>
                 <th style="text-align: right; width: 72%">PPH</th>
                 <td style="width: 25%">
-                    {!! Form::select('pph', $ppn, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph']) !!}
+                    {!! Form::select('pph', $pph, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph']) !!}
                 </td>
                 <td style="width: 3%"></td>
             </tr>
             <tr>
                 <th style="text-align: right; width: 72%">Total</th>
                 <td style="width: 25%">
-                    {!! Form::text('total', null, ['class'=>'form-control', 'id'=>'total', 'readonly']) !!}
+                    {!! Form::text('total', null, ['class'=>'form-control decimal', 'id'=>'total', 'readonly']) !!}
                 </td>
                 <td style="width: 3%"></td>
             </tr>

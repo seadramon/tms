@@ -258,8 +258,8 @@ class SppController extends Controller
                 $data->rit = $request->rit;
                 $data->jarak_km = $request->jarak_km;
                 $data->catatan = $request->catatan;
-                $data->jadwal1 = !empty($jadwal[0])?date('Y-m-d', strtotime($jadwal[0])):date('Y-m-d', strtotime('-3 day', time()));
-                $data->jadwal2 = !empty($jadwal[1])?date('Y-m-d', strtotime($jadwal[1])):date('Y-m-d');
+                $data->jadwal1 = !empty($jadwal[0]) ? date('Y-m-d', strtotime($jadwal[0])) : date('Y-m-d', strtotime('-3 day', time()));
+                $data->jadwal2 = !empty($jadwal[1]) ? date('Y-m-d', strtotime($jadwal[1])) : date('Y-m-d');
                 $data->tgl_sppb = date('Y-m-d');
                 $data->created_by = session('TMP_NIP');
 
