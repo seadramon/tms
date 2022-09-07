@@ -45,33 +45,14 @@
                                         <label class="form-label mt-2">Rekomendasi Rute</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" placeholder="">
+                                        <input type="text" class="form-control input-sm" placeholder="">
                                     </div>
                                     <div class="col-md-2">
-                                        <a href="#" class="btn btn-icon btn-dark"><i class="fas fa-add"></i></a>
+                                        <a href="#" class="btn btn-icon btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_1"><i class="fas fa-add"></i></a>
                                     </div>
                                 </div>   
                             </div>
                         </div>
-
-                        <div class="pac-card" id="pac-card">
-                            <div>
-                                <div id="label">Location search</div>
-                            </div>
-                            <div id="pac-container">
-                                <input id="pac-input" type="text" placeholder="Enter a location">
-                                <div id="location-error"></div>
-                            </div>
-                        </div>
-                        <div id="map" style="height:786px;"></div>
-                        <div id="current" sty>Nothing yet...</div>
-                        <div id="infowindow-content">
-                            <img src="" width="16" height="16" id="place-icon"> <span
-                                id="place-name" class="title"></span><br> <span
-                                id="place-address"></span>
-                        </div>
-                        
-                        
 
                     </div>
                 </div>
@@ -87,6 +68,51 @@
     <!--end::Row-->
 </div>
 <!--end::Content container-->
+
+<!-- add checkpoint modals -->
+<div class="modal fade" tabindex="-1" id="kt_modal_1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Cari Lokasi (Google Maps)</h3>
+
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="svg-icon svg-icon-1"></span>
+                </div>
+                <!--end::Close-->
+            </div>
+
+            <div class="modal-body">
+                <div class="pac-card" id="pac-card">
+                    <div>
+                        <div id="label">Location search</div>
+                    </div>
+                    <div id="pac-container">
+                        <input id="pac-input" type="text" placeholder="Enter a location">
+                        <div id="location-error"></div>
+                    </div>
+                </div>
+                <div id="map" style="height:500px;"></div>
+                <div id="current">Nothing yet...</div>
+                <input id="checkpoint_lat" type="text" />
+                <input id="checkpoint_lng" type="text" />
+                <div id="infowindow-content">
+                    <img src="" width="16" height="16" id="place-icon"> <span
+                        id="place-name" class="title"></span><br> <span
+                        id="place-address"></span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Add Checkpoint</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end of modals -->
+
+
 @endsection
 
 @section('css')
@@ -94,6 +120,17 @@
 <style type="text/css">
     #map {
         height: 100%;
+    }
+
+    .pac-container {
+        z-index: 10000 !important;
+    }
+    #checkpoint_lat  {
+        z-index: 10000 !important;
+    }
+
+    #checkpoint_lng {
+        z-index: 10000 !important;
     }
 </style>
 @endsection
@@ -144,10 +181,16 @@
 		});
 
         google.maps.event.addListener(marker, 'dragend', function (evt) {
-            document.getElementById('current').innerHTML = '<p>Marker dropped: Current Lat: ' + evt.latLng.lat().toFixed(6) + ' Current Lng: ' + evt.latLng.lng().toFixed(6) + '</p>';
+            // document.getElementById('current')
+            //     .innerHTML = '<p>Marker dropped: Current Lat: ' + evt.latLng.lat().toFixed(6) + ' Current Lng: ' + evt.latLng.lng().toFixed(6) + '</p>';
+            // // $('#checkpoint_lat').val('');
+            // // $('#checkpoint_lng').val('');
+
+            $('#checkpoint_lat').val(evt.latLng.lat().toFixed(6));
+            $('#checkpoint_lng').val(evt.latLng.lng().toFixed(6));
+
             infowindow.close();
 			marker.setVisible(false);
-			var place = autocomplete.getPlace();
             marker.setMap(map);
 			marker.setVisible(true);
         });
