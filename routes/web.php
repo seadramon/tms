@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sp3Controller;
 use App\Http\Controllers\SppController;
 use App\Http\Controllers\SppApprovalController;
+use App\Http\Controllers\AuthController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 /*
@@ -24,6 +25,12 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
     	// dd(session()->all());
         return view('testing');
     });
+
+    Route::get('login', [AuthController::class, 'index'])->name('login');
+    Route::post('custom-login', [AuthController::class, 'customLogin'])->name('login.custom'); 
+    Route::get('registration', [AuthController::class, 'registration'])->name('register-user');
+    Route::post('custom-registration', [AuthController::class, 'customRegistration'])->name('register.custom'); 
+    Route::get('signout', [AuthController::class, 'signOut'])->name('signout');
 
 	Route::group(['prefix' => '/sp3', 'as' => 'sp3.'], function(){
 	    Route::post('/destroy', [Sp3Controller::class, 'destroy'])->name('destroy');
