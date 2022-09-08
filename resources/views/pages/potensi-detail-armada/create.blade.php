@@ -38,11 +38,11 @@
                     @endif
 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12" style="padding-bottom: 5px;">
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label class="form-label mt-2">Rekomendasi Rute</label>
+                                        <label class="form-label mt-2">PBB Muat</label>
                                     </div>
                                     <div class="col-md-6">
                                         <input type="text" class="form-control input-sm" placeholder="">
@@ -52,7 +52,19 @@
                                     </div>
                                 </div>   
                             </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="form-label mt-2">Lokasi Tujuan</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control input-sm" placeholder="">
+                                    </div>
+                                </div>   
+                            </div>
                         </div>
+                        <div id="list_checkpoint"></div>
+                        
 
                     </div>
                 </div>
@@ -105,7 +117,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Add Checkpoint</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="add_checkpoint">Add Checkpoint</button>
             </div>
         </div>
     </div>
@@ -136,6 +148,38 @@
 @endsection
 
 @section('js')
+<script type="text/javascript">
+// delete checkpoint
+$(document).ready(function(){
+    $(document).on('click', '.delete_rute', function(e) {
+        $(this).parent().parent().parent().parent().remove();
+    });
+
+    $("#add_checkpoint").click(function(){
+        var lat = $('#checkpoint_lat').val();
+        var lng = $('#checkpoint_lng').val();
+        
+        $('#list_checkpoint').append(
+            '<div class="col-md-12" style="padding-bottom: 5px;">'+
+                '<div class="col-md-6">'+
+                    '<div class="row">'+
+                        '<div class="col-md-4">'+
+                            '<label class="form-label mt-2">Rute </label>'+
+                        '</div>'+
+                        '<div class="col-md-6">'+
+                            '<input type="text" class="form-control input-sm" placeholder="" value="'+ lat +','+ lng +'">'+
+                        '</div>'+
+                        '<div class="col-md-2">'+
+                            '<a href="#" class="btn btn-icon btn-danger delete_rute"><i class="fas fa-times"></i></a>'+
+                        '</div>'+
+                    '</div>'+ 
+                '</div>'+
+            '</div>');
+    });
+});
+</script>
+
+
 <script>
 	function initMap() {
 		var centerCoordinates = new google.maps.LatLng(37.6, -95.665);
@@ -178,6 +222,9 @@
 			infowindowContent.children['place-name'].textContent = place.name;
 			infowindowContent.children['place-address'].textContent = input.value;
 			infowindow.open(map, marker);
+
+            $('#checkpoint_lat').val(place.geometry.location.lat().toFixed(6));
+            $('#checkpoint_lng').val(place.geometry.location.lng().toFixed(6));
 		});
 
         google.maps.event.addListener(marker, 'dragend', function (evt) {
