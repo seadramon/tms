@@ -28,7 +28,7 @@
                 </div>
             
                 <div class="card-body">
-                    @if (count($errors) > 0)
+                    @if(count($errors) > 0)
                         @foreach($errors->all() as $error)
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <strong>Error!</strong> {{ $error }}
@@ -38,39 +38,36 @@
                     @endif
 
                     <div class="row">
-                        <div class="col-md-12" style="padding-bottom: 5px;">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label class="form-label mt-2">PBB Muat</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control input-sm" placeholder="">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <a href="#" class="btn btn-icon btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_1"><i class="fas fa-add"></i></a>
-                                    </div>
-                                </div>   
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label class="form-label mt-2">Lokasi Tujuan</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <input type="text" class="form-control input-sm" placeholder="">
-                                    </div>
-                                </div>   
-                            </div>
+                        <div class="col-md-6" style="margin-bottom:10px;">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label mt-2">PBB Muat</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control input-sm" placeholder="">
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="#" class="btn btn-icon btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_1"><i class="fas fa-add"></i></a>
+                                </div>
+                            </div>  
+                            <div id="list_checkpoint"></div> 
                         </div>
-                        <div id="list_checkpoint"></div>
-                        
-
-                    </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label mt-2">Lokasi Tujuan</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control input-sm" placeholder="">
+                                </div>
+                            </div>   
+                        </div>
+                    </div>   
+                <!-- end of card-body -->
                 </div>
             
                 <div class="card-footer" style="text-align: right;">
-                    <a href="{{ route('master-driver.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
+                    <a href="{{ URL::previous() }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
                     <input type="submit" class="btn btn-success" value="Simpan">
                 </div>
             </div>
@@ -161,19 +158,17 @@ $(document).ready(function(){
         
         $('#list_checkpoint').append(
             '<div class="col-md-12" style="padding-bottom: 5px;">'+
-                '<div class="col-md-6">'+
-                    '<div class="row">'+
-                        '<div class="col-md-4">'+
-                            '<label class="form-label mt-2">Rute </label>'+
-                        '</div>'+
-                        '<div class="col-md-6">'+
-                            '<input type="text" class="form-control input-sm" placeholder="" value="'+ lat +','+ lng +'">'+
-                        '</div>'+
-                        '<div class="col-md-2">'+
-                            '<a href="#" class="btn btn-icon btn-danger delete_rute"><i class="fas fa-times"></i></a>'+
-                        '</div>'+
-                    '</div>'+ 
-                '</div>'+
+                '<div class="row">'+
+                    '<div class="col-md-4">'+
+                        '<label class="form-label mt-2">Rute </label>'+
+                    '</div>'+
+                    '<div class="col-md-6">'+
+                        '<input type="text" class="form-control input-sm" placeholder="" value="'+ lat +','+ lng +'">'+
+                    '</div>'+
+                    '<div class="col-md-2">'+
+                        '<a href="#" class="btn btn-icon btn-danger delete_rute"><i class="fas fa-times"></i></a>'+
+                    '</div>'+
+                '</div>'+ 
             '</div>');
     });
 });
