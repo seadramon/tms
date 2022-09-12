@@ -322,7 +322,7 @@
                            
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mt-5">
                         <div class="col-md-6">
                             <a style="width: 100%;" href="javacript:void(0)" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_1"><i class="fas fa-add"></i> Tambah Rute</a>
 
@@ -432,6 +432,7 @@ $(document).ready(function(){
         $(this).parent().parent().parent().remove();
     });
 
+   
     $("#add_checkpoint").click(function(){
         var lat = $('#checkpoint_lat').val();
         var lng = $('#checkpoint_lng').val();
@@ -453,6 +454,9 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '#create_rute', function(e) {
+        $('#panel').empty();
+        $('#total').empty();
+
         var waypts = [];
         $("input[name='checkpoint[]']")
             .map(function(){
