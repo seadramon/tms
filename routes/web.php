@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sp3Controller;
 use App\Http\Controllers\SppController;
 use App\Http\Controllers\SppApprovalController;
+use App\Http\Controllers\MasterDriverController;
+use App\Http\Controllers\MasterArmadaController;
+use App\Http\Controllers\PdaController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 /*
@@ -71,5 +74,9 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::resource('/',  ArmadaController::class)->except([
 	        'show', 'destroy'
 	    ])->parameters(['' => 'master-armada']);
+	});
+
+	Route::group(['prefix' => 'potensi-detail-armada', 'as' => 'potensi.detail.armada.'], function(){
+		Route::get('/create',	[PdaController::class, 'create'])->name('create');
 	});
 });
