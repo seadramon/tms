@@ -483,6 +483,14 @@
 		
 				return text;
 			}
+			function reFormat(val){
+				val = val.toString();
+				if(val.split('.').length > 1){
+					return format(val, '.', val.split('.')[1].length); 
+				}else{
+					return format(val, '.', 0); 
+				}
+			}
 		</script>
 		@yield('js')
 		<!--end::Javascript-->

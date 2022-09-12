@@ -85,6 +85,7 @@
                 '_token': '{{ csrf_token() }}', 
                 'no_npp': $('#no_npp').val(), 
                 'vendor_id': $('#vendor_id').val(), 
+                'sat_harsat': $('#sat_harsat').val(), 
                 'kd_jpekerjaan': $('#kd_jpekerjaan').val()
             };
             
@@ -117,7 +118,7 @@
             minYear: 1901,
             autoApply: true,
             locale: {
-            format: 'YYYY-MM-DD'
+            format: 'DD-MM-YYYY'
             }
         });
 
@@ -171,9 +172,9 @@
         function calculateJumlah(rowId){
             if($('#satuan_' + rowId).val()){
                 if($('#satuan_' + rowId).val() == 'btg'){
-                    $('#jumlah_' + rowId).val($('#harsat_' + rowId).val() * $('#vol_btg_' + rowId).val());
+                    $('#jumlah_' + rowId).val(reFormat($('#harsat_' + rowId).val().replaceAll(",", "") * $('#vol_btg_' + rowId).val().replaceAll(",", "")));
                 }else{
-                    $('#jumlah_' + rowId).val($('#harsat_' + rowId).val() * $('#vol_ton_' + rowId).val());
+                    $('#jumlah_' + rowId).val(reFormat($('#harsat_' + rowId).val().replaceAll(",", "") * $('#vol_ton_' + rowId).val().replaceAll(",", "")));
                 }
             }
 
@@ -185,21 +186,22 @@
 
             for(let i=0; i < $('.detail_pekerjaan').length; i++){
                 if($('#jumlah_' + i).val()){
-                    subTotal = parseFloat(subTotal) + parseFloat($('#jumlah_' + i).val());
+                    subTotal = parseFloat(subTotal) + parseFloat($('#jumlah_' + i).val().replaceAll(",", ""));
                 }
             }
 
-            $('#subtotal').val(subTotal);
+            $('#subtotal').val(reFormat(subTotal));
 
             calculateTotal();
         }
 
         function calculateTotal(){
-            let ppn = parseFloat($('#subtotal').val()) * parseFloat($('#ppn').val() / 100);
-            let pph = parseFloat($('#subtotal').val()) * parseFloat($('#pph').val() / 100);
-            let total = parseFloat($('#subtotal').val()) + parseFloat(ppn) + parseFloat(pph);
+            let pph_ = $('#pph').val().split("|")
+            let ppn = parseFloat($('#subtotal').val().replaceAll(",", "")) * parseFloat($('#ppn').val() / 100);
+            let pph = parseFloat($('#subtotal').val().replaceAll(",", "")) * parseFloat(pph_[1] / 100);
+            let total = parseFloat($('#subtotal').val().replaceAll(",", "")) + parseFloat(ppn) + parseFloat(pph);
 
-            $('#total').val(total);
+            $('#total').val(reFormat(total));
         }
 
         $('.delete_pekerjaan').on('click', function(){

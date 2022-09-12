@@ -1,24 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Master;
 
+use App\Http\Controllers\Controller;
 use App\Models\Armada;
 use App\Models\Driver;
-use App\Models\Vendor;
+use App\Models\TrMaterial;
 use Carbon\Carbon;
+use Exception;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
-use DB;
-use Session;
-use Storage;
-use Validator;
 
-class MasterArmadaController extends Controller
+class ArmadaController extends Controller
 {
     public function index(){
-        return view('pages.master-armada.index');
+        return view('pages.master.armada.index');
     }
 
     public function data()
@@ -34,6 +35,9 @@ class MasterArmadaController extends Controller
                 })
                 ->editColumn('tgl_pajak', function ($model) {
                     return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_pajak)->format('d-m-Y');
+                })
+                ->editColumn('detail', function ($model) {
+                    return $model->kd_armada . '|' . $model->detail;
                 })
                 ->addColumn('menu', function ($model) {
                     $column = '<div class="btn-group">
@@ -54,24 +58,16 @@ class MasterArmadaController extends Controller
 
     public function create()
     {
-        $jenis = [
-            'trailer'       => 'Trailer',
-            'dump-truck'    => 'Dump-Truck',
-        ];
-            
+        $jenis = TrMaterial::where('kd_jmaterial', 'J')
+            ->get()
+            ->mapWithKeys(function($item){
+                return [$item->kd_material => $item->kd_material . ' | ' . $item->name];
+            })
+            ->all();
         $jenis = ["" => "Pilih Jenis Armada"] + $jenis;
 
-        $detail = [
-            'flatbed-panjang-12-meter'  => 'Flatbed Panjang 12 Meter',
-            'flatbed-panjang-6-meter'   => 'Flatbed Panjang 6 Meter',
-        ];
-            
-        $detail = ["" => "Pilih Jenis Flatbed"] + $detail;
-        
         $tahun = [];
-
         $rentangTahun = date('Y') - 10;
-        
         for($i=0; $i<10; $i++){
             $tahun[$rentangTahun + $i] = $rentangTahun + $i;
         }
@@ -93,9 +89,12 @@ class MasterArmadaController extends Controller
 
         $driver = ["" => "Pilih Driver"] + $driver;
 
-        return view('pages.master-armada.create', compact(
-            'jenis', 'detail', 'tahun', 'status', 'driver'
-        ));
+        return view('pages.master.armada.create', [
+            'jenis'  => $jenis, 
+            'tahun'  => $tahun, 
+            'status' => $status, 
+            'driver' => $driver
+        ]);
     }
 
     public function store(Request $request, FlasherInterface $flasher)
@@ -105,7 +104,6 @@ class MasterArmadaController extends Controller
                         
             Validator::make($request->all(), [
                 'jenis'             => 'required',
-                'detail'            => 'required',
                 'tahun'             => 'required',
                 'nopol'             => 'required',
                 'status'            => 'required',
@@ -116,10 +114,11 @@ class MasterArmadaController extends Controller
                 'tgl_pajak'         => 'required',
             ])->validate();
 
+            $tr = TrMaterial::find($request->jenis);
             $armada = new Armada();
             $armada->vendor_id = 'WBP004';
-            $armada->jenis = $request->jenis;
-            $armada->detail = $request->detail;
+            $armada->kd_armada = $request->jenis;
+            $armada->detail = $tr->name;
             $armada->tahun = $request->tahun;
             $armada->nopol = $request->nopol;
             $armada->status = $request->status;
@@ -222,19 +221,13 @@ class MasterArmadaController extends Controller
     {
         $data = Armada::find($id);
 
-        $jenis = [
-            'trailer'       => 'Trailer',
-            'dump-truck'    => 'Dump-Truck',
-        ];
-            
+        $jenis = TrMaterial::where('kd_jmaterial', 'J')
+            ->get()
+            ->mapWithKeys(function($item){
+                return [$item->kd_material => $item->kd_material . ' | ' . $item->name];
+            })
+            ->all();
         $jenis = ["" => "Pilih Jenis Armada"] + $jenis;
-
-        $detail = [
-            'flatbed-panjang-12-meter'  => 'Flatbed Panjang 12 Meter',
-            'flatbed-panjang-6-meter'   => 'Flatbed Panjang 6 Meter',
-        ];
-            
-        $detail = ["" => "Pilih Jenis Flatbed"] + $detail;
         
         $tahun = [];
 
@@ -261,8 +254,8 @@ class MasterArmadaController extends Controller
 
         $driver = ["" => "Pilih Driver"] + $driver;
 
-        return view('pages.master-armada.create', compact(
-            'jenis', 'detail', 'tahun', 'status', 'driver', 'data'
+        return view('pages.master.armada.create', compact(
+            'jenis', 'tahun', 'status', 'driver', 'data'
         ));
     }
 
@@ -273,7 +266,6 @@ class MasterArmadaController extends Controller
                         
             Validator::make($request->all(), [
                 'jenis'             => 'required',
-                'detail'            => 'required',
                 'tahun'             => 'required',
                 'nopol'             => 'required',
                 'status'            => 'required',
@@ -284,10 +276,11 @@ class MasterArmadaController extends Controller
                 'tgl_pajak'         => 'required',
             ])->validate();
 
+            $tr = TrMaterial::find($request->jenis);
             $armada = Armada::find($id);
             $armada->vendor_id = 'WBP004';
-            $armada->jenis = $request->jenis;
-            $armada->detail = $request->detail;
+            $armada->kd_armada = $request->jenis;
+            $armada->detail = $tr->name;
             $armada->tahun = $request->tahun;
             $armada->nopol = $request->nopol;
             $armada->status = $request->status;
@@ -403,4 +396,5 @@ class MasterArmadaController extends Controller
             return response()->json(['result' => $e->getMessage()])->setStatusCode(500, 'ERROR');
         }
     }
+
 }

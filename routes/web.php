@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Master\ArmadaController;
+use App\Http\Controllers\Master\DriverController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sp3Controller;
 use App\Http\Controllers\SppController;
@@ -59,17 +61,17 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	});
 
 	Route::group(['prefix' => '/master-driver', 'as' => 'master-driver.'], function(){
-	    Route::post('/destroy', [MasterDriverController::class, 'destroy'])->name('destroy');
-	    Route::get('/data', [MasterDriverController::class, 'data'])->name('data');
-	    Route::resource('/',  MasterDriverController::class)->except([
+	    Route::post('/destroy', [DriverController::class, 'destroy'])->name('destroy');
+	    Route::get('/data', [DriverController::class, 'data'])->name('data');
+	    Route::resource('/',  DriverController::class)->except([
 	        'show', 'destroy'
 	    ])->parameters(['' => 'master-driver']);
 	});
 
 	Route::group(['prefix' => '/master-armada', 'as' => 'master-armada.'], function(){
-	    Route::post('/destroy', [MasterArmadaController::class, 'destroy'])->name('destroy');
-	    Route::get('/data', [MasterArmadaController::class, 'data'])->name('data');
-	    Route::resource('/',  MasterArmadaController::class)->except([
+	    Route::post('/destroy', [ArmadaController::class, 'destroy'])->name('destroy');
+	    Route::get('/data', [ArmadaController::class, 'data'])->name('data');
+	    Route::resource('/',  ArmadaController::class)->except([
 	        'show', 'destroy'
 	    ])->parameters(['' => 'master-armada']);
 	});

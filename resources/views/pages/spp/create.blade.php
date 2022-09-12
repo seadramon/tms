@@ -69,134 +69,7 @@
 				{!! Form::open(['url' => route('spp.store'), 'class' => 'form', 'id' => 'fstore', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
 
 					<div class="card-body" id="kt_block_ui_target">
-						<div class="row">
-							<div class="col-lg-12">
-								<h3 class="card-title">Detail Pesanan NPP</h3>
-								<div class="table-responsive">
-									<table id="kt_datatable_example_2" class="table table-row-bordered  gy-5">
-										<thead>
-											<tr class="fw-bolder fs-6 text-gray-800">
-												<th rowspan="2">Nama/Tipe Produk</th>
-												<th colspan="2">Pesanan</th>
-												<th colspan="2">SPP Sebelumnya</th>
-												<th colspan="3">Volume Sisa</th>
-											</tr>
-											<tr>
-												<th>Vol(Btg)</th>
-												<th>Vol(Ton)</th>
-												<th>Vol(Btg)</th>
-												<th>Vol(Ton)</th>
-												<th>Vol(Btg)</th>
-												<th>Vol(Ton)</th>
-												<th>%</th>
-											</tr>
-										</thead>
-										<tbody id="dtlPesanan">
-											<tr>
-												<td>60 A3 B 14 7 B</td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-
-							<div class="col-lg-12">
-								<div class="form-group">
-									<label class="fs-6 fw-bold mt-2 mb-3">Proyek</label>
-									{!! Form::text('nama_proyek', '', ['class'=>'form-control', 'id'=>'nama_proyek']) !!}
-								</div>	
-							</div>
-
-							<div class="col-lg-6">
-								<div class="form-group">
-									<label class="fs-6 fw-bold mt-2 mb-3">Pelanggan</label>
-									{!! Form::text('nama_pelanggan', '', ['class'=>'form-control', 'id'=>'nama_pelanggan']) !!}
-								</div>	
-							</div>
-
-							<div class="col-lg-6">
-								<div class="form-group">
-									<label class="fs-6 fw-bold mt-2 mb-3">Lokasi Muat</label>
-									{!! Form::text('pat', '', ['class'=>'form-control', 'id'=>'pat']) !!}
-									{!! Form::hidden('pat_singkatan', '', ['class'=>'form-control', 'id'=>'pat_singkatan']) !!}
-								</div>	
-							</div>
-
-							<div class="col-lg-6">
-								<div class="form-group">
-									<label class="fs-6 fw-bold mt-2 mb-3">Tujuan</label>
-									{!! Form::text('tujuan', '', ['class'=>'form-control', 'id'=>'tujuan']) !!}
-								</div>	
-							</div>
-
-							<div class="col-lg-6">
-								<div class="form-group">
-									<label class="fs-6 fw-bold mt-2 mb-3">NPP</label>
-									{!! Form::text('no_npp', '', ['class'=>'form-control', 'id'=>'no_npp']) !!}
-									{!! Form::hidden('no_spprb', '', ['class'=>'form-control', 'id'=>'no_spprb']) !!}
-								</div>	
-							</div>
-
-							<div class="col-lg-6">
-								<div class="form-group">
-									<label class="fs-6 fw-bold mt-2 mb-3">Estimasi Total Ritase</label>
-									{!! Form::text('rit', '', ['class'=>'form-control', 'id'=>'rit']) !!}
-								</div>	
-							</div>
-
-							<div class="col-lg-6">
-								<div class="form-group">
-									<label class="fs-6 fw-bold mt-2 mb-3">Jarak (KM)</label>
-									{!! Form::text('jarak_km', '', ['class'=>'form-control', 'id'=>'jarak_km']) !!}
-								</div>	
-							</div>
-
-							<div class="col-lg-12 mt-10">
-								<h3 class="card-title">Detail Rencana Produk</h3>
-								<div class="table-responsive">
-									<table class="table table-row-bordered gy-5">
-										<thead>
-											<tr class="fw-bolder fs-6 text-gray-800">
-												<th>No</th>
-												<th>Nama Produk</th>
-												<th>Kode Produk</th>
-												<th>Saat Ini</th>
-												<th>S.d Saat ini</th>
-												<th>Keterangan</th>
-												<th>Segmen</th>
-												<th>Jumlah Segmen</th>
-											</tr>
-										</thead>
-										<tbody id="rencanaProd">
-											<tr>
-												<td colspan="8">Data Kosong</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-
-							<div class="col-lg-6">
-								<div class="form-group">
-									<label class="fs-6 fw-bold mt-2 mb-3">Rencana Pengiriman</label>
-									{!! Form::text('jadwal', '', ['class'=>'form-control', 'id'=>'daterange']) !!}
-								</div>	
-							</div>
-
-							<div class="col-lg-12">
-								<div class="form-group">
-									<label class="fs-6 fw-bold mt-2 mb-3">Keterangan</label>
-									{!! Form::textarea('catatan', '', ['class'=>'form-control', 'id'=>'daterange', 'rows' => '5']) !!}
-								</div>	
-							</div>
-						</div>
+						
 					</div>
 					<!-- end box 2 -->
 
@@ -227,16 +100,6 @@
 @endsection
 @section('js')
 <script type="text/javascript">
-
-function sdSaatIni(vol, urutan) {
-	console.log(vol);
-	console.log(urutan);
-
-	let saatIni = $("#id-saatini-" + urutan).val();
-	let hitungan = parseInt(vol) + parseInt(saatIni);
-	
-	$("#id-sdsaatini-" + urutan).val(hitungan);
-}
 
 $( document ).ready(function() {	
 	$("#daterange").daterangepicker();
@@ -284,32 +147,9 @@ $( document ).ready(function() {
 			url: url,
 			data: data,
 			success: function(res) {
-				console.log(res.npp);
-				$("#dtlPesanan").html("");
-				$("#dtlPesanan").html(res.tblPesanan);
+				$("#kt_block_ui_target").html("");
 
-				$("#nama_proyek").val(res.npp.nama_proyek);
-				$("#nama_pelanggan").val(res.npp.nama_pelanggan);
-				$("#tujuan").val(res.npp.kab + ', ' + res.npp.kec);
-				$("#no_spprb").val(res.noSpprb);
-				$("#no_npp").val(res.npp.no_npp);
-				$("#no_npp_input").val(res.npp.no_npp);
-				$("#pat").val(res.pat.ket);
-				$("#pat_singkatan").val(res.pat.singkatan);
-				$("#jarak_km").val(res.jarak);
-
-				$("#rencanaProd").html("");
-				$("#rencanaProd").html(res.rencanaProd);
-
-				blockUI.release();
-			},
-			error: function (err) {
-				$("#draft_submit").removeAttr("data-kt-indicator");
-				if (err.status == 422) {
-					// flasher.error(err.responseJSON.message);
-				} else {
-					// flasher.error("Data gagal ditambahkan");
-				}
+				$("#kt_block_ui_target").html(res);
 
 				blockUI.release();
 			}

@@ -22,4 +22,9 @@ class Armada extends Model
     {
         return $this->belongsTo(Driver::class, 'driver_id', 'id');
     }
+
+    public function jenis()
+    {
+        return $this->belongsTo(TrMaterial::class, 'kd_armada', 'kd_material');
+    }
 }
