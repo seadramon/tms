@@ -468,7 +468,8 @@ $(document).ready(function(){
      
         const map = new google.maps.Map(document.getElementById("rute_map"), {
             zoom: 6,
-            center: { lat: -7.258621, lng: 112.750281 }, // Indonesia.
+            // center: { lat: -7.258621, lng: 112.750281 }, // Indonesia.
+            center: { lat: -6.2297419, lng: 106.7594782 }, // Jakarta. -6.2297419,106.7594782
         });
         const directionsService = new google.maps.DirectionsService();
         const directionsRenderer = new google.maps.DirectionsRenderer({
@@ -494,15 +495,15 @@ $(document).ready(function(){
 
         function displayRoute(service, display) {  
             service.route({
-                origin: { location: { lat: -6.215654, lng: 106.802097 } },
-                destination: { location: { lat: -7.258621, lng: 112.750281 } },
+                origin: { location: { lat: -6.218410109901146, lng: 106.79832075524945 } }, //GBK -6.218410109901146, 106.79832075524945
+                destination: { location: { lat: -6.180274999666274, lng: 106.82641519051303 } }, // Monas -6.180274999666274, 106.82641519051303
                 waypoints: waypts,  
                 // [ values
                 //     // { location: { lat: -7.258621, lng: 112.750281 } },
                 //     // { location: "Broken Hill, NSW" },
                 // ],
                 travelMode: google.maps.TravelMode.DRIVING,
-                avoidTolls: true,
+                // avoidTolls: true,
                 })
                 .then((result) => {
                     display.setDirections(result);
@@ -600,5 +601,5 @@ $(document).ready(function(){
 	}
 </script>
 <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0f2vYkUlCd6XCyu17DBElvuxyf_4quCU&libraries=places&callback=initMap"></script>
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0f2vYkUlCd6XCyu17DBElvuxyf_4quCU&libraries=places&callback=initMap&language=id"></script>
 @endsection
