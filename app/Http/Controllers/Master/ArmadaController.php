@@ -28,13 +28,13 @@ class ArmadaController extends Controller
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_stnk', function ($model) {
-                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_stnk)->format('d-m-Y');
+                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_stnk)->format('d-m-y');
                 })
                 ->editColumn('tgl_kir_head', function ($model) {
-                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_kir_head)->format('d-m-Y');
+                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_kir_head)->format('d-m-y');
                 })
                 ->editColumn('tgl_pajak', function ($model) {
-                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_pajak)->format('d-m-Y');
+                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_pajak)->format('d-m-y');
                 })
                 ->editColumn('detail', function ($model) {
                     return $model->kd_armada . '|' . $model->detail;
@@ -59,6 +59,7 @@ class ArmadaController extends Controller
     public function create()
     {
         $jenis = TrMaterial::where('kd_jmaterial', 'J')
+            ->where('kd_material', 'LIKE', 'JA%')
             ->get()
             ->mapWithKeys(function($item){
                 return [$item->kd_material => $item->kd_material . ' | ' . $item->name];

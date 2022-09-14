@@ -57,7 +57,7 @@ class SppController extends Controller
             ->addColumn('waktu', function($model) {
                 $ret = 0;
                 if (!empty($model->jadwal1) && !empty($model->jadwal2)) {
-                    $a = $this->diffDate($model->jadwal1, date('d-m-Y'));
+                    $a = $this->diffDate($model->jadwal1, date('Y-m-d'));
                     $b = $this->diffDate($model->jadwal1, $model->jadwal2);
 
                     if ($b > 0) {
@@ -66,6 +66,9 @@ class SppController extends Controller
                 }
                 if($ret > 100){
                     $ret = 100;
+                }
+                if($ret < 0){
+                    $ret = 0;
                 }
 
                 return $ret . '%';
@@ -82,26 +85,36 @@ class SppController extends Controller
 
                 return $res . '%';
             })
+            ->addColumn('approval', function ($model) {
+                $teks = '';
+                if($model->app == 1){
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved 1</span>';
+                }
+                if($model->app2 == 1){
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved 2</span>';
+                }
+                return $teks;
+            })
             ->addColumn('menu', function ($model) {
                 switch (true) {
                     case ($model->app == 0):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'first', 
-                            'nosppb' => str_replace("/", "&", $model->no_sppb)
+                            'nosppb' => str_replace("/", "|", $model->no_sppb)
                         ]);
                         $caption = "Approve First";
                         break;
                     case ($model->app == 1 && $model->app2 == 0):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'second', 
-                            'nosppb' => str_replace("/", "&", $model->no_sppb)
+                            'nosppb' => str_replace("/", "|", $model->no_sppb)
                         ]);
                         $caption = "Approve Second";
                         break;
                     case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'third', 
-                            'nosppb' => str_replace("/", "&", $model->no_sppb)
+                            'nosppb' => str_replace("/", "|", $model->no_sppb)
                         ]);
                         $caption = "Approve Third";
                         break;
@@ -132,19 +145,13 @@ class SppController extends Controller
 
                 return $edit;
             })
-            ->rawColumns(['menu', 'waktu'])
+            ->rawColumns(['menu', 'waktu', 'approval'])
             ->toJson();
     }
 
     private function diffDate($date1, $date2)
     {
-        $j1 = date_create($date1);
-        $j2 = date_create($date2);
-        $interval = date_diff($j1, $j2);
-
-        $ret = $interval->format('%d');
-
-        return $ret;
+        return (strtotime($date2)-strtotime($date1)) / 3600 / 24;
     }
 
 

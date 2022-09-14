@@ -211,7 +211,7 @@
     $('.form-select-solid').select2();
 
     Inputmask({
-        "regex" : "([A-Z][A-Z]{1,2}) ([0-9]{1,4}) ([A-Z]{0,3})"
+        "regex" : "([A-Z]{1,2}) ([0-9]{1,4}) ([A-Z]{0,3})"
     }).mask("#nopol");
 
     $(".datepicker").daterangepicker({
@@ -224,7 +224,7 @@
         }
     }).on("change", function (e) {
         getNextExpiredDate($(this).attr('id'))
-    }).val('');
+    });
 
     function getNextExpiredDate(id){
         var date = $("#" + id).val();
