@@ -70,7 +70,7 @@
 		</div>	
 	</div>
 
-	<div class="col-lg-6">
+	<div class="col-lg-6 hide">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Lokasi Muat</label>
 			{!! Form::text('pat', $pat->ket, ['class'=>'form-control', 'id'=>'pat']) !!}

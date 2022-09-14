@@ -119,18 +119,7 @@
                     {data: 'jadwal2', name: 'jadwal2', defaultContent: '-',orderable: false, searchable: false},
                     {data: 'vol', name: 'vol', defaultContent: '-',orderable: false, searchable: false},
                     {data: 'waktu', name: 'waktu', defaultContent: '-',orderable: false, searchable: false},
-                    {
-                        render: function ( data, type, row ) {
-                            let firstBox = `<i class="fa fa-square" style="color:yellow; font-size:20px;"></i>`
-                            let secondBox = `<i class="fa fa-square" style="color:yellow; font-size:20px;"></i>`
-
-                            if(row.app == 1) firstBox = `<i class="fa fa-square" style="color:green; font-size:20px;"></i>`;
-
-                            return firstBox + '&nbsp;' + secondBox;
-                        },
-                        className: 'text-center',
-                        name: 'app'
-                    },
+                    {data: 'approval', name: 'approval', defaultContent: '-', orderable: false, searchable: false},
                     {data: 'menu', orderable: false, searchable: false}
                 ],
             });

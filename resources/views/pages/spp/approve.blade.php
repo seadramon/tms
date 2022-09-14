@@ -208,18 +208,18 @@
 													<td>{{ $detail->vol + $arrVol[$row->kd_produk] }}</td>
 													@if ($approval == 'first')
 														<td>
-															{!! Form::number("rencana[$detail->kd_produk][app1_vol]", null, ['class'=>'form-control']) !!}
+															{!! Form::text("rencana[$detail->kd_produk][app1_vol]", null, ['class'=>'form-control decimal']) !!}
 														</td>
 													@elseif ($approval == 'second')
 														<td>{{ $detail->app1_vol }}</td>
 														<td>
-															{!! Form::number("rencana[$detail->kd_produk][app2_vol]", null, ['class'=>'form-control']) !!}
+															{!! Form::text("rencana[$detail->kd_produk][app2_vol]", null, ['class'=>'form-control decimal']) !!}
 														</td>
 													@elseif ($approval == 'third')
 														<td>{{ $detail->app1_vol }}</td>
 														<td>{{ $detail->app2_vol }}</td>
 														<td>
-															{!! Form::number("rencana[$detail->kd_produk][app3_vol]", null, ['class'=>'form-control']) !!}
+															{!! Form::text("rencana[$detail->kd_produk][app3_vol]", null, ['class'=>'form-control decimal']) !!}
 														</td>
 													@endif
 												</tr>
