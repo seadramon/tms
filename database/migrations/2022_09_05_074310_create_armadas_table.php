@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('tms_armadas', function (Blueprint $table) {
             $table->id();
             $table->string('vendor_id', 30);
-            $table->foreignId('driver_id')->constrained('tms_drivers')->nullable();
+            $table->foreignId('driver_id')->nullable()->constrained('tms_drivers');
             $table->string('nopol', 50);
             $table->string('tahun', 8)->nullable();
-            $table->string('jenis', 100)->nullable();
-            $table->string('detail', 100)->nullable();
+            $table->string('kd_armada', 20)->nullable();
+            $table->string('detail', 200)->nullable();
             $table->string('status', 50)->nullable();
             $table->date('tgl_stnk')->nullable();
             $table->string('foto_stnk', 200)->nullable();
@@ -32,6 +32,8 @@ return new class extends Migration
             $table->string('foto_pajak', 200)->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('kd_armada')->references('kd_material')->on('tr_material');
         });
     }
 

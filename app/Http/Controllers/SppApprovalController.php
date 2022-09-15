@@ -24,7 +24,7 @@ class SppApprovalController extends Controller
     
     public function approval(Request $request)
     {
-    	$noSppb = str_replace("&", "/", $request->nosppb);
+    	$noSppb = str_replace("|", "/", $request->nosppb);
         $approval = $request->urutan;
 
     	$data = SppbH::with(['detail', 'spprb'])

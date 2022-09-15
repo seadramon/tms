@@ -25,6 +25,7 @@
                     <table id="tabel_master_armada" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                         <thead>
                             <tr class="fw-semibold fs-6 text-muted">
+                                <th>Jenis</th>
                                 <th>Tahun</th>
                                 <th>Nopol</th>
                                 <th>Driver</th>
@@ -94,10 +95,11 @@
 	            searchDelay: 500,
 	            processing: true,
 	            serverSide: true,
-	            order: [[0, 'desc']],
+	            order: [[1, 'desc']],
 	            stateSave: true,
 	            ajax: "{{ route('master-armada.data') }}",
 	            columns: [
+                    {data: 'detail', name: 'detail', defaultContent: '-'},
                     {data: 'tahun', name: 'tahun', defaultContent: '-'},
 	                {data: 'nopol', name: 'nopol', defaultContent: '-'},
 	                {data: 'driver.nama', name: 'driver.nama', defaultContent: '-'},
