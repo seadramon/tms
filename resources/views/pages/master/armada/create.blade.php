@@ -66,7 +66,7 @@
                             <label class="form-label">Tanggal Berlaku STNK</label>
                             <div class="col-lg-12">
                                 <div class="input-group date">
-                                    {!! Form::text('tgl_stnk', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->tgl_stnk)->format('d-m-Y') : null, ['class'=>'form-control datepicker', 'id'=>'tgl_stnk']) !!}
+                                    {!! Form::text('tgl_stnk', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->tgl_stnk)->format('d-m-Y') : null, ['class'=>'form-control datepicker', 'id'=>'tgl_stnk', 'data-inc-value' => "5", 'data-inc-type' => "years"]) !!}
                                     <div class="input-group-append">
                                         <span class="input-group-text" style="display: block">
                                             <i class="la la-calendar-check-o"></i>
@@ -95,7 +95,7 @@
                             <label class="form-label">Tanggal Berlaku KIR Head</label>
                             <div class="col-lg-12">
                                 <div class="input-group date">
-                                    {!! Form::text('tgl_kir_head', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->tgl_kir_head)->format('d-m-Y') : null, ['class'=>'form-control datepicker', 'id'=>'tgl_kir_head']) !!}
+                                    {!! Form::text('tgl_kir_head', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->tgl_kir_head)->format('d-m-Y') : null, ['class'=>'form-control datepicker', 'data-inc-value' => "6", 'data-inc-type' => "months", 'id'=>'tgl_kir_head']) !!}
                                     <div class="input-group-append">
                                         <span class="input-group-text" style="display: block">
                                             <i class="la la-calendar-check-o"></i>
@@ -124,7 +124,7 @@
                             <label class="form-label">Tanggal Berlaku KIR Trailer</label>
                             <div class="col-lg-12">
                                 <div class="input-group date">
-                                    {!! Form::text('tgl_kir_trailer', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->tgl_kir_trailer)->format('d-m-Y') : null, ['class'=>'form-control datepicker', 'id'=>'tgl_kir_trailer']) !!}
+                                    {!! Form::text('tgl_kir_trailer', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->tgl_kir_trailer)->format('d-m-Y') : null, ['class'=>'form-control datepicker', 'data-inc-value' => "6", 'data-inc-type' => "months", 'id'=>'tgl_kir_trailer']) !!}
                                     <div class="input-group-append">
                                         <span class="input-group-text" style="display: block">
                                             <i class="la la-calendar-check-o"></i>
@@ -153,7 +153,7 @@
                             <label class="form-label">Tanggal Berlaku Pajak</label>
                             <div class="col-lg-12">
                                 <div class="input-group date">
-                                    {!! Form::text('tgl_pajak', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->tgl_pajak)->format('d-m-Y') : null, ['class'=>'form-control datepicker', 'id'=>'tgl_pajak']) !!}
+                                    {!! Form::text('tgl_pajak', isset($data) ? Carbon\Carbon::createFromFormat('Y-m-d h:i:s', $data->tgl_pajak)->format('d-m-Y') : null, ['class'=>'form-control datepicker', 'data-inc-value' => "1", 'data-inc-type' => "years", 'id'=>'tgl_pajak']) !!}
                                     <div class="input-group-append">
                                         <span class="input-group-text" style="display: block">
                                             <i class="la la-calendar-check-o"></i>
@@ -202,10 +202,11 @@
 <script src="{{ asset('assets/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        getNextExpiredDate('tgl_stnk');
-        getNextExpiredDate('tgl_kir_head');
-        getNextExpiredDate('tgl_kir_trailer');
-        getNextExpiredDate('tgl_pajak');
+        // getNextExpiredDate('tgl_stnk');
+        // getNextExpiredDate('tgl_kir_head');
+        // getNextExpiredDate('tgl_kir_trailer');
+        // getNextExpiredDate('tgl_pajak');
+        $(".datepicker").trigger('change');
     });
 
     $('.form-select-solid').select2();
@@ -223,20 +224,16 @@
             format: 'DD-MM-YYYY'
         }
     }).on("change", function (e) {
-        getNextExpiredDate($(this).attr('id'))
+        getNextExpiredDate($(this).attr('id'), $(this).attr('data-inc-value'), $(this).attr('data-inc-type'))
     });
 
-    function getNextExpiredDate(id){
+    function getNextExpiredDate(id, inc, type){
         var date = $("#" + id).val();
         var idExpired = "#" + id + '_expired';
         if(date == ''){
             $(idExpired).val('');
         }else{
-            var day = date.substr(0, 2);
-            var month = date.substr(3, 2);
-            var year = date.substr(6,4);
-            var nextExpiredDate = day + '-' + month + '-' + (parseInt(year)+5);
-            $(idExpired).val(nextExpiredDate);
+            $(idExpired).val(moment(date, 'DD-MM-YYYY').add(inc, type).format('DD-MM-YYYY'));
         }
     }
 </script>

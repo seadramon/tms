@@ -28,9 +28,11 @@
                                 <th>Nama</th>
                                 <th>Usia</th>
                                 <th>Hp</th>
+                                <th>Nopol</th>
                                 <th>SIM</th>
                                 <th>SIM Expired</th>
                                 <th>Masa Kerja</th>
+                                <th>Status</th>
                                 <th>Menu</th>
                             </tr>
                         </thead>
@@ -101,9 +103,11 @@
 	                {data: 'nama', name: 'nama', defaultContent: '-'},
 	                {data: 'tgl_lahir', name: 'tgl_lahir', defaultContent: '-'},
 	                {data: 'no_hp', name: 'no_hp', defaultContent: '-'},
+	                {data: 'armada.nopol', name: 'armada.nopol', defaultContent: '-'},
 	                {data: 'sim_jenis', name: 'sim_jenis', defaultContent: '-'},
 	                {data: 'sim_expired', name: 'sim_expired', defaultContent: '-'},
 	                {data: 'tgl_bergabung', name: 'tgl_bergabung', defaultContent: '-'},
+	                {data: 'status_label', name: 'status', defaultContent: '-'},
 	                {data: 'menu', orderable: false, searchable: false}
 	            ],
 	        });
