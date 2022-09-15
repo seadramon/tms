@@ -337,7 +337,7 @@
                             <div id="rute_map" style="height:500px;"></div>
                         </div>
                         <div class="col-md-4">
-                            <div id="sidebar">
+                            <div id="sidebar" class="scroll h-500px px-5">
                                 <p>Total Distance: <span id="total"></span></p>
                                 <div id="panel"></div>
                             </div>
