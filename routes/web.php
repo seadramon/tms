@@ -9,6 +9,7 @@ use App\Http\Controllers\SppApprovalController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,6 +24,7 @@ use App\Http\Middleware\EnsureSessionIsValid;
 Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::get('/', function () {
     	// dd(session()->all());
+    	$data = \DB::connection('oracle-eproc')->table('m_user')->first();
         return view('testing');
     });
 

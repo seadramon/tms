@@ -63,7 +63,7 @@ return [
         'password'       => env('EPROC_DB_PASSWORD', ''),
         'charset'        => env('EPROC_DB_CHARSET', 'AL32UTF8'),
         'prefix'         => env('EPROC_DB_PREFIX', ''),
-        'prefix_schema'  => env('USRADM_DB_SCHEMA_PREFIX', ''),
+        'prefix_schema'  => env('EPROC_DB_SCHEMA_PREFIX', ''),
         'edition'        => env('DB_EDITION', 'ora$base'),
         'server_version' => env('DB_SERVER_VERSION', '11g'),
         'load_balance'   => env('DB_LOAD_BALANCE', 'yes'),
