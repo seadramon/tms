@@ -10,7 +10,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MasterDriverController;
 use App\Http\Controllers\MasterArmadaController;
 use App\Http\Controllers\PdaController;
+use App\Http\Controllers\LoginVendorController;
 use App\Http\Middleware\EnsureSessionIsValid;
+
+use App\Models\User;
 
 
 /*
@@ -27,15 +30,8 @@ use App\Http\Middleware\EnsureSessionIsValid;
 Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::get('/', function () {
     	// dd(session()->all());
-    	$data = \DB::connection('oracle-eproc')->table('m_user')->first();
         return view('testing');
     });
-
-    Route::get('login', [AuthController::class, 'index'])->name('login');
-    Route::post('custom-login', [AuthController::class, 'customLogin'])->name('login.custom'); 
-    Route::get('registration', [AuthController::class, 'registration'])->name('register-user');
-    Route::post('custom-registration', [AuthController::class, 'customRegistration'])->name('register.custom'); 
-    Route::get('signout', [AuthController::class, 'signOut'])->name('signout');
 
 	Route::group(['prefix' => '/sp3', 'as' => 'sp3.'], function(){
 	    Route::post('/destroy', [Sp3Controller::class, 'destroy'])->name('destroy');
@@ -88,4 +84,22 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	Route::group(['prefix' => 'potensi-detail-armada', 'as' => 'potensi.detail.armada.'], function(){
 		Route::get('/create',	[PdaController::class, 'create'])->name('create');
 	});
+});
+
+
+// VENDOR
+Route::group(['prefix' => '/vendor', 'as' => 'vendor.'], function(){
+
+	Route::get('/login',	[LoginVendorController::class, 'index'])->name('login');
+	Route::post('/login',	[LoginVendorController::class, 'postLogin'])->name('post-login');
+
+	Route::middleware('auth')->group(function () {
+
+		Route::get('/testing', function () {
+			return view('pages.tms-vendor.home');
+		});
+
+		Route::get('/logout',	[LoginVendorController::class, 'signOut'])->name('logout');
+	});
+
 });
