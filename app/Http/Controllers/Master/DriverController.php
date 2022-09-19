@@ -23,7 +23,7 @@ class DriverController extends Controller
 
     public function data()
     {
-        $query = Driver::with('vendor')->select('*');
+        $query = Driver::with('vendor', 'armada')->select('*');
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_lahir', function ($model) {
@@ -48,7 +48,7 @@ class DriverController extends Controller
 
                     return $column;
                 })
-                ->rawColumns(['menu'])
+                ->rawColumns(['menu', 'status_label'])
                 ->toJson();
     }
 
@@ -59,11 +59,16 @@ class DriverController extends Controller
             'B' => 'B',
             'B2' => 'B2'
         ];
+        $status = [
+            'aktif' => 'Aktif',
+            'tidak_aktif' => 'Tidak Aktif'
+        ];
             
         $jenisSim = ["" => "Pilih Jenis SIM"] + $jenisSim;
+        $status = ["" => "Pilih Status"] + $status;
 
         return view('pages.master.driver.create', compact(
-            'jenisSim'
+            'jenisSim', 'status'
         ));
     }
 
@@ -73,9 +78,12 @@ class DriverController extends Controller
             DB::beginTransaction();
                         
             Validator::make($request->all(), [
-                'nama'      => 'required',
-                'no_hp'     => 'required',
-                'sim_jenis' => 'required',
+                'nama'          => 'required',
+                'no_hp'         => 'required',
+                'sim_jenis'     => 'required',
+                'tgl_lahir'     => 'required',
+                'tgl_bergabung' => 'required',
+                'status'        => 'required'
             ])->validate();
 
             $driver = new Driver();
@@ -84,8 +92,10 @@ class DriverController extends Controller
             $driver->tgl_lahir = Carbon::createFromFormat('d-m-Y', $request->tgl_lahir)->format('Y-m-d');
             $driver->no_hp = $request->no_hp;
             $driver->sim_jenis = $request->sim_jenis;
+            $driver->sim_no = $request->sim_no;
             $driver->sim_expired = Carbon::createFromFormat('d-m-Y', $request->sim_expired)->format('Y-m-d');
             $driver->tgl_bergabung = Carbon::createFromFormat('d-m-Y', $request->tgl_bergabung)->format('Y-m-d');
+            $driver->status = $request->status;
             $driver->save();
 
             if ($request->hasFile('foto_sim')) {
@@ -110,13 +120,13 @@ class DriverController extends Controller
             DB::commit();
 
             $flasher->addSuccess('Data has been saved successfully!');
+            return redirect()->route('master-driver.index');
         } catch(Exception $e) {
             DB::rollback();
-
-            $flasher->addError('An error has occurred please try again later.');
+            
+            $flasher->addError($e->getMessage());
+            return redirect()->back();
         }
-
-        return redirect()->route('master-driver.index');
     }
 
     public function edit($id)
@@ -129,10 +139,16 @@ class DriverController extends Controller
             'B2' => 'B2'
         ];
             
+        $status = [
+            'aktif' => 'Aktif',
+            'tidak_aktif' => 'Tidak Aktif'
+        ];
+            
         $jenisSim = ["" => "Pilih Jenis SIM"] + $jenisSim;
+        $status = ["" => "Pilih Status"] + $status;
 
         return view('pages.master.driver.create', compact(
-            'data', 'jenisSim'
+            'data', 'jenisSim', 'status'
         ));
     }
 
@@ -142,9 +158,12 @@ class DriverController extends Controller
             DB::beginTransaction();
                         
             Validator::make($request->all(), [
-                'nama'      => 'required',
-                'no_hp'     => 'required',
-                'sim_jenis' => 'required',
+                'nama'          => 'required',
+                'no_hp'         => 'required',
+                'sim_jenis'     => 'required',
+                'tgl_lahir'     => 'required',
+                'tgl_bergabung' => 'required',
+                'status'        => 'required'
             ])->validate();
 
             $driver = Driver::find($id);
@@ -156,6 +175,8 @@ class DriverController extends Controller
             $driver->sim_jenis = $request->sim_jenis;
             $driver->sim_expired = Carbon::createFromFormat('d-m-Y', $request->sim_expired)->format('Y-m-d');
             $driver->tgl_bergabung = Carbon::createFromFormat('d-m-Y', $request->tgl_bergabung)->format('Y-m-d');
+            $driver->sim_no = $request->sim_no;
+            $driver->status = $request->status;
             $driver->save();
 
             if ($request->hasFile('foto_sim')) {
@@ -180,13 +201,13 @@ class DriverController extends Controller
             DB::commit();
 
             $flasher->addSuccess('Data has been saved successfully!');
+            return redirect()->route('master-driver.index');
         } catch(Exception $e) {
             DB::rollback();
 
-            $flasher->addError('An error has occurred please try again later.');
+            $flasher->addError($e->getMessage());
+            return redirect()->back();
         }
-
-        return redirect()->route('master-driver.index');
     }
 
     public function destroy(Request $request)

@@ -9,6 +9,7 @@ use App\Models\TrMaterial;
 use Carbon\Carbon;
 use Exception;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -84,6 +85,7 @@ class ArmadaController extends Controller
         $status = ["" => "Pilih Status"] + $status;
 
         $driver = Driver::where('vendor_id', 'WBP004')
+            ->doesntHave('armada')
             ->get()
             ->pluck('nama', 'id')
             ->toArray();
@@ -249,6 +251,10 @@ class ArmadaController extends Controller
         $status = ["" => "Pilih Status"] + $status;
 
         $driver = Driver::where('vendor_id', 'WBP004')
+            ->where(function (Builder $query) use ($data) {
+                $query->doesntHave('armada');
+                $query->orWhere('id', $data->driver_id);
+            })
             ->get()
             ->pluck('nama', 'id')
             ->toArray();
