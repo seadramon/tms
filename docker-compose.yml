@@ -1,32 +1,35 @@
 version: '3.7'
 
 services:
-  #PHP Service
-  phpfpm:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: wbtms
-    container_name: phpfpm_wbtms
-    restart: unless-stopped
-    tty: true
-    volumes:
-      - ./scripts/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - ./:/var/www
-    networks:
-      - intra_net
-  # NGINX Service
-  nginx:
-    container_name: nginx_wbtms
-    image: nginx:alpine
-    restart: unless-stopped
-    volumes:
-      - ./scripts/nginx/:/etc/nginx/conf.d
-      - ./:/var/www
-    ports:
-      - 80:80
-    networks:
-      - intra_net
+	tms:
+		build:
+			context: .
+			dockerfile: Dockerfile
+		image: tms_image
+		container_name: tms
+		restart: unless-stopped
+		tty: true
+		cap_add:
+			- NET_ADMIN
+		volumes:
+			- ./local.ini:/usr/local/etc/php/conf.d/local.ini
+			- /storage/tms:/var/www/tms/storage/app
+		networks:
+			- intra_net
+	tms_wton:
+		build:
+			context: .
+			dockerfile: Dockerfile
+		image: tms_wton_image
+		container_name: tms_wton
+		restart: unless-stopped
+		tty: true
+		volumes:
+			- ./local.ini:/usr/local/etc/php/conf.d/local.ini
+			- /storage/tms:/var/www/tms/storage/app
+		networks:
+			- intra_net
+
 networks:
-  intra_net:
-    name: internal_network
+	intra_net:
+		name: internal_network
