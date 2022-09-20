@@ -6,11 +6,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sp3Controller;
 use App\Http\Controllers\SppController;
 use App\Http\Controllers\SppApprovalController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MasterDriverController;
 use App\Http\Controllers\MasterArmadaController;
 use App\Http\Controllers\PdaController;
 use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaController;
+use App\Http\Controllers\LoginVendorController;
 use App\Http\Middleware\EnsureSessionIsValid;
+
+use App\Models\User;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -89,4 +94,22 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	Route::group(['prefix' => 'potensi-detail-armada', 'as' => 'potensi.detail.armada.'], function(){
 		Route::get('/create',	[PdaController::class, 'create'])->name('create');
 	});
+});
+
+
+// VENDOR
+Route::group(['prefix' => '/vendor', 'as' => 'vendor.'], function(){
+
+	Route::get('/login',	[LoginVendorController::class, 'index'])->name('login');
+	Route::post('/login',	[LoginVendorController::class, 'postLogin'])->name('post-login');
+
+	Route::middleware('auth')->group(function () {
+
+		Route::get('/testing', function () {
+			return view('pages.tms-vendor.home');
+		});
+
+		Route::get('/logout',	[LoginVendorController::class, 'signOut'])->name('logout');
+	});
+
 });
