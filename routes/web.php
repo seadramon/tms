@@ -9,6 +9,7 @@ use App\Http\Controllers\SppApprovalController;
 use App\Http\Controllers\MasterDriverController;
 use App\Http\Controllers\MasterArmadaController;
 use App\Http\Controllers\PdaController;
+use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 /*
@@ -74,6 +75,15 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::resource('/',  ArmadaController::class)->except([
 	        'show', 'destroy'
 	    ])->parameters(['' => 'master-armada']);
+	});
+
+	Route::group(['prefix' => 'verivikasi-armada', 'as' => 'verifikasi-armada.'], function(){
+		Route::get('verifikasi/{id}', [VerifikasiArmadaController::class, 'verify'])->name('verify');
+		Route::post('verifikasi/{id}', [VerifikasiArmadaController::class, 'verified'])->name('verify');
+		Route::get('data', [VerifikasiArmadaController::class, 'data'])->name('data');
+		Route::resource('/',  VerifikasiArmadaController::class)->only([
+			'index'
+		])->parameters(['' => 'id']);
 	});
 
 	Route::group(['prefix' => 'potensi-detail-armada', 'as' => 'potensi.detail.armada.'], function(){

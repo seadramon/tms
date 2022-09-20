@@ -18,6 +18,7 @@ use App\Models\Sp3D2;
 use App\Models\Sp3Pic;
 use App\Models\Vendor;
 use App\Models\Views\VSpprbRi;
+use Exception;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
@@ -114,7 +115,7 @@ class Sp3Controller extends Controller
             ->toArray();
             
         $jenisPekerjaan = ["" => "Pilih Pekerjaan"] + $jenisPekerjaan;
-        $sat_harsat = ["volumne" => "Volume", "ritase" => "Ritase"];
+        $sat_harsat = ["volume" => "Volume", "ritase" => "Ritase"];
 
         return view('pages.sp3.create', compact(
             'vendor', 'jenisPekerjaan', 'sat_harsat'
@@ -134,12 +135,15 @@ class Sp3Controller extends Controller
 
     public function searchPic(Request $request)
     {
-        return Personal::select('employee_id', 'first_name', 'last_name')
+        $personal = Personal::select('employee_id', 'first_name', 'last_name')
             ->where('ST', 1)
             ->where(DB::raw('LOWER(employee_id)'), 'LIKE', '%' . $request->q . '%')
             ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', '%' . $request->q . '%')
-            ->orWhere(DB::raw('LOWER(last_name)'), 'LIKE', '%' . $request->q . '%')
-            ->get();
+            ->orWhere(DB::raw('LOWER(last_name)'), 'LIKE', '%' . $request->q . '%');
+        if(session('TMP_KDWIL') != '0A'){
+            $personal->where('kd_pat', session('TMP_KDWIL') ?? '0A');
+        }
+        return $personal->get();
     }
 
     public function getDataBox2(Request $request)
@@ -217,6 +221,7 @@ class Sp3Controller extends Controller
         $pph = DB::table('tb_pph_d')->leftJoin('tb_pph_h', 'tb_pph_d.pph_id', '=', 'tb_pph_h.pph_id')
             ->select('tb_pph_d.pph_id', 'tb_pph_d.ket', 'tb_pph_h.pph_nama','tb_pph_d.value')
             ->get()
+            ->sortBy(['pph_id', 'value'])
             ->mapWithKeys(function($item){ 
                 return [$item->pph_id . '|' . $item->value => $item->pph_nama . ' [' . $item->value . '%]'];
             })
@@ -246,6 +251,7 @@ class Sp3Controller extends Controller
 
     public function store(Request $request, FlasherInterface $flasher)
     {
+        return response()->json($request->all());
         try {
             DB::beginTransaction();
                         
@@ -290,8 +296,8 @@ class Sp3Controller extends Controller
             $sp3->no_sp3 = $noSp3;
             $sp3->no_npp = $request->no_npp;
             $sp3->vendor_id = $vendor->vendor_id;
-            $sp3->satuan_harsat = $vendor->sat_harsat;
             $sp3->alamat_vendor = $vendor->alamat;
+            $sp3->satuan_harsat = $request->sat_harsat;
             $sp3->kd_jpekerjaan = $request->kd_jpekerjaan;
             $sp3->tgl_sp3 = date('Y-m-d', strtotime($request->tgl_sp3));
             $sp3->no_ban = $request->no_ban;
@@ -323,14 +329,16 @@ class Sp3Controller extends Controller
                 $sp3D->no_npp = $request->no_npp;
                 $sp3D->pat_to = $request->unit[$i];
                 $sp3D->kd_produk = $request->kd_produk[$i];
-                $sp3D->jarak_km = $request->jarak_pekerjaan[$i];
-                $sp3D->vol_awal = $request->vol_btg[$i];
-                $sp3D->vol_akhir = $request->vol_btg[$i];
-                $sp3D->vol_ton_awal = $request->vol_ton[$i];
-                $sp3D->vol_ton_akhir = $request->vol_ton[$i];
-                $sp3D->sat_harsat = $request->satuan[$i];
-                $sp3D->harsat_awal = $request->harsat[$i];
-                $sp3D->harsat_akhir = $request->harsat[$i];
+                $sp3D->jarak_km = str_replace(',', '', $request->jarak_pekerjaan[$i]);
+                $sp3D->vol_awal = str_replace(',', '', $request->vol_btg[$i]);
+                $sp3D->vol_akhir = str_replace(',', '', $request->vol_btg[$i]);
+                $sp3D->vol_ton_awal = str_replace(',', '', $request->vol_ton[$i]);
+                $sp3D->vol_ton_akhir = str_replace(',', '', $request->vol_ton[$i]);
+                if($request->sat_harsat == 'volume'){
+                    $sp3D->sat_harsat = $request->satuan[$i];
+                }
+                $sp3D->harsat_awal = str_replace(',', '', $request->harsat[$i]);
+                $sp3D->harsat_akhir = str_replace(',', '', $request->harsat[$i]);
                 $sp3D->save();
             }
 
@@ -353,7 +361,7 @@ class Sp3Controller extends Controller
             $flasher->addSuccess('Data has been saved successfully!');
         } catch(Exception $e) {
             DB::rollback();
-            $flasher->addError('An error has occurred please try again later.');
+            $flasher->addError($e->getMessage());
         }
 
         return redirect()->route('sp3.index');

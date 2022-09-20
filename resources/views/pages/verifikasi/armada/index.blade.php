@@ -2,7 +2,7 @@
 @section('page-title')
 <!--begin::Page title-->
 <div class="page-title d-flex justify-content-center flex-column me-5">
-    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Armada</h1>
+    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Verifikasi Armada</h1>
 </div>
 <!--end::Page title-->
 @endsection
@@ -15,10 +15,7 @@
         <div class="col-12 mb-md-5 mb-xl-10">
             <div class="card shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">List Armada</h3>
-                    <div class="card-toolbar">
-                        <a href="{{route('master-armada.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
-                    </div>
+                    <h3 class="card-title">List Verifikasi Armada</h3>
                 </div>
 
                 <div class="card-body py-5">
@@ -29,7 +26,6 @@
                                 <th>Tahun</th>
                                 <th>Nopol</th>
                                 <th>Driver</th>
-                                <th>Tipe</th>
                                 <th>Tgl STNK</th>
                                 <th>Tgl Kir Head</th>
                                 <th>Tgl Pajak</th>
@@ -98,13 +94,12 @@
 	            serverSide: true,
 	            order: [[1, 'desc']],
 	            stateSave: true,
-	            ajax: "{{ route('master-armada.data') }}",
+	            ajax: "{{ route('verifikasi-armada.data') }}",
 	            columns: [
                     {data: 'detail', name: 'detail', defaultContent: '-'},
                     {data: 'tahun', name: 'tahun', defaultContent: '-'},
 	                {data: 'nopol', name: 'nopol', defaultContent: '-'},
 	                {data: 'driver.nama', name: 'driver.nama', defaultContent: '-'},
-	                {data: 'v_status_label', name: 'v_status', defaultContent: '-'},
 	                {data: 'tgl_stnk', name: 'tgl_stnk', defaultContent: '-'},
 	                {data: 'tgl_kir_head', name: 'tgl_kir_head', defaultContent: '-'},
 	                {data: 'tgl_pajak', name: 'tgl_pajak', defaultContent: '-'},
@@ -141,7 +136,7 @@
 					if (res.result == 'success') {
 						flasher.success("Data telah berhasil dihapus!");
 
-						$('#tabel_master_armada').DataTable().ajax.url("{{ route('master-armada.data') }}").load();
+						$('#tabel_master_armada').DataTable().ajax.url("{{ route('verifikasi-armada.data') }}").load();
 					}
 				}
 			});

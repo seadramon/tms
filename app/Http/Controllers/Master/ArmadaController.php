@@ -38,7 +38,7 @@ class ArmadaController extends Controller
                     return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_pajak)->format('d-m-y');
                 })
                 ->editColumn('detail', function ($model) {
-                    return $model->kd_armada . '|' . $model->detail;
+                    return $model->detail;
                 })
                 ->addColumn('menu', function ($model) {
                     $column = '<div class="btn-group">
@@ -53,7 +53,7 @@ class ArmadaController extends Controller
 
                     return $column;
                 })
-                ->rawColumns(['menu'])
+                ->rawColumns(['menu', 'v_status_label', 'status_label'])
                 ->toJson();
     }
 
@@ -106,9 +106,9 @@ class ArmadaController extends Controller
             DB::beginTransaction();
                         
             Validator::make($request->all(), [
-                'jenis'             => 'required',
+                'kd_armada'         => 'required',
                 'tahun'             => 'required',
-                'nopol'             => 'required',
+                'nopol'             => 'required|unique:' . Armada::class . ',nopol',
                 'status'            => 'required',
                 'driver_id'         => 'required',
                 'tgl_stnk'          => 'required',
@@ -117,15 +117,16 @@ class ArmadaController extends Controller
                 'tgl_pajak'         => 'required',
             ])->validate();
 
-            $tr = TrMaterial::find($request->jenis);
+            $tr = TrMaterial::find($request->kd_armada);
             $armada = new Armada();
             $armada->vendor_id = 'WBP004';
-            $armada->kd_armada = $request->jenis;
+            $armada->kd_armada = $request->kd_armada;
             $armada->detail = $tr->name;
             $armada->tahun = $request->tahun;
             $armada->nopol = $request->nopol;
             $armada->status = $request->status;
             $armada->driver_id = $request->driver_id;
+            $armada->v_status = 'unverified';
             $armada->tgl_stnk = Carbon::createFromFormat('d-m-Y', $request->tgl_stnk)->format('Y-m-d');
             $armada->tgl_kir_head = Carbon::createFromFormat('d-m-Y', $request->tgl_kir_head)->format('Y-m-d');
             $armada->tgl_kir_trailer = Carbon::createFromFormat('d-m-Y', $request->tgl_kir_trailer)->format('Y-m-d');
@@ -211,13 +212,13 @@ class ArmadaController extends Controller
             DB::commit();
 
             $flasher->addSuccess('Data has been saved successfully!');
+            return redirect()->route('master-armada.index');
         } catch(Exception $e) {
             DB::rollback();
-
-            $flasher->addError('An error has occurred please try again later.');
+            $flasher->addError($e->getMessage(), "Validasi Error", ['timer' => 10000]);
+            return redirect()->back();
         }
 
-        return redirect()->route('master-armada.index');
     }
 
     public function edit($id)
@@ -270,11 +271,11 @@ class ArmadaController extends Controller
     {
         try {
             DB::beginTransaction();
-                        
+            $category = ['stnk', 'kir_head', 'kir_trailer', 'pajak'];
             Validator::make($request->all(), [
-                'jenis'             => 'required',
+                'kd_armada'         => 'required',
                 'tahun'             => 'required',
-                'nopol'             => 'required',
+                'nopol'             => 'required|unique:' . Armada::class . ',nopol,' . $id,
                 'status'            => 'required',
                 'driver_id'         => 'required',
                 'tgl_stnk'          => 'required',
@@ -283,107 +284,52 @@ class ArmadaController extends Controller
                 'tgl_pajak'         => 'required',
             ])->validate();
 
-            $tr = TrMaterial::find($request->jenis);
+            $tr = TrMaterial::find($request->kd_armada);
             $armada = Armada::find($id);
             $armada->vendor_id = 'WBP004';
-            $armada->kd_armada = $request->jenis;
+            $armada->kd_armada = $request->kd_armada;
             $armada->detail = $tr->name;
             $armada->tahun = $request->tahun;
             $armada->nopol = $request->nopol;
             $armada->status = $request->status;
             $armada->driver_id = $request->driver_id;
-            $armada->tgl_stnk = Carbon::createFromFormat('d-m-Y', $request->tgl_stnk)->format('Y-m-d');
-            $armada->tgl_kir_head = Carbon::createFromFormat('d-m-Y', $request->tgl_kir_head)->format('Y-m-d');
-            $armada->tgl_kir_trailer = Carbon::createFromFormat('d-m-Y', $request->tgl_kir_trailer)->format('Y-m-d');
-            $armada->tgl_pajak = Carbon::createFromFormat('d-m-Y', $request->tgl_pajak)->format('Y-m-d');
+            $armada->tgl_stnk = Carbon::createFromFormat('d-m-Y', $request->tgl_stnk)->format('Y-m-d 00:00:00');
+            $armada->tgl_kir_head = Carbon::createFromFormat('d-m-Y', $request->tgl_kir_head)->format('Y-m-d 00:00:00');
+            $armada->tgl_kir_trailer = Carbon::createFromFormat('d-m-Y', $request->tgl_kir_trailer)->format('Y-m-d 00:00:00');
+            $armada->tgl_pajak = Carbon::createFromFormat('d-m-Y', $request->tgl_pajak)->format('Y-m-d 00:00:00');
             $armada->save();
 
-            if ($request->hasFile('foto_stnk')) {
-                $file = $request->file('foto_stnk');
-			    $extension = $file->getClientOriginalExtension();
-
-                $dir = 'vendor/' . $armada->vendor_id . '/' . 'armada/' . $armada->id;
-
-                if (!Storage::disk('local')->exists($dir)) {
-                    Storage::disk('local')->makeDirectory($dir, 0777, true);
+            foreach ($category as $row) {
+                $param_foto = 'foto_' . $row;
+                if ($request->hasFile($param_foto)) {
+                    $file = $request->file($param_foto);
+                    $extension = $file->getClientOriginalExtension();
+    
+                    $dir = 'vendor/' . $armada->vendor_id . '/' . 'armada/' . $armada->id;
+    
+                    if (!Storage::disk('local')->exists($dir)) {
+                        Storage::disk('local')->makeDirectory($dir, 0777, true);
+                    }
+    
+                    $fileName = $row . '.' . $extension;
+                    $fullPath = $dir .'/'. $fileName;
+    
+                    Storage::disk('local')->put($fullPath, File::get($file));
+    
+                    $armada->foto_stnk = $fullPath;
                 }
-
-                $fileName = 'stnk.' . $extension;
-			    $fullPath = $dir .'/'. $fileName;
-
-                Storage::disk('local')->put($fullPath, File::get($file));
-
-			    $armada->foto_stnk = $fullPath;
-                $armada->save();
             }
-
-            if ($request->hasFile('foto_kir_head')) {
-                $file = $request->file('foto_kir_head');
-			    $extension = $file->getClientOriginalExtension();
-
-                $dir = 'vendor/' . $armada->vendor_id . '/' . 'armada/' . $armada->id;
-
-                if (!Storage::disk('local')->exists($dir)) {
-                    Storage::disk('local')->makeDirectory($dir, 0777, true);
-                }
-
-                $fileName = 'kir_head.' . $extension;
-			    $fullPath = $dir .'/'. $fileName;
-
-                Storage::disk('local')->put($fullPath, File::get($file));
-
-			    $armada->foto_kir_head = $fullPath;
-                $armada->save();
-            }
-
-            if ($request->hasFile('foto_kir_trailer')) {
-                $file = $request->file('foto_kir_trailer');
-			    $extension = $file->getClientOriginalExtension();
-
-                $dir = 'vendor/' . $armada->vendor_id . '/' . 'armada/' . $armada->id;
-
-                if (!Storage::disk('local')->exists($dir)) {
-                    Storage::disk('local')->makeDirectory($dir, 0777, true);
-                }
-
-                $fileName = 'kir_trailer.' . $extension;
-			    $fullPath = $dir .'/'. $fileName;
-
-                Storage::disk('local')->put($fullPath, File::get($file));
-
-			    $armada->foto_kir_trailer = $fullPath;
-                $armada->save();
-            }
-
-            if ($request->hasFile('foto_pajak')) {
-                $file = $request->file('foto_pajak');
-			    $extension = $file->getClientOriginalExtension();
-
-                $dir = 'vendor/' . $armada->vendor_id . '/' . 'armada/' . $armada->id;
-
-                if (!Storage::disk('local')->exists($dir)) {
-                    Storage::disk('local')->makeDirectory($dir, 0777, true);
-                }
-
-                $fileName = 'pajak.' . $extension;
-			    $fullPath = $dir .'/'. $fileName;
-
-                Storage::disk('local')->put($fullPath, File::get($file));
-
-			    $armada->foto_pajak = $fullPath;
-                $armada->save();
-            }
+            $armada->save();
 
             DB::commit();
-
             $flasher->addSuccess('Data has been saved successfully!');
+            return redirect()->route('master-armada.index');
         } catch(Exception $e) {
             DB::rollback();
-
-            $flasher->addError('An error has occurred please try again later.');
+            $flasher->addError($e->getMessage());
+            return redirect()->back();
         }
 
-        return redirect()->route('master-armada.index');
     }
 
     public function destroy(Request $request)

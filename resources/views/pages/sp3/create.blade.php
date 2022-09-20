@@ -240,6 +240,18 @@
 
             $('.harsat').trigger('change');
         });
+        
+        $('#est-rit').on('change', function(){
+            est = parseFloat($('#est-rit').val().replaceAll(",", "")) / $('.harsat').length;
+            $('.harsat').each(function(){
+                $(this).val(reFormat(est));
+            });
+            $('.jumlah').each(function(){
+                $(this).val(reFormat(est));
+            });
+            $('#subtotal').val($('#est-rit').val());
+            calculateTotal();
+        });
     }
 </script>
 @endsection

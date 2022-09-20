@@ -23,7 +23,7 @@
 
             <div class="card shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">Tambah Baru Driver</h3>
+                    <h3 class="card-title">@if (isset($data))Edit @else Tambah @endif Driver</h3>
                 </div>
             
                 <div class="card-body">

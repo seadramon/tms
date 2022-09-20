@@ -11,12 +11,12 @@ use App\Models\SpprbH;
 use App\Models\Sp3;
 use App\Models\SptbD;
 use App\Models\VSpprbRi;
+use Exception;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
-use DB;
-use Session;
-use Validator;
-use Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class SppController extends Controller
 {
@@ -276,10 +276,10 @@ class SppController extends Controller
                     $detail = new SppbD;
 
                     $detail->kd_produk = $row['kd_produk'];
-                    $detail->vol = $row['saat_ini'];
+                    $detail->vol = str_replace(',', '', $row['saat_ini']);
                     $detail->ket = $row['ket'];
                     $detail->segmental = !empty($row['segmental'])?$row['segmental']:'0';
-                    $detail->jml_segmen = $row['jml_segmen'];
+                    $detail->jml_segmen = str_replace(',', '', $row['jml_segmen']);
 
                     $data->detail()->save($detail);
                 }
@@ -303,7 +303,7 @@ class SppController extends Controller
         $term = trim($request->q);
 
         if (empty($term)) {
-            return \Response::json([]);
+            return Response::json([]);
         }
 
         $tags = DB::table('v_spprb_ri vsr')
@@ -324,7 +324,7 @@ class SppController extends Controller
             $formatted_tags[] = ['id' => $tag->spprblast.'|'.$tag->no_npp, 'text' => $tag->name];
         }
 
-        return \Response::json($formatted_tags);
+        return Response::json($formatted_tags);
     }
 
     private function generateSppb($kdProduk, $patSingkatan)

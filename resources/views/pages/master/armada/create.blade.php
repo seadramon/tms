@@ -23,7 +23,7 @@
 
             <div class="card shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">Tambah Baru Armada</h3>
+                    <h3 class="card-title">@if (isset($data))Edit @else Tambah @endif Armada</h3>
                 </div>
             
                 <div class="card-body">
@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Jenis Armada</label>
-                            {!! Form::select('jenis', $jenis, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'jenis']) !!}
+                            {!! Form::select('kd_armada', $jenis, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_armada']) !!}
                         </div>
 
                         <div class="form-group mb-3 col-lg-3">

@@ -31,6 +31,7 @@
 								$sppSebelumVolTon = $row->vol * $volm3 * 2.5;
 								$sisaBtg = $pesananVolBtg - $sppSebelumVolBtg;
 								$sisaTon = $pesananVolTon - $sppSebelumVolTon;
+								$persen = 0;
 								if ($pesananVolBtg > 0) {
 								    $persen = $sisaBtg / $pesananVolBtg * 100;
 								}

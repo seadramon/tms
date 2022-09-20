@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\FileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::name('api.')->namespace('Api')->group(function() {
+    Route::get('viewer/{path}', [FileController::class, 'viewer'])->name('file.viewer');
 });
