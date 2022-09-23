@@ -46,14 +46,15 @@
 							<div class="col-lg-6">
 								<div class="form-group">
 									<label class="fs-6 fw-bold mt-2 mb-3">NO SPP</label>
-									{!! Form::text('no_npp', 'AUTO', ['class'=>'form-control form-control-solid', 'id'=>'no_npp_input', 'readonly']) !!}
+									{!! Form::text('no_spp', 'AUTO', ['class'=>'form-control form-control-solid', 'id'=>'no_spp_input', 'readonly']) !!}
 								</div>	
 							</div>
 
 							<div class="col-lg-9">
 								<div class="form-group">
-									<label class="fs-6 fw-bold mt-2 mb-3">No SPPRB</label>
-									<select class="form-select select2spprb" data-control="select2" data-placeholder="Pilih SPPRB" data-allow-clear="true" name="no_spprb"></select>
+									<label class="fs-6 fw-bold mt-2 mb-3">NPP</label>
+									<!-- <select class="form-select select2spprb" data-control="select2" data-placeholder="Pilih SPPRB" data-allow-clear="true" name="no_spprb"></select> -->
+									<select class="form-select search-npp" name="no_npp" id="no_npp"></select>
 								</div>	
 							</div>
 
@@ -123,6 +124,26 @@ $( document ).ready(function() {
 		}
 	});
 
+	$('.search-npp').select2({
+        placeholder: 'Cari...',
+        ajax: {
+            url: "{{ route('sp3.search-npp') }}",
+            minimumInputLength: 2,
+            dataType: 'json',
+            cache: true,
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.no_npp + ' | ' + item.nama_proyek,
+                            id: item.no_npp
+                        }
+                    })
+                };
+            },
+        }
+    });
+
 	var target = document.querySelector("#kt_block_ui_target");
 
 	var imgLoading = "{{ asset('assets/image_loader.gif') }}";
@@ -151,6 +172,10 @@ $( document ).ready(function() {
 
 				$("#kt_block_ui_target").html(res);
 
+				blockUI.release();
+			},
+			error: function(res) {
+				console.log(res);
 				blockUI.release();
 			}
 		})
