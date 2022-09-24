@@ -26,4 +26,9 @@ class SppbH extends Model
     {
     	return $this->hasMany(SppbD::class, 'no_sppb', 'no_sppb');
     }
+
+    public function npp()
+    {
+        return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
+    }
 }
