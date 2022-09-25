@@ -19,4 +19,9 @@ class Npp extends Model
     {
         return $this->belongsTo(InfoPasar::class, 'no_info', 'no_info');
     }
+
+    public function pat()
+    {
+    	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
+    }
 }

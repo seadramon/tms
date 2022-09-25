@@ -1,47 +1,50 @@
 <div class="row">
 	<div class="col-lg-12">
 		<h3 class="card-title">Detail Pesanan NPP</h3>
-		<div class="table-responsive">
-			<table id="kt_datatable_example_2" class="table table-row-bordered  gy-5">
-				<thead>
-					<tr class="fw-bolder fs-6 text-gray-800">
-						<th rowspan="2">Nama/Tipe Produk</th>
-						<th colspan="2">Pesanan</th>
-						<th colspan="2">SPP Sebelumnya</th>
-						<th colspan="3">Volume Sisa</th>
-					</tr>
-					<tr>
-						<th>Vol(Btg)</th>
-						<th>Vol(Ton)</th>
-						<th>Vol(Btg)</th>
-						<th>Vol(Ton)</th>
-						<th>Vol(Btg)</th>
-						<th>Vol(Ton)</th>
-						<th>%</th>
-					</tr>
-				</thead>
+
+		<table class="table table-row-bordered text-center">
+			<thead>
+				<tr>
+					<th rowspan="2" style="vertical-align: middle; text-align: left">Nama/Tipe Produk</th>
+					<th colspan="2">Pesanan</th>
+					<th colspan="2">SPP Sebelumnya</th>
+					<th colspan="3">Volume Sisa</th>
+				</tr>
+				<tr>
+					<th>Vol(Btg)</th>
+					<th>Vol(Ton)</th>
+					<th>Vol(Btg)</th>
+					<th>Vol(Ton)</th>
+					<th>Vol(Btg)</th>
+					<th>Vol(Ton)</th>
+					<th>%</th>
+				</tr>
+			</thead>
+		</table>
+		<div class="hover-scroll-overlay-y h-400px">
+            <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
 				<tbody>
 					@if (count($tblPesanan) > 0)
-						@foreach($tblPesanan as $row)
+						@foreach($tblPesanan as $pesanan)
 							<?php 
-								$volm3 = !empty($row->vol_m3)?$row->vol_m3:1;
-								$pesananVolBtg = $row->vol_spprb;
-								$pesananVolTon = $row->vol_spprb * $volm3 * 2.5;
-								$sppSebelumVolBtg = $row->vol;
-								$sppSebelumVolTon = $row->vol * $volm3 * 2.5;
-								$sisaBtg = $pesananVolBtg - $sppSebelumVolBtg;
-								$sisaTon = $pesananVolTon - $sppSebelumVolTon;
+								$volm3 = !empty($pesanan->vol_m3)?$pesanan->vol_m3:1;
+								$pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
+                            	$pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
+								$sppVolBtg = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
+								$sppVolTon = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;
+								$sisaBtg = $pesananVolBtg - $sppVolBtg;
+								$sisaTon = $pesananVolTon - $sppVolTon;
 								$persen = 0;
 								if ($pesananVolBtg > 0) {
 								    $persen = $sisaBtg / $pesananVolBtg * 100;
 								}
 							?>
 							<tr>
-								<td>{{ $row->tipe }}</td>
+								<td style="text-align: left">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
 								<td>{{ nominal($pesananVolBtg) }}</td>
 								<td>{{ nominal($pesananVolTon) }}</td>
-								<td>{{ nominal($sppSebelumVolBtg) }}</td>
-								<td>{{ nominal($sppSebelumVolTon) }}</td>
+								<td>{{ nominal($sppVolBtg) }}</td>
+								<td>{{ nominal($sppVolTon) }}</td>
 								<td>{{ nominal($sisaBtg) }}</td>
 								<td>{{ nominal($sisaTon) }}</td>
 								<td>{{ round($persen, 2) }}</td>
@@ -74,8 +77,8 @@
 	<div class="col-lg-6 hide">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Lokasi Muat</label>
-			{!! Form::text('pat', $pat->ket, ['class'=>'form-control', 'id'=>'pat']) !!}
-			{!! Form::hidden('pat_singkatan', $pat->singkatan, ['class'=>'form-control', 'id'=>'pat_singkatan']) !!}
+			{!! Form::text('pat', $npp->pat, ['class'=>'form-control', 'id'=>'pat']) !!}
+			{!! Form::hidden('pat_singkatan', $npp->singkatan, ['class'=>'form-control', 'id'=>'pat_singkatan']) !!}
 		</div>	
 	</div>
 
@@ -108,46 +111,62 @@
 		</div>	
 	</div>
 
+	<!-- Detail Pekerjaan -->
 	<div class="col-lg-12 mt-10">
 		<h3 class="card-title">Detail Rencana Produk</h3>
-		<div class="table-responsive">
-			<table class="table table-row-bordered gy-5">
-				<thead>
-					<tr class="fw-bolder fs-6 text-gray-800">
-						<th>No</th>
-						<th>Nama Produk</th>
-						<th>Kode Produk</th>
-						<th>Saat Ini</th>
-						<th>S.d Saat ini</th>
-						<th>Keterangan</th>
-						<th>Segmen</th>
-						<th>Jumlah Segmen</th>
-					</tr>
-				</thead>
+		<table class="table table-row-bordered text-center">
+			<thead>
+				<tr class="fw-bolder fs-6 text-gray-800">
+					<th style="width: 5%">No</th>
+					<th style="width: 20%;text-align: left;">Nama Produk</th>
+					<th style="width: 15%">Kode Produk</th>
+					<th style="width: 15%">Saat Ini</th>
+					<th style="width: 15%">S.d Saat ini</th>
+					<th style="width: 15%">Keterangan</th>
+					<th style="width: 5%">Segmen</th>
+					<th style="width: 10%">Jumlah Segmen</th>
+				</tr>
+			</thead>
+		</table>
+		<div class="hover-scroll-overlay-y h-400px">
+            <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
 				<tbody>
 					@if (count($tblPesanan) > 0)
 						<?php $i = 1; ?>
-						@foreach($tblPesanan as $row)
+						@foreach($tblPesanan as $pesanan)
+						<?php 
+							$volm3 = !empty($pesanan->vol_m3)?$pesanan->vol_m3:1;
+							$pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
+                        	$pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
+							$sppVolBtg = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
+							$sppVolTon = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;
+							$sisaBtg = $pesananVolBtg - $sppVolBtg;
+							$sisaTon = $pesananVolTon - $sppVolTon;
+							$persen = 0;
+							if ($pesananVolBtg > 0) {
+							    $persen = $sisaBtg / $pesananVolBtg * 100;
+							}
+						?>
 							<tr>
-								<td>{{ $i }}</td>							
-								<td>{{ $row->tipe }}</td>							
-								<td>
-									<input type="text" name="rencana[{{$i}}][kd_produk]" value="{{$row->kd_produk}}" class="form-control" readonly>
+								<td style="width: 5%">{{ $i }}</td>							
+								<td style="text-align: left;width: 20%;">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
+								<td style="width: 15%">
+									<input type="text" name="rencana[{{$i}}][kd_produk]" value="{{$pesanan->kd_produk_konfirmasi}}" class="form-control" readonly>
 								</td>							
-								<td>
-									<input type="text" name="rencana[{{$i}}][saat_ini]" data-sblmbtg="{{$row->vol}}" data-urutan="{{$i}}" class="form-control saat-ini decimal" onkeyup="sdSaatIni({{$row->vol}}, {{$i}})" id="id-saatini-{{$i}}">
+								<td style="width: 15%">
+									<input type="number" max="{{ $sisaBtg }}" name="rencana[{{$i}}][saat_ini]" class="form-control saat-ini decimal" onkeyup="sdSaatIni({{$sppVolBtg}}, {{$i}})" id="id-saatini-{{$i}}">
 								</td>				
-								<td>
+								<td style="width: 15%">
 									<input type="number" name="rencana[{{$i}}][sd_saat_ini]" id="id-sdsaatini-{{$i}}" class="form-control" readonly>
 								</td>			
-								<td>
+								<td style="width: 15%">
 									<input type="text" name="rencana[{{$i}}][ket]" class="form-control">
 								</td>							
-								<td>
+								<td style="width: 5%">
 									<input class="form-check-input" name="rencana[{{$i}}][segmental]" type="checkbox" value="1" id="flexCheckDefault"/>
 								</td>							
-								<td>
-									<input type="text" name="rencana[{{$i}}][jml_segmen]" class="form-control decimal">
+								<td style="width: 10%">
+									<input type="number" name="rencana[{{$i}}][jml_segmen]" class="form-control decimal">
 								</td>							
 							</tr>
 
@@ -162,6 +181,7 @@
 			</table>
 		</div>
 	</div>
+	<!-- end:Detail Pekerjaan -->
 
 	<div class="col-lg-6">
 		<div class="form-group">
@@ -186,12 +206,9 @@
 	});
 	
 	function sdSaatIni(vol, urutan) {
-	console.log(vol);
-	console.log(urutan);
-
-	let saatIni = $("#id-saatini-" + urutan).val();
-	let hitungan = parseInt(vol) + parseInt(saatIni);
+		let saatIni = $("#id-saatini-" + urutan).val();
+		let hitungan = parseInt(vol) + parseInt(saatIni);
 	
-	$("#id-sdsaatini-" + urutan).val(hitungan);
-}
+		$("#id-sdsaatini-" + urutan).val(hitungan);
+	}
 </script>

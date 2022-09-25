@@ -7,7 +7,7 @@
 @section('page-title')
 <!--begin::Page title-->
 <div class="page-title d-flex justify-content-center flex-column me-5">
-	<h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Create SPP</h1>
+	<h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">{{ ucwords($tipe) }} SPP</h1>
 </div>
 <!--end::Page title-->
 @endsection
@@ -20,10 +20,12 @@
 		<div class="col-12 mb-md-5 mb-xl-10">
 			<div class="card shadow-sm">
 				<div class="card-header">
-					<h3 class="card-title">SPP Form</h3>
+					<h3 class="card-title">SPP Form {{ ucwords($tipe) }}</h3>
 				</div>
 
-				{!! Form::open(['url' => route('spp.draft'), 'class' => 'form', 'id' => 'draft', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
+				{!! Form::model($data, ['route' => ['spp.update', $spp], 'class' => 'form', 'method' => 'PUT']) !!}
+
+					{!! Form::hidden('tipe', $tipe, ['class'=>'form-control', 'id'=>'tipe']) !!}
 					<div class="card-body">
 						@if (count($errors) > 0)
 							@foreach($errors->all() as $error)
@@ -39,7 +41,7 @@
 							<div class="col-lg-6">
 								<div class="form-group">
 									<label class="fs-6 fw-bold mt-2 mb-3">Jenis</label>
-									{!! Form::select('jenis', $jenis, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'jenis']) !!}
+									{!! Form::text('jns_sppb', 'AUTO', ['class'=>'form-control form-control-solid', 'id'=>'jns_sppb', 'readonly']) !!}
 								</div>	
 							</div>
 
@@ -53,24 +55,18 @@
 							<div class="col-lg-9">
 								<div class="form-group">
 									<label class="fs-6 fw-bold mt-2 mb-3">NPP</label>
-									<!-- <select class="form-select select2spprb" data-control="select2" data-placeholder="Pilih SPPRB" data-allow-clear="true" name="no_spprb"></select> -->
-									<select class="form-select search-npp" name="no_npp" id="no_npp"></select>
+									<input type="text" class="form-control form-control-solid" name="captionnpp" value="{{ $data->no_npp.' | '.$data->npp->nama_proyek }}" readonly="">
 								</div>	
 							</div>
 
 							<div class="col-lg-3">
-								<div class="form-group">
-									<button type="submit" id="draft_submit" class="btn btn-primary mt-11" id="draft" value="Draft">Buat Draft</button>
-								</div>
+								&nbsp;
 							</div>
 						</div>
 					</div>
-				{!! Form::close() !!}
-
-				{!! Form::open(['url' => route('spp.store'), 'class' => 'form', 'id' => 'fstore', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
 
 					<div class="card-body" id="kt_block_ui_target">
-						
+						@include('pages.spp.part-edit')
 					</div>
 					<!-- end box 2 -->
 
