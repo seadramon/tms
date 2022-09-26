@@ -52,8 +52,10 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::post('/destroy', [SppController::class, 'destroy'])->name('destroy');
 	    Route::post('/draft', [SppController::class, 'createDraft'])->name('draft');
 	    Route::get('/data', [SppController::class, 'data'])->name('data');
+	    Route::get('/spp-edit/{spp}', [SppController::class, 'edit'])->name('edit');
+	    Route::get('/spp-amandemen/{spp}', [SppController::class, 'amandemen'])->name('amandemen');
 	    Route::resource('/',  SppController::class)->except([
-	        'destroy'
+	        'destroy', 'edit'
 	    ])->parameters(['' => 'spp']);
 	});
 

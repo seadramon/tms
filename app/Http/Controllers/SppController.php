@@ -10,6 +10,9 @@ use App\Models\SppbD;
 use App\Models\SpprbH;
 use App\Models\Sp3;
 use App\Models\SptbD;
+use App\Models\MonOp;
+use App\Models\Sp3D;
+use App\Models\Npp;
 use App\Models\VSpprbRi;
 use Exception;
 use Yajra\DataTables\Facades\DataTables;
@@ -17,6 +20,7 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use Log;
 
 class SppController extends Controller
 {
@@ -96,25 +100,26 @@ class SppController extends Controller
                 return $teks;
             })
             ->addColumn('menu', function ($model) {
+                $noSppb = str_replace("/", "|", $model->no_sppb);
                 switch (true) {
                     case ($model->app == 0):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'first', 
-                            'nosppb' => str_replace("/", "|", $model->no_sppb)
+                            'nosppb' => $noSppb
                         ]);
                         $caption = "Approve First";
                         break;
                     case ($model->app == 1 && $model->app2 == 0):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'second', 
-                            'nosppb' => str_replace("/", "|", $model->no_sppb)
+                            'nosppb' => $noSppb
                         ]);
                         $caption = "Approve Second";
                         break;
                     case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'third', 
-                            'nosppb' => str_replace("/", "|", $model->no_sppb)
+                            'nosppb' => $noSppb
                         ]);
                         $caption = "Approve Third";
                         break;
@@ -135,8 +140,8 @@ class SppController extends Controller
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">View</a></li>
-                            <li><a class="dropdown-item" href="#">Edit</a></li>
-                            <li><a class="dropdown-item" href="#">Adendum</a></li>
+                            <li><a class="dropdown-item" href="'. route('spp.edit', ['spp' => $noSppb]) .'">Edit</a></li>
+                            <li><a class="dropdown-item" href="'. route('spp.amandemen', ['spp' => $noSppb]) .'">Amandemen</a></li>
                             '.$approval.'
                             <li><a class="dropdown-item" href="#">Print</a></li>
                             <li><a class="dropdown-item" href="#">Hapus</a></li>
@@ -187,56 +192,52 @@ class SppController extends Controller
             Validator::make($request->all(), [
                 'jenis'   => 'required',
                 'no_npp'   => 'required',
-                'no_spprb'   => 'required'
             ])->validate();
 
-            $params = explode("|", $request->no_spprb);
-            $noSpprb = $params[0];
-            $noNpp = $params[1];
+            $noNpp = $request->no_npp;
 
-            // 040/PI/SPPRB/III/WP-I/21P01
-            $dtlPesanan = DB::table('v_spprb_ri vsr')
-                ->leftJoin('tb_produk', 'vsr.kd_produk', '=', 'tb_produk.kd_produk')
-                ->leftJoin('sppb_h', 'sppb_h.no_spprb', '=', 'vsr.spprblast')
-                ->leftJoin('sppb_d', function($join) {
-                    $join->on('sppb_h.no_sppb', '=', 'sppb_d.no_sppb')
-                        ->on('vsr.kd_produk', '=', 'sppb_d.kd_produk');
-                })
-                ->select('tb_produk.tipe', 'tb_produk.ket', 'vsr.vol_spprb', 'tb_produk.vol_m3', 
-                    'sppb_d.vol', 'vsr.kd_produk')
-                ->where('vsr.spprblast', $noSpprb)
-                ->where('vsr.no_npp', $noNpp)
-                ->take(3)
+            $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+                ->where('no_npp', $noNpp)
+                ->take(2)
                 ->get();
 
-            $sqlNpp = DB::table('v_spprb_ri vsr')
-                ->leftJoin('npp', 'npp.no_npp', '=', 'vsr.no_npp')
+            $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
+        
+            $sp3D = Sp3D::whereNoNpp($noNpp)
+                ->whereIn('kd_produk', $kd_produks)
+                ->get()
+                ->sortByDesc('no_sp3')
+                ->groupBy([
+                    'kd_produk', function ($item) {
+                        return substr($item->no_sp3, 0, -3);
+                    }
+                ], true);
+
+            $sqlNpp = Npp::select('npp.nama_proyek', 
+                    'npp.nama_pelanggan', 
+                    'npp.no_npp', 
+                    'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec', 
+                    'tb_pat.ket as pat', 
+                    'npp.kd_pat', 
+                    'tb_pat.singkatan')
                 ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
                 ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
-                ->where('vsr.spprblast', $noSpprb)
-                ->where('vsr.no_npp', $noNpp)
-                ->select('npp.nama_proyek', 'npp.nama_pelanggan', 'vsr.no_npp', 'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec')
-                ->first();
-
-            $sqlPat = DB::table('v_spprb_ri vsr')
-                ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'vsr.pat_to')
-                ->where('vsr.spprblast', $noSpprb)
-                ->where('vsr.no_npp', $noNpp)
-                ->select('tb_pat.ket', 'vsr.pat_to', 'tb_pat.singkatan')
+                ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'npp.kd_pat')
+                ->where('npp.no_npp', $noNpp)
                 ->first();
 
             $sp3 = DB::table('SP3_D')
                 ->where('no_npp', $noNpp)
-                ->where('pat_to', $sqlPat->pat_to)
+                ->where('pat_to', $sqlNpp->kd_pat)
                 ->max('jarak_km');
 
             return view('pages.spp.box2', [
                 'result' => 'success',
-                'tblPesanan' => $dtlPesanan,
+                'tblPesanan' => $detailPesanan,
                 'npp' => $sqlNpp,
-                'pat' => $sqlPat,
                 'jarak' => $sp3,
-                'noSpprb' => $noSpprb
+                'noSpprb' => 'xxxxx', // NO SPPRB STILL HARDCODE
+                'sp3D' => $sp3D
             ])->render();
         } catch(Exception $e) {
             return response()->json(['result' => $e->getMessage()])->setStatusCode(500, 'ERROR');
@@ -247,20 +248,21 @@ class SppController extends Controller
     {
         try {
             DB::beginTransaction();
-// dd($request->all());
+
             if ($request->rencana) {
                 $jadwal = [];
                 $rencana = $request->rencana;
                 $kdProduk = $request->rencana[1]['kd_produk'];
                 $noSppb = $this->generateSppb($kdProduk, session('TMP_KDWIL'));
-// dd(strlen($noSppb));
+
                 if (!empty($request->jadwal)) {
                     $jadwal = explode(" - ", $request->jadwal);
                 }
 
                 $data = new SppbH;
                 $data->no_sppb = $noSppb;
-                $data->no_spprb = $request->no_spprb;
+                $data->no_npp = $request->no_npp;
+                $data->no_spprb = "140/PI/XI/WP/WP.VI/06P00"; // NO SPPRB STILL HARDCODE
                 $data->tujuan = $request->tujuan;
                 $data->rit = $request->rit;
                 $data->jarak_km = $request->jarak_km;
@@ -289,12 +291,15 @@ class SppController extends Controller
             } else {
                 $flasher->addError('Detail Rencana Produk dikirim kosong.');
             }
+
+            return redirect()->route('spp.index');
         } catch(Exception $e) {
             DB::rollback();
+            Log::error($e->getMessage());
             $flasher->addError('Terjadi error silahkan coba beberapa saat lagi.');
-        }
 
-        return redirect()->route('spp.index');
+            return redirect()->back();
+        }
     }
 
 
@@ -325,6 +330,133 @@ class SppController extends Controller
         }
 
         return Response::json($formatted_tags);
+    }
+
+    private function editData($spp, $tipe)
+    {
+        $jenis = [
+            '' => '-Pilih Jenis-',
+            'Pesanan Wilayah' => 'Pesanan Wilayah',
+            'Pesanan Lain-lain' => 'Pesanan Lain-lain'
+        ];
+
+        $noSppb = str_replace("|", "/", $spp);
+        $data = SppbH::find($noSppb);
+        $noNpp = $data->no_npp;
+
+        $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+            ->where('no_npp', $noNpp)
+            ->take(2)
+            ->get();
+
+        $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
+        
+        $sp3D = Sp3D::whereNoNpp($noNpp)
+            ->whereIn('kd_produk', $kd_produks)
+            ->get()
+            ->sortByDesc('no_sp3')
+            ->groupBy([
+                'kd_produk', function ($item) {
+                    return substr($item->no_sp3, 0, -3);
+                }
+            ], true);
+
+        $start = date('m/d/Y', strtotime($data->jadwal1));
+        $end = date('m/d/Y', strtotime($data->jadwal2));
+
+        return [
+            'data' => $data,
+            'jenis' => $jenis,
+            'start' => $start,
+            'end' => $end,
+            'noSppb' => $noSppb,
+            'spp' => $spp,
+            'tipe' => $tipe,
+            'tblPesanan' => $detailPesanan
+        ];
+    }
+
+    public function edit($spp)
+    {
+        $arrData = $this->editData($spp, 'edit');
+
+        return view('pages.spp.edit',  $arrData);
+    }
+
+    public function amandemen($spp)
+    {
+        $arrData = $this->editData($spp, 'amandemen');
+
+        return view('pages.spp.edit',  $arrData);
+    }
+
+    public function update(Request $request, $spp, FlasherInterface $flasher)
+    {
+        try {
+            DB::beginTransaction();
+
+            $noSppb = str_replace("|", "/", $spp);
+            $data = SppbH::find($noSppb);
+
+            if ($request->tipe == 'amandemen') {
+                $temp = explode("/", $noSppb);
+                if (strlen($temp[5]) == 4) {
+                    $temp[5] .= "P01";
+                } else {
+                    $foo = substr($temp[5], 5) + 1;
+                    $inc = sprintf("%02d", $foo);
+                    $temp[5] = substr($temp[5], 0, 4).'P'.$inc;
+                }
+
+                if (count($request->rencana) > 0) {
+                    $del = SppbD::where('no_sppb', $noSppb)->delete();
+                }
+
+                $noSppb = implode("/", $temp);
+                $data->no_sppb = $noSppb;
+            }
+
+            $data->tujuan = $request->tujuan;
+            $data->rit = $request->rit;
+            $data->jarak_km = $request->jarak_km;
+
+            if (!empty($request->jadwal)) {
+                $jadwal = explode(" - ", $request->jadwal);
+            }
+            $data->jadwal1 = !empty($jadwal[0]) ? date('Y-m-d', strtotime($jadwal[0])) : date('Y-m-d', strtotime('-3 day', time()));
+            $data->jadwal2 = !empty($jadwal[1]) ? date('Y-m-d', strtotime($jadwal[1])) : date('Y-m-d');
+            $data->catatan = $request->catatan;
+
+            $data->save();
+
+            if (count($request->rencana) > 0) {
+                $del = SppbD::where('no_sppb', $noSppb)->delete();
+
+                foreach ($request->rencana as $row) {
+                    $detail = new SppbD;
+
+                    $detail->kd_produk = $row['kd_produk'];
+                    $detail->vol = $row['saat_ini'];
+                    $detail->ket = $row['ket'];
+                    $detail->segmental = isset($row['segmental'])?1:0;
+                    $detail->jml_segmen = $row['jml_segmen'];
+
+                    $data->detail()->save($detail);
+                }
+            }
+
+            DB::commit();
+            $flasher->addSuccess('Data telah berhasil disimpan!');
+
+            return redirect()->route('spp.index');
+        } catch(Exception $e) {
+            DB::rollback();
+            dd($e);
+            Log::error($e->getMessage());
+            $flasher->addError('Terjadi error silahkan coba beberapa saat lagi.');
+
+            return redirect()->back();
+        }
     }
 
     private function generateSppb($kdProduk, $patSingkatan)
