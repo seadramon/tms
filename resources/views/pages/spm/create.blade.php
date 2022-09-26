@@ -22,7 +22,7 @@
 
                     <div class="card-body">
                         <div class="alert alert-danger alert-dismissible fade" id="alert-box1" role="alert">
-                            NPP, Vendor, dan Pekerjaan harus diisi!
+                            SPP, PPB Muat, Tanggal dan Jenis SPM harus diisi !
                             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                         </div>
 
@@ -62,10 +62,7 @@
                             <div class="col-lg-6 custom-form">
                                 <label class="form-label col-sm-3 required">PBB Muat</label>
                                 <select class="form-control" data-control="select2"  data-placeholder="Pilih PBB Muat" name="pbb_muat" id="pbb_muat">
-                                    <option>asdasd</option>
-                                    <option>asdasd</option>
-                                    <option>asdasd</option>
-                                    <option>asdasd</option>
+
                                 </select>
                             </div>
                         </div>
@@ -79,37 +76,7 @@
         </form>
 
         <div id="box2">
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h3 class="card-title">Detail SPP</h3>
-                </div>
-
-                <div class="card-body">
-                    <table class="table table-bordered gy-7 gs-7">
-                        <thead>
-                            <tr>
-                                <th rowspan="2">Type</th>
-                                <th colspan="2" class="text-center">SPP</th>
-                                <th colspan="2" class="text-center">SPP Terdistribusi</th>
-                                <th colspan="3" class="text-center">Volume Sisa</th>
-                            </tr>
-                            <tr class="table table-striped gy-7 gs-7">
-                                <th>Vol (Btg)</th>
-                                <th>Vol (Ton)</th>
-                                <th>Vol (Btg)</th>
-                                <th>Vol (Ton)</th>
-                                <th>Vol (Btg)</th>
-                                <th>Vol (Ton)</th>
-                                <th>%</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-
-                <div class="card-footer" style="text-align: right;">
-                    <input type="button" class="btn btn-primary" id="buat_draft" value="Submit">
-                </div>
-            </div>
+          
         </div>
     </div>
 </div>
@@ -126,34 +93,20 @@
 
 <script type="text/javascript">
 
+var target = document.querySelector("#kt_body");
+var blockUI = new KTBlockUI(target, {
+    message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Loading data...</div>',
+});
+
+$(document).ready(function() {
+    $("#alert-box1").hide();
+});
 
 // Start field tanggal
 $("#kt_datepicker_3").flatpickr({
     dateFormat: "d-m-Y",
 });
 // end of field tanggal
-
-// field PBB Muat
-// $('#pbb_muat').select2({
-//     placeholder: 'Cari...',
-//     ajax: {
-//         url: "{{ route('spm.getPbbMuat') }}",
-//         minimumInputLength: 2,
-//         dataType: 'json',
-//         cache: true,
-//         processResults: function (data) {
-//             return {
-//                 results: $.map(data, function (item) {
-//                     return {
-//                         text: item.no_npp + ' | ' + item.nama_proyek,
-//                         id: item.no_npp
-//                     }
-//                 })
-//             };
-//         },
-//     }
-// });
-// end of PBB Muat
 
 
 $('#no_spp').on("change", function(e) { 
@@ -167,12 +120,59 @@ $('#no_spp').on("change", function(e) {
         data: {
             no_spp: no_spp,
         },
-        success: function(data)
-        {
-            console.log(data);
+        success: function(result){
+            $('#pbb_muat').empty();
+            if(result){
+                for(i = 0; i < result.length; i++){
+                    $('#pbb_muat').append('<option value="'+ result[i].pat.kd_pat +'">'+ result[i].pat.kd_pat +' | '+ result[i].pat.ket +'</option>');
+                }
+            }
+
         }
     });
 });
+
+$('#buat_draft').on('click', function(){
+    alert('aa');
+    if(!$('#no_spp').val() || !$('#pbb_muat').val() || !$('#jenis_spm').val() || !$('#kt_datepicker_3').val() ){
+        $("#alert-box1").show();
+        $("#alert-box1").addClass("show");
+
+        setTimeout(function() {
+            $("#alert-box1").hide();
+        }, 5000);
+
+        return false;
+    }else{
+        let data = {
+            '_token': '{{ csrf_token() }}', 
+            'no_spp': $('#no_spp').val(), 
+            'tanggal': $('#kt_datepicker_3').val(), 
+            'pbb_muat': $('#pbb_muat').val(), 
+            'jenis_spm': $('#jenis_spm').val()
+        };
+        
+        $.ajax({
+            url: "{{ route('spm.get-data-box2') }}",
+            type: "POST",
+            data: data,
+            dataType: 'json',
+            beforeSend: function() {
+                blockUI.block();
+            },
+            complete: function() {
+                blockUI.release();
+            },
+            success: function(result) {
+                $('#box2').html(result.html);
+
+                // box2();
+            },
+            error: function(result) {
+            }
+        });
+    }
+    });
 
 </script>
 

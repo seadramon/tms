@@ -107,6 +107,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    ])->parameters(['' => 'spm']);
 
 		Route::post('/search-pbbmuat', [SpmController::class, 'getPbbMuat'])->name('getPbbMuat');
+		Route::post('/get-data-box2', [SpmController::class, 'getDataBox2'])->name('get-data-box2');
 	});
 });
 

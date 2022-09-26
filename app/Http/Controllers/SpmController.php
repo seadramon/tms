@@ -33,18 +33,23 @@ class SpmController extends Controller
     }
 
     public function getPbbMuat(Request $request){
-        // query 
-        // from SPPB_H 
-        // where no_sppb=no_spp and get NO_NPP, 
-        
-        // then query 
-        // from SPPRB_H join tb_pat on SPPRB_H.PAT_TO=tb_pat.kd_pat 
-        // where NO_NPP=NO_NPP, 
-        // show kd_pat and ket
-        
+
         $data = SppbH::select('no_npp')->where('no_sppb',$request->no_spp)->first();
-        $data_1 = SpprbH::where()->get();
-        return response()->json($data);
-        // return $request->no_spp;
+        $data_1 = SpprbH::with('pat')->where('no_npp',$data->no_npp)->get();
+        return response()->json($data_1);
+        
+    }
+
+    public function getDataBox2(Request $request){
+
+        $no_spp = $request->
+
+        $detail_spp = SppbD::with('produk')->where('no_sppb',$request->no_spp)->get();
+
+        $html = view('pages.spm.box2', [
+            'detail_spp' => $detail_spp,
+        ])->render();
+        
+        return response()->json( array('success' => true, 'html'=> $html) );
     }
 }

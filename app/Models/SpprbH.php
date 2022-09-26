@@ -18,4 +18,9 @@ class SpprbH extends Model
 	{
 		// return $this->
 	}
+
+	public function pat()
+    {
+        return $this->belongsTo(Pat::class, 'pat_to', 'kd_pat');
+    }
 }
