@@ -103,6 +103,8 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::resource('/',  SpmController::class)->except([
 	        'destroy'
 	    ])->parameters(['' => 'spm']);
+
+		Route::post('/search-pbbmuat', [SpmController::class, 'getPbbMuat'])->name('getPbbMuat');
 	});
 });
 

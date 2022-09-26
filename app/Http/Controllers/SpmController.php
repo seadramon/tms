@@ -33,6 +33,18 @@ class SpmController extends Controller
     }
 
     public function getPbbMuat(Request $request){
-        $sppb_h = SppbH::where('no_sppb',$request->no_spp)->first();
+        // query 
+        // from SPPB_H 
+        // where no_sppb=no_spp and get NO_NPP, 
+        
+        // then query 
+        // from SPPRB_H join tb_pat on SPPRB_H.PAT_TO=tb_pat.kd_pat 
+        // where NO_NPP=NO_NPP, 
+        // show kd_pat and ket
+        
+        $data = SppbH::select('no_npp')->where('no_sppb',$request->no_spp)->first();
+        $data_1 = SpprbH::where()->get();
+        return response()->json($data);
+        // return $request->no_spp;
     }
 }
