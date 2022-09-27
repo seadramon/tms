@@ -76,7 +76,7 @@
         </form>
 
         <div id="box2">
-          
+
         </div>
     </div>
 </div>
@@ -109,7 +109,7 @@ $("#kt_datepicker_3").flatpickr({
 // end of field tanggal
 
 
-$('#no_spp').on("change", function(e) { 
+$('#no_spp').on("change", function(e) {
     var no_spp = ($('#no_spp :selected').val());
     $.ajax({
         type: 'POST',
@@ -133,7 +133,6 @@ $('#no_spp').on("change", function(e) {
 });
 
 $('#buat_draft').on('click', function(){
-    alert('aa');
     if(!$('#no_spp').val() || !$('#pbb_muat').val() || !$('#jenis_spm').val() || !$('#kt_datepicker_3').val() ){
         $("#alert-box1").show();
         $("#alert-box1").addClass("show");
@@ -145,13 +144,13 @@ $('#buat_draft').on('click', function(){
         return false;
     }else{
         let data = {
-            '_token': '{{ csrf_token() }}', 
-            'no_spp': $('#no_spp').val(), 
-            'tanggal': $('#kt_datepicker_3').val(), 
-            'pbb_muat': $('#pbb_muat').val(), 
+            '_token': '{{ csrf_token() }}',
+            'no_spp': $('#no_spp').val(),
+            'tanggal': $('#kt_datepicker_3').val(),
+            'pbb_muat': $('#pbb_muat').val(),
             'jenis_spm': $('#jenis_spm').val()
         };
-        
+
         $.ajax({
             url: "{{ route('spm.get-data-box2') }}",
             type: "POST",

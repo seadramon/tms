@@ -4,7 +4,7 @@
     </div>
 
     <div class="card-body">
-        <table class="table table-bordered gy-7 gs-7">
+        <table class="table table-row-dashed table-row-gray-300 gy-7">
             <thead>
                 <tr>
                     <th rowspan="2">Type</th>
@@ -13,22 +13,22 @@
                     <th colspan="3" class="text-center">Volume Sisa</th>
                 </tr>
                 <tr class="table table-striped gy-7 gs-7">
-                    <th>Vol (Btg)</th>
-                    <th>Vol (Ton)</th>
-                    <th>Vol (Btg)</th>
-                    <th>Vol (Ton)</th>
-                    <th>Vol (Btg)</th>
-                    <th>Vol (Ton)</th>
-                    <th>%</th>
+                    <th class="text-center">Vol (Btg)</th>
+                    <th class="text-center">Vol (Ton)</th>
+                    <th class="text-center">Vol (Btg)</th>
+                    <th class="text-center">Vol (Ton)</th>
+                    <th class="text-center">Vol (Btg)</th>
+                    <th class="text-center">Vol (Ton)</th>
+                    <th class="text-center">%</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($detail_spp as $row)
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                    <td>{{ $row->type_produk }}</td>
+                    <td class="text-center">{{ $row->spp_vol_btg }}</td>
+                    <td>{{ $row->spp_vol_ton }}</td>
+                    <td>{{ $row->sppdis_vol_btg }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -41,7 +41,7 @@
         <div class="form-group row">
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 required ">No. NPP</label>
-                <input class="form-control" type="text" readonly  value="" />
+                <input class="form-control" type="text" readonly  value="{{ $no_npp }}" />
             </div>
 
             <div class="col-lg-6 custom-form">
@@ -53,12 +53,12 @@
         <div class="form-group row">
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 required ">Pelanggan</label>
-                <input class="form-control" type="text" readonly  value="" />
+                <input class="form-control" type="text" readonly  value="{{ $pelanggan }}" />
             </div>
 
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 custom-label">Nama Proyek</label>
-                <input class="form-control" type="text" readonly value="" />
+                <input class="form-control" type="text" readonly value="{{ $nama_proyek }}" />
             </div>
         </div>
 
@@ -82,7 +82,7 @@
 
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 custom-label">Kondisi Penyerahan</label>
-                <input class="form-control" type="text" readonly value="" />
+                <input class="form-control" type="text" readonly value="{{ $kp }}" />
             </div>
         </div>
 
