@@ -108,6 +108,8 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 		Route::post('/search-pbbmuat', [SpmController::class, 'getPbbMuat'])->name('getPbbMuat');
 		Route::post('/get-data-box2', [SpmController::class, 'getDataBox2'])->name('get-data-box2');
+        Route::post('/get-jml-segmen', [SpmController::class, 'getJmlSegmen'])->name('get-jml-segmen');
+        Route::post('/get-vol-spm', [SpmController::class, 'getVolSPM'])->name('get-vol-spm');
 	});
 });
 

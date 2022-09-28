@@ -31,6 +31,7 @@
                                 <label class="form-label col-sm-3 required ">No. SPP</label>
                                 <select class="form-control" data-control="select2" name="no_spp" id="no_spp"  data-placeholder="Pilih No. SPP">
                                     <option></option>
+                                    <option value="003/SPPB/TP/WP/I/2007">003/SPPB/TP/WP/I/2007</option>
                                     @foreach ( $no_spp as $row)
                                         <option value="{{ $row->no_sppb }}">{{ $row->no_sppb }}</option>
                                     @endforeach
@@ -165,13 +166,93 @@ $('#buat_draft').on('click', function(){
             success: function(result) {
                 $('#box2').html(result.html);
 
-                // box2();
+                box2();
             },
             error: function(result) {
             }
         });
     }
-    });
+});
+
+
+    function validate_vol(){
+        var maxValue =  parseFloat($('#volsppb-show').text()) - parseFloat($('#volspm-show').text());
+        if($('#volume-show').val() > maxValue){
+            $('#volume-show').val(maxValue);
+        }
+    }
+
+    function box2() {
+        $('.form-select-solid').select2();
+
+        $("#tipe_produk_select" ).change(function() {
+            $.ajax({
+                url: "{{ route('spm.get-jml-segmen') }}",
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    kd_produk: $(this).val(),
+                    no_sppb: $('#no_spp').val()
+                },
+                dataType: 'json',
+                success: function(result) {
+                    console.log(result);
+                    $('#segmen-show').text(result[0].jml_segmen);
+                    $('#volsppb-show').text(result[0].app2_vol);
+                    $('#volspm-show').text(result[0].jml_spm);
+                }
+            });
+        });
+
+        $('#add_muat').on('click', function(){
+            $('#body_muat').append(''+
+                '<tr class="fw-semibold text-gray-800 border border-gray-400">'+
+                    '<td style="padding-left: 10px;">'+
+                        '<label class="form-label">'+  $("#tipe_produk_select" ).val() +'</label>'+
+                        '<input class="d-none" name="tipe_produk_select[]" value="'+  $("#tipe_produk_select" ).val() +'" />'+
+                    '</td>'+
+                    '<td class="text-center">'+
+                        '<label class="form-label">'+ $('#volume-show').val() +'</label>'+
+                        '<input class="d-none" name="volume_produk_select[]" value="'+ $('#volume-show').val() +'" />'+
+                    '</td>'+
+                    '<td class="text-center">'+
+                        '<label class="form-label">'+ $('#segmen-show').text() +'</label>'+
+                        '<input class="d-none" name="segmen_select[]" value="'+ $('#segmen-show').text() +'" />'+
+                    '</td>'+
+                    '<td class="text-center">'+
+                        '<label class="form-label">'+ $('#volsppb-show').text() +'</label>'+
+                        '<input class="d-none" name="volsppb_select[]" value="'+ $('#volsppb-show').text() +'" />'+
+                    '</td>'+
+                    '<td class="text-center">'+
+                        '<label class="form-label">'+ $('#volspm-show').text() +'</label>'+
+                        '<input class="d-none" name="volspm_select[]" value="'+ $('#volspm-show').text() +'" />'+
+                    '</td>'+
+                    '<td class="text-center">'+
+                        '<label class="form-label" id="">0</label>'+
+                        '<input class="d-none" name="voltitipan_select[]" value="0" />'+
+                    '</td>'+
+                    '<td class="text-center">'+
+                        '<label class="form-label">'+ $('#keterangan-show').val() +'</label>'+
+                        '<input type="text" class="d-none" name="keterangan_select[]" />'+
+                    '</td>'+
+                    '<td class="text-left">'+
+                        '<a href="javascript:void(0)" class="btn btn-icon btn-danger delete_muat" onClick="return confirm(\'Are you absolutely sure you want to delete?\')"><i class="fa fa-times"></i></a>'+
+                    '</td>'+
+                '</tr>');
+
+            $('#volume-show').val('');
+            $('#keterangan-show').val('');
+            $('#segmen-show').text('');
+            $('#volsppb-show').text('');
+            $('#volspm-show').text('');
+        });
+
+        $(document).on('click', '.delete_muat', function(e) {
+            $(this).parent().parent().remove();
+        });
+    }
 
 </script>
 
