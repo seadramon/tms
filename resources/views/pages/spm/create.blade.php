@@ -13,7 +13,8 @@
 <!--begin::Content container-->
 <div id="kt_content_container" class="container-xxl">
     <div class="col-12 mb-md-5 mb-xl-10">
-        <form class="form-control" method="POST" enctype="multipart/form-data" action="">
+        <form class="form-control" method="POST" action="{{ route('spm.store') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div id="box1">
                 <div class="card shadow-sm">
                     <div class="card-header">
@@ -74,7 +75,7 @@
                     </div>
                 </div>
             </div>
-        </form>
+        
 
         <div id="box2">
 
@@ -235,7 +236,7 @@ $('#buat_draft').on('click', function(){
                     '</td>'+
                     '<td class="text-center">'+
                         '<label class="form-label">'+ $('#keterangan-show').val() +'</label>'+
-                        '<input type="text" class="d-none" name="keterangan_select[]" />'+
+                        '<input type="text" class="d-none" name="keterangan_select[]" value="'+$('#keterangan-show').val()+'" />'+
                     '</td>'+
                     '<td class="text-left">'+
                         '<a href="javascript:void(0)" class="btn btn-icon btn-danger delete_muat" onClick="return confirm(\'Are you absolutely sure you want to delete?\')"><i class="fa fa-times"></i></a>'+

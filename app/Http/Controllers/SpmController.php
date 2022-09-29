@@ -9,13 +9,15 @@ use App\Models\Produk;
 use App\Models\SppbH;
 use App\Models\SppbD;
 use App\Models\SpprbH;
-use App\Models\Sp3;
+
 use App\Models\Sp3D;
 use App\Models\SpmH;
+use App\Models\SpmD;
 use App\Models\SptbD;
-use App\Models\VSpprbRi;
+use App\Models\MsNoDokumen;
 use App\Models\Vendor;
 use App\Models\Npp;
+use App\Models\Sbu;
 use Exception;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
@@ -162,5 +164,85 @@ class SpmController extends Controller
             }
             return response()->json($jml);
         }
+    }
+
+    public function store(Request $request, FlasherInterface $flasher){
+        try {
+            DB::beginTransaction();
+            // store in SPM_H
+            $no_sppb = $request->no_spp;
+            $tgl_spm = $request->tanggal;
+            $jns_spm = $request->jenis_spm;
+
+            // ---------
+            $no_npp = SppbH::select('no_npp')->where('no_sppb',$no_sppb)->first();
+            $no_spprb = SpprbH::with('pat')->where('no_npp',$no_npp->no_npp)->first();
+            $pat_to = $no_spprb->pat->kd_pat;
+            // -----------
+
+            $vendor_angkutan = $request->vendor;
+            $jarak = $request->jarak;
+
+            //create number
+            $kd_sbu = substr($request->tipe_produk_select[0], 0, 1);
+            $n3 = Sbu::select('singkatan2')->where('kd_sbu',$kd_sbu)->first();
+            $n4 = Pat::select('singkatan')->where('kd_pat',$pat_to)->first();
+            // end of create number
+
+            $noDokumen = 'SPM/'.$n3->singkatan2.'/'.$n4->singkatan;
+
+            $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
+            
+            if($msNoDokumen->exists()){
+                $msNoDokumen = $msNoDokumen->first();
+
+                $newSequence = sprintf('%04s', ((int)$msNoDokumen->seq + 1));
+
+                $msNoDokumen->update([
+                    'seq'           =>  $newSequence,
+                    'updated_by'    => session('TMP_NIP') ?? '12345',
+                    'updated_date'  => date('Y-m-d H:i:s'),
+                ]);
+            }else{
+                $newSequence = '0001';
+
+                $msNoDokumenData = new MsNoDokumen();
+                $msNoDokumenData->tahun = date('Y');
+                $msNoDokumenData->no_dokumen = $noDokumen;
+                $msNoDokumenData->seq = $newSequence;
+                $msNoDokumenData->created_by = session('TMP_NIP') ?? '12345';
+                $msNoDokumenData->created_date = date('Y-m-d H:i:s');
+                $msNoDokumenData->save();
+            }
+
+            $no_spm = $newSequence.'/'.$noDokumen.'/'.date('m').'/'.date('Y');
+
+            $SpmH = new SpmH();
+            $SpmH->no_spm = $no_spm;
+            $SpmH->no_sppb = $no_sppb;
+            $SpmH->vendor_id = $vendor_angkutan;
+            $SpmH->tgl_spm = $tgl_spm;
+            $SpmH->app1 = 0;
+            $SpmH->save();
+            // store to smp_d
+            $i = 0;
+            foreach($request->keterangan_select as $row){
+                $SpmD = new SpmD();
+                $SpmD->no_spm = $no_spm;
+                $SpmD->kd_produk = $request->tipe_produk_select[$i];
+                $SpmD->vol = $request->volume_produk_select[$i];
+                $SpmD->ket = $request->keterangan_select[$i];
+                $SpmD->save();
+                $i++;
+            }
+            DB::commit();
+
+            $flasher->addSuccess('Data has been saved successfully!');
+        } catch(Exception $e) {
+            DB::rollback();
+            $flasher->addError($e->getMessage());
+        }
+
+        return redirect()->route('spm.create');
     }
 }

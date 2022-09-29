@@ -82,7 +82,7 @@
         <div class="form-group row">
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 required ">Jarak</label>
-                <input class="form-control" type="text" readonly  value="{{ $jarak->jarak_km ?? 0 }}" />
+                <input name="jarak" class="form-control" type="text" readonly  value="{{ $jarak->jarak_km ?? 0 }}" />
             </div>
 
             <div class="col-lg-6 custom-form">
@@ -108,8 +108,7 @@
                 <tbody >
                     <tr class="fw-semibold text-gray-800 border border-gray-400">
                         <td style="padding-left: 10px;">
-                            <select class="form-control form-select-solid ml-2" data-control="select2" data-placeholder="Pilih Tipe Produk"
-                                    name="tipe_produk_select[]" id="tipe_produk_select">
+                            <select class="form-control form-select-solid ml-2" data-control="select2" data-placeholder="Pilih Tipe Produk" id="tipe_produk_select">
                                 <option></option>
                                 @foreach($detail_spp as $row)
                                     <option value="{{ $row->kode_produk }}">{{ $row->type_produk }}</option>
@@ -146,6 +145,7 @@
     </div>
 
     <div class="card-footer" style="text-align: right;">
-        <input type="button" class="btn btn-primary" id="buat_draft" value="Submit">
+        <input type="submit" class="btn btn-success" value="Simpan">
     </div>
+</form>
 </div>
