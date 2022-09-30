@@ -230,4 +230,16 @@ class SpmController extends Controller
 
         return redirect()->route('spm.create');
     }
+
+
+    public function create_konfirmasi_vendor($no_spm){
+        $data = Spm_H::with('vendor')->where('no_spm',$no_spm)->first();
+        
+        $data = SppbH::select('no_npp')->where('no_sppb',$request->no_spp)->first();
+        $data_1 = SpprbH::with('pat')->where('no_npp',$data->no_npp)->get();
+        
+        return view('pages.spm.konfirmasi-vendor', [
+            'data' => $data
+        ]);
+    }
 }

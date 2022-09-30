@@ -21,4 +21,10 @@ class SpmH extends Model
     	return $this->hasMany(SpmD::class, 'no_spm', 'no_spm');
     }
 
+    public function vendor()
+    {
+    	return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');
+    }
+    
+
 }
