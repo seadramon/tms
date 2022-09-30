@@ -86,7 +86,8 @@ class Sp3Controller extends Controller
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">View</a></li>
-                                <li><a class="dropdown-item" href="#">Edit</a></li>
+                                <li><a class="dropdown-item" href="' . route('sp3.edit', str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>
+                                <li><a class="dropdown-item" href="' . route('sp3.amandemen', str_replace('/', '|', $model->no_sp3)) . '">Amandemen</a></li>
                                 <li><a class="dropdown-item" href="#">Adendum</a></li>
                                 <li><a class="dropdown-item" href="' . route('sp3.get-approve', [!$model->app1 ? 'first' : 'second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>
                                 <li><a class="dropdown-item" href="#">Print</a></li>
@@ -251,7 +252,6 @@ class Sp3Controller extends Controller
 
     public function store(Request $request, FlasherInterface $flasher)
     {
-        return response()->json($request->all());
         try {
             DB::beginTransaction();
                         
@@ -305,11 +305,10 @@ class Sp3Controller extends Controller
             $sp3->jadwal1 = date('Y-m-d', strtotime($request->jadwal1));
             $sp3->jadwal2 = date('Y-m-d', strtotime($request->jadwal2));
             $sp3->rit = $request->rit;
-            $sp3->pph = $pph[1];
-            $sp3->pph_id = $pph[0];
             $sp3->jarak_km = $request->jarak_pesanan;
             $sp3->ppn = $request->ppn ? (float)($request->ppn / 100) : 0;
-            $sp3->pph = $request->pph ? (float)($request->pph / 100) : 0;
+            $sp3->pph = $pph[1];
+            $sp3->pph_id = $pph[0];
             $sp3->keterangan = $request->keterangan;
             $sp3->created_by = session('TMP_NIP') ?? '12345';
             $sp3->created_date = date('Y-m-d H:i:s');
@@ -334,9 +333,11 @@ class Sp3Controller extends Controller
                 $sp3D->vol_akhir = str_replace(',', '', $request->vol_btg[$i]);
                 $sp3D->vol_ton_awal = str_replace(',', '', $request->vol_ton[$i]);
                 $sp3D->vol_ton_akhir = str_replace(',', '', $request->vol_ton[$i]);
+
                 if($request->sat_harsat == 'volume'){
                     $sp3D->sat_harsat = $request->satuan[$i];
                 }
+                
                 $sp3D->harsat_awal = str_replace(',', '', $request->harsat[$i]);
                 $sp3D->harsat_akhir = str_replace(',', '', $request->harsat[$i]);
                 $sp3D->save();
@@ -365,6 +366,222 @@ class Sp3Controller extends Controller
         }
 
         return redirect()->route('sp3.index');
+    }
+
+    public function edit($noSp3)
+    {
+        $noSp3 = str_replace('|', '/', $noSp3);
+
+        $data = Sp3::find($noSp3);
+
+        $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+            ->where('no_npp', $data->no_npp)
+            ->get();
+
+        $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
+        
+        $sp3D = Sp3D::whereNoNpp($data->no_npp)
+            ->whereIn('kd_produk', $kd_produks)
+            ->get()
+            ->sortByDesc('no_sp3')
+            ->groupBy([
+                'kd_produk', function ($item) {
+                    return substr($item->no_sp3, 0, -3);
+                }
+            ], true);
+
+        $npp = Npp::with(['infoPasar.region'])
+            ->where('no_npp', $data->no_npp)
+            ->first();
+
+        $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
+            ->get()
+            ->pluck('no_ban', 'no_ban');
+
+        $kontrak = Kontrak::where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
+            ->get()
+            ->pluck('no_kontrak', 'no_kontrak');
+
+        $vendor = Vendor::where('vendor_id', $data->vendor_id)->first();
+
+        $kondisiPenyerahan = [
+            'L' => 'LOKO', 
+            'F' => 'FRANKO', 
+            'T' => 'TERPASANG', 
+            'D' => 'DISPENSASI'
+        ];
+
+        $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($data->no_npp, -1))];
+
+        $VSpprbRi = VSpprbRi::where('no_npp', $data->no_npp)->first();
+
+        if($VSpprbRi){
+            $jarak = Sp3D::where('pat_to', $VSpprbRi->pat_to)
+                ->where('no_npp', $VSpprbRi->no_npp)
+                ->max('jarak_km');
+        }else{
+            $jarak = 0;
+        }
+
+        $unit = Pat::where('kd_pat', 'LIKE', '2%')
+            ->orWhere('kd_pat', 'LIKE', '4%')
+            ->orWhere('kd_pat', 'LIKE', '5%')
+            ->get()
+            ->pluck('ket', 'kd_pat')
+            ->toArray();
+            
+        $unit = ["" => "Pilih Unit"] + $unit;
+
+        $satuan = [
+            "" => "Pilih",
+            "btg" => "BTG",
+            "ton" => "TON",
+        ];
+
+        $ppn = [
+            "0" => "0%",
+            "11" => "11%",
+        ];
+
+        $pph = DB::table('tb_pph_d')->leftJoin('tb_pph_h', 'tb_pph_d.pph_id', '=', 'tb_pph_h.pph_id')
+            ->select('tb_pph_d.pph_id', 'tb_pph_d.ket', 'tb_pph_h.pph_nama','tb_pph_d.value')
+            ->get()
+            ->sortBy(['pph_id', 'value'])
+            ->mapWithKeys(function($item){ 
+                return [$item->pph_id . '|' . $item->value => $item->pph_nama . ' [' . $item->value . '%]'];
+            })
+            ->all();
+
+        $pph = ["0|0" => "0%"] + $pph;
+
+        $sat_harsat = $data->satuan_harsat;
+
+        $listPic = Sp3Pic::with('employee')
+            ->where('no_sp3', $noSp3)
+            ->get();
+
+        $detailPekerjaan = Sp3D::where('no_sp3', $noSp3)->get();
+
+        $materialTambahan = Sp3D2::where('no_sp3', $noSp3)->get();
+
+        $isAmandemen = str_contains(request()->url(), 'amandemen');
+
+        return view('pages.sp3.edit', compact(
+            'data',
+            'detailPesanan',
+            'npp',
+            'ban',
+            'kontrak',
+            'vendor',
+            'kondisiPenyerahan',
+            'kondisiPenyerahanDipilih',
+            'VSpprbRi',
+            'jarak',
+            'unit',
+            'satuan',
+            'ppn',
+            'pph',
+            'sp3D',
+            'sat_harsat',
+            'listPic',
+            'detailPekerjaan',
+            'materialTambahan',
+            'isAmandemen'
+        ));
+    }
+
+    public function update(Request $request, FlasherInterface $flasher, $noSp3){
+        try {
+            DB::beginTransaction();
+
+            $noSp3 = str_replace('|', '/', $noSp3);
+            
+            if($request->isAmandemen){
+                $noSp3Sequence = sprintf('%02s', ((int)substr($noSp3, -2))+1);
+
+                $newNoSp3 = str_replace(substr($noSp3, -2), $noSp3Sequence, $noSp3);
+            }
+            
+            $pph = explode('|', $request->pph);
+
+            //Delete child data
+            Sp3Pic::where('no_sp3', $noSp3)->delete();
+            Sp3D::where('no_sp3', $noSp3)->delete();
+            Sp3D2::where('no_sp3', $noSp3)->delete();
+
+            //Update Sp3
+            $sp3 = Sp3::find($noSp3);
+            $sp3->no_sp3 = $newNoSp3;
+            $sp3->tgl_sp3 = date('Y-m-d', strtotime($request->tgl_sp3));
+            $sp3->no_ban = $request->no_ban;
+            $sp3->no_kontrak_induk = $request->no_kontrak_induk;
+            $sp3->jadwal1 = date('Y-m-d', strtotime($request->jadwal1));
+            $sp3->jadwal2 = date('Y-m-d', strtotime($request->jadwal2));
+            $sp3->rit = $request->rit;
+            $sp3->jarak_km = $request->jarak_pesanan;
+            $sp3->ppn = $request->ppn ? (float)($request->ppn / 100) : 0;
+            $sp3->pph = $pph[1];
+            $sp3->pph_id = $pph[0];
+            $sp3->keterangan = $request->keterangan;
+            $sp3->created_by = session('TMP_NIP') ?? '12345';
+            $sp3->created_date = date('Y-m-d H:i:s');
+            $sp3->kd_pat = session('TMP_KDWIL') ?? '1A';
+            $sp3->save();
+
+            foreach($request->pic as $pic){
+                $sp3Pic = new Sp3Pic();
+                $sp3Pic->no_sp3 = $newNoSp3;
+                $sp3Pic->employee_id = $pic;
+                $sp3Pic->save();
+            }
+
+            for($i=0; $i < count($request->unit); $i++){
+                $sp3D = new Sp3D();
+                $sp3D->no_sp3 = $newNoSp3;
+                $sp3D->no_npp = $sp3->no_npp;
+                $sp3D->pat_to = $request->unit[$i];
+                $sp3D->kd_produk = $request->kd_produk[$i];
+                $sp3D->jarak_km = str_replace(',', '', $request->jarak_pekerjaan[$i]);
+                $sp3D->vol_awal = str_replace(',', '', $request->vol_btg[$i]);
+                $sp3D->vol_akhir = str_replace(',', '', $request->vol_btg[$i]);
+                $sp3D->vol_ton_awal = str_replace(',', '', $request->vol_ton[$i]);
+                $sp3D->vol_ton_akhir = str_replace(',', '', $request->vol_ton[$i]);
+
+                if($request->sat_harsat == 'volume'){
+                    $sp3D->sat_harsat = $request->satuan[$i];
+                }
+                
+                $sp3D->harsat_awal = str_replace(',', '', $request->harsat[$i]);
+                $sp3D->harsat_akhir = str_replace(',', '', $request->harsat[$i]);
+                $sp3D->save();
+            }
+
+            $sp3D2Id = Sp3D2::max('id') ?? 0;
+
+            foreach(($request->material_tambahan ?? []) as $material){
+                $sp3D2Id++;
+
+                $sp3D2 = new Sp3D2();
+                $sp3D2->id = $sp3D2Id;
+                $sp3D2->no_sp3 = $newNoSp3;
+                $sp3D2->material = $material['material'];
+                $sp3D2->spesifikasi = $material['spesifikasi'];
+                $sp3D2->volume = $material['volume'];
+                $sp3D2->save();
+            }
+
+            DB::commit();
+
+            $flasher->addSuccess('Data has been saved successfully!');
+        } catch(Exception $e) {
+            dd($e);
+            DB::rollback();
+            $flasher->addError($e->getMessage());
+        }
+
+        return $request->isAmandemen 
+            ? redirect()->route('sp3.amandemen', str_replace('/', '|', $newNoSp3))
+            : redirect()->route('sp3.edit', str_replace('/', '|', $newNoSp3));
     }
 
     public function showApprove($type, $noSp3)

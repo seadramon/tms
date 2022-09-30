@@ -1,0 +1,125 @@
+<msg time='2022-09-29T07:27:54.993+00:00' org_id='oracle' comp_id='clients'
+ msg_id='dbgrmmdcrf_create_relation_full:1960:1503427940' type='NOTIFICATION' group='create'
+ level='16' host_id='829210f0dc0f' host_addr='172.18.0.2'
+ pid='99' version='1'>
+ <txt>Create Relation ADR_CONTROL
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:55.281+00:00' org_id='oracle' comp_id='clients'
+ msg_id='dbgrmmdcrf_create_relation_full:1960:1503427940' type='NOTIFICATION' group='create'
+ level='16' host_id='829210f0dc0f' host_addr='172.18.0.2'
+ pid='99'>
+ <txt>Create Relation ADR_INVALIDATION
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:55.557+00:00' org_id='oracle' comp_id='clients'
+ msg_id='dbgrmmdcrf_create_relation_full:1960:1503427940' type='NOTIFICATION' group='create'
+ level='16' host_id='829210f0dc0f' host_addr='172.18.0.2'
+ pid='99'>
+ <txt>Create Relation INC_METER_IMPT_DEF
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:55.937+00:00' org_id='oracle' comp_id='clients'
+ msg_id='dbgrmmdcrf_create_relation_full:1960:1503427940' type='NOTIFICATION' group='create'
+ level='16' host_id='829210f0dc0f' host_addr='172.18.0.2'
+ pid='99'>
+ <txt>Create Relation INC_METER_PK_IMPTS
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.115+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>
+
+***********************************************************************
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.157+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>
+Fatal NI connect error 12541, connecting to:
+ (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.6.1.169)(PORT=1521))(CONNECT_DATA=(SID=orawb)(CID=(PROGRAM=php-fpm:?pool?www)(HOST=829210f0dc0f)(USER=www-data))))
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.200+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>
+  VERSION INFORMATION:
+	TNS for Linux: Version 12.2.0.1.0 - Production
+	TCP/IP NT Protocol Adapter for Linux: Version 12.2.0.1.0 - Production
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.243+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>  Time: 29-SEP-2022 07:27:56
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.282+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>  Tracing not turned on.
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.316+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>  Tns error struct:
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.351+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>    ns main err code: 12541
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.394+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>    
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.433+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>TNS-12541: Message 12541 not found; No message file for product=network, facility=TNS
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.465+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>    ns secondary err code: 12560
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.523+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>    nt main err code: 511
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.575+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>    
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.624+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>TNS-00511: Message 511 not found; No message file for product=network, facility=TNS
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.665+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>    nt secondary err code: 111
+ </txt>
+</msg>
+<msg time='2022-09-29T07:27:56.709+00:00' org_id='oracle' comp_id='clients'
+ type='UNKNOWN' level='16' host_id='829210f0dc0f'
+ host_addr='172.18.0.2' pid='99'>
+ <txt>    nt OS err code: 0
+ </txt>
+</msg>
