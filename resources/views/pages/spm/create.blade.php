@@ -32,7 +32,6 @@
                                 <label class="form-label col-sm-3 required ">No. SPP</label>
                                 <select class="form-control" data-control="select2" name="no_spp" id="no_spp"  data-placeholder="Pilih No. SPP">
                                     <option></option>
-                                    <option value="003/SPPB/TP/WP/I/2007">003/SPPB/TP/WP/I/2007</option>
                                     @foreach ( $no_spp as $row)
                                         <option value="{{ $row->no_sppb }}">{{ $row->no_sppb }}</option>
                                     @endforeach
