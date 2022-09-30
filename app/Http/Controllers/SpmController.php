@@ -55,20 +55,22 @@ class SpmController extends Controller
 
         $collection_table = new Collection();
         foreach($detail_spp as $item){
-            // $sppdis_vol_btg = DB::select('
-            //     SELECT SPM_H.NO_SPM, SPM_H.NO_SPPB, SPTB_H.NO_SPM,  SPTB_D.NO_SPTB, SUM(SPTB_D.VOL) as sppdis_vol_btg
-            //     FROM SPM_H
-            //     JOIN SPTB_H on SPTB_H.NO_SPM = SPM_H.NO_SPM
-            //     JOIN SPTB_D on SPTB_H.NO_SPTB = SPTB_D.NO_SPTB
-            //     where SPM_H.NO_SPPB = '.$request->no_spp.'
-            //     GROUP BY SPM_H.NO_SPM, SPM_H.NO_SPPB, SPTB_H.NO_SPM,  SPTB_D.NO_SPTB');
+            
+            $sppdis_vol_btg = DB::table('SPM_H')
+                ->selectRaw('SUM(SPTB_D.VOL) as sppdis_vol_btg')
+                ->join('SPTB_H','SPTB_H.NO_SPM','=','SPM_H.NO_SPM')
+                ->join('SPTB_D','SPTB_H.NO_SPTB','=','SPTB_D.NO_SPTB')
+                ->where('SPM_H.NO_SPPB',$request->no_spp)
+                ->groupBy('SPM_H.NO_SPM','SPM_H.NO_SPPB','SPTB_H.NO_SPM','SPTB_D.NO_SPTB')
+                ->first();
 
             $collection_table->push((object)[
                 'kode_produk' => $item->produk->kd_produk,
                 'type_produk' => $item->produk->kd_produk.' - '.$item->produk->tipe,
                 'spp_vol_btg' => $item->app2_vol,
                 'spp_vol_ton' => 0,
-                'sppdis_vol_btg' => 0
+                'sppdis_vol_btg' => $sppdis_vol_btg->sppdis_vol_btg ?? 0,
+                'sppdis_vol_ton' => 0
             ]);
         }
 
@@ -118,7 +120,7 @@ class SpmController extends Controller
                 ->where('kd_produk',$kd_produk)
                 ->first();
 
-        $spm = SpmH::with(['spmd' => function($sql){
+        $spm = SpmH::with(['spmd' => function($sql) use ($kd_produk){
                     $sql->where('kd_produk',$kd_produk);
                 }])
                 ->where('no_sppb',$no_sppb)
@@ -144,34 +146,12 @@ class SpmController extends Controller
 
     }
 
-    function getVolSPM(){
-        $no_sppb = $request->no_sppb;
-        $kd_produk = $request->kd_produk;
-
-        $data = SpmH::with(['spmd' => function($sql){
-                    $sql->where('kd_produk',$kd_produk);
-                }])
-                ->where('no_sppb',$no_sppb)
-                ->first();
-
-
-        if(empty($data)){
-            return 0;
-        }else{
-            $jml = 0;
-            foreach($data->spmd as $row){
-                $jml = $jml + $row->vol;
-            }
-            return response()->json($jml);
-        }
-    }
-
     public function store(Request $request, FlasherInterface $flasher){
         try {
             DB::beginTransaction();
             // store in SPM_H
             $no_sppb = $request->no_spp;
-            $tgl_spm = $request->tanggal;
+            $tgl_spm = date('Y-m-d', strtotime($request->tanggal));
             $jns_spm = $request->jenis_spm;
 
             // ---------
@@ -222,8 +202,13 @@ class SpmController extends Controller
             $SpmH->no_sppb = $no_sppb;
             $SpmH->vendor_id = $vendor_angkutan;
             $SpmH->tgl_spm = $tgl_spm;
+            $SpmH->jns_spm = $jns_spm;
             $SpmH->app1 = 0;
+            $SpmH->pat_to = $pat_to;
+            $SpmH->jarak_km = $request->jarak;
+            $SpmH->created_by = session('TMP_NIP') ?? '12345';
             $SpmH->save();
+
             // store to smp_d
             $i = 0;
             foreach($request->keterangan_select as $row){

@@ -194,7 +194,7 @@ $('#buat_draft').on('click', function(){
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data: {
-                    kd_produk: $(this).val(),
+                    kd_produk: $('#tipe_produk_select').val(),
                     no_sppb: $('#no_spp').val()
                 },
                 dataType: 'json',

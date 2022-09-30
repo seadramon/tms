@@ -16,9 +16,9 @@ class SpmH extends Model
     public $timestamps = false;
     public $incrementing = false;
 
-    public function smpd()
+    public function spmd()
     {
-    	return $this->hasMany(SpmD::class, 'no_sppb', 'no_sppb');
+    	return $this->hasMany(SpmD::class, 'no_spm', 'no_spm');
     }
 
 }
