@@ -118,7 +118,7 @@
             minYear: 1901,
             autoApply: true,
             locale: {
-            format: 'DD-MM-YYYY'
+                format: 'DD-MM-YYYY'
             }
         });
 
@@ -142,9 +142,7 @@
             }
         });
 
-        $('.form-select-solid').select2();
-
-        $('.vol_btg').on('change', function(){
+        $(document).on('change', '.vol_btg', function(){
             let rowId = $(this).attr('row-id');
 
             let volBtg = parseFloat($('#vol_btg_' + rowId).val());
@@ -159,7 +157,7 @@
             }
         });
 
-        $('.vol_btg, .vol_ton, .harsat, .satuan').on('change', function(){
+        $(document).on('change', '.vol_btg, .vol_ton, .harsat, .satuan', function(){
             let rowId = $(this).attr('row-id');
 
             calculateJumlah(rowId);
@@ -204,7 +202,7 @@
             $('#total').val(reFormat(total));
         }
 
-        $('.delete_pekerjaan').on('click', function(){
+        $(document).on('click', '.delete_pekerjaan', function(){
             let rowId = $(this).attr('row-id');
             let deletedRow = $('#detail_pekerjaan_' + rowId);
 
@@ -252,6 +250,67 @@
             $('#subtotal').val($('#est-rit').val());
             calculateTotal();
         });
+
+        $('#add-detail').on('click', function(){
+            var newIndex = parseInt($('#tabel_detail_pekerjaan tr:last').attr('row-id')) + 1;
+
+            var row = document.getElementById('detail_pekerjaan_clone'); // find row to copy
+            var table = document.getElementById('tabel_detail_pekerjaan'); // find table to append to
+            var clone = row.cloneNode(true); // copy children too
+
+            //Set Row Id
+            clone.id = 'detail_pekerjaan_' + newIndex;
+            
+            //Set Id
+            clone.getElementsByTagName('select')[0].id = 'unit_' + newIndex;
+            clone.getElementsByTagName('input')[1].id = 'tipe_' + newIndex;
+            clone.getElementsByTagName('input')[2].id = 'jarak_pekerjaan_' + newIndex;
+            clone.getElementsByTagName('input')[3].id = 'vol_btg_' + newIndex;
+            clone.getElementsByTagName('input')[4].id = 'vol_btg_max_' + newIndex;
+            clone.getElementsByTagName('input')[5].id = 'vol_ton_' + newIndex;
+            clone.getElementsByTagName('select')[1].id = 'satuan_' + newIndex;
+            clone.getElementsByTagName('input')[6].id = 'harsat_' + newIndex;
+            clone.getElementsByTagName('input')[7].id = 'jumlah_' + newIndex;
+            clone.getElementsByTagName('button')[0].id = 'delete_pekerjaan_' + newIndex;
+            
+            $(table).find('tbody').append(clone) // add new row to end of table
+            
+            //Set Row Id
+            $('#detail_pekerjaan_' + newIndex).attr('row-id', newIndex);
+            
+            //Set Col Id
+            $('#unit_' + newIndex).attr('row-id', newIndex);
+            $('#tipe_' + newIndex).attr('row-id', newIndex);
+            $('#jarak_pekerjaan_' + newIndex).attr('row-id', newIndex);
+            $('#vol_btg_' + newIndex).attr('row-id', newIndex);
+            $('#vol_btg_max_' + newIndex).attr('row-id', newIndex);
+            $('#vol_ton_' + newIndex).attr('row-id', newIndex);
+            $('#satuan_' + newIndex).attr('row-id', newIndex);
+            $('#harsat_' + newIndex).attr('row-id', newIndex);
+            $('#jumlah_' + newIndex).attr('row-id', newIndex);
+            $('#delete_pekerjaan_' + newIndex).attr('row-id', newIndex);
+
+            //Remove Disable
+            $('#unit_' + newIndex).removeAttr('disabled');
+            $('#tipe_' + newIndex).removeAttr('disabled');
+            $('#jarak_pekerjaan_' + newIndex).removeAttr('disabled');
+            $('#vol_btg_' + newIndex).removeAttr('disabled');
+            $('#vol_btg_max_' + newIndex).removeAttr('disabled');
+            $('#vol_ton_' + newIndex).removeAttr('disabled');
+            $('#satuan_' + newIndex).removeAttr('disabled');
+            $('#harsat_' + newIndex).removeAttr('disabled');
+            $('#jumlah_' + newIndex).removeAttr('disabled');
+            $('#delete_pekerjaan_' + newIndex).removeAttr('disabled');
+            
+            //Set Select2
+            $('#unit_' + newIndex).select2();
+            $('#satuan_' + newIndex).select2();
+            
+            //Show New Row
+            $('#detail_pekerjaan_' + newIndex).show();
+        });
+
+        $('.form-select-solid').select2();
     }
 </script>
 @endsection
