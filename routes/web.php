@@ -4,6 +4,7 @@ use App\Http\Controllers\Master\ArmadaController;
 use App\Http\Controllers\Master\DriverController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Sp3Controller;
+use App\Http\Controllers\SpmController;
 use App\Http\Controllers\SppController;
 use App\Http\Controllers\SppApprovalController;
 use App\Http\Controllers\AuthController;
@@ -95,6 +96,19 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	Route::group(['prefix' => 'potensi-detail-armada', 'as' => 'potensi.detail.armada.'], function(){
 		Route::get('/create',	[PdaController::class, 'create'])->name('create');
+	});
+
+    Route::group(['prefix' => '/spm', 'as' => 'spm.'], function(){
+	    Route::post('/destroy', [SpmController::class, 'destroy'])->name('destroy');
+	    Route::post('/draft', [SpmController::class, 'createDraft'])->name('draft');
+	    Route::get('/data', [SpmController::class, 'data'])->name('data');
+	    Route::resource('/',  SpmController::class)->except([
+	        'destroy'
+	    ])->parameters(['' => 'spm']);
+
+		Route::post('/search-pbbmuat', [SpmController::class, 'getPbbMuat'])->name('getPbbMuat');
+		Route::post('/get-data-box2', [SpmController::class, 'getDataBox2'])->name('get-data-box2');
+        Route::post('/get-jml-segmen', [SpmController::class, 'getJmlSegmen'])->name('get-jml-segmen');
 	});
 });
 
