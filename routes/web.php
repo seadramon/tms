@@ -8,6 +8,7 @@ use App\Http\Controllers\SpmController;
 use App\Http\Controllers\SppController;
 use App\Http\Controllers\SppApprovalController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\KalenderPengirimanController;
 use App\Http\Controllers\MasterDriverController;
 use App\Http\Controllers\MasterArmadaController;
 use App\Http\Controllers\PdaController;
@@ -112,6 +113,12 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::post('/search-pbbmuat', [SpmController::class, 'getPbbMuat'])->name('getPbbMuat');
 		Route::post('/get-data-box2', [SpmController::class, 'getDataBox2'])->name('get-data-box2');
         Route::post('/get-jml-segmen', [SpmController::class, 'getJmlSegmen'])->name('get-jml-segmen');
+	});
+
+	Route::group(['prefix' => 'kalender-pengirimian', 'as' => 'kalender-pengiriman.'], function() {
+		Route::get('/', [KalenderPengirimanController::class, 'index'])->name('index');
+		Route::get('spm', [KalenderPengirimanController::class, 'spmData'])->name('spm');
+		Route::get('spp', [KalenderPengirimanController::class, 'sppData'])->name('spp');
 	});
 });
 

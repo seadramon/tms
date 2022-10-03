@@ -574,7 +574,6 @@ class Sp3Controller extends Controller
 
             $flasher->addSuccess('Data has been saved successfully!');
         } catch(Exception $e) {
-            dd($e);
             DB::rollback();
             $flasher->addError($e->getMessage());
         }
