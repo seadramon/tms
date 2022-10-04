@@ -107,13 +107,13 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::post('/draft', [SpmController::class, 'createDraft'])->name('draft');
 	    Route::get('/data', [SpmController::class, 'data'])->name('data');
 	    Route::resource('/',  SpmController::class)->except([
-	        'destroy'
+	        'destroy', 'show'
 	    ])->parameters(['' => 'spm']);
 
 		Route::post('/search-pbbmuat', [SpmController::class, 'getPbbMuat'])->name('getPbbMuat');
 		Route::post('/get-data-box2', [SpmController::class, 'getDataBox2'])->name('get-data-box2');
         Route::post('/get-jml-segmen', [SpmController::class, 'getJmlSegmen'])->name('get-jml-segmen');
-		Route::post('/konfirmasi-vendor', [SpmController::class, 'create_konfirmasi_vendor'])->name('create-konfirmasi-vendor');
+		Route::get('/konfirmasi-vendor', [SpmController::class, 'create_konfirmasi_vendor'])->name('create-konfirmasi-vendor');
 	});
 
 	Route::group(['prefix' => 'kalender-pengirimian', 'as' => 'kalender-pengiriman.'], function() {

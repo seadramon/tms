@@ -252,14 +252,88 @@ class SpmController extends Controller
     }
 
 
-    public function create_konfirmasi_vendor($no_spm){
-        $data = Spm_H::with('vendor')->where('no_spm',$no_spm)->first();
+    public function create_konfirmasi_vendor(){
+        $data = SpmH::with('vendor')->where('no_spm','0002/SPM/PI/PPB-SMT/09/2022')->first();
         
-        $data = SppbH::select('no_npp')->where('no_sppb',$request->no_spp)->first();
-        $data_1 = SpprbH::with('pat')->where('no_npp',$data->no_npp)->get();
+        $data_ = SppbH::select('no_npp')->where('no_sppb',$data->no_sppb)->first();
+        $data_1 = SpprbH::with('pat')->where('no_npp',$data_->no_npp)->get();
+        $detail_spp = SppbD::with('produk')->where('no_sppb',$data->no_sppb)->get();
+
+        $collection_table = new Collection();
+        foreach($detail_spp as $item){
+
+            $data_segmen = SppbD::select('jml_segmen','app2_vol')
+                ->where('no_sppb',$data->no_sppb)
+                ->where('kd_produk',$item->produk->kd_produk)
+                ->first();
+
+            $spm = SpmH::with(['spmd' => function($sql) use ($item){
+                    $sql->where('kd_produk',$item->produk->kd_produk);
+                }])
+                ->where('no_sppb',$data->no_sppb)
+                ->first();
+                $jml = 0;
+                if(!empty($spm)){
+                    foreach($spm->spmd as $row){
+                        $jml = $jml + $row->vol;
+                    }
+                }
+
+            $sppdis_vol_btg = DB::table('SPM_H')
+                ->selectRaw('SUM(SPTB_D.VOL) as sppdis_vol_btg')
+                ->join('SPTB_H','SPTB_H.NO_SPM','=','SPM_H.NO_SPM')
+                ->join('SPTB_D','SPTB_H.NO_SPTB','=','SPTB_D.NO_SPTB')
+                ->where('SPM_H.NO_SPPB',$data->no_sppb)
+                ->groupBy('SPM_H.NO_SPM','SPM_H.NO_SPPB','SPTB_H.NO_SPM','SPTB_D.NO_SPTB')
+                ->first();
+
+            $collection_table->push((object)[
+                'kode_produk' => $item->produk->kd_produk,
+                'type_produk' => $item->produk->kd_produk.' - '.$item->produk->tipe,
+                'spp_vol_btg' => $item->app2_vol,
+                'spp_vol_ton' => 0,
+                'sppdis_vol_btg' => $sppdis_vol_btg->sppdis_vol_btg ?? 0,
+                'sppdis_vol_ton' => 0,
+                'segmen' => $data_segmen->jml_segmen,
+                'spm' => $jml,
+                'vol_sppb' => $data_segmen->app2_vol
+            ]);
+        }
+
         
+        $no_npp = SppbH::select('no_npp')->where('no_sppb',$data->no_sppb)->first();
+        $no_spprb = SpprbH::with('pat')->where('no_npp',$no_npp->no_npp)->first();
+        $pelanggan = Npp::select('nama_pelanggan','nama_proyek')->where('no_npp',$no_npp->no_npp)->first();
+        $vendor_angkutan = Vendor::where('vendor_id',$data->vendor_id)->first();
+        $tujuan = Npp::with('infoPasar.region')->first();
+
+        $jarak = Sp3D::where('no_npp',$no_npp->no_npp)->where('pat_to',$no_spprb->pat->kd_pat)->first();
+        if(empty($jarak)){
+            $jarak = 0;
+        }
+
+        $kondisiPenyerahan = [
+            'L' => 'LOKO',
+            'F' => 'FRANKO',
+            'T' => 'TERPASANG',
+            'D' => 'DISPENSASI'
+        ];
+
+        $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($no_npp->no_npp, -1))];
+
         return view('pages.spm.konfirmasi-vendor', [
-            'data' => $data
+            'data' => $data,
+            'collectoin' => $collection_table,
+            'no_npp' => $no_npp->no_npp,
+            'no_spprb' => $no_spprb->no_spprb,
+            'detail_spp' => $collection_table,
+            'no_spp' => $data->no_sppb,
+            'vendor_angkutan' => $vendor_angkutan,
+            'kp'=> $kondisiPenyerahanDipilih,
+            'pelanggan' => $pelanggan->nama_pelanggan,
+            'nama_proyek' => $pelanggan->nama_proyek,
+            'tujuan' => $tujuan,
+            'jarak' => $jarak
         ]);
     }
 }
