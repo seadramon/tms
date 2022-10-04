@@ -106,7 +106,11 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">PIC</label>
-                <select class="form-control search-pic" name="pic[]" id="pic" multiple required></select>
+                <select class="form-control search-pic" name="pic[]" id="pic" multiple required>
+                    @foreach ($listPic as $pic)
+                        <option value="{{ $pic->employee_id }}" selected>{{ $pic->employee_id }} - {{ $pic->employee?->first_name }} {{ $pic->employee?->last_name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group col-lg-6">
@@ -154,7 +158,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Jarak</label>
-                {!! Form::number('jarak_pesanan', $jarak, ['class'=>'form-control', 'id'=>'jarak_pesanan', 'required']) !!}
+                {!! Form::number('jarak_pesanan', $data->jarak_km, ['class'=>'form-control', 'id'=>'jarak_pesanan', 'required']) !!}
             </div>
             @if ($sat_harsat == 'ritase')
             <div class="form-group col-lg-6">
@@ -190,35 +194,53 @@
                 <tbody>
                     @include('pages.sp3.row-to-clone')
 
-                    @foreach($detailPesanan as $key => $pesanan)
+                    @php
+                        $subtotal = 0;
+                    @endphp
+
+                    @foreach($detailPekerjaan as $key => $pekerjaan)
+                        @php
+                            $vol_btg = $pekerjaan->vol_awal;
+                            $vol_ton = $pekerjaan->vol_ton_awal;
+                            $harsat = $pekerjaan->harsat_awal;
+
+                            if($pekerjaan->sat_harsat == 'btg'){
+                                $jumlah = $harsat * $vol_btg;
+                            }else{
+                                $jumlah = $harsat * $vol_ton;
+                            }
+
+                            $subtotal += $jumlah;
+                        @endphp
+
                         <tr class="detail_pekerjaan" id="detail_pekerjaan_{{ $key }}" row-id={{ $key }}>
                             <td style="width: 10%;">
-                                {!! Form::select('unit[]', $unit, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'unit_' . $key, 'row-id'=>$key]) !!}
+                                {!! Form::select('unit[]', $unit, $pekerjaan->pat_to, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'unit_' . $key, 'row-id'=>$key]) !!}
                             </td>
                             <td style="width: 14%;">
-                                {!! Form::hidden('kd_produk[]', $pesanan->produk?->kd_produk, []) !!}
-                                {!! Form::text('tipe[]', $pesanan->produk?->tipe, ['class'=>'form-control', 'id'=>'tipe_' . $key, 'row-id'=>$key]) !!}
+                                {!! Form::hidden('kd_produk[]', $pekerjaan->kd_produk, []) !!}
+                                {!! Form::text('tipe[]', $pekerjaan->produk?->tipe, ['class'=>'form-control', 'id'=>'tipe_' . $key, 'row-id'=>$key]) !!}
                             </td>
                             <td style="width: 12%;">
-                                {!! Form::text('jarak_pekerjaan[]', $jarak, ['class'=>'form-control jarak_pekerjaan decimal', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key]) !!}
+                                {!! Form::text('jarak_pekerjaan[]', number_format($pekerjaan->jarak_km), ['class'=>'form-control jarak_pekerjaan decimal', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key]) !!}
                             </td>
                             <td style="width: 13%;">
-                                {!! Form::text('vol_btg[]', $sat_harsat != 'volume' ? 1 : null, ['class'=>'form-control vol_btg decimal', 'readonly' => $readonly, 'id'=>'vol_btg_' . $key, 'max'=>(float)$pesanan->vol_konfirmasi ?? 0, 'row-id'=>$key]) !!}
-                                <input type="hidden" id="vol_btg_max_{{ $key }}" value="{{ (float)$pesanan->vol_konfirmasi ?? 0 }}">
+                                {!! Form::text('vol_btg[]', number_format($vol_btg), ['class'=>'form-control vol_btg decimal', 'readonly' => $readonly, 'id'=>'vol_btg_' . $key, 'row-id'=>$key]) !!}
+                                <input type="hidden" id="vol_btg_max_{{ $key }}" value="9999">
                             </td>
                             <td style="width: 13%;">
-                                {!! Form::text('vol_ton[]', $sat_harsat != 'volume' ? 1 : null, ['class'=>'form-control vol_ton decimal', 'readonly' => $readonly, 'id'=>'vol_ton_' . $key, 'row-id'=>$key]) !!}
+                                {!! Form::text('vol_ton[]', number_format($vol_ton), ['class'=>'form-control vol_ton decimal', 'readonly' => $readonly, 'id'=>'vol_ton_' . $key, 'row-id'=>$key]) !!}
                             </td>
                             @if ($sat_harsat != 'ritase')
                                 <td style="width: 10%;">
-                                    {!! Form::select('satuan[]', $satuan, null, ['class'=>'form-control form-select-solid satuan', 'data-control'=>'select2', 'id'=>'satuan_' . $key, 'row-id'=>$key]) !!}
+                                    {!! Form::select('satuan[]', $satuan, $pekerjaan->sat_harsat, ['class'=>'form-control form-select-solid satuan', 'data-control'=>'select2', 'id'=>'satuan_' . $key, 'row-id'=>$key]) !!}
                                 </td>
                             @endif
                             <td style="width: 15%;">
-                                {!! Form::text('harsat[]', null, ['class'=>'form-control harsat decimal', 'id'=>'harsat_' . $key, 'row-id'=>$key]) !!}
+                                {!! Form::text('harsat[]', number_format($harsat), ['class'=>'form-control harsat decimal', 'id'=>'harsat_' . $key, 'row-id'=>$key]) !!}
                             </td>
                             <td style="width: 10%;">
-                                {!! Form::text('jumlah[]', null, ['class'=>'form-control jumlah decimal', 'id'=>'jumlah_' . $key, 'row-id'=>$key, 'readonly']) !!}
+                                {!! Form::text('jumlah[]', number_format($jumlah), ['class'=>'form-control jumlah decimal', 'id'=>'jumlah_' . $key, 'row-id'=>$key, 'readonly']) !!}
                             </td>
                             <td style="vertical-align: middle; padding-left: 0px; width: 3%;">
                                 <button class="btn btn-danger btn-sm delete_pekerjaan" id="delete_pekerjaan_{{ $key }}" row-id={{ $key }} style="padding: 5px 6px;">
@@ -226,42 +248,48 @@
                                 </button>
                             </td>
                         </tr>
-                    @endforeach                
+                    @endforeach
                 </tbody>
             </table>
-
-            <div class="form-group" style="margin-top: 20px">
-                <button type="button" class="btn btn-light-primary" id="add-detail">
-                    <i class="la la-plus"></i>Tambah
-                </button>
-            </div>
         </div>
+
+        <div class="form-group" style="margin-top: 20px">
+            <button type="button" class="btn btn-light-primary" id="add-detail">
+                <i class="la la-plus"></i>Tambah
+            </button>
+        </div>
+
         <table class="table table-row-bordered text-center">
+            @php
+                $total = $subtotal + ($subtotal * $data->ppn) + ($subtotal * $data->pph/100);
+                $formatPph = $data->pph_id . '|' . $data->pph;
+            @endphp
+
             <tr>
                 <th style="text-align: right; width: 72%">Subtotal</th>
                 <td style="width: 25%">
-                    {!! Form::text('subtotal', null, ['class'=>'form-control decimal', 'id'=>'subtotal', 'readonly']) !!}
+                    {!! Form::text('subtotal', number_format($subtotal), ['class'=>'form-control decimal', 'id'=>'subtotal', 'readonly']) !!}
                 </td>
                 <td style="width: 3%"></td>
             </tr>
             <tr>
                 <th style="text-align: right; width: 72%">PPN</th>
                 <td style="width: 25%">
-                    {!! Form::select('ppn', $ppn, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'ppn']) !!}
+                    {!! Form::select('ppn', $ppn, $data->ppn*100, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'ppn']) !!}
                 </td>
                 <td style="width: 3%"></td>
             </tr>
             <tr>
                 <th style="text-align: right; width: 72%">PPH</th>
                 <td style="width: 25%">
-                    {!! Form::select('pph', $pph, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph']) !!}
+                    {!! Form::select('pph', $pph, $formatPph, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph']) !!}
                 </td>
                 <td style="width: 3%"></td>
             </tr>
             <tr>
                 <th style="text-align: right; width: 72%">Total</th>
                 <td style="width: 25%">
-                    {!! Form::text('total', null, ['class'=>'form-control decimal', 'id'=>'total', 'readonly']) !!}
+                    {!! Form::text('total', $total, ['class'=>'form-control decimal', 'id'=>'total', 'readonly']) !!}
                 </td>
                 <td style="width: 3%"></td>
             </tr>
@@ -273,27 +301,53 @@
         <div id="material_tambahan">
             <div class="form-group">
                 <div data-repeater-list="material_tambahan">
-                    <div data-repeater-item>
-                        <div class="form-group row">
-                            <div class="col-md-3">
-                                <label class="form-label">Material</label>
-                                {!! Form::text('material', null, ['class'=>'form-control', 'required']) !!}
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Spesifikasi</label>
-                                {!! Form::text('spesifikasi', null, ['class'=>'form-control', 'required']) !!}
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Volume</label>
-                                {!! Form::number('volume', null, ['class'=>'form-control', 'required']) !!}
-                            </div>
-                            <div class="col-md-3">
-                                <a href="javascript:;" data-repeater-delete class="btn btn-md btn-light-danger mt-md-8">
-                                    <i class="la la-trash-o"></i>Hapus
-                                </a>
+                    @if(blank($materialTambahan))
+                        <div data-repeater-item>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Material</label>
+                                    {!! Form::text('material', null, ['class'=>'form-control', 'required']) !!}
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Spesifikasi</label>
+                                    {!! Form::text('spesifikasi', null, ['class'=>'form-control', 'required']) !!}
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Volume</label>
+                                    {!! Form::number('volume', null, ['class'=>'form-control', 'required']) !!}
+                                </div>
+                                <div class="col-md-3">
+                                    <a href="javascript:;" data-repeater-delete class="btn btn-md btn-light-danger mt-md-8">
+                                        <i class="la la-trash-o"></i>Hapus
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @else
+                        @foreach ($materialTambahan as $material)
+                            <div data-repeater-item>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Material</label>
+                                        {!! Form::text('material', $material->material, ['class'=>'form-control', 'required']) !!}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Spesifikasi</label>
+                                        {!! Form::text('spesifikasi', $material->spesifikasi, ['class'=>'form-control', 'required']) !!}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Volume</label>
+                                        {!! Form::number('volume', $material->volume, ['class'=>'form-control', 'required']) !!}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="javascript:;" data-repeater-delete class="btn btn-md btn-light-danger mt-md-8">
+                                            <i class="la la-trash-o"></i>Hapus
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         
@@ -310,7 +364,7 @@
 
         <div class="form-group">
             <label class="form-label">Keterangan</label>
-            <textarea name="keterangan" id="keterangan" rows="5" class="col-md-12"></textarea>
+            <textarea name="keterangan" id="keterangan" rows="5" class="col-md-12">{{ $data->keterangan }}</textarea>
         </div>
 
         <br><br>

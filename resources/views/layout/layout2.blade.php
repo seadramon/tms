@@ -486,7 +486,6 @@
 		<script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Vendors Javascript(used by this page)-->
-		<script src="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js') }}"></script>
 		<!--end::Vendors Javascript-->
 		<!--begin::Custom Javascript(used by this page)-->
 		<script type="text/javascript" src="{{asset('js/lazy/jquery.lazy.min.js')}}"></script>

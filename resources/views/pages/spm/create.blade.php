@@ -12,73 +12,74 @@
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <!--begin::Content container-->
 <div id="kt_content_container" class="container-xxl">
-    <div class="col-12 mb-md-5 mb-xl-10">
-        <form class="form-control" method="POST" action="{{ route('spm.store') }}">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <div id="box1">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h3 class="card-title">Tambah Baru SPM</h3>
+    <div class="row g-5 g-xl-8">
+        <!--begin::Col-->
+        <div class="col-12 mb-3" id="box1">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Tambah Baru SPM</h3>
+                </div>
+
+                <div class="card-body">
+                    <div class="alert alert-danger alert-dismissible fade" id="alert-box1" role="alert">
+                        SPP, PPB Muat, Tanggal dan Jenis SPM harus diisi !
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                     </div>
 
-                    <div class="card-body">
-                        <div class="alert alert-danger alert-dismissible fade" id="alert-box1" role="alert">
-                            SPP, PPB Muat, Tanggal dan Jenis SPM harus diisi !
-                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    <div class="form-group row">
+                        <div class="col-lg-6 custom-form">
+                            <label class="form-label col-sm-3 required ">No. SPP</label>
+                            <select class="form-control" data-control="select2" name="no_spp" id="no_spp"  data-placeholder="Pilih No. SPP">
+                                <option></option>
+                                @foreach ( $no_spp as $row)
+                                    <option value="{{ $row->no_sppb }}">{{ $row->no_sppb }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
-                        <div class="form-group row">
-                            <div class="col-lg-6 custom-form">
-                                <label class="form-label col-sm-3 required ">No. SPP</label>
-                                <select class="form-control" data-control="select2" name="no_spp" id="no_spp"  data-placeholder="Pilih No. SPP">
-                                    <option></option>
-                                    @foreach ( $no_spp as $row)
-                                        <option value="{{ $row->no_sppb }}">{{ $row->no_sppb }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-lg-6 custom-form">
-                                <label class="form-label col-sm-3 custom-label">No. SPM</label>
-                                <input class="form-control" type="text" value="AUTO" readonly />
-                            </div>
-                        </div>
-
-                        <div class="form-group row mt-2">
-                            <div class="col-lg-6 custom-form">
-                                <label class="form-label col-sm-3 required ">Tanggal</label>
-                                <input  name="tanggal" class="form-control flatpickr-input active" placeholder="Pilih Tanggal" id="kt_datepicker_3" type="text" readonly="readonly">
-                            </div>
-
-                            <div class="col-lg-6 custom-form">
-                                <label class="form-label col-sm-3 required ">Jenis SPM</label>
-                                <select class="form-control" data-control="select2" data-placeholder="Pilih Jenis SPM" name="jenis_spm" id="jenis_spm">
-                                    <option></option>
-                                    <option value="2">Stok Titipan</option>
-                                    <option value="0">Stok Aktif</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row mt-2">
-                            <div class="col-lg-6 custom-form">
-                                <label class="form-label col-sm-3 required">PBB Muat</label>
-                                <select class="form-control" data-control="select2"  data-placeholder="Pilih PBB Muat" name="pbb_muat" id="pbb_muat">
-
-                                </select>
-                            </div>
+                        <div class="col-lg-6 custom-form">
+                            <label class="form-label col-sm-3 custom-label">No. SPM</label>
+                            <input class="form-control" type="text" value="AUTO" readonly />
                         </div>
                     </div>
 
-                    <div class="card-footer" style="text-align: right;">
-                        <input type="button" class="btn btn-primary" id="buat_draft" value="Buat Draft">
+                    <div class="form-group row mt-2">
+                        <div class="col-lg-6 custom-form">
+                            <label class="form-label col-sm-3 required ">Tanggal</label>
+                            <input  name="tanggal" class="form-control flatpickr-input active" placeholder="Pilih Tanggal" id="kt_datepicker_3" type="text" readonly="readonly">
+                        </div>
+
+                        <div class="col-lg-6 custom-form">
+                            <label class="form-label col-sm-3 required ">Jenis SPM</label>
+                            <select class="form-control" data-control="select2" data-placeholder="Pilih Jenis SPM" name="jenis_spm" id="jenis_spm">
+                                <option></option>
+                                <option value="2">Stok Titipan</option>
+                                <option value="0">Stok Aktif</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row mt-2">
+                        <div class="col-lg-6 custom-form">
+                            <label class="form-label col-sm-3 required">PBB Muat</label>
+                            <select class="form-control" data-control="select2"  data-placeholder="Pilih PBB Muat" name="pbb_muat" id="pbb_muat">
+
+                            </select>
+                        </div>
                     </div>
                 </div>
+
+                <div class="card-footer" style="text-align: right;">
+                    <input type="button" class="btn btn-primary" id="buat_draft" value="Buat Draft">
+                </div>
             </div>
-        
-
-        <div id="box2">
-
         </div>
+        <div class="col-12 mb-3" id="box2">
+        </div>
+
+        <form method="POST" action="{{ route('spm.store') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            
+        </form>
     </div>
 </div>
 <!--end::Content container-->

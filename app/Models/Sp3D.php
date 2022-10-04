@@ -16,4 +16,14 @@ class Sp3D extends Model
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
+    }
+
+    public function pat()
+    {
+        return $this->belongsTo(Pat::class, 'pat_to', 'kd_pat');
+    }
 }
