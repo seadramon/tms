@@ -55,7 +55,24 @@ class SpmController extends Controller
 
         $collection_table = new Collection();
         foreach($detail_spp as $item){
-            
+
+            $data_segmen = SppbD::select('jml_segmen','app2_vol')
+                ->where('no_sppb',$no_spp)
+                ->where('kd_produk',$item->produk->kd_produk)
+                ->first();
+
+            $spm = SpmH::with(['spmd' => function($sql) use ($item){
+                    $sql->where('kd_produk',$item->produk->kd_produk);
+                }])
+                ->where('no_sppb',$no_spp)
+                ->first();
+                $jml = 0;
+                if(!empty($spm)){
+                    foreach($spm->spmd as $row){
+                        $jml = $jml + $row->vol;
+                    }
+                }
+
             $sppdis_vol_btg = DB::table('SPM_H')
                 ->selectRaw('SUM(SPTB_D.VOL) as sppdis_vol_btg')
                 ->join('SPTB_H','SPTB_H.NO_SPM','=','SPM_H.NO_SPM')
@@ -70,7 +87,10 @@ class SpmController extends Controller
                 'spp_vol_btg' => $item->app2_vol,
                 'spp_vol_ton' => 0,
                 'sppdis_vol_btg' => $sppdis_vol_btg->sppdis_vol_btg ?? 0,
-                'sppdis_vol_ton' => 0
+                'sppdis_vol_ton' => 0,
+                'segmen' => $data_segmen->jml_segmen,
+                'spm' => $jml,
+                'vol_sppb' => $data_segmen->app2_vol
             ]);
         }
 
@@ -169,57 +189,57 @@ class SpmController extends Controller
             $n4 = Pat::select('singkatan')->where('kd_pat',$pat_to)->first();
             // end of create number
 
-            $noDokumen = 'SPM/'.$n3->singkatan2.'/'.$n4->singkatan;
+            // $noDokumen = 'SPM/'.$n3->singkatan2.'/'.$n4->singkatan;
 
-            $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
-            
-            if($msNoDokumen->exists()){
-                $msNoDokumen = $msNoDokumen->first();
+            // $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
 
-                $newSequence = sprintf('%04s', ((int)$msNoDokumen->seq + 1));
+            // if($msNoDokumen->exists()){
+            //     $msNoDokumen = $msNoDokumen->first();
 
-                $msNoDokumen->update([
-                    'seq'           =>  $newSequence,
-                    'updated_by'    => session('TMP_NIP') ?? '12345',
-                    'updated_date'  => date('Y-m-d H:i:s'),
-                ]);
-            }else{
-                $newSequence = '0001';
+            //     $newSequence = sprintf('%04s', ((int)$msNoDokumen->seq + 1));
 
-                $msNoDokumenData = new MsNoDokumen();
-                $msNoDokumenData->tahun = date('Y');
-                $msNoDokumenData->no_dokumen = $noDokumen;
-                $msNoDokumenData->seq = $newSequence;
-                $msNoDokumenData->created_by = session('TMP_NIP') ?? '12345';
-                $msNoDokumenData->created_date = date('Y-m-d H:i:s');
-                $msNoDokumenData->save();
-            }
+            //     $msNoDokumen->update([
+            //         'seq'           =>  $newSequence,
+            //         'updated_by'    => session('TMP_NIP') ?? '12345',
+            //         'updated_date'  => date('Y-m-d H:i:s'),
+            //     ]);
+            // }else{
+            //     $newSequence = '0001';
 
-            $no_spm = $newSequence.'/'.$noDokumen.'/'.date('m').'/'.date('Y');
+            //     $msNoDokumenData = new MsNoDokumen();
+            //     $msNoDokumenData->tahun = date('Y');
+            //     $msNoDokumenData->no_dokumen = $noDokumen;
+            //     $msNoDokumenData->seq = $newSequence;
+            //     $msNoDokumenData->created_by = session('TMP_NIP') ?? '12345';
+            //     $msNoDokumenData->created_date = date('Y-m-d H:i:s');
+            //     $msNoDokumenData->save();
+            // }
 
-            $SpmH = new SpmH();
-            $SpmH->no_spm = $no_spm;
-            $SpmH->no_sppb = $no_sppb;
-            $SpmH->vendor_id = $vendor_angkutan;
-            $SpmH->tgl_spm = $tgl_spm;
-            $SpmH->jns_spm = $jns_spm;
-            $SpmH->app1 = 0;
-            $SpmH->pat_to = $pat_to;
-            $SpmH->jarak_km = $request->jarak;
-            $SpmH->created_by = session('TMP_NIP') ?? '12345';
-            $SpmH->save();
+            // $no_spm = $newSequence.'/'.$noDokumen.'/'.date('m').'/'.date('Y');
 
-            // store to smp_d
-            $i = 0;
-            foreach($request->keterangan_select as $row){
-                $SpmD = new SpmD();
-                $SpmD->no_spm = $no_spm;
-                $SpmD->kd_produk = $request->tipe_produk_select[$i];
-                $SpmD->vol = $request->volume_produk_select[$i];
-                $SpmD->ket = $request->keterangan_select[$i];
-                $SpmD->save();
-                $i++;
-            }
+            // $SpmH = new SpmH();
+            // $SpmH->no_spm = $no_spm;
+            // $SpmH->no_sppb = $no_sppb;
+            // $SpmH->vendor_id = $vendor_angkutan;
+            // $SpmH->tgl_spm = $tgl_spm;
+            // $SpmH->jns_spm = $jns_spm;
+            // $SpmH->app1 = 0;
+            // $SpmH->pat_to = $pat_to;
+            // $SpmH->jarak_km = $request->jarak;
+            // $SpmH->created_by = session('TMP_NIP') ?? '12345';
+            // $SpmH->save();
+
+            // // store to smp_d
+            // $i = 0;
+            // foreach($request->keterangan_select as $row){
+            //     $SpmD = new SpmD();
+            //     $SpmD->no_spm = $no_spm;
+            //     $SpmD->kd_produk = $request->tipe_produk_select[$i];
+            //     $SpmD->vol = $request->volume_produk_select[$i];
+            //     $SpmD->ket = $request->keterangan_select[$i];
+            //     $SpmD->save();
+            //     $i++;
+            // }
             DB::commit();
 
             $flasher->addSuccess('Data has been saved successfully!');
