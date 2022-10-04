@@ -27,6 +27,41 @@ use Illuminate\Support\Facades\Validator;
 
 class SpmController extends Controller
 {
+    public function index()
+    {
+        return view('pages.spm.index');
+    }   
+    
+    public function data(Request $request)
+    {
+        $query = SpmH::with(['sppb', 'vendornya']);
+        return DataTables::eloquent($query)
+            ->editColumn('tgl_spm', function ($model) {
+                return date('d-m-Y', strtotime($model->tgl_spm));
+            })
+            ->addColumn('status', function($model) {
+                $status = "";
+
+                return $status;
+            })
+            ->addColumn('menu', function ($model) {
+                $edit = '<div class="btn-group">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Action
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">KOnfirmasi</a></li>
+                            <li><a class="dropdown-item" href="#">KOnfirmasi Vendor</a></li>
+                            <li><a class="dropdown-item" href="#">Hapus</a></li>
+                        </ul>
+                        </div>';
+
+                return $edit;
+            })
+            ->rawColumns(['menu', 'status'])
+            ->toJson();
+    } 
+
     /**
      * Display a listing of the resource.
      *
