@@ -16,4 +16,9 @@ class SpmD extends Model
     public $timestamps = false;
     public $incrementing = false;
 
+
+    public function produk()
+	{
+		return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
+	}
 }

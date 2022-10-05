@@ -123,6 +123,7 @@ $('#no_spp').on("change", function(e) {
             no_spp: no_spp,
         },
         success: function(result){
+            // console.log(result);
             $('#pbb_muat').empty();
             if(result){
                 var temp = '';

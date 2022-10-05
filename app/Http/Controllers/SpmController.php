@@ -9,7 +9,7 @@ use App\Models\Produk;
 use App\Models\SppbH;
 use App\Models\SppbD;
 use App\Models\SpprbH;
-
+use App\Models\Armada;
 use App\Models\Sp3D;
 use App\Models\SpmH;
 use App\Models\SpmD;
@@ -42,7 +42,7 @@ class SpmController extends Controller
     public function getPbbMuat(Request $request){
 
         $data = SppbH::select('no_npp')->where('no_sppb',$request->no_spp)->first();
-        $data_1 = SpprbH::with('pat')->where('no_npp',$data->no_npp)->get();
+        $data_1 = SpprbH::with('pat')->where('no_npp',$data->no_npp)->whereNotNull('pat_to')->get();
         return response()->json($data_1);
 
     }
@@ -253,31 +253,22 @@ class SpmController extends Controller
 
 
     public function create_konfirmasi_vendor(){
-        $data = SpmH::with('vendor')->where('no_spm','0002/SPM/PI/PPB-SMT/09/2022')->first();
+        $no_spm = '0002/SPM/PI/PPB-SMT/09/2022';
+        $data = SpmH::with('vendor')->where('no_spm',$no_spm)->first();
         
         $data_ = SppbH::select('no_npp')->where('no_sppb',$data->no_sppb)->first();
-        $data_1 = SpprbH::with('pat')->where('no_npp',$data_->no_npp)->get();
-        $detail_spp = SppbD::with('produk')->where('no_sppb',$data->no_sppb)->get();
+        // $data_1 = SpprbH::with('pat')->where('no_npp',$data_->no_npp)->get();
+        $detail_spm = SpmH::with('spmd.produk')->where('no_spm',$no_spm)->first();
+        // $detail_spp = SppbD::with('produk')->where('no_sppb',$request->no_spp)->get();
 
         $collection_table = new Collection();
-        foreach($detail_spp as $item){
+        foreach($detail_spm->spmd as $item){
 
             $data_segmen = SppbD::select('jml_segmen','app2_vol')
                 ->where('no_sppb',$data->no_sppb)
-                ->where('kd_produk',$item->produk->kd_produk)
+                ->where('kd_produk',$item->kd_produk)
                 ->first();
 
-            $spm = SpmH::with(['spmd' => function($sql) use ($item){
-                    $sql->where('kd_produk',$item->produk->kd_produk);
-                }])
-                ->where('no_sppb',$data->no_sppb)
-                ->first();
-                $jml = 0;
-                if(!empty($spm)){
-                    foreach($spm->spmd as $row){
-                        $jml = $jml + $row->vol;
-                    }
-                }
 
             $sppdis_vol_btg = DB::table('SPM_H')
                 ->selectRaw('SUM(SPTB_D.VOL) as sppdis_vol_btg')
@@ -295,19 +286,20 @@ class SpmController extends Controller
                 'sppdis_vol_btg' => $sppdis_vol_btg->sppdis_vol_btg ?? 0,
                 'sppdis_vol_ton' => 0,
                 'segmen' => $data_segmen->jml_segmen,
-                'spm' => $jml,
-                'vol_sppb' => $data_segmen->app2_vol
+                'spm' => $item->vol,
+                'vol_sppb' => $data_segmen->app2_vol,
+                'keterangan' => $item->ket 
             ]);
         }
 
         
         $no_npp = SppbH::select('no_npp')->where('no_sppb',$data->no_sppb)->first();
-        $no_spprb = SpprbH::with('pat')->where('no_npp',$no_npp->no_npp)->first();
-        $pelanggan = Npp::select('nama_pelanggan','nama_proyek')->where('no_npp',$no_npp->no_npp)->first();
+        $no_spprb = SpprbH::with('pat')->where('no_npp',$data_->no_npp)->first();
+        $pelanggan = Npp::select('nama_pelanggan','nama_proyek')->where('no_npp',$data_->no_npp)->first();
         $vendor_angkutan = Vendor::where('vendor_id',$data->vendor_id)->first();
         $tujuan = Npp::with('infoPasar.region')->first();
 
-        $jarak = Sp3D::where('no_npp',$no_npp->no_npp)->where('pat_to',$no_spprb->pat->kd_pat)->first();
+        $jarak = Sp3D::where('no_npp',$data_->no_npp)->where('pat_to',$no_spprb->pat->kd_pat)->first();
         if(empty($jarak)){
             $jarak = 0;
         }
@@ -319,7 +311,9 @@ class SpmController extends Controller
             'D' => 'DISPENSASI'
         ];
 
-        $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($no_npp->no_npp, -1))];
+        $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($no_spprb->no_npp, -1))];
+
+        $armada = Armada::with('driver')->get();
 
         return view('pages.spm.konfirmasi-vendor', [
             'data' => $data,
@@ -333,7 +327,25 @@ class SpmController extends Controller
             'pelanggan' => $pelanggan->nama_pelanggan,
             'nama_proyek' => $pelanggan->nama_proyek,
             'tujuan' => $tujuan,
-            'jarak' => $jarak
+            'jarak' => $jarak,
+            'armada' => $armada
         ]);
+    }
+
+    public function store_konfirmasi_vendor(Request $request, FlasherInterface $flasher){
+        $no_spm = $request->no_spm;
+        $armada = $request->armada;
+
+        $ex = explode('|', $armada);
+
+        $data = SpmH::where('no_spm',$no_spm)->first();
+        $data->app2 = 1;
+        $data->no_pol = $ex[0];
+        $data->app2_name = $ex[1];
+        $data->app2_hp = $ex[2];
+        $data->save();
+
+        $flasher->addSuccess('Data has been update successfully!');
+        return redirect()->route('spm.create');
     }
 }

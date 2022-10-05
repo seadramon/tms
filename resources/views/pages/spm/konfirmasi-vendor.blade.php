@@ -13,6 +13,7 @@
 <!--begin::Content container-->
 <div id="kt_content_container" class="container-xxl">
     <div class="col-12 mb-3">
+        <form action="{{ route('spm.store-konfirmasi-vendor') }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="card shadow-sm">
             <div class="card-body">
@@ -28,15 +29,12 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer" style="text-align: right;">
-                <input type="button" class="btn btn-primary" id="buat_draft" value="Buat Draft">
-            </div>
         </div>
     </div>
     <div class="col-12">
         <div class="card shadow-sm">
             <div class="card-body">
-                <div class="form-group row">
+                <div class="form-group row mt-5">
                     <div class="col-lg-6 custom-form">
                         <label class="form-label col-sm-3 required ">No. NPP</label>
                         <input class="form-control" type="text" readonly  value="{{ $no_npp }}" />
@@ -48,7 +46,7 @@
                     </div>
                 </div>
         
-                <div class="form-group row">
+                <div class="form-group row mt-5">
                     <div class="col-lg-6 custom-form">
                         <label class="form-label col-sm-3 required ">Pelanggan</label>
                         <input class="form-control" type="text" readonly  value="{{ $pelanggan }}" />
@@ -60,15 +58,10 @@
                     </div>
                 </div>
         
-                <div class="form-group row">
+                <div class="form-group row mt-5">
                     <div class="col-lg-6 custom-form">
                         <label class="form-label col-sm-8 required ">Perusahaan / Pemilik Angkutan</label>
-                        <select class="form-control form-select-solid" data-control="select2" data-placeholder="Pilih Perusahaan / Pemilik Angkutan" name="vendor" id="vendor">
-                            <option></option>
-                            @foreach ($vendor_angkutan as $row)
-                                <option value="{{ $row->vendor_id }}">{{ $row->nama }}</option>
-                            @endforeach
-                        </select>
+                        <input class="form-control" type="text" readonly value="{{ $vendor_angkutan->nama }}" />
                     </div>
         
                     <div class="col-lg-6 custom-form">
@@ -77,7 +70,7 @@
                     </div>
                 </div>
         
-                <div class="form-group row">
+                <div class="form-group row mt-5">
                     <div class="col-lg-6 custom-form">
                         <label class="form-label col-sm-3 required ">Jarak</label>
                         <input name="jarak" class="form-control" type="text" readonly  value="{{ $jarak->jarak_km ?? 0 }}" />
@@ -89,22 +82,79 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row mt-5">
                     <div class="col-lg-6 custom-form">
-                        <label class="form-label col-sm-3 required ">Lokasi Stockyard Pemuatan</label>
-                        <input name="jarak" class="form-control" type="text" readonly  value="{{ $jarak->jarak_km ?? 0 }}" />
+                        <label class="form-label col-sm-6 required ">Lokasi Stockyard Pemuatan</label>
+                        <input name="jarak" class="form-control" type="text" readonly  value="" />
                     </div>
         
                     <div class="col-lg-6 custom-form">
-                        <label class="form-label col-sm-3 custom-label">Lokasi Jalur / Gang Stockyard</label>
-                        <input class="form-control" type="text" readonly value="AUTO" />
+                        <label class="form-label col-sm-6 custom-label">Lokasi Jalur / Gang Stockyard</label>
+                        <input class="form-control" type="text" readonly value="GANG1" />
                     </div>
+                </div>
+
+                <div class="form-group row mt-5">
+                    <div class="col-lg-12 custom-form">
+                        <label class="form-label col-sm-8 required ">Armada</label>
+                        <select class="form-control form-select-solid" data-control="select2" data-placeholder="Pilih Perusahaan / Pemilik Angkutan" name="armada" id="armada" required>
+                            <option></option>
+                            @foreach ($armada as $row)
+                                <option value="{{ $row->nopol }}|{{ $row->driver->nama }}|{{ $row->driver->no_hp }}">{{ $row->nopol }} - {{ $row->driver->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row mt-5">
+                    <p>Detail Muat</p>
+                    <table class="table">
+                        <thead>
+                            <tr class="fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                <th class="text-center" width="30%">Tipe Produk</th>
+                                <th class="text-center">Volume</th>
+                                <th class="text-center">Jumlah Segmen</th>
+                                <th class="text-center">Volume SPPB</th>
+                                <th class="text-center">Volume SPM</th>
+                                <th class="text-center">Volume Titipan</th>
+                                <th class="text-center" width="30%">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody style="border-bottom: 1px solid grey;">
+                            @foreach($detail_spp as $row)
+                            <tr class="fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                <td class="text-center" style="padding-left: 10px;">
+                                    <label class="text-center">{{ $row->kode_produk }}</label>
+                                </td>
+                                <td class="text-center" width="15%">
+                                    <label class="text-center">{{ $row->spm }}</label>
+                                </td>
+                                <td class="text-center" width="10%">
+                                    <label class="text-center">{{ $row->segmen }}</label>
+                                    
+                                </td>
+                                <td  class="text-center"  width="10%">
+                                    <label class="text-center">{{ $row->vol_sppb }}</label>
+                                </td>
+                                <td  class="text-center" width="10%">
+                                    <label class="text-center">{{ $row->spm }}</label>
+                                </td>
+                                <td  class="text-center">0</td>
+                                <td  class="text-center">
+                                    <label class="text-center">{{ $row->keterangan }}</label>
+                                </td>
+                            </tr>
+                            @endforeach
+        
+                        </tbody>
+                    </table>
                 </div>
 
             </div>
             <div class="card-footer" style="text-align: right;">
-                <input type="button" class="btn btn-primary" id="buat_draft" value="Buat Draft">
+                <input type="submit" class="btn btn-primary" id="buat_draft" value="Konfirmasi">
             </div>
+        </form>
         </div>
     </div>
 </div>

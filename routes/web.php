@@ -114,6 +114,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::post('/get-data-box2', [SpmController::class, 'getDataBox2'])->name('get-data-box2');
         Route::post('/get-jml-segmen', [SpmController::class, 'getJmlSegmen'])->name('get-jml-segmen');
 		Route::get('/konfirmasi-vendor', [SpmController::class, 'create_konfirmasi_vendor'])->name('create-konfirmasi-vendor');
+		Route::post('/store-konfirmasi-vendor', [SpmController::class, 'store_konfirmasi_vendor'])->name('store-konfirmasi-vendor');
 	});
 
 	Route::group(['prefix' => 'kalender-pengirimian', 'as' => 'kalender-pengiriman.'], function() {
