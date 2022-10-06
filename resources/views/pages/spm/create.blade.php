@@ -20,10 +20,6 @@
                     <h3 class="card-title">Tambah Baru SPM</h3>
                 </div>
 
-                <form method="POST" action="{{ route('spm.store') }}" id="submit_spm">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-
                 <div class="card-body">
                     <div class="alert alert-danger alert-dismissible fade" id="alert-box1" role="alert">
                         SPP, PPB Muat, Tanggal dan Jenis SPM harus diisi !
@@ -50,12 +46,13 @@
                     <div class="form-group row mt-2">
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 required ">Tanggal</label>
-                            <input  name="tanggal" class="form-control flatpickr-input active" placeholder="Pilih Tanggal" id="kt_datepicker_3" type="text" readonly="readonly">
+                            <input  name="tanggal"
+                             class="form-control flatpickr-input active" placeholder="Pilih Tanggal" id="kt_datepicker_3" type="text" readonly="readonly">
                         </div>
 
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 required ">Jenis SPM</label>
-                            <select class="form-control" data-control="select2" data-placeholder="Pilih Jenis SPM" name="jenis_spm" id="jenis_spm">
+                            <select class="form-control" data-control="select2" data-placeholder="Pilih Jenis SPM" id="jenis_spm">
                                 <option></option>
                                 <option value="2">Stok Titipan</option>
                                 <option value="0">Stok Aktif</option>
@@ -104,11 +101,6 @@ $(document).ready(function() {
     $("#alert-box1").hide();
 });
 
-// Start field tanggal
-$("#kt_datepicker_3").flatpickr({
-    dateFormat: "d-m-Y",
-});
-// end of field tanggal
 
 
 $('#no_spp').on("change", function(e) {
@@ -123,18 +115,27 @@ $('#no_spp').on("change", function(e) {
             no_spp: no_spp,
         },
         success: function(result){
-            // console.log(result);
+
+
+            // Start field tanggal
+            $("#kt_datepicker_3").flatpickr({
+                "minDate": result.min,
+                "maxDate": result.max,
+                dateFormat: "d-m-Y"
+            });
+            // end of field tanggal
+
             $('#pbb_muat').empty();
             if(result){
                 var temp = '';
-                for(i = 0; i < result.length; i++){
-                    if(temp == result[i].pat.kd_pat){
+                for(i = 0; i < result.data_1.length; i++){
+                    if(temp == result.data_1[i].pat.kd_pat){
                         return false;
                     }else{
-                        $('#pbb_muat').append('<option value="'+ result[i].pat.kd_pat +'">'+ result[i].pat.kd_pat +' | '+ result[i].pat.ket +'</option>');
-                        var temp = result[i].pat.kd_pat;
+                        $('#pbb_muat').append('<option value="'+ result.data_1[i].pat.kd_pat +'">'+ result.data_1[i].pat.kd_pat +' | '+ result.data_1[i].pat.ket +'</option>');
+                        var temp = result.data_1[i].pat.kd_pat;
                     }
-                   
+
                 }
             }
 
@@ -193,6 +194,10 @@ $('#buat_draft').on('click', function(){
 
     function box2() {
         $('.form-select-solid').select2();
+        $('#jenis_spm_select').val($('#jenis_spm').val());
+        $('#tanggal_select').val($('#kt_datepicker_3').val());
+        $('#muat_select').val($('#pbb_muat').val());
+        $('#spp_select').val($('#no_spp').val());
 
         // $("#tipe_produk_select" ).change(function() {
         //     $.ajax({

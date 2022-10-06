@@ -2,6 +2,14 @@
     <div class="card-header">
         <h3 class="card-title">Detail SPP</h3>
     </div>
+    <form method="POST" action="{{ route('spm.store') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+
+        <input class="d-none" name="no_spp" id="spp_select"/>
+        <input class="d-none" name="pbb_muat" id="muat_select"/>
+        <input class="d-none" name="jenis_spm" id="jenis_spm_select"/>
+        <input class="d-none" name="tanggal" id="tanggal_select"/>
 
     <div class="card-body">
         <table class="table table-row-dashed table-row-gray-300 gy-7">
@@ -149,8 +157,7 @@
     </div>
 
     <div class="card-footer" style="text-align: right;">
-        <input type="submit" class="btn btn-success" value="submit">
-    </form>
+        <button type="submit" class="btn btn-success"> Submit </button>
     </div>
 
 </div>

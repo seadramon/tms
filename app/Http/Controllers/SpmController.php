@@ -41,9 +41,13 @@ class SpmController extends Controller
 
     public function getPbbMuat(Request $request){
 
-        $data = SppbH::select('no_npp')->where('no_sppb',$request->no_spp)->first();
+        $data = SppbH::select('no_npp','jadwal1','jadwal2')->where('no_sppb',$request->no_spp)->first();
         $data_1 = SpprbH::with('pat')->where('no_npp',$data->no_npp)->whereNotNull('pat_to')->get();
-        return response()->json($data_1);
+        return response()->json([
+            'data_1' => $data_1,
+            'min' => date("Y-m-d", strtotime($data->jadwal1)),
+            'max' => date("Y-m-d", strtotime($data->jadwal1))]
+        );
 
     }
 
@@ -255,7 +259,7 @@ class SpmController extends Controller
     public function create_konfirmasi_vendor(){
         $no_spm = '0002/SPM/PI/PPB-SMT/09/2022';
         $data = SpmH::with('vendor')->where('no_spm',$no_spm)->first();
-        
+
         $data_ = SppbH::select('no_npp')->where('no_sppb',$data->no_sppb)->first();
         // $data_1 = SpprbH::with('pat')->where('no_npp',$data_->no_npp)->get();
         $detail_spm = SpmH::with('spmd.produk')->where('no_spm',$no_spm)->first();
@@ -288,11 +292,11 @@ class SpmController extends Controller
                 'segmen' => $data_segmen->jml_segmen,
                 'spm' => $item->vol,
                 'vol_sppb' => $data_segmen->app2_vol,
-                'keterangan' => $item->ket 
+                'keterangan' => $item->ket
             ]);
         }
 
-        
+
         $no_npp = SppbH::select('no_npp')->where('no_sppb',$data->no_sppb)->first();
         $no_spprb = SpprbH::with('pat')->where('no_npp',$data_->no_npp)->first();
         $pelanggan = Npp::select('nama_pelanggan','nama_proyek')->where('no_npp',$data_->no_npp)->first();
