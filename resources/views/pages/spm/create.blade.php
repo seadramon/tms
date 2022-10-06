@@ -123,10 +123,18 @@ $('#no_spp').on("change", function(e) {
             no_spp: no_spp,
         },
         success: function(result){
+            // console.log(result);
             $('#pbb_muat').empty();
             if(result){
+                var temp = '';
                 for(i = 0; i < result.length; i++){
-                    $('#pbb_muat').append('<option value="'+ result[i].pat.kd_pat +'">'+ result[i].pat.kd_pat +' | '+ result[i].pat.ket +'</option>');
+                    if(temp == result[i].pat.kd_pat){
+                        return false;
+                    }else{
+                        $('#pbb_muat').append('<option value="'+ result[i].pat.kd_pat +'">'+ result[i].pat.kd_pat +' | '+ result[i].pat.ket +'</option>');
+                        var temp = result[i].pat.kd_pat;
+                    }
+                   
                 }
             }
 
