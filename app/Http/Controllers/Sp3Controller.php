@@ -85,7 +85,7 @@ class Sp3Controller extends Controller
                                 Action
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">View</a></li>
+                                <li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>
                                 <li><a class="dropdown-item" href="' . route('sp3.edit', str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>
                                 <li><a class="dropdown-item" href="' . route('sp3.amandemen', str_replace('/', '|', $model->no_sp3)) . '">Amandemen</a></li>
                                 <li><a class="dropdown-item" href="#">Adendum</a></li>
@@ -366,6 +366,128 @@ class Sp3Controller extends Controller
         }
 
         return redirect()->route('sp3.index');
+    }
+
+    public function show($noSp3)
+    {
+        $noSp3 = str_replace('|', '/', $noSp3);
+        
+        $data = Sp3::find($noSp3);
+
+        $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+            ->where('no_npp', $data->no_npp)
+            ->get();
+
+        $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
+        
+        $sp3D = Sp3D::whereNoNpp($data->no_npp)
+            ->whereIn('kd_produk', $kd_produks)
+            ->get()
+            ->sortByDesc('no_sp3')
+            ->groupBy([
+                'kd_produk', function ($item) {
+                    return substr($item->no_sp3, 0, -3);
+                }
+            ], true);
+
+        $npp = Npp::with(['infoPasar.region'])
+            ->where('no_npp', $data->no_npp)
+            ->first();
+
+        $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
+            ->get()
+            ->pluck('no_ban', 'no_ban');
+
+        $kontrak = Kontrak::where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
+            ->get()
+            ->pluck('no_kontrak', 'no_kontrak');
+
+        $vendor = Vendor::where('vendor_id', $data->vendor_id)->first();
+
+        $kondisiPenyerahan = [
+            'L' => 'LOKO', 
+            'F' => 'FRANKO', 
+            'T' => 'TERPASANG', 
+            'D' => 'DISPENSASI'
+        ];
+
+        $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($data->no_npp, -1))];
+
+        $VSpprbRi = VSpprbRi::where('no_npp', $data->no_npp)->first();
+
+        if($VSpprbRi){
+            $jarak = Sp3D::where('pat_to', $VSpprbRi->pat_to)
+                ->where('no_npp', $VSpprbRi->no_npp)
+                ->max('jarak_km');
+        }else{
+            $jarak = 0;
+        }
+
+        $unit = Pat::where('kd_pat', 'LIKE', '2%')
+            ->orWhere('kd_pat', 'LIKE', '4%')
+            ->orWhere('kd_pat', 'LIKE', '5%')
+            ->get()
+            ->pluck('ket', 'kd_pat')
+            ->toArray();
+            
+        $unit = ["" => "Pilih Unit"] + $unit;
+
+        $satuan = [
+            "" => "Pilih",
+            "btg" => "BTG",
+            "ton" => "TON",
+        ];
+
+        $ppn = [
+            "0" => "0%",
+            "11" => "11%",
+        ];
+
+        $pph = DB::table('tb_pph_d')->leftJoin('tb_pph_h', 'tb_pph_d.pph_id', '=', 'tb_pph_h.pph_id')
+            ->select('tb_pph_d.pph_id', 'tb_pph_d.ket', 'tb_pph_h.pph_nama','tb_pph_d.value')
+            ->get()
+            ->sortBy(['pph_id', 'value'])
+            ->mapWithKeys(function($item){ 
+                return [$item->pph_id . '|' . $item->value => $item->pph_nama . ' [' . $item->value . '%]'];
+            })
+            ->all();
+
+        $pph = ["0|0" => "0%"] + $pph;
+
+        $sat_harsat = $data->satuan_harsat;
+
+        $listPic = Sp3Pic::with('employee')
+            ->where('no_sp3', $noSp3)
+            ->get();
+
+        $detailPekerjaan = Sp3D::where('no_sp3', $noSp3)->get();
+
+        $materialTambahan = Sp3D2::where('no_sp3', $noSp3)->get();
+
+        $isAmandemen = str_contains(request()->url(), 'amandemen');
+
+        return view('pages.sp3.show', compact(
+            'data',
+            'detailPesanan',
+            'npp',
+            'ban',
+            'kontrak',
+            'vendor',
+            'kondisiPenyerahan',
+            'kondisiPenyerahanDipilih',
+            'VSpprbRi',
+            'jarak',
+            'unit',
+            'satuan',
+            'ppn',
+            'pph',
+            'sp3D',
+            'sat_harsat',
+            'listPic',
+            'detailPekerjaan',
+            'materialTambahan',
+            'isAmandemen'
+        ));
     }
 
     public function edit($noSp3)
