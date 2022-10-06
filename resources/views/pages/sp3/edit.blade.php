@@ -42,6 +42,8 @@
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <script src="{{ asset('assets/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
 <script type="text/javascript">
+    let isFirstAdd = true;
+
     $(".datepicker").daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
@@ -245,6 +247,13 @@
             $('#satuan_' + newIndex).select2();
         }
 
+        if(isFirstAdd){
+            $('#detail_pekerjaan_' + newIndex).find('.select2-container').eq(1).remove();
+            $('#detail_pekerjaan_' + newIndex).find('.select2-container').last().remove();
+
+            isFirstAdd = false;
+        }
+        
         //Show New Row
         $('#detail_pekerjaan_' + newIndex).show();
     });
