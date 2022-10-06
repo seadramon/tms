@@ -40,7 +40,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::post('/destroy', [Sp3Controller::class, 'destroy'])->name('destroy');
 	    Route::get('/data', [Sp3Controller::class, 'data'])->name('data');
 	    Route::resource('/',  Sp3Controller::class)->except([
-	        'show', 'destroy'
+	        'destroy'
 	    ])->parameters(['' => 'sp3']);
 		Route::get('/search-npp', [Sp3Controller::class, 'searchNpp'])->name('search-npp');
 		Route::get('/search-pic', [Sp3Controller::class, 'searchPic'])->name('search-pic');
