@@ -500,6 +500,8 @@ class Sp3Controller extends Controller
                 $noSp3Sequence = sprintf('%02s', ((int)substr($noSp3, -2))+1);
 
                 $newNoSp3 = str_replace(substr($noSp3, -2), $noSp3Sequence, $noSp3);
+            }else{
+                $newNoSp3 = $noSp3;
             }
             
             $pph = explode('|', $request->pph);
