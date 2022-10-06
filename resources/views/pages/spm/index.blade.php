@@ -6,6 +6,9 @@
 </div>
 <!--end::Page title-->
 @endsection
+@section('css')
+     <meta name="csrf-token" content="{{ csrf_token() }}" />
+@endsection
 @section('content')
 <!--begin::Content container-->
 <div id="kt_content_container" class="container-xxl">
@@ -49,6 +52,69 @@
     <!--end::Row-->
 </div>
 <!--end::Content container-->
+
+<!--begin::Modal - Create Api Key-->
+<div class="modal fade" id="modal_konfirmasi" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered mw-650px">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header" id="modal_konfirmasi_header">
+                <!--begin::Modal title-->
+                <h2>Konfirmasi</h2>
+                <!--end::Modal title-->
+                <!--begin::Close-->
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                    <span class="svg-icon svg-icon-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </div>
+                <!--end::Close-->
+            </div>
+            <!--end::Modal header-->
+            <!--begin::Form-->
+            <form method="post" id="modal_konfirmasi_form" class="form" action="{{ route('spm.konfirmasi') }}">
+                <input type="hidden" name="no_spm" id="no_spm">
+                <!--begin::Modal body-->
+                <div class="modal-body px-lg-10">
+                    <!--begin::Scroll-->
+                    <div class="scroll-y me-n7 pe-7" id="modal_konfirmasi_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_konfirmasi_header" data-kt-scroll-wrappers="#modal_konfirmasi_scroll" data-kt-scroll-offset="300px">
+                        
+                        <div class="form-group row">
+                            <div class="col-lg-12 custom-form">
+                                <label class="form-label col-sm-3 custom-label">Vendor</label>
+                                {!! Form::select('vendor_id', $vendor, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'vendor_id']) !!}
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--end::Scroll-->
+                </div>
+                <!--end::Modal body-->
+
+                <!--begin::Modal footer-->
+                <div class="modal-footer flex-right">
+                    <button type="submit" id="modal_konfirmasi_submit" class="btn btn-primary">
+                        <span class="indicator-label">Konfirmasi</span>
+                        <span class="indicator-progress">Please wait...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                    </button>
+                </div>
+                <!--end::Modal footer-->
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
+<!--end::Modal - Create Api Key-->
 @endsection
 @section('css')
 <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css"/>
@@ -125,6 +191,41 @@
     // On document ready
     KTUtil.onDOMContentLoaded(function () {
         KTDatatablesServerSide.init();
+    });
+
+    $(document).on("click", ".konfirmasi", function () {
+        var id = $(this).data('id');
+        $("#no_spm").val(id);
+    });
+
+    $("#modal_konfirmasi_form").submit(function(event) {
+        event.preventDefault();
+
+        $("#modal_konfirmasi_submit").attr("data-kt-indicator", "on");
+
+        let data = $(this).serialize();
+        let url = $(this).attr('action');
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type:"post",
+            url: url,
+            data: data,
+            success: function(res) {
+                $("#modal_konfirmasi_submit").removeAttr("data-kt-indicator");
+
+                $('#modal_konfirmasi').modal('toggle');
+                flasher.success("Konfirmasi berhasil!");
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#modal_konfirmasi_submit").removeAttr("data-kt-indicator");
+
+                $('#modal_konfirmasi').modal('toggle');
+                flasher.error("Konfirmasi gagal!");
+            }
+        })
     });
 
     $('body').on('click', '.delete', function () {

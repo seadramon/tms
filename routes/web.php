@@ -105,6 +105,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::group(['prefix' => '/spm', 'as' => 'spm.'], function(){
 	    Route::post('/destroy', [SpmController::class, 'destroy'])->name('destroy');
 	    Route::post('/draft', [SpmController::class, 'createDraft'])->name('draft');
+	    Route::post('/konfirmasi', [SpmController::class, 'konfirmasi'])->name('konfirmasi');
 	    Route::get('/data', [SpmController::class, 'data'])->name('data');
 	    Route::resource('/',  SpmController::class)->except([
 	        'destroy'
