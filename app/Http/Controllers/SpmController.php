@@ -46,7 +46,7 @@ class SpmController extends Controller
         return response()->json([
             'data_1' => $data_1,
             'min' => date("Y-m-d", strtotime($data->jadwal1)),
-            'max' => date("Y-m-d", strtotime($data->jadwal1))]
+            'max' => date("Y-m-d", strtotime($data->jadwal2))]
         );
 
     }
