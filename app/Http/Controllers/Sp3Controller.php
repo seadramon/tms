@@ -334,7 +334,7 @@ class Sp3Controller extends Controller
                 $sp3D->vol_ton_awal = str_replace(',', '', $request->vol_ton[$i]);
                 $sp3D->vol_ton_akhir = str_replace(',', '', $request->vol_ton[$i]);
 
-                if($request->sat_harsat == 'volume'){
+                if(strtolower($request->sat_harsat) == 'volume'){
                     $sp3D->sat_harsat = $request->satuan[$i];
                 }
                 
@@ -671,7 +671,7 @@ class Sp3Controller extends Controller
                 $sp3D->vol_ton_awal = str_replace(',', '', $request->vol_ton[$i]);
                 $sp3D->vol_ton_akhir = str_replace(',', '', $request->vol_ton[$i]);
 
-                if($request->sat_harsat == 'volume'){
+                if(strtolower($request->sat_harsat) == 'volume'){
                     $sp3D->sat_harsat = $request->satuan[$i];
                 }
                 
@@ -698,7 +698,6 @@ class Sp3Controller extends Controller
 
             $flasher->addSuccess('Data has been saved successfully!');
         } catch(Exception $e) {
-            dd($e);
             DB::rollback();
             $flasher->addError($e->getMessage());
         }
