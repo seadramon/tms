@@ -57,7 +57,9 @@ class SptbController extends Controller
 
             $spmH = SpmH::find($request->no_spm);
 
-            $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', 'SPM/PO/WP-I');
+            $noDokumen = 'SPM/PO/WP-I';
+
+            $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
             
             if($msNoDokumen->exists()){
                 $msNoDokumen = $msNoDokumen->first();
@@ -81,9 +83,9 @@ class SptbController extends Controller
                 $msNoDokumenData->save();
             }
 
-            $month = DB::select("select fnc_getbl(to_date(sysdate)) from dual");
+            $month = DB::select("select fnc_getbl(to_date(sysdate)) as month from dual");
 
-            $noSptb = $newSequence . '/SPtB/' . $spmH->pat_to . '/' . $month . '/' . date('Y');
+            $noSptb = $newSequence . '/SPtB/' . $spmH->pat_to . '/' . substr($month[0]->month, 0, 2) . '/' . date('Y');
 
             $kdPat = session("TMP_KDWIL") ?? '1A';
 
@@ -91,20 +93,20 @@ class SptbController extends Controller
             $sptbH->no_spm = $request->no_spm;
             $sptbH->jns_sptb = $request->jns_sptb;
             $sptbH->tgl_berangkat = Carbon::createFromFormat('d-m-Y', $request->tgl_berangkat)->format('Y-m-d');
-            $sptbH->ket = $request->ket;
+            // $sptbH->ket = $request->ket;
             $sptbH->tujuan = $request->tujuan;
             $sptbH->angkutan = $request->angkutan;
             $sptbH->no_pol = $request->no_pol;
-            $sptbH->nama_driver = $request->nama_driver;
-            $sptbH->no_hp_driver = $request->no_hp_driver;
-            $sptbH->jarak_km = $request->jarak_km;
-            $sptbD->no_sptb = $noSptb;
-            $sptbH->tgl_sptb = TO_DATE(date('Y-m-d'), 'YYYY-MM-DD');
+            // $sptbH->nama_driver = $request->nama_driver;
+            // $sptbH->no_hp_driver = $request->no_hp_driver;
+            // $sptbH->jarak_km = $request->jarak_km;
+            $sptbH->no_sptb = $noSptb;
+            $sptbH->tgl_sptb = date('Y-m-d');
             $sptbH->no_spprb = $spmH->sppbh?->no_spprb;
             $sptbH->no_npp = $spmH->no_npp;
-            $sptbH->app_driver = 0;
+            // $sptbH->app_driver = 0;
             $sptbH->barcode_img = decbin(ord($noSptb));
-            $sptbH->kd_pat = $kdPat;
+            // $sptbH->kd_pat = $kdPat;
             $sptbH->created_by = session('TMP_NIP') ?? '12345';
             $sptbH->created_date = date('Y-m-d H:i:s');
             $sptbH->save();
@@ -122,7 +124,7 @@ class SptbController extends Controller
                 $sptbD->vol = $sppbD->segmental == 1 ? ($request->vol[$i] / $sppbD->jml_segmen) : $request->vol[$i];
                 $sptbD->save();
 
-                for($j; $i < count($request->vol[$i]); $j++){
+                for($j; $j < $request->vol[$i]; $j++){
                     $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
                         ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
                         ->first();
@@ -133,7 +135,7 @@ class SptbController extends Controller
                     $sptbD2 = new SptbD2();
                     $sptbD2->no_sptb = $noSptb;
                     $sptbD2->kd_produk = $request->kd_produk[$i];
-                    $sptbD2->tgl_produksi = Carbon::createFromFormat('d-m-Y', $request->child_tgl_produksi[$j])->format('Y-m-d');
+                    // $sptbD2->tgl_produksi = Carbon::createFromFormat('d-m-Y', $request->child_tgl_produksi[$j])->format('Y-m-d');
                     $sptbD2->stockid = $request->child_kd_produk[$j];
                     $sptbD2->vol = 1;
                     $sptbD2->kd_pat = $kdPat;
@@ -147,6 +149,7 @@ class SptbController extends Controller
 
             $flasher->addSuccess('Data has been saved successfully!');
         } catch(Exception $e) {
+            dd($e);
             DB::rollback();
 
             $flasher->addError($e->getMessage());

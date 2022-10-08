@@ -13,4 +13,5 @@ class SptbD2 extends Model
     protected $primaryKey = 'no_sptb';
 	protected $keyType = 'string';
 	public $incrementing = false;
+    public $timestamps = false;
 }
