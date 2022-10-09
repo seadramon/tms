@@ -2,6 +2,14 @@
     <div class="card-header">
         <h3 class="card-title">Detail SPP</h3>
     </div>
+    <form method="POST" action="{{ route('spm.store') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+
+        <input class="d-none" name="no_spp" id="spp_select"/>
+        <input class="d-none" name="pbb_muat" id="muat_select"/>
+        <input class="d-none" name="jenis_spm" id="jenis_spm_select"/>
+        <input class="d-none" name="tanggal" id="tanggal_select"/>
 
     <div class="card-body">
         <table class="table table-row-dashed table-row-gray-300 gy-7">
@@ -94,7 +102,7 @@
         <div class="form-group row mt-5">
             <table class="table">
                 <thead>
-                    <tr class="fw-bold text-gray-800 border border-gray-400">
+                    <tr class="fw-semibold fs-6 text-gray-800 border border-gray-400">
                         <th class="text-center" width="30%">Tipe Produk</th>
                         <th class="text-center">Volume</th>
                         <th class="text-center">Jumlah Segmen</th>
@@ -105,47 +113,51 @@
                         <th class="text-center" >opsi</th>
                     </tr>
                 </thead>
-                <tbody >
-                    <tr class="fw-semibold text-gray-800 border border-gray-400">
-                        <td style="padding-left: 10px;">
-                            <select class="form-control form-select-solid ml-2" data-control="select2" data-placeholder="Pilih Tipe Produk" id="tipe_produk_select">
-                                <option></option>
-                                @foreach($detail_spp as $row)
-                                    <option value="{{ $row->kode_produk }}">{{ $row->type_produk }}</option>
-                                @endforeach
-                            </select>
+                <tbody style="border-bottom: 1px solid grey;">
+                    @foreach($detail_spp as $row)
+                    <tr class="fw-semibold fs-6 text-gray-800 border border-gray-400">
+                        <td class="text-center" style="padding-left: 10px;">
+                            <input class="form-control" name="tipe_produk_select[]" readonly value="{{ $row->kode_produk }}" />
                         </td>
-                        <td class="text-center">
-                            <input type="number" class="form-control" step="any" id="volume-show" onkeyup="validate_vol()" />
+                        <td class="text-center" width="15%">
+                            <input type="number"
+                                    segmen="{{ $row->segmen }}"
+                                    sppb="{{ $row->vol_sppb }}"
+                                    spm="{{ $row->spm }}"
+                                    class="form-control volume-show"
+                                    step="any"
+                                    onkeyup="validate_vol(this)" />
                         </td>
-                        <td class="text-center">
-                            <label class="text-center" id="segmen-show"></label>
+                        <td class="text-center" width="10%">
+                            <label class="text-center">{{ $row->segmen }}</label>
+                            <input class="segmen-show d-none" name="segmen_select[]" value="{{ $row->segmen }}" />
                         </td>
-                        <td  class="text-center">
-                            <label class="text-center" id="volsppb-show"></label>
+                        <td  class="text-center"  width="10%">
+                            <label class="text-center">{{ $row->vol_sppb }}</label>
+                            <input class="d-none" name="volsppb_select[]" value="{{ $row->vol_sppb }}" />
                         </td>
-                        <td  class="text-center">
-                            <label class="text-center" id="volspm-show"></label>
+                        <td  class="text-center" width="10%">
+                            <label class="text-center">{{ $row->spm }}</label>
+                            <input class="volspm-show d-none" name="volspm_select[]" value="{{ $row->spm }}" />
                         </td>
                         <td  class="text-center">0</td>
                         <td  class="text-center">
-                            <input type="text" class="form-control" id="keterangan-show"/>
+                            <input type="text" name="keterangan_select[]" class="form-control"/>
                         </td>
                         <td style="padding-right: 10px;">
-                            <a href="javascript:void(0)" class="btn btn-icon btn-success" id="add_muat"><i class="fa fa-plus"></i></a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-danger delete_muat" onClick="return confirm('Are you absolutely sure you want to delete?')"><i class="fa fa-times"></i></a>
                         </td>
                     </tr>
-                </tbody>
-                <tfoot id="body_muat" style="border-bottom: 1px solid black;">
+                    @endforeach
 
-                </tfoot>
+                </tbody>
             </table>
         </div>
 
     </div>
 
     <div class="card-footer" style="text-align: right;">
-        <input type="submit" class="btn btn-success" value="Simpan">
+        <button type="submit" class="btn btn-success"> Submit </button>
     </div>
-</form>
+
 </div>

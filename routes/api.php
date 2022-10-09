@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Driver\LoginController;
 use App\Http\Controllers\Api\FileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::name('api.')->namespace('Api')->group(function() {
     Route::get('viewer/{path}', [FileController::class, 'viewer'])->name('file.viewer');
+
+    Route::name('driver.')->prefix('driver')->namespace('Driver')->group(function() {
+        Route::post('login', [LoginController::class, 'login'])->name('login');
+    });
 });

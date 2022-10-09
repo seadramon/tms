@@ -31,4 +31,13 @@ class SpmH extends Model
         return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');
     }
 
+    public function vendor()
+    {
+    	return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');
+    }
+    
+    public function sppbd()
+    {
+    	return $this->hasMany(SppbD::class, 'no_sppb', 'no_sppb');
+    }
 }
