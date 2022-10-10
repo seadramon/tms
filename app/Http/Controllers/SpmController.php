@@ -27,6 +27,47 @@ use Illuminate\Support\Facades\Validator;
 
 class SpmController extends Controller
 {
+    public function index()
+    {
+        $vendor = [
+            "" => 'Please Select Data'
+        ];
+
+        return view('pages.spm.index', [
+            'vendor' => $vendor
+        ]);
+    }   
+    
+    public function data(Request $request)
+    {
+        $query = SpmH::with(['sppb', 'vendornya']);
+        return DataTables::eloquent($query)
+            ->editColumn('tgl_spm', function ($model) {
+                return date('d-m-Y', strtotime($model->tgl_spm));
+            })
+            ->addColumn('status', function($model) {
+                $status = "";
+
+                return $status;
+            })
+            ->addColumn('menu', function ($model) {
+                $edit = '<div class="btn-group">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Action
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-id="'. $model->no_spm .'">Konfirmasi</a></li>
+                            <li><a class="dropdown-item" href="#">Konfirmasi Vendor</a></li>
+                            <li><a class="dropdown-item delete" href="#">Hapus</a></li>
+                        </ul>
+                        </div>';
+
+                return $edit;
+            })
+            ->rawColumns(['menu', 'status'])
+            ->toJson();
+    } 
+
     /**
      * Display a listing of the resource.
      *
@@ -255,6 +296,25 @@ class SpmController extends Controller
         return redirect()->route('spm.create');
     }
 
+    public function konfirmasi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = SpmH::find($request->no_spm);
+            $data->app1 = 1;
+            $data->app1_empid = session('TMP_NIP') ?? '12345';
+            $data->app1_jbt = !empty(session('TMP_KDJBT')) ? str_replace("JBT", "", session('TMP_KDJBT')) : '12345';
+            $data->app1_date = getNow();
+            $data->save();
+
+            DB::commit();
+            return response()->json(['result' => 'success'])->setStatusCode(200, 'OK');
+        } catch(Exception $e) {
+            DB::rollback();
+            return response()->json(['result' => $e->getMessage()])->setStatusCode(500, 'ERROR');
+        }
+    }
 
     public function create_konfirmasi_vendor(){
         $no_spm = '0002/SPM/PI/PPB-SMT/09/2022';
