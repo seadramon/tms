@@ -41,7 +41,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::post('/destroy', [Sp3Controller::class, 'destroy'])->name('destroy');
 	    Route::get('/data', [Sp3Controller::class, 'data'])->name('data');
 	    Route::resource('/',  Sp3Controller::class)->except([
-	        'show', 'destroy'
+	        'destroy'
 	    ])->parameters(['' => 'sp3']);
 		Route::get('/search-npp', [Sp3Controller::class, 'searchNpp'])->name('search-npp');
 		Route::get('/search-pic', [Sp3Controller::class, 'searchPic'])->name('search-pic');
@@ -114,14 +114,17 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::group(['prefix' => '/spm', 'as' => 'spm.'], function(){
 	    Route::post('/destroy', [SpmController::class, 'destroy'])->name('destroy');
 	    Route::post('/draft', [SpmController::class, 'createDraft'])->name('draft');
+	    Route::post('/konfirmasi', [SpmController::class, 'konfirmasi'])->name('konfirmasi');
 	    Route::get('/data', [SpmController::class, 'data'])->name('data');
 	    Route::resource('/',  SpmController::class)->except([
-	        'destroy'
+	        'destroy', 'show'
 	    ])->parameters(['' => 'spm']);
 
 		Route::post('/search-pbbmuat', [SpmController::class, 'getPbbMuat'])->name('getPbbMuat');
 		Route::post('/get-data-box2', [SpmController::class, 'getDataBox2'])->name('get-data-box2');
         Route::post('/get-jml-segmen', [SpmController::class, 'getJmlSegmen'])->name('get-jml-segmen');
+		Route::get('/konfirmasi-vendor', [SpmController::class, 'create_konfirmasi_vendor'])->name('create-konfirmasi-vendor');
+		Route::post('/store-konfirmasi-vendor', [SpmController::class, 'store_konfirmasi_vendor'])->name('store-konfirmasi-vendor');
 	});
 
 	Route::group(['prefix' => 'kalender-pengirimian', 'as' => 'kalender-pengiriman.'], function() {

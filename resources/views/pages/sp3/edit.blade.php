@@ -42,6 +42,8 @@
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <script src="{{ asset('assets/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
 <script type="text/javascript">
+    let isFirstAdd = true;
+
     $(".datepicker").daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
@@ -188,17 +190,21 @@
 
         //Set Row Id
         clone.id = 'detail_pekerjaan_' + newIndex;
+
+        var sat_harsat = $("#sat_harsat").val();
         
         //Set Id
         clone.getElementsByTagName('select')[0].id = 'unit_' + newIndex;
-        clone.getElementsByTagName('input')[1].id = 'tipe_' + newIndex;
-        clone.getElementsByTagName('input')[2].id = 'jarak_pekerjaan_' + newIndex;
-        clone.getElementsByTagName('input')[3].id = 'vol_btg_' + newIndex;
-        clone.getElementsByTagName('input')[4].id = 'vol_btg_max_' + newIndex;
-        clone.getElementsByTagName('input')[5].id = 'vol_ton_' + newIndex;
-        clone.getElementsByTagName('select')[1].id = 'satuan_' + newIndex;
-        clone.getElementsByTagName('input')[6].id = 'harsat_' + newIndex;
-        clone.getElementsByTagName('input')[7].id = 'jumlah_' + newIndex;
+        clone.getElementsByTagName('select')[1].id = 'tipe_' + newIndex;
+        clone.getElementsByTagName('input')[1].id = 'jarak_pekerjaan_' + newIndex;
+        clone.getElementsByTagName('input')[2].id = 'vol_btg_' + newIndex;
+        clone.getElementsByTagName('input')[3].id = 'vol_btg_max_' + newIndex;
+        clone.getElementsByTagName('input')[4].id = 'vol_ton_' + newIndex;
+        if(sat_harsat == 'volume'){
+            clone.getElementsByTagName('select')[2].id = 'satuan_' + newIndex;
+        }
+        clone.getElementsByTagName('input')[5].id = 'harsat_' + newIndex;
+        clone.getElementsByTagName('input')[6].id = 'jumlah_' + newIndex;
         clone.getElementsByTagName('button')[0].id = 'delete_pekerjaan_' + newIndex;
         
         $(table).find('tbody').append(clone) // add new row to end of table
@@ -213,7 +219,9 @@
         $('#vol_btg_' + newIndex).attr('row-id', newIndex);
         $('#vol_btg_max_' + newIndex).attr('row-id', newIndex);
         $('#vol_ton_' + newIndex).attr('row-id', newIndex);
-        $('#satuan_' + newIndex).attr('row-id', newIndex);
+        if(sat_harsat == 'volume'){
+            $('#satuan_' + newIndex).attr('row-id', newIndex);
+        }
         $('#harsat_' + newIndex).attr('row-id', newIndex);
         $('#jumlah_' + newIndex).attr('row-id', newIndex);
         $('#delete_pekerjaan_' + newIndex).attr('row-id', newIndex);
@@ -225,14 +233,26 @@
         $('#vol_btg_' + newIndex).removeAttr('disabled');
         $('#vol_btg_max_' + newIndex).removeAttr('disabled');
         $('#vol_ton_' + newIndex).removeAttr('disabled');
-        $('#satuan_' + newIndex).removeAttr('disabled');
+        if(sat_harsat == 'volume'){
+            $('#satuan_' + newIndex).removeAttr('disabled');
+        }
         $('#harsat_' + newIndex).removeAttr('disabled');
         $('#jumlah_' + newIndex).removeAttr('disabled');
         $('#delete_pekerjaan_' + newIndex).removeAttr('disabled');
         
         //Set Select2
         $('#unit_' + newIndex).select2();
-        $('#satuan_' + newIndex).select2();
+        $('#tipe_' + newIndex).select2();
+        if(sat_harsat == 'volume'){
+            $('#satuan_' + newIndex).select2();
+        }
+
+        if(isFirstAdd){
+            $('#detail_pekerjaan_' + newIndex).find('.select2-container').eq(1).remove();
+            $('#detail_pekerjaan_' + newIndex).find('.select2-container').last().remove();
+
+            isFirstAdd = false;
+        }
         
         //Show New Row
         $('#detail_pekerjaan_' + newIndex).show();

@@ -14,3 +14,12 @@ if (!function_exists('full_url_from_path')) {
         return route('api.file.viewer', ['path' => str_replace("/", "|", $path)]);;
     }
 }
+
+if (!function_exists('getNow')) {
+	function getNow()
+	{
+	    $data = DB::select("SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AS saiki FROM dual");
+	    
+	    return $data[0]->saiki;
+	}
+}
