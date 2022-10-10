@@ -182,7 +182,7 @@
                                 <label class="form-label">Tanggal Penyerahan</label>
                                 <div class="col-lg-12">
                                     <div class="input-group date">
-                                        {!! Form::text('jadwal1', null, ['class'=>'form-control datepicker', 'id'=>'jadwal1']) !!}
+                                        {!! Form::text('jadwal1', null, ['class'=>'form-control datepicker', 'id'=>'jadwal1', 'readonly']) !!}
                                         <div class="input-group-append">
                                             <span class="input-group-text" style="display: block">
                                                 <i class="la la-calendar-check-o"></i>
@@ -196,7 +196,7 @@
                                 <label class="form-label">&nbsp;</label>
                                 <div class="col-lg-12">
                                     <div class="input-group date">
-                                        {!! Form::text('jadwal2', null, ['class'=>'form-control datepicker', 'id'=>'jadwal2']) !!}
+                                        {!! Form::text('jadwal2', null, ['class'=>'form-control datepicker', 'id'=>'jadwal2', 'readonly']) !!}
                                         <div class="input-group-append">
                                             <span class="input-group-text" style="display: block">
                                                 <i class="la la-calendar-check-o"></i>
@@ -213,17 +213,17 @@
                 
                             <div class="form-group col-lg-6">
                                 <label class="form-label">Estimasi Total Ritasi</label>
-                                {!! Form::text('rit', 0, ['class'=>'form-control decimal', 'id' => $sat_harsat != 'volume' ? 'est-rit' : 'rit', 'required']) !!}
+                                {!! Form::text('rit', 0, ['class'=>'form-control decimal', 'id' => $sat_harsat != 'volume' ? 'est-rit' : 'rit', 'required', 'readonly']) !!}
                             </div>
                 
                             <div class="form-group col-lg-6">
                                 <label class="form-label">Jarak</label>
-                                {!! Form::number('jarak_pesanan', $data->jarak_km, ['class'=>'form-control', 'id'=>'jarak_pesanan', 'required']) !!}
+                                {!! Form::number('jarak_pesanan', $data->jarak_km, ['class'=>'form-control', 'id'=>'jarak_pesanan', 'required', 'readonly']) !!}
                             </div>
                             @if ($sat_harsat == 'ritase')
                             <div class="form-group col-lg-6">
                                 <label class="form-label">Harga Satuan Ritase</label>
-                                {!! Form::text('harga_satuan_ritase', 0, ['class'=>'form-control decimal', 'id'=>'harga_satuan_ritase']) !!}
+                                {!! Form::text('harga_satuan_ritase', 0, ['class'=>'form-control decimal', 'id'=>'harga_satuan_ritase', 'readonly']) !!}
                             </div>
                             @endif
                         </div>
@@ -273,29 +273,29 @@
                 
                                         <tr class="detail_pekerjaan" id="detail_pekerjaan_{{ $key }}" row-id={{ $key }}>
                                             <td style="width: 10%;">
-                                                {!! Form::select('unit[]', $unit, $pekerjaan->pat_to, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'unit_' . $key, 'row-id'=>$key]) !!}
+                                                {!! Form::select('unit[]', $unit, $pekerjaan->pat_to, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'unit_' . $key, 'row-id'=>$key, 'disabled']) !!}
                                             </td>
                                             <td style="width: 14%;">
                                                 {!! Form::hidden('kd_produk[]', $pekerjaan->kd_produk, []) !!}
-                                                {!! Form::text('tipe[]', $pekerjaan->produk?->tipe, ['class'=>'form-control', 'id'=>'tipe_' . $key, 'row-id'=>$key]) !!}
+                                                {!! Form::text('tipe[]', $pekerjaan->produk?->tipe, ['class'=>'form-control', 'id'=>'tipe_' . $key, 'row-id'=>$key, 'readonly']) !!}
                                             </td>
                                             <td style="width: 12%;">
-                                                {!! Form::text('jarak_pekerjaan[]', number_format($pekerjaan->jarak_km), ['class'=>'form-control jarak_pekerjaan decimal', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key]) !!}
+                                                {!! Form::text('jarak_pekerjaan[]', number_format($pekerjaan->jarak_km), ['class'=>'form-control jarak_pekerjaan decimal', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key, 'readonly']) !!}
                                             </td>
                                             <td style="width: 13%;">
-                                                {!! Form::text('vol_btg[]', number_format($vol_btg), ['class'=>'form-control vol_btg decimal', 'readonly' => $readonly, 'id'=>'vol_btg_' . $key, 'row-id'=>$key]) !!}
+                                                {!! Form::text('vol_btg[]', number_format($vol_btg), ['class'=>'form-control vol_btg decimal', 'readonly' => $readonly, 'id'=>'vol_btg_' . $key, 'row-id'=>$key, 'readonly']) !!}
                                                 <input type="hidden" id="vol_btg_max_{{ $key }}" value="9999">
                                             </td>
                                             <td style="width: 13%;">
-                                                {!! Form::text('vol_ton[]', number_format($vol_ton), ['class'=>'form-control vol_ton decimal', 'readonly' => $readonly, 'id'=>'vol_ton_' . $key, 'row-id'=>$key]) !!}
+                                                {!! Form::text('vol_ton[]', number_format($vol_ton), ['class'=>'form-control vol_ton decimal', 'readonly' => $readonly, 'id'=>'vol_ton_' . $key, 'row-id'=>$key, 'readonly']) !!}
                                             </td>
                                             @if ($sat_harsat != 'ritase')
                                                 <td style="width: 10%;">
-                                                    {!! Form::select('satuan[]', $satuan, $pekerjaan->sat_harsat, ['class'=>'form-control form-select-solid satuan', 'data-control'=>'select2', 'id'=>'satuan_' . $key, 'row-id'=>$key]) !!}
+                                                    {!! Form::select('satuan[]', $satuan, $pekerjaan->sat_harsat, ['class'=>'form-control form-select-solid satuan', 'data-control'=>'select2', 'id'=>'satuan_' . $key, 'row-id'=>$key, 'disabled']) !!}
                                                 </td>
                                             @endif
                                             <td style="width: 15%;">
-                                                {!! Form::text('harsat[]', number_format($harsat), ['class'=>'form-control harsat decimal', 'id'=>'harsat_' . $key, 'row-id'=>$key]) !!}
+                                                {!! Form::text('harsat[]', number_format($harsat), ['class'=>'form-control harsat decimal', 'id'=>'harsat_' . $key, 'row-id'=>$key, 'readonly']) !!}
                                             </td>
                                             <td style="width: 10%;">
                                                 {!! Form::text('jumlah[]', number_format($jumlah), ['class'=>'form-control jumlah decimal', 'id'=>'jumlah_' . $key, 'row-id'=>$key, 'readonly']) !!}
@@ -325,14 +325,14 @@
                             <tr>
                                 <th style="text-align: right; width: 72%">PPN</th>
                                 <td style="width: 25%">
-                                    {!! Form::select('ppn', $ppn, $data->ppn*100, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'ppn']) !!}
+                                    {!! Form::select('ppn', $ppn, $data->ppn*100, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'ppn', 'disabled']) !!}
                                 </td>
                                 <td style="width: 3%"></td>
                             </tr>
                             <tr>
                                 <th style="text-align: right; width: 72%">PPH</th>
                                 <td style="width: 25%">
-                                    {!! Form::select('pph', $pph, $formatPph, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph']) !!}
+                                    {!! Form::select('pph', $pph, $formatPph, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph', 'disabled']) !!}
                                 </td>
                                 <td style="width: 3%"></td>
                             </tr>
@@ -347,28 +347,11 @@
                 
                         <br><br>
                 
-                        <h3>Material Tambahan</h3>
-                        <div id="material_tambahan">
-                            <div class="form-group">
-                                <div data-repeater-list="material_tambahan">
-                                    @if(blank($materialTambahan))
-                                        <div data-repeater-item>
-                                            <div class="form-group row">
-                                                <div class="col-md-3">
-                                                    <label class="form-label">Material</label>
-                                                    {!! Form::text('material', null, ['class'=>'form-control', 'required', 'readonly']) !!}
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <label class="form-label">Spesifikasi</label>
-                                                    {!! Form::text('spesifikasi', null, ['class'=>'form-control', 'required', 'readonly']) !!}
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <label class="form-label">Volume</label>
-                                                    {!! Form::number('volume', null, ['class'=>'form-control', 'required', 'readonly']) !!}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @else
+                        @if(!blank($materialTambahan))
+                            <h3>Material Tambahan</h3>
+                            <div id="material_tambahan">
+                                <div class="form-group">
+                                    <div data-repeater-list="material_tambahan">
                                         @foreach ($materialTambahan as $material)
                                             <div data-repeater-item>
                                                 <div class="form-group row">
@@ -387,10 +370,10 @@
                                                 </div>
                                             </div>
                                         @endforeach
-                                    @endif
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                 
                         <br><br>
                 
@@ -420,100 +403,100 @@
                                     <tr>
                                         <th>Faktur / Invoice / Kwitansi</th>
                                         <td>
-                                            {!! Form::number('invoice_asli', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('invoice_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         <td>
-                                            {!! Form::number('invoice_copy', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('invoice_copy', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         
                                         <th>&nbsp;</th>
                 
                                         <th>Packing List</th>
                                         <td>
-                                            {!! Form::number('packing_asli', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('packing_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         <td>
-                                            {!! Form::number('packing_copy', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('packing_copy', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                     </tr>
                 
                                     <tr>
                                         <th>Faktur Pajak</th>
                                         <td>
-                                            {!! Form::number('pajak_asli', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('pajak_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         <td>
-                                            {!! Form::number('pajak_copy', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('pajak_copy', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         
                                         <th>&nbsp;</th>
                 
                                         <th>BAPB</th>
                                         <td>
-                                            {!! Form::number('bapb_asli', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('bapb_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         <td>
-                                            {!! Form::number('bapb_copy', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('bapb_copy', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                     </tr>
                 
                                     <tr>
                                         <th>SP3 / SPK</th>
                                         <td>
-                                            {!! Form::number('sp3_asli', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('sp3_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         <td>
-                                            {!! Form::number('sp3_copy', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('sp3_copy', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         
                                         <th>&nbsp;</th>
                 
                                         <th>BA Pemeriksaan / Opname</th>
                                         <td>
-                                            {!! Form::number('pemeriksaan_asli', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('pemeriksaan_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         <td>
-                                            {!! Form::number('pemeriksaan_copy', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('pemeriksaan_copy', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                     </tr>
                                     
                                     <tr>
                                         <th>Surat Jalan / SPHB</th>
                                         <td>
-                                            {!! Form::number('surat_asli', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('surat_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         <td>
-                                            {!! Form::number('surat_copy', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('surat_copy', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         
                                         <th>&nbsp;</th>
                 
                                         <th>BA Pembayaran</th>
                                         <td>
-                                            {!! Form::number('pembayaran_asli', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('pembayaran_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         <td>
-                                            {!! Form::number('pembayaran_copy', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('pembayaran_copy', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                     </tr>
                 
                                     <tr>
                                         <th>Rekap Surat Jalan / SPHB</th>
                                         <td>
-                                            {!! Form::number('rekap_asli', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('rekap_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         <td>
-                                            {!! Form::number('rekap_copy', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('rekap_copy', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         
                                         <th>&nbsp;</th>
                 
                                         <th>Lembar Kendali Pembayaran</th>
                                         <td>
-                                            {!! Form::number('lembar_asli', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('lembar_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                         <td>
-                                            {!! Form::number('lembar_copy', null, ['class'=>'form-control']) !!}
+                                            {!! Form::number('lembar_copy', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
                                     </tr>
                                 </tbody>
