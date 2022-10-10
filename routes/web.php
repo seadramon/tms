@@ -75,6 +75,8 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	});
 
 	Route::group(['prefix' => '/sptb', 'as' => 'sptb.'], function(){
+		Route::get('/data', [SptbController::class, 'data'])->name('data');
+
 	    Route::resource('/',  SptbController::class)->except([
 	        'show', 'destroy'
 	    ])->parameters(['' => 'sptb']);

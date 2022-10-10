@@ -12,11 +12,41 @@ use App\Models\MsNoDokumen;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use Exception;
 
 class SptbController extends Controller
 {
+    public function index()
+    {
+        return view('pages.sptb.index');
+    }
+
+    public function data()
+    {
+        $query = SptbH::with(['spmh', 'npp'])->select('*');
+
+        return DataTables::eloquent($query)
+            ->editColumn('tgl_sptb', function ($model) {
+                return Carbon::createFromFormat('Y-m-d H:i:s', $model->tgl_sptb)->format('d-m-Y');
+            })
+            ->addColumn('menu', function ($model) {
+                $edit = '<div class="btn-group">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Action
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="' . route('sptb.edit', str_replace('/', '|', $model->no_sptb)) . '">Edit</a></li>
+                        </ul>
+                        </div>';
+
+                return $edit;
+            })
+            ->rawColumns(['menu'])
+            ->toJson();
+    }
+    
     public function create()
     {
         $no_spm = SpmH::where('app2', 1)
