@@ -46,12 +46,13 @@
                     <div class="form-group row mt-2">
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 required ">Tanggal</label>
-                            <input  name="tanggal" class="form-control flatpickr-input active" placeholder="Pilih Tanggal" id="kt_datepicker_3" type="text" readonly="readonly">
+                            <input  name="tanggal"
+                             class="form-control flatpickr-input active" placeholder="Pilih Tanggal" id="kt_datepicker_3" type="text" readonly="readonly">
                         </div>
 
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 required ">Jenis SPM</label>
-                            <select class="form-control" data-control="select2" data-placeholder="Pilih Jenis SPM" name="jenis_spm" id="jenis_spm">
+                            <select class="form-control" data-control="select2" data-placeholder="Pilih Jenis SPM" id="jenis_spm">
                                 <option></option>
                                 <option value="2">Stok Titipan</option>
                                 <option value="0">Stok Aktif</option>
@@ -74,12 +75,8 @@
             </div>
         </div>
         <div class="col-12 mb-3" id="box2">
-        </div>
 
-        <form method="POST" action="{{ route('spm.store') }}">
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            
-        </form>
+        </div>
     </div>
 </div>
 <!--end::Content container-->
@@ -104,11 +101,6 @@ $(document).ready(function() {
     $("#alert-box1").hide();
 });
 
-// Start field tanggal
-$("#kt_datepicker_3").flatpickr({
-    dateFormat: "d-m-Y",
-});
-// end of field tanggal
 
 
 $('#no_spp').on("change", function(e) {
@@ -123,10 +115,27 @@ $('#no_spp').on("change", function(e) {
             no_spp: no_spp,
         },
         success: function(result){
+
+
+            // Start field tanggal
+            $("#kt_datepicker_3").flatpickr({
+                "minDate": result.min,
+                "maxDate": result.max,
+                dateFormat: "d-m-Y"
+            });
+            // end of field tanggal
+
             $('#pbb_muat').empty();
             if(result){
-                for(i = 0; i < result.length; i++){
-                    $('#pbb_muat').append('<option value="'+ result[i].pat.kd_pat +'">'+ result[i].pat.kd_pat +' | '+ result[i].pat.ket +'</option>');
+                var temp = '';
+                for(i = 0; i < result.data_1.length; i++){
+                    if(temp == result.data_1[i].pat.kd_pat){
+                        return false;
+                    }else{
+                        $('#pbb_muat').append('<option value="'+ result.data_1[i].pat.kd_pat +'">'+ result.data_1[i].pat.kd_pat +' | '+ result.data_1[i].pat.ket +'</option>');
+                        var temp = result.data_1[i].pat.kd_pat;
+                    }
+
                 }
             }
 
@@ -176,79 +185,83 @@ $('#buat_draft').on('click', function(){
 });
 
 
-    function validate_vol(){
-        var maxValue =  parseFloat($('#volsppb-show').text()) - parseFloat($('#volspm-show').text());
-        if($('#volume-show').val() > maxValue){
-            $('#volume-show').val(maxValue);
+    function validate_vol(el){
+        var maxValue =  parseFloat($(el).attr('sppb')) - parseFloat($(el).attr('spm'));
+        if($(el).val() > maxValue){
+            $(el).val(maxValue);
         }
     }
 
     function box2() {
         $('.form-select-solid').select2();
+        $('#jenis_spm_select').val($('#jenis_spm').val());
+        $('#tanggal_select').val($('#kt_datepicker_3').val());
+        $('#muat_select').val($('#pbb_muat').val());
+        $('#spp_select').val($('#no_spp').val());
 
-        $("#tipe_produk_select" ).change(function() {
-            $.ajax({
-                url: "{{ route('spm.get-jml-segmen') }}",
-                type: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    kd_produk: $('#tipe_produk_select').val(),
-                    no_sppb: $('#no_spp').val()
-                },
-                dataType: 'json',
-                success: function(result) {
-                    console.log(result);
-                    $('#segmen-show').text(result[0].jml_segmen);
-                    $('#volsppb-show').text(result[0].app2_vol);
-                    $('#volspm-show').text(result[0].jml_spm);
-                }
-            });
-        });
+        // $("#tipe_produk_select" ).change(function() {
+        //     $.ajax({
+        //         url: "{{ route('spm.get-jml-segmen') }}",
+        //         type: "POST",
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         data: {
+        //             kd_produk: $('#tipe_produk_select').val(),
+        //             no_sppb: $('#no_spp').val()
+        //         },
+        //         dataType: 'json',
+        //         success: function(result) {
+        //             console.log(result);
+        //             $('#segmen-show').text(result[0].jml_segmen);
+        //             $('#volsppb-show').text(result[0].app2_vol);
+        //             $('#volspm-show').text(result[0].jml_spm);
+        //         }
+        //     });
+        // });
 
-        $('#add_muat').on('click', function(){
-            $('#body_muat').append(''+
-                '<tr class="fw-semibold text-gray-800 border border-gray-400">'+
-                    '<td style="padding-left: 10px;">'+
-                        '<label class="form-label">'+  $("#tipe_produk_select" ).val() +'</label>'+
-                        '<input class="d-none" name="tipe_produk_select[]" value="'+  $("#tipe_produk_select" ).val() +'" />'+
-                    '</td>'+
-                    '<td class="text-center">'+
-                        '<label class="form-label">'+ $('#volume-show').val() +'</label>'+
-                        '<input class="d-none" name="volume_produk_select[]" value="'+ $('#volume-show').val() +'" />'+
-                    '</td>'+
-                    '<td class="text-center">'+
-                        '<label class="form-label">'+ $('#segmen-show').text() +'</label>'+
-                        '<input class="d-none" name="segmen_select[]" value="'+ $('#segmen-show').text() +'" />'+
-                    '</td>'+
-                    '<td class="text-center">'+
-                        '<label class="form-label">'+ $('#volsppb-show').text() +'</label>'+
-                        '<input class="d-none" name="volsppb_select[]" value="'+ $('#volsppb-show').text() +'" />'+
-                    '</td>'+
-                    '<td class="text-center">'+
-                        '<label class="form-label">'+ $('#volspm-show').text() +'</label>'+
-                        '<input class="d-none" name="volspm_select[]" value="'+ $('#volspm-show').text() +'" />'+
-                    '</td>'+
-                    '<td class="text-center">'+
-                        '<label class="form-label" id="">0</label>'+
-                        '<input class="d-none" name="voltitipan_select[]" value="0" />'+
-                    '</td>'+
-                    '<td class="text-center">'+
-                        '<label class="form-label">'+ $('#keterangan-show').val() +'</label>'+
-                        '<input type="text" class="d-none" name="keterangan_select[]" value="'+$('#keterangan-show').val()+'" />'+
-                    '</td>'+
-                    '<td class="text-left">'+
-                        '<a href="javascript:void(0)" class="btn btn-icon btn-danger delete_muat" onClick="return confirm(\'Are you absolutely sure you want to delete?\')"><i class="fa fa-times"></i></a>'+
-                    '</td>'+
-                '</tr>');
+        // $('#add_muat').on('click', function(){
+        //     $('#body_muat').append(''+
+        //         '<tr class="fw-semibold text-gray-800 border border-gray-400">'+
+        //             '<td style="padding-left: 10px;">'+
+        //                 '<label class="form-label">'+  $("#tipe_produk_select" ).val() +'</label>'+
+        //                 '<input class="d-none" name="tipe_produk_select[]" value="'+  $("#tipe_produk_select" ).val() +'" />'+
+        //             '</td>'+
+        //             '<td class="text-center">'+
+        //                 '<label class="form-label">'+ $('#volume-show').val() +'</label>'+
+        //                 '<input class="d-none" name="volume_produk_select[]" value="'+ $('#volume-show').val() +'" />'+
+        //             '</td>'+
+        //             '<td class="text-center">'+
+        //                 '<label class="form-label">'+ $('#segmen-show').text() +'</label>'+
+        //                 '<input class="d-none" name="segmen_select[]" value="'+ $('#segmen-show').text() +'" />'+
+        //             '</td>'+
+        //             '<td class="text-center">'+
+        //                 '<label class="form-label">'+ $('#volsppb-show').text() +'</label>'+
+        //                 '<input class="d-none" name="volsppb_select[]" value="'+ $('#volsppb-show').text() +'" />'+
+        //             '</td>'+
+        //             '<td class="text-center">'+
+        //                 '<label class="form-label">'+ $('#volspm-show').text() +'</label>'+
+        //                 '<input class="d-none" name="volspm_select[]" value="'+ $('#volspm-show').text() +'" />'+
+        //             '</td>'+
+        //             '<td class="text-center">'+
+        //                 '<label class="form-label" id="">0</label>'+
+        //                 '<input class="d-none" name="voltitipan_select[]" value="0" />'+
+        //             '</td>'+
+        //             '<td class="text-center">'+
+        //                 '<label class="form-label">'+ $('#keterangan-show').val() +'</label>'+
+        //                 '<input type="text" class="d-none" name="keterangan_select[]" value="'+$('#keterangan-show').val()+'" />'+
+        //             '</td>'+
+        //             '<td class="text-left">'+
+        //                 '<a href="javascript:void(0)" class="btn btn-icon btn-danger delete_muat" onClick="return confirm(\'Are you absolutely sure you want to delete?\')"><i class="fa fa-times"></i></a>'+
+        //             '</td>'+
+        //         '</tr>');
 
-            $('#volume-show').val('');
-            $('#keterangan-show').val('');
-            $('#segmen-show').text('');
-            $('#volsppb-show').text('');
-            $('#volspm-show').text('');
-        });
+        //     $('#volume-show').val('');
+        //     $('#keterangan-show').val('');
+        //     $('#segmen-show').text('');
+        //     $('#volsppb-show').text('');
+        //     $('#volspm-show').text('');
+        // });
 
         $(document).on('click', '.delete_muat', function(e) {
             $(this).parent().parent().remove();
