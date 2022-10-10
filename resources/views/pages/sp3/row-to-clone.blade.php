@@ -4,7 +4,7 @@
     </td>
     <td style="width: 14%;">
         {!! Form::hidden('kd_produk[]', $detailPesanan->first()?->produk?->kd_produk, []) !!}
-        {!! Form::text('tipe[]', null, ['class'=>'form-control', 'disabled']) !!}
+        {!! Form::select('tipe[]', $produk, null, ['class'=>'form-control', 'data-control'=>'select2', 'disabled']) !!}
     </td>
     <td style="width: 12%;">
         {!! Form::text('jarak_pekerjaan[]', null, ['class'=>'form-control jarak_pekerjaan decimal', 'disabled']) !!}

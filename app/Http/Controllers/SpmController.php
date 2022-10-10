@@ -57,7 +57,7 @@ class SpmController extends Controller
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-id="'. $model->no_spm .'">Konfirmasi</a></li>
-                            <li><a class="dropdown-item" href="#">Konfirmasi Vendor</a></li>
+                            <li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>
                             <li><a class="dropdown-item delete" href="#">Hapus</a></li>
                         </ul>
                         </div>';
@@ -158,7 +158,7 @@ class SpmController extends Controller
             'D' => 'DISPENSASI'
         ];
 
-        $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($no_npp->no_npp, -1))];
+        $kondisiPenyerahanDipilih = $no_npp->no_npp ? $kondisiPenyerahan[strtoupper(substr($no_npp->no_npp, -1))] : 'LOKO';
 
         $html = view('pages.spm.box2', [
             'no_npp' => $no_npp->no_npp,
@@ -212,7 +212,12 @@ class SpmController extends Controller
     }
 
     public function store(Request $request, FlasherInterface $flasher){
+        // return response()->json($request->all());
         try {
+            Validator::make($request->all(), [
+                'vendor'        => 'required',
+            ])->validate();
+
             DB::beginTransaction();
             // store in SPM_H
             $no_sppb = $request->no_spp;
@@ -288,12 +293,13 @@ class SpmController extends Controller
             DB::commit();
 
             $flasher->addSuccess('Data has been saved successfully!');
+            return redirect()->route('spm.index');
         } catch(Exception $e) {
             DB::rollback();
             $flasher->addError($e->getMessage());
+            return redirect()->route('spm.create');
         }
 
-        return redirect()->route('spm.create');
     }
 
     public function konfirmasi(Request $request)
@@ -316,8 +322,8 @@ class SpmController extends Controller
         }
     }
 
-    public function create_konfirmasi_vendor(){
-        $no_spm = '0002/SPM/PI/PPB-SMT/09/2022';
+    public function create_konfirmasi_vendor($spm){
+        $no_spm = str_replace('|', '/', $spm); // '0002/SPM/PI/PPB-SMT/09/2022';
         $data = SpmH::with('vendor')->where('no_spm',$no_spm)->first();
 
         $data_ = SppbH::select('no_npp')->where('no_sppb',$data->no_sppb)->first();
@@ -410,6 +416,6 @@ class SpmController extends Controller
         $data->save();
 
         $flasher->addSuccess('Data has been update successfully!');
-        return redirect()->route('spm.create');
+        return redirect()->route('spm.index');
     }
 }

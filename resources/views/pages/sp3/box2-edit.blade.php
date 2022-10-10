@@ -189,9 +189,14 @@
                 </tr>
             </thead>
         </table>
-        <div class="hover-scroll-overlay-y">
+        <div class="hover-scroll-overlay-y h-400px">
             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
                 <tbody>
+                    @php
+                        $produk = $detailPesanan->mapWithKeys(function($item){
+                            return [$item->produk->kd_produk => $item->produk->tipe];
+                        })->all();
+                    @endphp
                     @include('pages.sp3.row-to-clone')
 
                     @php
