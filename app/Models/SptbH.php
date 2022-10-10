@@ -14,4 +14,14 @@ class SptbH extends Model
 	protected $keyType = 'string';
 	public $incrementing = false;
 	public $timestamps = false;
+
+    public function sptbd()
+    {
+    	return $this->hasMany(SptbD::class, 'no_sptb', 'no_sptb');
+    }
+
+    public function sptbd2()
+    {
+    	return $this->hasMany(SptbD2::class, 'no_sptb', 'no_sptb');
+    }
 }
