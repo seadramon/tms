@@ -40,4 +40,14 @@ class SpmH extends Model
     {
     	return $this->hasMany(SppbD::class, 'no_sppb', 'no_sppb');
     }
+
+    public function sppbh()
+    {
+        return $this->belongsTo(SppbH::class, 'no_sppb', 'no_sppb');
+    }
+
+    public function pat()
+    {
+    	return $this->belongsTo(Pat::class, 'pat_to', 'kd_pat');
+    }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Sp3Controller;
 use App\Http\Controllers\SpmController;
 use App\Http\Controllers\SppController;
 use App\Http\Controllers\SppApprovalController;
+use App\Http\Controllers\SptbController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KalenderPengirimanController;
 use App\Http\Controllers\MasterDriverController;
@@ -71,6 +72,14 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	Route::group(['prefix' => '/select2', 'as' => 'select2.'], function(){
 		Route::get('/spprb',	[SppController::class, 'getSpprb'])->name('spprb');
+	});
+
+	Route::group(['prefix' => '/sptb', 'as' => 'sptb.'], function(){
+	    Route::resource('/',  SptbController::class)->except([
+	        'show', 'destroy'
+	    ])->parameters(['' => 'sptb']);
+
+		Route::post('/get-spm', [SptbController::class, 'getSpm'])->name('get-spm');
 	});
 
 	Route::group(['prefix' => '/master-driver', 'as' => 'master-driver.'], function(){
