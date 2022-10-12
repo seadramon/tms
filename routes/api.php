@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Driver\LoginController;
 use App\Http\Controllers\Api\FileController;
+use App\Http\Controllers\Api\Internal\KalenderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,5 +26,9 @@ Route::name('api.')->namespace('Api')->group(function() {
 
     Route::name('driver.')->prefix('driver')->namespace('Driver')->group(function() {
         Route::post('login', [LoginController::class, 'login'])->name('login');
+    });
+
+    Route::name('internal.')->prefix('internal')->namespace('Internal')->group(function() {
+        Route::post('kalender-daily', [KalenderController::class, 'daily'])->name('daily');
     });
 });
