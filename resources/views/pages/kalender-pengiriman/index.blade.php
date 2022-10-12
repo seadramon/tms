@@ -78,7 +78,7 @@
 		aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
 
 		// nowIndicator: true,
-		now: '2008-06-15' + "T09:25:00", // just for demo
+		now: TODAY + "T09:25:00", // just for demo
 
 		views: {
 			dayGridMonth: { buttonText: "Bulan" },
@@ -86,7 +86,7 @@
 		},
 
 		initialView: "dayGridMonth",
-		initialDate: '2008-06-15',
+		initialDate: TODAY,
 
 		// editable: true,
 		dayMaxEvents: true, // allow "more" link when too many events
