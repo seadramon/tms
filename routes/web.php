@@ -40,9 +40,6 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	Route::group(['prefix' => '/sp3', 'as' => 'sp3.'], function(){
 	    Route::post('/destroy', [Sp3Controller::class, 'destroy'])->name('destroy');
 	    Route::get('/data', [Sp3Controller::class, 'data'])->name('data');
-	    Route::resource('/',  Sp3Controller::class)->except([
-	        'destroy'
-	    ])->parameters(['' => 'sp3']);
 		Route::get('/search-npp', [Sp3Controller::class, 'searchNpp'])->name('search-npp');
 		Route::get('/search-pic', [Sp3Controller::class, 'searchPic'])->name('search-pic');
 		Route::post('/get-data-box2', [Sp3Controller::class, 'getDataBox2'])->name('get-data-box2');
@@ -51,6 +48,9 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('/edit/{no_sp3}', [Sp3Controller::class, 'edit'])->name('edit');
 		Route::get('/amandemen/{no_sp3}', [Sp3Controller::class, 'edit'])->name('amandemen');
 		Route::put('/update/{no_sp3}', [Sp3Controller::class, 'update'])->name('update');
+	    Route::resource('/',  Sp3Controller::class)->except([
+	        'destroy'
+	    ])->parameters(['' => 'sp3']);
 	});
 
 	Route::group(['prefix' => '/spp', 'as' => 'spp.'], function(){
