@@ -39,7 +39,7 @@
                         <tr>
                             <td style="text-align: left">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
                             
-                            <td>{{ nominal($pesananVolBtg) }}</td>
+                            <td>{{ $pesanan->vol_konfirmasi }}</td>
                             <td>{{ nominal($pesananVolTon) }}</td>
                             <td>{{ nominal($sp3dVolBtg) }}</td>
                             <td>{{ nominal($sp3dVolTon) }}</td>
