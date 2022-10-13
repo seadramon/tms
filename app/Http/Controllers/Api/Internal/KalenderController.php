@@ -12,11 +12,19 @@ class KalenderController extends Controller
     public function daily(Request $request)
     {
         if($request->type == 'spm'){
-            $data = (new KalenderService($request->start, $request->end))->rekapDailySpm();
+            $temp = (new KalenderService($request->start, $request->end))->rekapDailySpm();
+            $color = null;
         }else{
-            $data = (new KalenderService($request->start, $request->end))->rekapDailySppWithSp3();
+            $temp = (new KalenderService($request->start, $request->end))->rekapDailySppWithSp3();
+            $color = [
+                'spp' => '#af96e2',
+                'sp3' => '#b6f5f7'
+            ];
         }
-		return response()->json($data);
+		return response()->json([
+            'data' => $temp,
+            'color' => $color,
+        ]);
     }
 }
 
