@@ -7,16 +7,15 @@ use App\Models\Pat;
 use App\Models\TrMaterial;
 use App\Models\Vendor;
 use App\Models\Npp;
-use App\Models\AngkutanH;
-use App\Models\AngkutanD;
-use App\Models\AngkutanD2;
+use App\Models\PricelistAngkutanH;
+use App\Models\PricelistAngkutanD;
+use App\Models\PricelistAngkutanD2;
 use App\Imports\PricelistImport;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 use Exception;
 
 class PricelistAngkutanController extends Controller
@@ -38,7 +37,7 @@ class PricelistAngkutanController extends Controller
         
         $kd_material = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
-            ->pluck('uraian', 'kd_jmaterial')
+            ->pluck('name', 'kd_jmaterial')
             ->toArray();
         
         $jenis_muat =  [
@@ -85,35 +84,41 @@ class PricelistAngkutanController extends Controller
                 'kd_pat'        => 'required'
             ])->validate();
 
-            $angkutanH = new AngkutanH();
-            $angkutanH->kd_pat = $request->kd_pat;
-            $angkutanH->tahun = $request->tahun;
-            $angkutanH->save();
+            $pricelistAngkutanH = new PricelistAngkutanH();
+            $pricelistAngkutanH->kd_pat = $request->kd_pat;
+            $pricelistAngkutanH->tahun = $request->tahun;
+            $pricelistAngkutanH->save();
+
+            $j=0;
+            $countHarsat = 0;
 
             for($i=0; $i < count($request->kd_material); $i++){
-                $angkutanD = new AngkutanD();
-                $angkutanD->kd_material = $request->kd_material[$i];
-                $angkutanD->jenis_muat = $request->jenis_muat[$i];
-                $angkutanD->kd_muat = $request->kd_muat[$i];
-                $angkutanD->tgl_mulai = Carbon::createFromFormat('d-m-Y', $request->tgl_mulai[$i])->format('Y-m-d');
-                $angkutanD->tgl_selesai = Carbon::createFromFormat('d-m-Y', $request->tgl_selesai[$i])->format('Y-m-d');
-                $angkutanD->save();
-            }
+                $pricelistAngkutanD = new PricelistAngkutanD();
+                $pricelistAngkutanD->pah_id = $pricelistAngkutanH->id;
+                $pricelistAngkutanD->kd_material = $request->kd_material[$i];
+                $pricelistAngkutanD->jenis_muat = $request->jenis_muat[$i];
+                $pricelistAngkutanD->kd_muat = $request->kd_muat[$i];
+                $pricelistAngkutanD->tgl_mulai = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_mulai[$i]))."'), 'YYYY-MM-DD')");
+                $pricelistAngkutanD->tgl_selesai = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_selesai[$i]))."'), 'YYYY-MM-DD')");
+                $pricelistAngkutanD->save();
 
-            for($i=0; $i < count($request->key_harsat); $i++){
-                $angkutanD2 = new AngkutanD2();
-                $angkutanD2->range_min = $request->range_min[$i];
-                $angkutanD2->range_max = $request->range_max[$i];
-                $angkutanD2->h_pusat = $request->h_pusat[$i];
-                $angkutanD2->h_final = $request->h_final[$i];
-                $angkutanD2->save();
+                $countHarsat += $request->count_harsat[$i];
+
+                for($j; $j < $countHarsat; $j++){
+                    $pricelistAngkutanD2 = new PricelistAngkutanD2();
+                    $pricelistAngkutanD2->pad_id = $pricelistAngkutanD->id;
+                    $pricelistAngkutanD2->range_min = $request->range_min[$j];
+                    $pricelistAngkutanD2->range_max = $request->range_max[$j];
+                    $pricelistAngkutanD2->h_pusat = $request->h_pusat[$j];
+                    $pricelistAngkutanD2->h_final = $request->h_final[$j];
+                    $pricelistAngkutanD2->save();
+                }
             }
 
             DB::commit();
 
             $flasher->addSuccess('Data has been saved successfully!');
         } catch(Exception $e) {
-            dd($e);
             DB::rollback();
 
             $flasher->addError($e->getMessage());

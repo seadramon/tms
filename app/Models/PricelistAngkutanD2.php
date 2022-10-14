@@ -9,4 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PricelistAngkutanD2 extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $table = 'tms_pricelist_angkutan_d2';
 }
