@@ -89,7 +89,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		// Route::get('/data', [PricelistAngkutanController::class, 'data'])->name('data');
 
 	    Route::resource('/',  PricelistAngkutanController::class)->except([
-			'show', 'destroy'
+			'destroy'
 		])->parameters(['' => 'sptb']);
 
 		Route::post('/get-lokasi-pemuatan', [PricelistAngkutanController::class, 'getLokasiPemuatan'])->name('get-lokasi-pemuatan');

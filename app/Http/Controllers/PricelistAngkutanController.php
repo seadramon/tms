@@ -37,7 +37,7 @@ class PricelistAngkutanController extends Controller
         
         $kd_material = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
-            ->pluck('name', 'kd_jmaterial')
+            ->pluck('name', 'kd_material')
             ->toArray();
         
         $jenis_muat =  [
@@ -58,7 +58,8 @@ class PricelistAngkutanController extends Controller
         $data = match ($request->jenis_muat) {
             'unit'      => Pat::get()->pluck('ket', 'kd_pat'),
             'vendor'    => Vendor::get()->pluck('nama', 'vendor_id'),
-            'site'      => Npp::get()->pluck('nama_proyek', 'no_npp')
+            'site'      => Npp::get()->pluck('nama_proyek', 'no_npp'),
+            default     => Pat::get()->pluck('ket', 'kd_pat')
         };
         
         return $data->toArray();
@@ -126,6 +127,136 @@ class PricelistAngkutanController extends Controller
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
 
-        return redirect()->route('pricelist-angkutan.create');
+        return redirect()->route('pricelist-angkutan.index');
+    }
+
+    public function edit($id)
+    {
+        $data = PricelistAngkutanH::find($id);
+
+        $kd_pat = Pat::get()
+            ->pluck('ket', 'kd_pat')
+            ->toArray();
+
+        $min_tahun = (int) date('Y', strtotime(date('Y') . " -5 year"));
+        $max_tahun = (int) date('Y', strtotime(date('Y') . " +5 year"));
+        
+        $tahun = [];
+        
+        for ($i=$min_tahun; $i < $max_tahun; $i++) { 
+            $tahun[$i] = $i;
+        }
+        
+        $kd_material = TrMaterial::where('kd_jmaterial', 'T')
+            ->get()
+            ->pluck('name', 'kd_material')
+            ->toArray();
+        
+        $jenis_muat =  [
+            "unit" => "UnitKerja", 
+            "vendor" => "Vendor Material", 
+            "site" => "Site"
+        ];
+        
+        $jenis_muat = ["" => "Pilih Jenis Pemuatan"] + $jenis_muat;
+
+        return view('pages.pricelist-angkutan.edit', compact(
+            'data', 'kd_pat', 'tahun', 'kd_material', 'jenis_muat'
+        ));
+    }
+
+    public function update(Request $request, FlasherInterface $flasher, $id)
+    {
+        try {
+            DB::beginTransaction();
+                        
+            Validator::make($request->all(), [
+                'kd_pat'        => 'required'
+            ])->validate();
+
+            $pricelistAngkutanH = PricelistAngkutanH::find($id);
+            $pricelistAngkutanH->kd_pat = $request->kd_pat;
+            $pricelistAngkutanH->tahun = $request->tahun;
+            $pricelistAngkutanH->save();
+
+            $j=0;
+            $countHarsat = 0;
+
+            foreach ($pricelistAngkutanH->pad as $pad) {
+                $pad->pad2()->delete();
+            }
+
+            $pricelistAngkutanH->pad()->delete();
+            
+            for($i=0; $i < count($request->kd_material); $i++){
+                $pricelistAngkutanD = new PricelistAngkutanD();
+                $pricelistAngkutanD->pah_id = $pricelistAngkutanH->id;
+                $pricelistAngkutanD->kd_material = $request->kd_material[$i];
+                $pricelistAngkutanD->jenis_muat = $request->jenis_muat[$i];
+                $pricelistAngkutanD->kd_muat = $request->kd_muat[$i];
+                $pricelistAngkutanD->tgl_mulai = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_mulai[$i]))."'), 'YYYY-MM-DD')");
+                $pricelistAngkutanD->tgl_selesai = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_selesai[$i]))."'), 'YYYY-MM-DD')");
+                $pricelistAngkutanD->save();
+
+                $countHarsat += $request->count_harsat[$i];
+
+                for($j; $j < $countHarsat; $j++){
+                    $pricelistAngkutanD2 = new PricelistAngkutanD2();
+                    $pricelistAngkutanD2->pad_id = $pricelistAngkutanD->id;
+                    $pricelistAngkutanD2->range_min = $request->range_min[$j];
+                    $pricelistAngkutanD2->range_max = $request->range_max[$j];
+                    $pricelistAngkutanD2->h_pusat = $request->h_pusat[$j];
+                    $pricelistAngkutanD2->h_final = $request->h_final[$j];
+                    $pricelistAngkutanD2->save();
+                }
+            }
+
+            DB::commit();
+
+            $flasher->addSuccess('Data has been saved successfully!');
+        } catch(Exception $e) {
+            dd($e);
+            DB::rollback();
+
+            $flasher->addError($e->getMessage());
+
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
+
+        return redirect()->route('pricelist-angkutan.index');
+    }
+
+    public function show($id){
+        $data = PricelistAngkutanH::find($id);
+
+        $kd_pat = Pat::get()
+            ->pluck('ket', 'kd_pat')
+            ->toArray();
+
+        $min_tahun = (int) date('Y', strtotime(date('Y') . " -5 year"));
+        $max_tahun = (int) date('Y', strtotime(date('Y') . " +5 year"));
+        
+        $tahun = [];
+        
+        for ($i=$min_tahun; $i < $max_tahun; $i++) { 
+            $tahun[$i] = $i;
+        }
+        
+        $kd_material = TrMaterial::where('kd_jmaterial', 'T')
+            ->get()
+            ->pluck('name', 'kd_material')
+            ->toArray();
+        
+        $jenis_muat =  [
+            "unit" => "UnitKerja", 
+            "vendor" => "Vendor Material", 
+            "site" => "Site"
+        ];
+        
+        $jenis_muat = ["" => "Pilih Jenis Pemuatan"] + $jenis_muat;
+
+        return view('pages.pricelist-angkutan.show', compact(
+            'data', 'kd_pat', 'tahun', 'kd_material', 'jenis_muat'
+        ));
     }
 }

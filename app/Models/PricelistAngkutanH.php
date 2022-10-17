@@ -19,6 +19,6 @@ class PricelistAngkutanH extends Model
 
     public function pad()
     {
-    	return $this->hasMany(AngkutanD::class, 'pah_id', 'id');
+    	return $this->hasMany(PricelistAngkutanD::class, 'pah_id', 'id')->orderBy('id');
     }
 }
