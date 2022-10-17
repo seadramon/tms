@@ -75,13 +75,13 @@ class SptbController extends Controller
 
         $volume = [];
 
-        $spmH->spmd->map(function ($spmd) use (&$volume, $spmH) {
-            $sppbD = SppbD::where('no_sppb', $spmH->no_sppb)
-                ->where('kd_produk', $spmd->kd_produk)
-                ->first();
+        // $spmH->spmd->map(function ($spmd) use (&$volume, $spmH) {
+        //     $sppbD = SppbD::where('no_sppb', $spmH->no_sppb)
+        //         ->where('kd_produk', $spmd->kd_produk)
+        //         ->first();
             
-            return $volume[] = $sppbD->segmental == 1 ? ($spmd->vol / $sppbD->jml_segmen) : $spmd->vol;
-        });
+        //     return $volume[] = $sppbD->segmental == 1 ? ($spmd->vol / $sppbD->jml_segmen) : $spmd->vol;
+        // });
 
         return [
             'volume' => $volume,

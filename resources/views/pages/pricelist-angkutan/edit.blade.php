@@ -43,10 +43,15 @@
                             {!! Form::select('tahun', $tahun, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'tahun']) !!}
                         </div>
 
-                        <div class="form-group col-lg-3">
+                        <div class="form-group col-lg-6">
                             <a href="{{ asset('template/pricelist.xlsx') }}" class="btn btn-success">
                                 Download Template Price List
                             </a>
+                        </div>
+                        <div class="form-group col-lg-6" style="text-align: right">
+                            <button type="button" class="btn btn-light-primary btn_tambah">
+                                <i class="la la-plus"></i>Tambah Detail
+                            </button>
                         </div>
                     </div>
 
@@ -55,7 +60,8 @@
 
                     <div id="container_pricelist_angkutan">
                         @foreach ($data->pad as $key => $pad)
-                            <div id="box_1" class="box" data-id="{{ $key }}">
+                            <div id="box_{{ $key }}" class="box" data-id="{{ $key }}">
+                                <div class="separator separator-dashed border-primary my-10"></div>
                                 <div class="row mb-5">
                                     <div class="form-group col-lg-6">
                                         <label class="form-label">Jenis Angkutan</label>
@@ -113,6 +119,11 @@
                                             Upload Excel
                                         </button>
                                     </div>
+                                    <div class="form-group col-lg-6" style="text-align: right;">
+                                        <button type="button" class="btn btn-light-danger btn_hapus mt-8" id="btn_hapus_1" data-id="1">
+                                            <i class="la la-trash"></i>Hapus
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div id="container_harsat_{{ $key }}" data-id="{{ $key }}">
@@ -143,26 +154,17 @@
                                                         <input type="hidden" name="range_max[]" value="{{ $pad2->range_max }}">
                                                     </td>
                                                     <td>
-                                                        {{ $pad2->h_pusat }}
+                                                        {{ number_format($pad2->h_pusat) }}
                                                         <input type="hidden" name="h_pusat[]" value="{{ $pad2->h_pusat }}">
                                                     </td>
                                                     <td>
-                                                        {{ $pad2->h_final }}
+                                                        {{ number_format($pad2->h_final) }}
                                                         <input type="hidden" name="h_final[]" value="{{ $pad2->h_final }}">
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
-                                </div>
-                            
-                                <div class="btn-add-delete">
-                                    <button type="button" class="btn btn-light-danger btn_hapus" id="btn_hapus_{{ $key }}" data-id="{{ $key }}">
-                                        <i class="la la-trash"></i>Hapus
-                                    </button>
-                                    <button type="button" class="btn btn-light-primary btn_tambah" id="btn_tambah_{{ $key }}" data-id="{{ $key }}">
-                                        <i class="la la-plus"></i>Tambah
-                                    </button>
                                 </div>
                             </div> 
                         @endforeach
@@ -327,7 +329,7 @@
         let dataId = $(this).data('id');
         
         var newIndex = parseInt($('.box:last').data('id')) + 1;
-
+        console.log(newIndex);
         // find box to copy
         var box = document.getElementById('box_to_clone');
 
@@ -346,8 +348,8 @@
         clone.getElementsByTagName('input')[2].id = 'file_excel_' + newIndex;
         clone.getElementsByTagName('button')[0].id = 'upload_excel_' + newIndex;
         clone.getElementsByTagName('button')[1].id = 'btn_hapus_' + newIndex;
-        clone.getElementsByTagName('button')[2].id = 'btn_tambah_' + newIndex;
-        clone.getElementsByTagName('div')[14].id = 'container_harsat_' + newIndex;
+        // clone.getElementsByTagName('button')[2].id = 'btn_tambah_' + newIndex;
+        clone.getElementsByTagName('div')[16].id = 'container_harsat_' + newIndex;
 
         // add new box to end of div
         $('#container_pricelist_angkutan').append(clone);
@@ -362,7 +364,7 @@
         $('#file_excel_' + newIndex).attr('data-id', newIndex);
         $('#upload_excel_' + newIndex).attr('data-id', newIndex);
         $('#btn_hapus_' + newIndex).attr('data-id', newIndex);
-        $('#btn_tambah_' + newIndex).attr('data-id', newIndex);
+        // $('#btn_tambah_' + newIndex).attr('data-id', newIndex);
         $('#container_harsat_' + newIndex).attr('data-id', newIndex);
 
         //Set Required

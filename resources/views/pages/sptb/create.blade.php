@@ -268,7 +268,7 @@
                 $('#container-produk').html('');
 
                 for(i=0; i<result.spm.spmd?.length; i++){
-                    var volume = result.volume[i];
+                    var volume = result.spm.spmd[i].vol;
                     
                     $('#container-produk').append(`
                         <div class="form-group col-lg-6">

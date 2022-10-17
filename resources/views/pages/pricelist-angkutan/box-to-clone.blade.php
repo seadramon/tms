@@ -1,4 +1,5 @@
 <div id="box_to_clone" class="box" style="display: none;">
+    <div class="separator separator-dashed border-primary my-10"></div>
     <div class="row mb-5">
         <div class="form-group col-lg-6">
             <label class="form-label">Jenis Angkutan</label>
@@ -47,7 +48,7 @@
 
         <div class="form-group col-lg-4">
             <label class="form-label">Upload File Excel (Harga Satuan)</label>
-            {!! Form::file('file_excel[]', ['class'=>'form-control', 'disabled']) !!}
+            {!! Form::file('file_excel[]', ['class'=>'form-control', 'disabled', "accept" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]) !!}
         </div>
 
         <div class="form-group col-lg-2">
@@ -56,18 +57,13 @@
                 Upload Excel
             </button>
         </div>
+        <div class="form-group col-lg-6" style="text-align: right;">
+            <button type="button" class="btn btn-light-danger btn_hapus mt-8" id="btn_hapus_1" data-id="1">
+                <i class="la la-trash"></i>Hapus
+            </button>
+        </div>
     </div>
-
-    <div>
-        
-    </div>
-
-    <div class="btn-add-delete">
-        <button type="button" class="btn btn-light-danger btn_hapus">
-            <i class="la la-trash"></i>Hapus
-        </button>
-        <button type="button" class="btn btn-light-primary btn_tambah">
-            <i class="la la-plus"></i>Tambah
-        </button>
+    <div id="container_harsat" data-id="">
+                                
     </div>
 </div>

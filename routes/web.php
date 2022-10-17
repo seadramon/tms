@@ -86,7 +86,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	});
 
 	Route::group(['prefix' => '/pricelist-angkutan', 'as' => 'pricelist-angkutan.'], function(){
-		// Route::get('/data', [PricelistAngkutanController::class, 'data'])->name('data');
+		Route::get('/data', [PricelistAngkutanController::class, 'data'])->name('data');
 
 	    Route::resource('/',  PricelistAngkutanController::class)->except([
 			'destroy'

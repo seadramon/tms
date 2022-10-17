@@ -50,6 +50,7 @@
                     <div id="container_pricelist_angkutan">
                         @foreach ($data->pad as $key => $pad)
                             <div id="box_1" class="box" data-id="{{ $key }}">
+                                <div class="separator separator-dashed border-primary my-10"></div>
                                 <div class="row mb-5">
                                     <div class="form-group col-lg-6">
                                         <label class="form-label">Jenis Angkutan</label>

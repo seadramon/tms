@@ -43,10 +43,15 @@
                             {!! Form::select('tahun', $tahun, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'tahun']) !!}
                         </div>
 
-                        <div class="form-group col-lg-3">
+                        <div class="form-group col-lg-6">
                             <a href="{{ asset('template/pricelist.xlsx') }}" class="btn btn-success">
                                 Download Template Price List
                             </a>
+                        </div>
+                        <div class="form-group col-lg-6" style="text-align: right">
+                            <button type="button" class="btn btn-light-primary btn_tambah">
+                                <i class="la la-plus"></i>Tambah Detail
+                            </button>
                         </div>
                     </div>
 
@@ -55,6 +60,7 @@
 
                     <div id="container_pricelist_angkutan">
                         <div id="box_1" class="box" data-id="1">
+                            <div class="separator separator-dashed border-primary my-10"></div>
                             <div class="row mb-5">
                                 <div class="form-group col-lg-6">
                                     <label class="form-label">Jenis Angkutan</label>
@@ -103,7 +109,7 @@
 
                                 <div class="form-group col-lg-4">
                                     <label class="form-label">Upload File Excel (Harga Satuan)</label>
-                                    {!! Form::file('file_excel[]', ['class'=>'form-control', 'id'=>'file_excel_1', 'data-id'=>'1']) !!}
+                                    {!! Form::file('file_excel[]', ['class'=>'form-control', 'id'=>'file_excel_1', 'data-id'=>'1', "accept" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]) !!}
                                 </div>
         
                                 <div class="form-group col-lg-2">
@@ -112,19 +118,15 @@
                                         Upload Excel
                                     </button>
                                 </div>
+                                <div class="form-group col-lg-6" style="text-align: right;">
+                                    <button type="button" class="btn btn-light-danger btn_hapus mt-8" id="btn_hapus_1" data-id="1">
+                                        <i class="la la-trash"></i>Hapus
+                                    </button>
+                                </div>
                             </div>
 
                             <div id="container_harsat_1" data-id="1">
                                 
-                            </div>
-                        
-                            <div class="btn-add-delete">
-                                <button type="button" class="btn btn-light-danger btn_hapus" id="btn_hapus_1" data-id="1">
-                                    <i class="la la-trash"></i>Hapus
-                                </button>
-                                <button type="button" class="btn btn-light-primary btn_tambah" id="btn_tambah_1" data-id="1">
-                                    <i class="la la-plus"></i>Tambah
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -294,8 +296,8 @@
         clone.getElementsByTagName('input')[2].id = 'file_excel_' + newIndex;
         clone.getElementsByTagName('button')[0].id = 'upload_excel_' + newIndex;
         clone.getElementsByTagName('button')[1].id = 'btn_hapus_' + newIndex;
-        clone.getElementsByTagName('button')[2].id = 'btn_tambah_' + newIndex;
-        clone.getElementsByTagName('div')[14].id = 'container_harsat_' + newIndex;
+        // clone.getElementsByTagName('button')[2].id = 'btn_tambah_' + newIndex;
+        clone.getElementsByTagName('div')[16].id = 'container_harsat_' + newIndex;
 
         // add new box to end of div
         $('#container_pricelist_angkutan').append(clone);
@@ -310,7 +312,7 @@
         $('#file_excel_' + newIndex).attr('data-id', newIndex);
         $('#upload_excel_' + newIndex).attr('data-id', newIndex);
         $('#btn_hapus_' + newIndex).attr('data-id', newIndex);
-        $('#btn_tambah_' + newIndex).attr('data-id', newIndex);
+        // $('#btn_tambah_' + newIndex).attr('data-id', newIndex);
         $('#container_harsat_' + newIndex).attr('data-id', newIndex);
 
         //Set Required

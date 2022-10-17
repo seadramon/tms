@@ -25,11 +25,11 @@
                     <input type="hidden" name="range_max[]" value="{{ $data['range_max'] }}">
                 </td>
                 <td>
-                    {{ $data['h_pusat'] }}
+                    {{ number_format($data['h_pusat']) }}
                     <input type="hidden" name="h_pusat[]" value="{{ $data['h_pusat'] }}">
                 </td>
                 <td>
-                    {{ $data['h_final'] }}
+                    {{ number_format($data['h_final']) }}
                     <input type="hidden" name="h_final[]" value="{{ $data['h_final'] }}">
                 </td>
             </tr>

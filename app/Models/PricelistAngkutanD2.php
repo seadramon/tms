@@ -11,4 +11,5 @@ class PricelistAngkutanD2 extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tms_pricelist_angkutan_d2';
+    protected $guarded = [];
 }

@@ -20,6 +20,41 @@ use Exception;
 
 class PricelistAngkutanController extends Controller
 {   
+    public function index()
+    {
+        return view('pages.pricelist-angkutan.index');
+    }
+
+    public function data()
+    {
+        $query = PricelistAngkutanH::with(['pad' => function($sql) { $sql->with('angkutan'); }, 'pat'])->select('*');
+
+        return DataTables::eloquent($query)
+            ->addColumn('angkutan', function ($model) {
+                $item = $model->pad->map(function($d){ return $d->angkutan->name; });
+                return implode("<br>", $item->all());
+            })
+            ->addColumn('pemuatan', function ($model) {
+                $item = $model->pad->map(function($d){ return $d->unit_muat; });
+                return implode("<br>", $item->all());
+            })
+            ->addColumn('menu', function ($model) {
+                $edit = '<div class="btn-group">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Action
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="' . route('pricelist-angkutan.show', str_replace('/', '|', $model->id)) . '">View</a></li>
+                            <li><a class="dropdown-item" href="' . route('pricelist-angkutan.edit', str_replace('/', '|', $model->id)) . '">Edit</a></li>
+                        </ul>
+                        </div>';
+
+                return $edit;
+            })
+            ->rawColumns(['menu', 'pemuatan', 'angkutan'])
+            ->toJson();
+    }
+
     public function create()
     {
         $kd_pat = Pat::get()
@@ -99,8 +134,8 @@ class PricelistAngkutanController extends Controller
                 $pricelistAngkutanD->kd_material = $request->kd_material[$i];
                 $pricelistAngkutanD->jenis_muat = $request->jenis_muat[$i];
                 $pricelistAngkutanD->kd_muat = $request->kd_muat[$i];
-                $pricelistAngkutanD->tgl_mulai = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_mulai[$i]))."'), 'YYYY-MM-DD')");
-                $pricelistAngkutanD->tgl_selesai = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_selesai[$i]))."'), 'YYYY-MM-DD')");
+                $pricelistAngkutanD->tgl_mulai = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->tgl_mulai[$i]))."', 'YYYY-MM-DD')");
+                $pricelistAngkutanD->tgl_selesai = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->tgl_selesai[$i]))."', 'YYYY-MM-DD')");
                 $pricelistAngkutanD->save();
 
                 $countHarsat += $request->count_harsat[$i];
@@ -182,29 +217,38 @@ class PricelistAngkutanController extends Controller
             $j=0;
             $countHarsat = 0;
 
-            foreach ($pricelistAngkutanH->pad as $pad) {
-                $pad->pad2()->delete();
-            }
+            // foreach ($pricelistAngkutanH->pad as $pad) {
+            //     $pad->pad2()->delete();
+            // }
 
+            $pricelistAngkutanH->pad->each(function($d){ $d->pad2()->delete(); });
             $pricelistAngkutanH->pad()->delete();
             
             for($i=0; $i < count($request->kd_material); $i++){
-                $pricelistAngkutanD = new PricelistAngkutanD();
-                $pricelistAngkutanD->pah_id = $pricelistAngkutanH->id;
-                $pricelistAngkutanD->kd_material = $request->kd_material[$i];
-                $pricelistAngkutanD->jenis_muat = $request->jenis_muat[$i];
-                $pricelistAngkutanD->kd_muat = $request->kd_muat[$i];
-                $pricelistAngkutanD->tgl_mulai = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_mulai[$i]))."'), 'YYYY-MM-DD')");
-                $pricelistAngkutanD->tgl_selesai = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_selesai[$i]))."'), 'YYYY-MM-DD')");
+                $pricelistAngkutanD = PricelistAngkutanD::withTrashed()->firstOrNew([
+                    'pah_id'      => $pricelistAngkutanH->id,
+                    'kd_material' => $request->kd_material[$i],
+                    'jenis_muat'  => $request->jenis_muat[$i],
+                    'kd_muat'     => $request->kd_muat[$i]
+                ]);
+                if($pricelistAngkutanD->id){
+                    $pricelistAngkutanD->restore();
+                }
+                $pricelistAngkutanD->tgl_mulai = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->tgl_mulai[$i]))."', 'YYYY-MM-DD')");
+                $pricelistAngkutanD->tgl_selesai = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->tgl_selesai[$i]))."', 'YYYY-MM-DD')");
                 $pricelistAngkutanD->save();
 
                 $countHarsat += $request->count_harsat[$i];
 
                 for($j; $j < $countHarsat; $j++){
-                    $pricelistAngkutanD2 = new PricelistAngkutanD2();
-                    $pricelistAngkutanD2->pad_id = $pricelistAngkutanD->id;
-                    $pricelistAngkutanD2->range_min = $request->range_min[$j];
-                    $pricelistAngkutanD2->range_max = $request->range_max[$j];
+                    $pricelistAngkutanD2 = PricelistAngkutanD2::withTrashed()->firstOrNew([
+                        'pad_id' => $pricelistAngkutanD->id,
+                        'range_min'  => $request->range_min[$j],
+                        'range_max'  => $request->range_max[$j]
+                    ]);
+                    if($pricelistAngkutanD2->id){
+                        $pricelistAngkutanD2->restore();
+                    }
                     $pricelistAngkutanD2->h_pusat = $request->h_pusat[$j];
                     $pricelistAngkutanD2->h_final = $request->h_final[$j];
                     $pricelistAngkutanD2->save();
@@ -215,7 +259,7 @@ class PricelistAngkutanController extends Controller
 
             $flasher->addSuccess('Data has been saved successfully!');
         } catch(Exception $e) {
-            dd($e);
+            // dd($e);
             DB::rollback();
 
             $flasher->addError($e->getMessage());

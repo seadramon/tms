@@ -345,11 +345,11 @@
 								<!--end:Menu item-->
 
 								<!--begin:Menu item-->
-								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+								<div class="menu-item">
 									<!--begin:Menu link-->
-									<span class="menu-link">
+									<a class="menu-link" href="{{ route('pricelist-angkutan.index') }}">
 										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/communication/com005.svg-->
+											<!--begin::Svg Icon | path: icons/duotune/abstract/abs014.svg-->
 											<span class="svg-icon svg-icon-2">
 												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 													<path d="M20 14H18V10H20C20.6 10 21 10.4 21 11V13C21 13.6 20.6 14 20 14ZM21 19V17C21 16.4 20.6 16 20 16H18V20H20C20.6 20 21 19.6 21 19ZM21 7V5C21 4.4 20.6 4 20 4H18V8H20C20.6 8 21 7.6 21 7Z" fill="currentColor" />
@@ -359,39 +359,8 @@
 											<!--end::Svg Icon-->
 										</span>
 										<span class="menu-title">Price List Angkutan</span>
-										<span class="menu-arrow"></span>
-									</span>
+									</a>
 									<!--end:Menu link-->
-									<!--begin:Menu sub-->
-									{{-- <div class="menu-sub menu-sub-accordion">
-										<!--begin:Menu item-->
-										<div class="menu-item">
-											<!--begin:Menu link-->
-											<a class="menu-link" href="{{ route('pricelist-angkutan.index') }}">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Data</span>
-											</a>
-											<!--end:Menu link-->
-										</div>
-										<!--end:Menu item-->
-									</div> --}}
-									<div class="menu-sub menu-sub-accordion">
-										<!--begin:Menu item-->
-										<div class="menu-item">
-											<!--begin:Menu link-->
-											<a class="menu-link" href="{{ route('pricelist-angkutan.create') }}">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Tambah</span>
-											</a>
-											<!--end:Menu link-->
-										</div>
-										<!--end:Menu item-->
-									</div>
-									<!--end:Menu sub-->
 								</div>
 								<!--end:Menu item-->
 
