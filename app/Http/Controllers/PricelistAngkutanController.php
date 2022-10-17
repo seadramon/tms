@@ -37,7 +37,7 @@ class PricelistAngkutanController extends Controller
         
         $kd_material = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
-            ->pluck('name', 'kd_jmaterial')
+            ->pluck('name', 'kd_material')
             ->toArray();
         
         $jenis_muat =  [
@@ -149,7 +149,7 @@ class PricelistAngkutanController extends Controller
         
         $kd_material = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
-            ->pluck('name', 'kd_jmaterial')
+            ->pluck('name', 'kd_material')
             ->toArray();
         
         $jenis_muat =  [
@@ -244,7 +244,7 @@ class PricelistAngkutanController extends Controller
         
         $kd_material = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
-            ->pluck('name', 'kd_jmaterial')
+            ->pluck('name', 'kd_material')
             ->toArray();
         
         $jenis_muat =  [
