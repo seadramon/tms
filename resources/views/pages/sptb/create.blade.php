@@ -250,31 +250,33 @@
                 blockUI.release();
             },
             success: function(result) {
-                $('#jns_sptb').val(result.jns_spm).trigger('change');
-                $('#nama_pelanggan').val(result.sppbh?.npp?.nama_pelanggan);
+                $('#jns_sptb').val(result.spm.jns_spm).trigger('change');
+                $('#nama_pelanggan').val(result.spm.sppbh?.npp?.nama_pelanggan);
 
-                if(typeof result.sppbh?.npp?.infoPasar?.region?.kabupaten_name !== typeof undefined){
-                    $('#tujuan').val(result.sppbh?.npp?.infoPasar?.region?.kabupaten_name + ', ' + result.sppbh?.npp?.infoPasar?.region?.kecamatan_name);
+                if(typeof result.spm.sppbh?.npp?.infoPasar?.region?.kabupaten_name !== typeof undefined){
+                    $('#tujuan').val(result.spm.sppbh?.npp?.infoPasar?.region?.kabupaten_name + ', ' + result.spm.sppbh?.npp?.infoPasar?.region?.kecamatan_name);
                 }
                 
-                $('#nama_proyek').val(result.sppbh?.npp?.nama_proyek);
-                $('#angkutan').val(result.vendor?.nama);
-                $('#no_pol').val(result.no_pol);
-                $('#dari_pabrik').val(result.pat?.ket);
-                $('#nama_driver').val(result.app2_name);
-                $('#no_hp_driver').val(result.app2_hp);
-                $('#jarak_km').val(result.jarak_km);
+                $('#nama_proyek').val(result.spm.sppbh?.npp?.nama_proyek);
+                $('#angkutan').val(result.spm.vendor?.nama);
+                $('#no_pol').val(result.spm.no_pol);
+                $('#dari_pabrik').val(result.spm.pat?.ket);
+                $('#nama_driver').val(result.spm.app2_name);
+                $('#no_hp_driver').val(result.spm.app2_hp);
+                $('#jarak_km').val(result.spm.jarak_km);
                 
                 $('#container-produk').html('');
 
-                for(i=0; i<result.spmd?.length; i++){
+                for(i=0; i<result.spm.spmd?.length; i++){
+                    var volume = result.volume[i];
+                    
                     $('#container-produk').append(`
                         <div class="form-group col-lg-6">
-                            <input type="text" class="form-control" value="` + result.spmd[i].kd_produk + ' - ' + result.spmd[i].ket + `" readonly style="background-color: var(--kt-input-disabled-bg);">
-                            <input type="hidden" name="kd_produk[]" class="form-control" value="` + result.spmd[i].kd_produk + `">
+                            <input type="text" class="form-control" value="` + result.spm.spmd[i].kd_produk + ' - ' + result.spm.spmd[i].ket + `" readonly style="background-color: var(--kt-input-disabled-bg);">
+                            <input type="hidden" name="kd_produk[]" class="form-control" value="` + result.spm.spmd[i].kd_produk + `">
                         </div>
                         <div class="form-group col-lg-3">
-                            <input type="text" name="vol[]" class="form-control" value="` + result.spmd[i].vol + `" readonly style="background-color: var(--kt-input-disabled-bg);">
+                            <input type="text" name="vol[]" class="form-control" value="` + volume + `" readonly style="background-color: var(--kt-input-disabled-bg);">
                         </div>
                         <div class="form-group col-lg-3">
                             <div class="input-group date">
@@ -288,14 +290,14 @@
                         </div>
                     `);
 
-                    if(result.spmd[i].vol > 0){
+                    if(volume > 0){
                         $('#container-produk').append(`
                             <label class="form-label col-lg-6">Tanggal Produksi</label>
                             <label class="form-label col-lg-6">No. Produk</label>
                         `);
                     }
 
-                    for(j=0; j<result.spmd[i].vol; j++){
+                    for(j=0; j<volume; j++){
                         $('#container-produk').append(`
                             <div class="form-group col-lg-6">
                                 <div class="input-group date">

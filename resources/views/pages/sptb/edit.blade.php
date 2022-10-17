@@ -54,7 +54,7 @@
 
                         <div class="form-group col-lg-6">
                             <label class="form-label">Jenis SPTB</label>
-                            {!! Form::text('jns_sptb', $jns_sptb[$data->jns_sptb], ['class'=>'form-control', 'id'=>'jns_sptb', 'readonly']) !!}
+                            {!! Form::text('jns_sptb', $jns_sptb[$data->jns_sptb] ?? null, ['class'=>'form-control', 'id'=>'jns_sptb', 'readonly']) !!}
                         </div>
 
                         <div class="form-group col-lg-3">
