@@ -9,4 +9,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PricelistAngkutanH extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $table = 'tms_pricelist_angkutan_h';
+
+    public function pat()
+    {
+    	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
+    }
+
+    public function pad()
+    {
+    	return $this->hasMany(AngkutanD::class, 'pah_id', 'id');
+    }
 }

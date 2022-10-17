@@ -13,6 +13,7 @@ use App\Http\Controllers\KalenderPengirimanController;
 use App\Http\Controllers\MasterDriverController;
 use App\Http\Controllers\MasterArmadaController;
 use App\Http\Controllers\PdaController;
+use App\Http\Controllers\PricelistAngkutanController;
 use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaController;
 use App\Http\Controllers\LoginVendorController;
 use App\Http\Middleware\EnsureSessionIsValid;
@@ -82,6 +83,17 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    ])->parameters(['' => 'sptb']);
 
 		Route::post('/get-spm', [SptbController::class, 'getSpm'])->name('get-spm');
+	});
+
+	Route::group(['prefix' => '/pricelist-angkutan', 'as' => 'pricelist-angkutan.'], function(){
+		// Route::get('/data', [PricelistAngkutanController::class, 'data'])->name('data');
+
+	    Route::resource('/',  PricelistAngkutanController::class)->except([
+			'show', 'destroy'
+		])->parameters(['' => 'sptb']);
+
+		Route::post('/get-lokasi-pemuatan', [PricelistAngkutanController::class, 'getLokasiPemuatan'])->name('get-lokasi-pemuatan');
+		Route::post('/upload-excel', [PricelistAngkutanController::class, 'uploadExcel'])->name('upload-excel');
 	});
 
 	Route::group(['prefix' => '/master-driver', 'as' => 'master-driver.'], function(){
