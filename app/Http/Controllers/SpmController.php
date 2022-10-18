@@ -367,7 +367,7 @@ class SpmController extends Controller
         $no_spprb = SpprbH::with('pat')->where('no_npp',$data_->no_npp)->first();
         $pelanggan = Npp::select('nama_pelanggan','nama_proyek')->where('no_npp',$data_->no_npp)->first();
         $vendor_angkutan = Vendor::where('vendor_id',$data->vendor_id)->first();
-        $tujuan = Npp::with('infoPasar.region')->first();
+        $tujuan = Npp::with('infoPasar.region')->where('no_npp',$data_->no_npp)->first();
 
         $jarak = Sp3D::where('no_npp',$data_->no_npp)->where('pat_to',$no_spprb->pat->kd_pat)->first();
         if(empty($jarak)){
