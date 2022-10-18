@@ -21,6 +21,16 @@ class SpmH extends Model
     	return $this->hasMany(SpmD::class, 'no_spm', 'no_spm');
     }
 
+    public function sppb()
+    {
+        return $this->belongsTo(SppbH::class, 'no_sppb', 'no_sppb');
+    }
+
+    public function vendornya()
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');
+    }
+
     public function vendor()
     {
     	return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');
@@ -31,13 +41,13 @@ class SpmH extends Model
     	return $this->hasMany(SppbD::class, 'no_sppb', 'no_sppb');
     }
 
-    public function sppb()
+    public function sppbh()
     {
         return $this->belongsTo(SppbH::class, 'no_sppb', 'no_sppb');
     }
 
-    public function vendornya()
+    public function pat()
     {
-        return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');
+    	return $this->belongsTo(Pat::class, 'pat_to', 'kd_pat');
     }
 }

@@ -121,6 +121,7 @@
                         </td>
                         <td class="text-center" width="15%">
                             <input type="number"
+                                    name="volume_produk_select[]"
                                     segmen="{{ $row->segmen }}"
                                     sppb="{{ $row->vol_sppb }}"
                                     spm="{{ $row->spm }}"

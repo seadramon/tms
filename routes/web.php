@@ -7,11 +7,13 @@ use App\Http\Controllers\Sp3Controller;
 use App\Http\Controllers\SpmController;
 use App\Http\Controllers\SppController;
 use App\Http\Controllers\SppApprovalController;
+use App\Http\Controllers\SptbController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KalenderPengirimanController;
 use App\Http\Controllers\MasterDriverController;
 use App\Http\Controllers\MasterArmadaController;
 use App\Http\Controllers\PdaController;
+use App\Http\Controllers\PricelistAngkutanController;
 use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaController;
 use App\Http\Controllers\LoginVendorController;
 use App\Http\Middleware\EnsureSessionIsValid;
@@ -39,9 +41,6 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	Route::group(['prefix' => '/sp3', 'as' => 'sp3.'], function(){
 	    Route::post('/destroy', [Sp3Controller::class, 'destroy'])->name('destroy');
 	    Route::get('/data', [Sp3Controller::class, 'data'])->name('data');
-	    Route::resource('/',  Sp3Controller::class)->except([
-	        'destroy'
-	    ])->parameters(['' => 'sp3']);
 		Route::get('/search-npp', [Sp3Controller::class, 'searchNpp'])->name('search-npp');
 		Route::get('/search-pic', [Sp3Controller::class, 'searchPic'])->name('search-pic');
 		Route::post('/get-data-box2', [Sp3Controller::class, 'getDataBox2'])->name('get-data-box2');
@@ -50,6 +49,9 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('/edit/{no_sp3}', [Sp3Controller::class, 'edit'])->name('edit');
 		Route::get('/amandemen/{no_sp3}', [Sp3Controller::class, 'edit'])->name('amandemen');
 		Route::put('/update/{no_sp3}', [Sp3Controller::class, 'update'])->name('update');
+	    Route::resource('/',  Sp3Controller::class)->except([
+	        'destroy'
+	    ])->parameters(['' => 'sp3']);
 	});
 
 	Route::group(['prefix' => '/spp', 'as' => 'spp.'], function(){
@@ -71,6 +73,27 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	Route::group(['prefix' => '/select2', 'as' => 'select2.'], function(){
 		Route::get('/spprb',	[SppController::class, 'getSpprb'])->name('spprb');
+	});
+
+	Route::group(['prefix' => '/sptb', 'as' => 'sptb.'], function(){
+		Route::get('/data', [SptbController::class, 'data'])->name('data');
+
+	    Route::resource('/',  SptbController::class)->except([
+	        'show', 'destroy'
+	    ])->parameters(['' => 'sptb']);
+
+		Route::post('/get-spm', [SptbController::class, 'getSpm'])->name('get-spm');
+	});
+
+	Route::group(['prefix' => '/pricelist-angkutan', 'as' => 'pricelist-angkutan.'], function(){
+		Route::get('/data', [PricelistAngkutanController::class, 'data'])->name('data');
+
+	    Route::resource('/',  PricelistAngkutanController::class)->except([
+			'destroy'
+		])->parameters(['' => 'sptb']);
+
+		Route::post('/get-lokasi-pemuatan', [PricelistAngkutanController::class, 'getLokasiPemuatan'])->name('get-lokasi-pemuatan');
+		Route::post('/upload-excel', [PricelistAngkutanController::class, 'uploadExcel'])->name('upload-excel');
 	});
 
 	Route::group(['prefix' => '/master-driver', 'as' => 'master-driver.'], function(){
@@ -114,7 +137,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::post('/search-pbbmuat', [SpmController::class, 'getPbbMuat'])->name('getPbbMuat');
 		Route::post('/get-data-box2', [SpmController::class, 'getDataBox2'])->name('get-data-box2');
         Route::post('/get-jml-segmen', [SpmController::class, 'getJmlSegmen'])->name('get-jml-segmen');
-		Route::get('/konfirmasi-vendor', [SpmController::class, 'create_konfirmasi_vendor'])->name('create-konfirmasi-vendor');
+		Route::get('/konfirmasi-vendor/{spm}', [SpmController::class, 'create_konfirmasi_vendor'])->name('create-konfirmasi-vendor');
 		Route::post('/store-konfirmasi-vendor', [SpmController::class, 'store_konfirmasi_vendor'])->name('store-konfirmasi-vendor');
 	});
 
@@ -122,6 +145,9 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('/', [KalenderPengirimanController::class, 'index'])->name('index');
 		Route::get('spm', [KalenderPengirimanController::class, 'spmData'])->name('spm');
 		Route::get('spp', [KalenderPengirimanController::class, 'sppData'])->name('spp');
+
+		Route::get('detail-weekly', [KalenderPengirimanController::class, 'detailWeekly'])->name('detail-weekly');
+		Route::post('detail-weekly-data', [KalenderPengirimanController::class, 'detailWeeklyData'])->name('detail-weekly-data');
 	});
 });
 

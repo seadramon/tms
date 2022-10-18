@@ -39,7 +39,7 @@
                         <tr>
                             <td style="text-align: left">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
                             
-                            <td>{{ nominal($pesananVolBtg) }}</td>
+                            <td>{{ $pesanan->vol_konfirmasi }}</td>
                             <td>{{ nominal($pesananVolTon) }}</td>
                             <td>{{ nominal($sp3dVolBtg) }}</td>
                             <td>{{ nominal($sp3dVolTon) }}</td>
@@ -185,9 +185,14 @@
                 </tr>
             </thead>
         </table>
-        <div class="hover-scroll-overlay-y">
+        <div class="hover-scroll-overlay-y h-400px">
             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
                 <tbody>
+                    @php
+                        $produk = $detailPesanan->mapWithKeys(function($item){
+                            return [$item->produk->kd_produk => $item->produk->tipe];
+                        })->all();
+                    @endphp
                     @include('pages.sp3.row-to-clone')
 
                     @foreach($detailPesanan as $key => $pesanan)
@@ -197,7 +202,7 @@
                             </td>
                             <td style="width: 14%;">
                                 {!! Form::hidden('kd_produk[]', $pesanan->produk?->kd_produk, []) !!}
-                                {!! Form::text('tipe[]', $pesanan->produk?->tipe, ['class'=>'form-control', 'id'=>'tipe_' . $key, 'row-id'=>$key]) !!}
+                                {!! Form::select('tipe[]', $produk, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'tipe_' . $key, 'row-id'=>$key]) !!}
                             </td>
                             <td style="width: 12%;">
                                 {!! Form::text('jarak_pekerjaan[]', $jarak, ['class'=>'form-control jarak_pekerjaan decimal', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key]) !!}

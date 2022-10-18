@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Pat;
 use App\Models\Sp3;
 use App\Models\SpmH;
 use App\Models\SppbH;
+use App\Services\KalenderService;
 use Illuminate\Http\Request;
 
 class KalenderPengirimanController extends Controller
@@ -12,68 +14,52 @@ class KalenderPengirimanController extends Controller
     {
         return view('pages.kalender-pengiriman.index');
     }
-
+	
 	public function spmData(Request $request)
 	{
-		$data = SpmH::whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($request->start)), date('Y-m-d 23:59:59', strtotime($request->end))])
-			->get()
-			->groupBy(function ($item, $key) {
-				return date('Y-m-d', strtotime($item->tgl_spm));
-			})
-			->map(function ($item, $key) {
-				return [
-					'title' => $item->count(),
-					'start' => $key,
-					'extendedProps' => [
-						'withText' => true
-					]
-				];
-			})
-			->values();
+		$data = (new KalenderService($request->start, $request->end))->rekapDailySpm();
 		return response()->json($data);
 	}
-
+	
 	public function sppData(Request $request)
 	{
-		$spp = SppbH::whereBetween('tgl_sppb', [date('Y-m-d 00:00:00', strtotime($request->start)), date('Y-m-d 23:59:59', strtotime($request->end))])
-			->get()
-			->groupBy(function ($item, $key) {
-				return date('Y-m-d', strtotime($item->tgl_sppb));
-			})
-			->map(function ($item, $key) {
-				return [
-					'title' => $item->count(),
-					'start' => $key,
-					'backgroundColor' => '#af96e2',
-					'extendedProps' => [
-						'withText' => false
-					]
-				];
-			});
-			// ->values();
-
-		$sp3 = Sp3::whereBetween('tgl_sp3', [date('Y-m-d 00:00:00', strtotime($request->start)), date('Y-m-d 23:59:59', strtotime($request->end))])
-			->get()
-			->groupBy(function ($item, $key) {
-				return date('Y-m-d', strtotime($item->tgl_sp3));
-			})
-			->map(function ($item, $key) {
-				return [
-					'title' => $item->count(),
-					'start' => $key,
-					'backgroundColor' => '#b6f5f7',
-					'extendedProps' => [
-						'withText' => false
-					]
-				];
-			});
-			// ->values();
-		
-		if($sp3->count() > 0){
-			$data = $sp3->merge($spp->all())->values();
-		}else{
-			$data = $spp->values();
-		}
+		$data = (new KalenderService($request->start, $request->end))->rekapDailySppWithSp3();
 		return response()->json($data);
+	}
+	
+	public function detailWeekly()
+	{
+		$labelSemua = ["" => "Semua"];
+        $pat = Pat::all()->pluck('ket', 'kd_pat')->toArray();
+        $pat = $labelSemua + $pat;
+		
+		$periode = [];
+        for($i=0; $i<10; $i++){
+            $year = date('Y', strtotime(($i-5) . ' years'));
+            $periode[$year] = $year;
+        }
+		$periode_minggu = [];
+        for($i=1; $i<53; $i++){
+            $periode_minggu[$i] = $i;
+        }
+		
+		return view('pages.kalender-pengiriman.detail-weekly', [
+			'pat'     => $pat,
+			'periode' => $periode,
+			'periode_minggu' => $periode_minggu,
+		]);
+	}
+
+	public function detailWeeklyData()
+	{
+		$data = SpmH::with('sppb.npp', 'pat')
+			->whereBetween('tgl_spm', ['2008-06-01 00:00:00', '2008-06-30 23:59:59'])
+			->get()
+			->groupBy(function($item){
+				return $item->sppb->no_npp . '_' . $item->sppb->npp->nama_proyek . '_' . ($item->pat->ket ?? 'Unknown');
+			});
+		return view('pages.kalender-pengiriman.detail-weekly-data', [
+			'data' => $data
+		]);
 	}
 }
