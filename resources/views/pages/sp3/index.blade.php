@@ -143,18 +143,7 @@
 	                {data: 'no_npp', name: 'no_npp', defaultContent: '-'},
 	                {data: 'tgl_sp3', name: 'tgl_sp3', defaultContent: '-'},
 	                {data: 'vendor.nama', name: 'vendor.nama', defaultContent: '-'},
-	                {
-						render: function ( data, type, row ) {
-                            let firstBox = `<i class="fa fa-square" style="color:yellow; font-size:20px;"></i>`
-                            let secondBox = `<i class="fa fa-square" style="color:yellow; font-size:20px;"></i>`
-
-                            if(row.app1 == 1) firstBox = `<i class="fa fa-square" style="color:green; font-size:20px;"></i>`;
-
-							return firstBox + '&nbsp;' + secondBox;
-						},
-                        className: 'text-center',
-						name: 'app1'
-					},
+	                {data: 'approval', name: 'app1', defaultContent: '-'},
 	                {defaultContent: '-'},
 	                {defaultContent: '-'},
 	                {defaultContent: '-'},

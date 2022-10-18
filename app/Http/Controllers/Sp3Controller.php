@@ -73,11 +73,26 @@ class Sp3Controller extends Controller
 
     public function data()
     {
-        $query = Sp3::with('vendor')->select('*');
+        $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
+        $query = Sp3::with('vendor')
+            ->join(DB::raw($joinQuery), function($join) {
+                $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
+            })
+            ->select('sp3_h.no_sp3', 'sp3_h.tgl_sp3', 'sp3_h.app1', 'sp3_h.no_npp', 'sp3_h.vendor_id');
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_sp3', function ($model) {
                     return date('d-m-Y', strtotime($model->tgl_sp3));
+                })
+                ->addColumn('approval', function ($model) {
+                    $teks = '';
+                    if($model->app1 == 1){
+                        $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved 1</span>';
+                    }
+                    if($model->app2 == 1){
+                        $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved 2</span>';
+                    }
+                    return $teks;
                 })
                 ->addColumn('menu', function ($model) {
                     $edit = '<div class="btn-group">
@@ -97,7 +112,7 @@ class Sp3Controller extends Controller
 
                     return $edit;
                 })
-                ->rawColumns(['menu'])
+                ->rawColumns(['menu', 'approval'])
                 ->toJson();
     }
 

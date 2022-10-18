@@ -4,7 +4,7 @@
     </div>
 
     <div class="card-body">
-        <table class="table table-row-bordered text-center">
+        {{-- <table class="table table-row-bordered text-center">
             <thead>
                 <tr>
                     <th rowspan="2" style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
@@ -22,9 +22,26 @@
                     <th>Vol (Ton)</th>
                 </tr>
             </thead>
-        </table>
+        </table> --}}
         <div class="hover-scroll-overlay-y h-400px">
             <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
+                        <th colspan="2">Pesanan</th>
+                        <th colspan="2">Total SP3/SPK Sebelumnya</th>
+                        <th colspan="2">Volume Sisa</th>
+                    </tr>
+                    
+                    <tr>
+                        <th>Vol (Btg)</th>
+                        <th>Vol (Ton)</th>
+                        <th>Vol (Btg)</th>
+                        <th>Vol (Ton)</th>
+                        <th>Vol (Btg)</th>
+                        <th>Vol (Ton)</th>
+                    </tr>
+                </thead>
                 <tbody>
                     @foreach($detailPesanan as $pesanan)
                         @php
@@ -172,7 +189,7 @@
         @endphp
         <br><br>
         <h3>Detail Pekerjaan</h3>
-        <table class="table table-row-bordered text-center">
+        {{-- <table class="table table-row-bordered text-center">
             <thead>
                 <tr>
                     <th style="width: 10%;">Unit</th>
@@ -188,9 +205,24 @@
                     <th style="width: 3%;"></th>
                 </tr>
             </thead>
-        </table>
+        </table> --}}
         <div class="hover-scroll-overlay-y h-400px">
             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Unit</th>
+                        <th style="width: 14%;">Tipe</th>
+                        <th style="width: 12%;">Jarak (KM)</th>
+                        <th style="width: 13%;">Vol (Btg)</th>
+                        <th style="width: 13%;">Vol (Ton)</th>
+                        @if ($sat_harsat != 'ritase')
+                            <th style="width: 10%;">Satuan</th>
+                        @endif
+                        <th style="width: 15%;">Harsat {{ $sat_harsat == 'volume' ? '[Btg/Ton]' : 'Rit' }}</th>
+                        <th style="width: 10%;">Jumlah</th>
+                        <th style="width: 3%;"></th>
+                    </tr>
+                </thead>
                 <tbody>
                     @php
                         $produk = $detailPesanan->mapWithKeys(function($item){
@@ -294,7 +326,7 @@
             <tr>
                 <th style="text-align: right; width: 72%">Total</th>
                 <td style="width: 25%">
-                    {!! Form::text('total', $total, ['class'=>'form-control decimal', 'id'=>'total', 'readonly']) !!}
+                    {!! Form::text('total', number_format($total), ['class'=>'form-control decimal', 'id'=>'total', 'readonly']) !!}
                 </td>
                 <td style="width: 3%"></td>
             </tr>

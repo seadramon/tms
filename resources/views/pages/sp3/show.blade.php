@@ -64,7 +64,7 @@
                     </div>
                 
                     <div class="card-body">
-                        <table class="table table-row-bordered text-center">
+                        {{-- <table class="table table-row-bordered text-center">
                             <thead>
                                 <tr>
                                     <th rowspan="2" style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
@@ -82,9 +82,26 @@
                                     <th>Vol (Ton)</th>
                                 </tr>
                             </thead>
-                        </table>
+                        </table> --}}
                         <div class="hover-scroll-overlay-y h-400px">
                             <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
+                                        <th colspan="2">Pesanan</th>
+                                        <th colspan="2">Total SP3/SPK Sebelumnya</th>
+                                        <th colspan="2">Volume Sisa</th>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <th>Vol (Btg)</th>
+                                        <th>Vol (Ton)</th>
+                                        <th>Vol (Btg)</th>
+                                        <th>Vol (Ton)</th>
+                                        <th>Vol (Btg)</th>
+                                        <th>Vol (Ton)</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     @foreach($detailPesanan as $pesanan)
                                         @php
@@ -97,7 +114,7 @@
                                         @endphp
                                         
                                         <tr>
-                                            <td style="text-align: left">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
+                                            <td style="text-align: left">{{ $pesanan->produk->tipe }} / {{$pesanan->kd_produk_konfirmasi}}</td>
                                             
                                             <td>{{ nominal($pesananVolBtg) }}</td>
                                             <td>{{ nominal($pesananVolTon) }}</td>
@@ -134,7 +151,7 @@
                                 <label class="form-label">Tanggal</label>
                                 <div class="col-lg-12">
                                     <div class="input-group date">
-                                        {!! Form::text('tgl_sp3', null, ['class'=>'form-control', 'id'=>'tgl_sp3', 'readonly']) !!}
+                                        {!! Form::text('tgl_sp3', date('d-m-Y', strtotime($data->tgl_sp3)), ['class'=>'form-control', 'id'=>'tgl_sp3', 'readonly']) !!}
                                         <div class="input-group-append">
                                             <span class="input-group-text" style="display: block">
                                                 <i class="la la-calendar-check-o"></i>
@@ -182,7 +199,7 @@
                                 <label class="form-label">Tanggal Penyerahan</label>
                                 <div class="col-lg-12">
                                     <div class="input-group date">
-                                        {!! Form::text('jadwal1', null, ['class'=>'form-control datepicker', 'id'=>'jadwal1', 'readonly']) !!}
+                                        {!! Form::text('jadwal1', date('d-m-Y', strtotime($data->jadwal1)), ['class'=>'form-control datepicker', 'id'=>'jadwal1', 'readonly']) !!}
                                         <div class="input-group-append">
                                             <span class="input-group-text" style="display: block">
                                                 <i class="la la-calendar-check-o"></i>
@@ -196,7 +213,7 @@
                                 <label class="form-label">&nbsp;</label>
                                 <div class="col-lg-12">
                                     <div class="input-group date">
-                                        {!! Form::text('jadwal2', null, ['class'=>'form-control datepicker', 'id'=>'jadwal2', 'readonly']) !!}
+                                        {!! Form::text('jadwal2', date('d-m-Y', strtotime($data->jadwal2)), ['class'=>'form-control datepicker', 'id'=>'jadwal2', 'readonly']) !!}
                                         <div class="input-group-append">
                                             <span class="input-group-text" style="display: block">
                                                 <i class="la la-calendar-check-o"></i>
@@ -232,7 +249,7 @@
                         @endphp
                         <br><br>
                         <h3>Detail Pekerjaan</h3>
-                        <table class="table table-row-bordered text-center">
+                        {{-- <table class="table table-row-bordered text-center">
                             <thead>
                                 <tr>
                                     <th style="width: 10%;">Unit</th>
@@ -248,9 +265,24 @@
                                     <th style="width: 3%;"></th>
                                 </tr>
                             </thead>
-                        </table>
+                        </table> --}}
                         <div class="hover-scroll-overlay-y">
                             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10%;">Unit</th>
+                                        <th style="width: 14%;">Tipe</th>
+                                        <th style="width: 12%;">Jarak (KM)</th>
+                                        <th style="width: 13%;">Vol (Btg)</th>
+                                        <th style="width: 13%;">Vol (Ton)</th>
+                                        @if ($sat_harsat != 'ritase')
+                                            <th style="width: 10%;">Satuan</th>
+                                        @endif
+                                        <th style="width: 15%;">Harsat {{ $sat_harsat == 'volume' ? '[Btg/Ton]' : 'Rit' }}</th>
+                                        <th style="width: 10%;">Jumlah</th>
+                                        <th style="width: 3%;"></th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     @php
                                         $subtotal = 0;
@@ -272,7 +304,7 @@
                                         @endphp
                 
                                         <tr class="detail_pekerjaan" id="detail_pekerjaan_{{ $key }}" row-id={{ $key }}>
-                                            <td style="width: 10%;">
+                                            <td style="width: 5%;">
                                                 {!! Form::select('unit[]', $unit, $pekerjaan->pat_to, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'unit_' . $key, 'row-id'=>$key, 'disabled']) !!}
                                             </td>
                                             <td style="width: 14%;">
@@ -339,7 +371,7 @@
                             <tr>
                                 <th style="text-align: right; width: 72%">Total</th>
                                 <td style="width: 25%">
-                                    {!! Form::text('total', $total, ['class'=>'form-control decimal', 'id'=>'total', 'readonly']) !!}
+                                    {!! Form::text('total', number_format($total), ['class'=>'form-control decimal', 'id'=>'total', 'readonly']) !!}
                                 </td>
                                 <td style="width: 3%"></td>
                             </tr>

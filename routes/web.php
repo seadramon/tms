@@ -145,6 +145,9 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('/', [KalenderPengirimanController::class, 'index'])->name('index');
 		Route::get('spm', [KalenderPengirimanController::class, 'spmData'])->name('spm');
 		Route::get('spp', [KalenderPengirimanController::class, 'sppData'])->name('spp');
+
+		Route::get('detail-weekly', [KalenderPengirimanController::class, 'detailWeekly'])->name('detail-weekly');
+		Route::post('detail-weekly-data', [KalenderPengirimanController::class, 'detailWeeklyData'])->name('detail-weekly-data');
 	});
 });
 
