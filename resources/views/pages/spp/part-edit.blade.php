@@ -67,14 +67,14 @@
 	<div class="col-lg-12">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Proyek</label>
-			{!! Form::text('nama_proyek', $data->npp->nama_proyek, ['class'=>'form-control form-control-solid', 'id'=>'nama_proyek', 'readonly']) !!}
+			{!! Form::text('nama_proyek', !empty($data->npp)?$data->npp->nama_proyek:null, ['class'=>'form-control form-control-solid', 'id'=>'nama_proyek', 'readonly']) !!}
 		</div>	
 	</div>
 
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Pelanggan</label>
-			{!! Form::text('nama_pelanggan', $data->npp->nama_pelanggan, ['class'=>'form-control form-control-solid', 'id'=>'nama_pelanggan']) !!}
+			{!! Form::text('nama_pelanggan', !empty($data->npp)?$data->npp->nama_pelanggan:null, ['class'=>'form-control form-control-solid', 'id'=>'nama_pelanggan']) !!}
 		</div>	
 	</div>
 
@@ -133,24 +133,30 @@
 			<div class="hover-scroll-overlay-y h-400px">
 	            <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
 					<tbody>
-						@if (count($data->detail) > 0)
+						@if (count($data->detail) > 0 && count($tblPesanan) > 0)
 							<?php $i = 1; ?>
 							@foreach($data->detail as $pesanan)
-							<?php 
-								// dd($dtlRencana[$pesanan->kd_produk]['sisaBtg']);
-							?>
 								<tr>
 									<td style="width: 5%">{{ $i }}</td>							
 									<td style="text-align: left;width: 20%;">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk}}</td>
 									<td style="width: 15%">
 										<input type="text" name="rencana[{{$i}}][kd_produk]" value="{{$pesanan->kd_produk}}" class="form-control" readonly>
 									</td>							
-									<td style="width: 15%">
-										<input type="number" max="{{ $dtlRencana[$pesanan->kd_produk]['sisaBtg'] }}" name="rencana[{{$i}}][saat_ini]" class="form-control saat-ini decimal" onkeyup="sdSaatIni({{$dtlRencana[$pesanan->kd_produk]['sppVolBtg']}}, {{$i}})" id="id-saatini-{{$i}}" value="{{ $pesanan->vol }}">
-									</td>				
-									<td style="width: 15%">
-										<input type="number" name="rencana[{{$i}}][sd_saat_ini]" id="id-sdsaatini-{{$i}}" class="form-control form-control-solid" value="{{ $dtlRencana[$pesanan->kd_produk]['sppVolBtg'] + $pesanan->vol }}" readonly>
-									</td>			
+									@if ($tipe == 'show')
+										<td style="width: 15%">
+											<input type="number" name="rencana[{{$i}}][saat_ini]" class="form-control saat-ini decimal" id="id-saatini-{{$i}}" value="{{ $pesanan->vol }}" readonly>
+										</td>				
+										<td style="width: 15%">
+											<input type="number" name="rencana[{{$i}}][sd_saat_ini]" id="id-sdsaatini-{{$i}}" class="form-control form-control-solid" value="{{ $pesanan->vol }}" readonly>
+										</td>	
+									@else
+										<td style="width: 15%">
+											<input type="number" max="{{ $dtlRencana[$pesanan->kd_produk]['sisaBtg'] }}" name="rencana[{{$i}}][saat_ini]" class="form-control saat-ini decimal" onkeyup="sdSaatIni({{$dtlRencana[$pesanan->kd_produk]['sppVolBtg']}}, {{$i}})" id="id-saatini-{{$i}}" value="{{ $pesanan->vol }}">
+										</td>				
+										<td style="width: 15%">
+											<input type="number" name="rencana[{{$i}}][sd_saat_ini]" id="id-sdsaatini-{{$i}}" class="form-control form-control-solid" value="{{ $dtlRencana[$pesanan->kd_produk]['sppVolBtg'] + $pesanan->vol }}" readonly>
+										</td>	
+									@endif
 									<td style="width: 15%">
 										<input type="text" name="rencana[{{$i}}][ket]" class="form-control" value="{{ $pesanan->ket }}">
 									</td>							
