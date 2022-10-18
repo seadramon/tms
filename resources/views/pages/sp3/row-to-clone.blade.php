@@ -11,7 +11,7 @@
     </td>
     <td style="width: 13%;">
         {!! Form::text('vol_btg[]', null, ['class'=>'form-control vol_btg decimal', 'disabled']) !!}
-        <input type="hidden" value="9999" disabled>
+        <input type="hidden" value="0" disabled>
     </td>
     <td style="width: 13%;">
         {!! Form::text('vol_ton[]', null, ['class'=>'form-control vol_ton decimal', 'disabled']) !!}

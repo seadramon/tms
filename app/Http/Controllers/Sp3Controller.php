@@ -15,7 +15,9 @@ use App\Models\Produk;
 use App\Models\Sp3;
 use App\Models\Sp3D;
 use App\Models\Sp3D2;
+use App\Models\Sp3Dokumen;
 use App\Models\Sp3Pic;
+use App\Models\TrMaterial;
 use App\Models\Vendor;
 use App\Models\Views\VSpprbRi;
 use Exception;
@@ -38,6 +40,8 @@ class Sp3Controller extends Controller
             $year = date('Y', strtotime('-' . $i . ' years'));
             $periode[$year] = $year;
         }
+
+        $periode = $labelSemua + $periode;
 
         $status = [
             'draft'             => 'Draft',
@@ -71,9 +75,17 @@ class Sp3Controller extends Controller
         ));
     }
 
-    public function data()
+    public function data(Request $request)
     {
         $query = Sp3::with('vendor')->select('*');
+
+        if($request->pat){
+            $query->where('kd_pat', $request->pat);
+        }
+
+        if($request->periode){
+            $query->whereYear('tgl_sp3', $request->periode);
+        }
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_sp3', function ($model) {
@@ -116,6 +128,7 @@ class Sp3Controller extends Controller
             ->toArray();
             
         $jenisPekerjaan = ["" => "Pilih Pekerjaan"] + $jenisPekerjaan;
+
         $sat_harsat = ["volume" => "Volume", "ritase" => "Ritase"];
 
         return view('pages.sp3.create', compact(
@@ -227,7 +240,13 @@ class Sp3Controller extends Controller
                 return [$item->pph_id . '|' . $item->value => $item->pph_nama . ' [' . $item->value . '%]'];
             })
             ->all();
+
         $pph = ["0|0" => "0%"] + $pph;
+
+        $kd_material = TrMaterial::where('kd_jmaterial', 'T')
+            ->get()
+            ->pluck('name', 'kd_material')
+            ->toArray();
 
         $html = view('pages.sp3.box2', [
             'detailPesanan' => $detailPesanan,
@@ -245,6 +264,7 @@ class Sp3Controller extends Controller
             'pph' => $pph,
             'sp3D' => $sp3D,
             'sat_harsat' => $request->sat_harsat,
+            'kd_material' => $kd_material,
         ])->render();
         
         return response()->json( array('success' => true, 'html'=> $html) );
@@ -310,6 +330,7 @@ class Sp3Controller extends Controller
             $sp3->pph = $pph[1];
             $sp3->pph_id = $pph[0];
             $sp3->keterangan = $request->keterangan;
+            $sp3->kd_material = $request->kd_material;
             $sp3->created_by = session('TMP_NIP') ?? '12345';
             $sp3->created_date = date('Y-m-d H:i:s');
             $sp3->kd_pat = session('TMP_KDWIL') ?? '1A';
@@ -327,7 +348,7 @@ class Sp3Controller extends Controller
                 $sp3D->no_sp3 = $noSp3;
                 $sp3D->no_npp = $request->no_npp;
                 $sp3D->pat_to = $request->unit[$i];
-                $sp3D->kd_produk = $request->kd_produk[$i];
+                $sp3D->kd_produk = $request->tipe[$i];
                 $sp3D->jarak_km = str_replace(',', '', $request->jarak_pekerjaan[$i]);
                 $sp3D->vol_awal = str_replace(',', '', $request->vol_btg[$i]);
                 $sp3D->vol_akhir = str_replace(',', '', $request->vol_btg[$i]);
@@ -357,12 +378,25 @@ class Sp3Controller extends Controller
                 $sp3D2->save();
             }
 
+            for($i=0; $i < count($request->dokumen_asli); $i++){
+                $sp3Dokumen = new Sp3Dokumen();
+
+                $sp3Dokumen->no_sp3 = $newNoSp3;
+                $sp3Dokumen->dok_id = $i + 1;
+                $sp3Dokumen->asli = $request->dokumen_asli[$i];
+                $sp3Dokumen->copy = $request->dokumen_copy[$i];
+                $sp3Dokumen->save();
+            }
+
             DB::commit();
 
             $flasher->addSuccess('Data has been saved successfully!');
         } catch(Exception $e) {
             DB::rollback();
+
             $flasher->addError($e->getMessage());
+
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
 
         return redirect()->route('sp3.index');
@@ -588,6 +622,11 @@ class Sp3Controller extends Controller
 
         $isAmandemen = str_contains(request()->url(), 'amandemen');
 
+        $kd_material = TrMaterial::where('kd_jmaterial', 'T')
+            ->get()
+            ->pluck('name', 'kd_material')
+            ->toArray();
+
         return view('pages.sp3.edit', compact(
             'data',
             'detailPesanan',
@@ -608,7 +647,8 @@ class Sp3Controller extends Controller
             'listPic',
             'detailPekerjaan',
             'materialTambahan',
-            'isAmandemen'
+            'isAmandemen',
+            'kd_material'
         ));
     }
 
@@ -622,20 +662,31 @@ class Sp3Controller extends Controller
                 $noSp3Sequence = sprintf('%02s', ((int)substr($noSp3, -2))+1);
 
                 $newNoSp3 = str_replace(substr($noSp3, -2), $noSp3Sequence, $noSp3);
+
+                $sp3 = new Sp3();
             }else{
                 $newNoSp3 = $noSp3;
+
+                $sp3 = Sp3::find($noSp3);
+
+                //Delete child data
+                Sp3Pic::where('no_sp3', $noSp3)->delete();
+                Sp3D::where('no_sp3', $noSp3)->delete();
+                Sp3D2::where('no_sp3', $noSp3)->delete();
+                Sp3Dokumen::where('no_sp3', $noSp3)->delete();
             }
             
+            $vendor = Vendor::find($request->vendor_id);
+
             $pph = explode('|', $request->pph);
 
-            //Delete child data
-            Sp3Pic::where('no_sp3', $noSp3)->delete();
-            Sp3D::where('no_sp3', $noSp3)->delete();
-            Sp3D2::where('no_sp3', $noSp3)->delete();
-
-            //Update Sp3
-            $sp3 = Sp3::find($noSp3);
+            //Update or Create Sp3
             $sp3->no_sp3 = $newNoSp3;
+            $sp3->no_npp = $request->no_npp;
+            $sp3->vendor_id = $vendor->vendor_id;
+            $sp3->alamat_vendor = $vendor->alamat;
+            $sp3->satuan_harsat = $request->sat_harsat;
+            $sp3->kd_jpekerjaan = $request->kd_jpekerjaan;
             $sp3->tgl_sp3 = date('Y-m-d', strtotime($request->tgl_sp3));
             $sp3->no_ban = $request->no_ban;
             $sp3->no_kontrak_induk = $request->no_kontrak_induk;
@@ -647,6 +698,7 @@ class Sp3Controller extends Controller
             $sp3->pph = $pph[1];
             $sp3->pph_id = $pph[0];
             $sp3->keterangan = $request->keterangan;
+            $sp3->kd_material = $request->kd_material;
             $sp3->created_by = session('TMP_NIP') ?? '12345';
             $sp3->created_date = date('Y-m-d H:i:s');
             $sp3->kd_pat = session('TMP_KDWIL') ?? '1A';
@@ -664,7 +716,7 @@ class Sp3Controller extends Controller
                 $sp3D->no_sp3 = $newNoSp3;
                 $sp3D->no_npp = $sp3->no_npp;
                 $sp3D->pat_to = $request->unit[$i];
-                $sp3D->kd_produk = $request->kd_produk[$i];
+                $sp3D->kd_produk = $request->tipe[$i];
                 $sp3D->jarak_km = str_replace(',', '', $request->jarak_pekerjaan[$i]);
                 $sp3D->vol_awal = str_replace(',', '', $request->vol_btg[$i]);
                 $sp3D->vol_akhir = str_replace(',', '', $request->vol_btg[$i]);
@@ -694,12 +746,25 @@ class Sp3Controller extends Controller
                 $sp3D2->save();
             }
 
+            for($i=0; $i < count($request->dokumen_asli); $i++){
+                $sp3Dokumen = new Sp3Dokumen();
+
+                $sp3Dokumen->no_sp3 = $newNoSp3;
+                $sp3Dokumen->dok_id = $i + 1;
+                $sp3Dokumen->asli = $request->dokumen_asli[$i];
+                $sp3Dokumen->copy = $request->dokumen_copy[$i];
+                $sp3Dokumen->save();
+            }
+
             DB::commit();
 
             $flasher->addSuccess('Data has been saved successfully!');
         } catch(Exception $e) {
             DB::rollback();
+
             $flasher->addError($e->getMessage());
+
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
 
         return $request->isAmandemen 
@@ -742,8 +807,25 @@ class Sp3Controller extends Controller
         foreach($data->pic as $pic){
             $listPic[] = $pic->employee->employee_id . ' - ' . $pic->employee->first_name . ($pic->employee->last_name ? ' - ' . $pic->employee->last_name : '');
         }
+
+        $ppn = [
+            "0" => "0%",
+            "11" => "11%",
+        ];
+
+        $pph = DB::table('tb_pph_d')->leftJoin('tb_pph_h', 'tb_pph_d.pph_id', '=', 'tb_pph_h.pph_id')
+            ->select('tb_pph_d.pph_id', 'tb_pph_d.ket', 'tb_pph_h.pph_nama','tb_pph_d.value')
+            ->get()
+            ->sortBy(['pph_id', 'value'])
+            ->mapWithKeys(function($item){ 
+                return [$item->pph_id . '|' . $item->value => $item->pph_nama . ' [' . $item->value . '%]'];
+            })
+            ->all();
+
+        $pph = ["0|0" => "0%"] + $pph;
+
         return view('pages.sp3.approve', compact(
-            'data', 'detailPesanan', 'sp3D', 'kondisiPenyerahanDipilih', 'type', 'listPic'
+            'data', 'detailPesanan', 'sp3D', 'kondisiPenyerahanDipilih', 'type', 'listPic', 'pph', 'ppn'
         ));
     }
 

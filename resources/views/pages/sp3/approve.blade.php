@@ -240,6 +240,11 @@
                         </div>
                         <div class="px-5">
                             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
+                                @php
+                                    $total = $subtotal + ($subtotal * $data->ppn) + ($subtotal * $data->pph/100);
+                                    $formatPph = $data->pph_id . '|' . $data->pph;
+                                @endphp
+
                                 <tr>
                                     <td colspan="7" style="text-align: right; width: 70%">Subtotal</td>
                                     <td style="width: 30%;">
@@ -249,13 +254,20 @@
                                 <tr>
                                     <td colspan="7" style="text-align: right; width: 70%">PPN</td>
                                     <td style="width: 30%;">
-                                        {!! Form::text('ppn', $data->ppn == '0.11' ? '11%' : '0%', ['class'=>'form-control decimal text-right', 'disabled']) !!}
+                                        {!! Form::select('ppn', $ppn, $data->ppn*100, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'ppn', 'disabled']) !!}
                                     </td>
+                                </tr>
+                                <tr>
+                                    <th colspan="7" style="text-align: right; width: 70%">PPH</th>
+                                    <td style="width: 30%;">
+                                        {!! Form::select('pph', $pph, $formatPph, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph', 'disabled']) !!}
+                                    </td>
+                                    <td style="width: 3%"></td>
                                 </tr>
                                 <tr>
                                     <td colspan="7" style="text-align: right; width: 70%">Total</td>
                                     <td style="width: 30%;">
-                                        {!! Form::text('total', $data->ppn ? ($subtotal * $data->ppn) : $subtotal, ['class'=>'form-control decimal text-right', 'disabled']) !!}
+                                        {!! Form::text('total', $total, ['class'=>'form-control decimal text-right', 'disabled']) !!}
                                     </td>
                                 </tr>
                             </table>

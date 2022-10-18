@@ -30,7 +30,7 @@
                         
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 custom-label">Lokasi Muat</label>
-                            {!! Form::select('pbbMuat', ['' => 'Semua'], null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pbbMuat']) !!}
+                            {!! Form::select('pbbMuat', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pbbMuat']) !!}
                         </div>
                     </div>
 
@@ -137,7 +137,15 @@
 	            serverSide: true,
 	            order: [[0, 'desc']],
 	            stateSave: true,
-	            ajax: "{{ route('sp3.data') }}",
+	            ajax: {
+                    url: "{{ route('sp3.data') }}",
+                    type: "POST",
+                    data: function(d){
+                        d._token = '{{ csrf_token() }}';
+                        d.pat = $("#pat").val();
+                        d.periode = $("#periode").val();
+                    }
+                },
 	            columns: [
 	                {data: 'no_sp3', name: 'no_sp3', defaultContent: '-'},
 	                {data: 'no_npp', name: 'no_npp', defaultContent: '-'},
@@ -197,5 +205,9 @@
 			});
 		}
 	});
+
+    $(document).on('change', '#pat, #periode', function(){
+        $('#tabel_sp3').DataTable().ajax.reload()
+    });
 </script>
 @endsection
