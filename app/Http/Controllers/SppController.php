@@ -139,7 +139,7 @@ class SppController extends Controller
                             Action
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">View</a></li>
+                            <li><a class="dropdown-item" href="'. route('spp.show', ['spp' => $noSppb]) .'">View</a></li>
                             <li><a class="dropdown-item" href="'. route('spp.edit', ['spp' => $noSppb]) .'">Edit</a></li>
                             <li><a class="dropdown-item" href="'. route('spp.amandemen', ['spp' => $noSppb]) .'">Amandemen</a></li>
                             '.$approval.'
@@ -342,6 +342,7 @@ class SppController extends Controller
 
         $noSppb = str_replace("|", "/", $spp);
         $data = SppbH::find($noSppb);
+        $npp = !empty($data->npp)?$data->npp:null;
         $noNpp = $data->no_npp;
 
         $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
@@ -371,8 +372,10 @@ class SppController extends Controller
             'end' => $end,
             'noSppb' => $noSppb,
             'spp' => $spp,
+            'npp' => $npp,
+            'no_npp' => $noNpp,
             'tipe' => $tipe,
-            'tblPesanan' => $detailPesanan
+            'tblPesanan' => $detailPesanan,
         ];
     }
 
@@ -381,6 +384,46 @@ class SppController extends Controller
         $arrData = $this->editData($spp, 'edit');
 
         return view('pages.spp.edit',  $arrData);
+    }
+
+    public function show($spp)
+    {
+        $arrData = $this->editData($spp, 'show');
+
+        $npp = Npp::find($arrData['no_npp']);
+
+        $arrData['spprb'] = VSpprbRi::with(['produk', 'pat'])
+            ->where('v_spprb_ri.spprblast', $arrData['data']->no_spprb)
+            ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
+            ->select('v_spprb_ri.spprblast', 'v_spprb_ri.kd_produk', 'v_spprb_ri.vol_spprb', 'spprb_h.jadwal1', 
+                'spprb_h.jadwal2')
+            ->get();
+
+        $arrData['angkutan'] = SppbH::join('spprb_h', 'spprb_h.no_spprb', '=', 'sppb_h.no_spprb')
+                ->join('sp3_h', 'sp3_h.no_npp', '=', 'spprb_h.no_npp')
+                ->join('vendor', 'vendor.vendor_id', '=', 'sp3_h.vendor_id')
+                ->select('spprb_h.no_spprb', 'sp3_h.no_sp3', 'sp3_h.app1', 'sp3_h.app2', 'sp3_h.st_wf', 'vendor.nama as vendorname', DB::raw("(SELECT sum(vol_akhir) FROM sp3_d WHERE NO_SP3 = sp3_h.NO_SP3) AS volakhir"), DB::raw("(SELECT sum(VOL_TON_AKHIR) FROM sp3_d WHERE NO_SP3 = sp3_h.NO_SP3) AS voltonakhir"))
+                ->where('sppb_h.no_sppb', $arrData['noSppb'])
+                ->get();
+
+        if (!empty($npp)) {
+            if (!empty($npp->no_info)) {
+                $arrData['kontrak'] = DB::table('KD_SEPEDM_D')
+                    ->where('no_proyek', $npp->no_info)
+                    ->where('no_dok', '12')
+                    ->whereRaw("P_KE = (select 
+                            max(P_KE) 
+                        from 
+                            KD_SEPEDM_D
+                        WHERE
+                            NO_DOK = '12'
+                            AND NO_PROYEK = '$npp->no_info'
+                        )")
+                    ->first();
+            }
+        }
+
+        return view('pages.spp.show',  $arrData);
     }
 
     public function amandemen($spp)

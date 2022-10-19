@@ -416,6 +416,7 @@ class SpmController extends Controller
         $data->save();
 
         $flasher->addSuccess('Data has been update successfully!');
-        return redirect()->route('spm.index');
+
+        return redirect()->route('spm.create');
     }
 }

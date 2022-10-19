@@ -18,4 +18,9 @@ class VSpprbRi extends Model
 	{
 		return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
 	}
+
+	public function pat()
+	{
+		return $this->belongsTo(Pat::class, 'pat_to', 'kd_pat');
+	}
 }
