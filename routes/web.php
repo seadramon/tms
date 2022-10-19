@@ -40,7 +40,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	Route::group(['prefix' => '/sp3', 'as' => 'sp3.'], function(){
 	    Route::post('/destroy', [Sp3Controller::class, 'destroy'])->name('destroy');
-	    Route::get('/data', [Sp3Controller::class, 'data'])->name('data');
+	    Route::post('/data', [Sp3Controller::class, 'data'])->name('data');
 		Route::get('/search-npp', [Sp3Controller::class, 'searchNpp'])->name('search-npp');
 		Route::get('/search-pic', [Sp3Controller::class, 'searchPic'])->name('search-pic');
 		Route::post('/get-data-box2', [Sp3Controller::class, 'getDataBox2'])->name('get-data-box2');

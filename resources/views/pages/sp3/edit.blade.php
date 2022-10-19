@@ -15,7 +15,7 @@
     <div class="row g-5 g-xl-8">
         <!--begin::Col-->
         <div class="col-12 mb-md-5 mb-xl-10">
-            {!! Form::model($data, ['route' => ['sp3.update', str_replace('/', '|', $data->no_sp3)], 'class' => 'form', 'method' => 'PUT']) !!}
+            {!! Form::model($data, ['route' => ['sp3.update', str_replace('/', '|', $data->no_sp3)], 'class' => 'form', 'method' => 'PUT', 'enctype' => 'multipart/form-data']) !!}
 
             <input type="hidden" name="isAmandemen" value="{{ $isAmandemen }}">
             
@@ -80,6 +80,20 @@
         let volBtg = parseFloat($('#vol_btg_' + rowId).val());
         let volBtgMax = parseFloat($('#vol_btg_max_' + rowId).val());
 
+        $('.tipe').each(function(){
+            if($(this).attr('row-id') != rowId && $(this).val() == $('#tipe_' + rowId).val()){
+                volBtg = parseFloat(volBtg) + parseFloat($('#vol_btg_' + $(this).attr('row-id')).val());
+            }
+        });
+
+        $('.pesanan_kd_produk').each(function(){
+            if($(this).val() == $('#tipe_' + rowId).val()){
+                $('#vol_btg_max_' + rowId).val($('#pesanan_vol_btg_max_' + $(this).attr('row-id')).val());
+
+                volBtgMax = $('#vol_btg_max_' + rowId).val();
+            }
+        });
+
         if(volBtg && volBtg > volBtgMax){
             alert('Nilai Vol (Btg) Pekerjaan tidak Boleh lebih dari Vol (Btg) Pesanan!');
 
@@ -99,6 +113,12 @@
         calculateTotal();
     });
 
+    $(document).on('change', '.tipe', function(){
+        let rowId = $(this).attr('row-id');
+
+        $('#vol_btg_' + rowId).val(0);
+    });
+
     function calculateJumlah(rowId){
         if($('#satuan_' + rowId).val()){
             if($('#satuan_' + rowId).val() == 'btg'){
@@ -111,7 +131,7 @@
         calculateSubTotal(rowId);
     }
 
-    function calculateSubTotal(rowId){
+    function calculateSubTotal(rowId = null){
         let subTotal = 0;
 
         for(let i=0; i < $('.detail_pekerjaan').length; i++){
@@ -143,6 +163,8 @@
 
     function deleteRow(deletedRow){
         $(deletedRow.remove());
+
+        calculateSubTotal();
     }
 
     $('#material_tambahan').repeater({
@@ -192,7 +214,7 @@
         //Set Row Id
         clone.id = 'detail_pekerjaan_' + newIndex;
 
-        var sat_harsat = $("#sat_harsat").val();
+        var sat_harsat = $("#sat_harsat").val().toLowerCase();
         
         //Set Id
         clone.getElementsByTagName('select')[0].id = 'unit_' + newIndex;
@@ -216,6 +238,7 @@
         //Set Col Id
         $('#unit_' + newIndex).attr('row-id', newIndex);
         $('#tipe_' + newIndex).attr('row-id', newIndex);
+        $('#tipe_' + newIndex).addClass('tipe');
         $('#jarak_pekerjaan_' + newIndex).attr('row-id', newIndex);
         $('#vol_btg_' + newIndex).attr('row-id', newIndex);
         $('#vol_btg_max_' + newIndex).attr('row-id', newIndex);
@@ -244,12 +267,14 @@
         //Set Select2
         $('#unit_' + newIndex).select2();
         $('#tipe_' + newIndex).select2();
+
         if(sat_harsat == 'volume'){
             $('#satuan_' + newIndex).select2();
         }
 
         if(isFirstAdd){
             $('#detail_pekerjaan_' + newIndex).find('.select2-container').eq(1).remove();
+            $('#detail_pekerjaan_' + newIndex).find('.select2-container').eq(2).remove();
             $('#detail_pekerjaan_' + newIndex).find('.select2-container').last().remove();
 
             isFirstAdd = false;

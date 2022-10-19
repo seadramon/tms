@@ -64,6 +64,11 @@ class Sp3 extends Model
         return $this->belongsTo(Kontrak::class, 'no_kontrak_induk', 'no_kontrak');
     }
 
+    public function dokumen()
+    {
+        return $this->hasMany(Sp3Dokumen::class, 'no_sp3', 'no_sp3');
+    }
+
     public function vSpprbRi()
     {
         return $this->belongsTo('App\Models\View\VSpprbRi', 'no_npp', 'no_npp');

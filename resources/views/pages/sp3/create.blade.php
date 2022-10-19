@@ -144,10 +144,24 @@
 
         $(document).on('change', '.vol_btg', function(){
             let rowId = $(this).attr('row-id');
-
+            
             let volBtg = parseFloat($('#vol_btg_' + rowId).val());
             let volBtgMax = parseFloat($('#vol_btg_max_' + rowId).val());
 
+            $('.tipe').each(function(){
+                if($(this).attr('row-id') != rowId && $(this).val() == $('#tipe_' + rowId).val()){
+                    volBtg = parseFloat(volBtg) + parseFloat($('#vol_btg_' + $(this).attr('row-id')).val());
+                }
+            });
+
+            $('.pesanan_kd_produk').each(function(){
+                if($(this).val() == $('#tipe_' + rowId).val()){
+                    $('#vol_btg_max_' + rowId).val($('#pesanan_vol_btg_max_' + $(this).attr('row-id')).val());
+
+                    volBtgMax = $('#vol_btg_max_' + rowId).val();
+                }
+            });
+            
             if(volBtg && volBtg > volBtgMax){
                 alert('Nilai Vol (Btg) Pekerjaan tidak Boleh lebih dari Vol (Btg) Pesanan!');
 
@@ -167,6 +181,12 @@
             calculateTotal();
         });
 
+        $(document).on('change', '.tipe', function(){
+            let rowId = $(this).attr('row-id');
+
+            $('#vol_btg_' + rowId).val(0);
+        });
+
         function calculateJumlah(rowId){
             if($('#satuan_' + rowId).val()){
                 if($('#satuan_' + rowId).val() == 'btg'){
@@ -179,7 +199,7 @@
             calculateSubTotal(rowId);
         }
 
-        function calculateSubTotal(rowId){
+        function calculateSubTotal(rowId = null){
             let subTotal = 0;
 
             for(let i=0; i < $('.detail_pekerjaan').length; i++){
@@ -211,6 +231,8 @@
 
         function deleteRow(deletedRow){
             $(deletedRow.remove());
+
+            calculateSubTotal();
         }
 
         $('#material_tambahan').repeater({
@@ -258,7 +280,7 @@
             var table = document.getElementById('tabel_detail_pekerjaan'); // find table to append to
             var clone = row.cloneNode(true); // copy children too
 
-            var sat_harsat = $("#sat_harsat").val();
+            var sat_harsat = $("#sat_harsat").val().toLowerCase();
 
             //Set Row Id
             clone.id = 'detail_pekerjaan_' + newIndex;
@@ -285,6 +307,7 @@
             //Set Col Id
             $('#unit_' + newIndex).attr('row-id', newIndex);
             $('#tipe_' + newIndex).attr('row-id', newIndex);
+            $('#tipe_' + newIndex).addClass('tipe');
             $('#jarak_pekerjaan_' + newIndex).attr('row-id', newIndex);
             $('#vol_btg_' + newIndex).attr('row-id', newIndex);
             $('#vol_btg_max_' + newIndex).attr('row-id', newIndex);
@@ -313,6 +336,7 @@
             //Set Select2
             $('#unit_' + newIndex).select2();
             $('#tipe_' + newIndex).select2();
+
             if(sat_harsat == 'volume'){
                 $('#satuan_' + newIndex).select2();
             }
