@@ -1,8 +1,4 @@
-<div class="card-header">
-	<h3 class="card-title">Kontrak</h3>
-</div>
-
-<div class="card-body">
+<div class="col-12">
 	@if (!empty($kontrak))
 		@if (!empty($kontrak->dok))
 			<object data="data:application/pdf;base64,<?php echo base64_encode($kontrak->dok) ?>" type="application/pdf" style="height:40em;width:100%"></object>
@@ -12,7 +8,4 @@
 	@else
 		<p style="text-align: center;color: grey;">Data tidak ditemukan</p>
 	@endif
-</div>
-
-<div class="card-footer">
 </div>

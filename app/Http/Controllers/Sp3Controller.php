@@ -782,9 +782,10 @@ class Sp3Controller extends Controller
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
 
-        return $request->isAmandemen 
-            ? redirect()->route('sp3.amandemen', str_replace('/', '|', $newNoSp3))
-            : redirect()->route('sp3.edit', str_replace('/', '|', $newNoSp3));
+        // return $request->isAmandemen 
+        //     ? redirect()->route('sp3.amandemen', str_replace('/', '|', $newNoSp3))
+        //     : redirect()->route('sp3.edit', str_replace('/', '|', $newNoSp3));
+        return redirect()->route('sp3.index');
     }
 
     public function showApprove($type, $noSp3)

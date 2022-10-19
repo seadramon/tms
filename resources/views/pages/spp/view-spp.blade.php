@@ -1,11 +1,8 @@
-<div class="card-header">
-	<h3 class="card-title">SPP Form {{ ucwords($tipe) }}</h3>
-</div>
 
 {!! Form::model($data, ['route' => ['spp.update', $spp], 'class' => 'form', 'method' => 'PUT']) !!}
 
 	{!! Form::hidden('tipe', $tipe, ['class'=>'form-control', 'id'=>'tipe']) !!}
-	<div class="card-body">
+	<div class="col-12">
 		@if (count($errors) > 0)
 			@foreach($errors->all() as $error)
 				<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -31,7 +28,7 @@
 				</div>	
 			</div>
 
-			<div class="col-lg-9">
+			<div class="col-lg-6">
 				<?php 
 				$nama_proyek = !empty($npp->nama_proyek)?$npp->nama_proyek:'';
 				?>
@@ -47,13 +44,13 @@
 		</div>
 	</div>
 
-	<div class="card-body" id="kt_block_ui_target">
+	<div class="col-12 mt-5">
 		@include('pages.spp.part-edit')
 	</div>
 	<!-- end box 2 -->
 
-	<div class="card-footer">
+	{{-- <div class="card-footer">
 		<a href="{{ route('spp.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
 		<input type="submit" class="btn btn-primary" id="kt_project_settings_submit" value="Simpan">
-	</div>
+	</div> --}}
 {!! Form::close() !!}

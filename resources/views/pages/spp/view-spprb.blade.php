@@ -1,8 +1,4 @@
-<div class="card-header">
-	<h3 class="card-title">Rute SPPrB</h3>
-</div>
-
-<div class="card-body">
+<div class="col-12">
 	<table class="table table-row-bordered text-left">
 		<thead>
 			<tr>
@@ -35,7 +31,4 @@
 			@endif
 		</tbody>
 	</table>
-</div>
-
-<div class="card-footer">
 </div>

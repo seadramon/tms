@@ -18,45 +18,65 @@
 	<div class="row g-5 g-xl-8">
 		<!--begin::Col-->
 		<div class="col-12 mb-md-5 mb-xl-10">
-			<ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6">
-			    <li class="nav-item">
-			        <a class="nav-link active" data-bs-toggle="tab" href="#spp">SPP</a>
-			    </li>
-			    <li class="nav-item">
-			        <a class="nav-link" data-bs-toggle="tab" href="#rute_pengiriman">Rute Pengiriman</a>
-			    </li>
-			    <li class="nav-item">
-			        <a class="nav-link" data-bs-toggle="tab" href="#kontrak">Kontrak</a>
-			    </li>
-			    <li class="nav-item">
-			        <a class="nav-link" data-bs-toggle="tab" href="#spprb">SPPrB</a>
-			    </li>
-			    <li class="nav-item">
-			        <a class="nav-link" data-bs-toggle="tab" href="#angkutan">SP3/SPK VDR ANGKUTAN</a>
-			    </li>
-			</ul>
-
 			<div class="card shadow-sm">
-				<div class="tab-content" id="myTabContent">
-				    <div class="tab-pane fade show active" id="spp" role="tabpanel">
-				        @include('pages.spp.view-spp')
-				    </div>
-				    <div class="tab-pane fade" id="rute_pengiriman" role="tabpanel">
-				        @include('pages.spp.view-rute')
-				    </div>
-				    <div class="tab-pane fade" id="kontrak" role="tabpanel">
-				        @include('pages.spp.view-kontrak')
-				    </div>
-				    <div class="tab-pane fade" id="spprb" role="tabpanel">
-				        @include('pages.spp.view-spprb')
-				    </div>
-				    <div class="tab-pane fade" id="angkutan" role="tabpanel">
-				        @include('pages.spp.view-angkutan')
-				    </div>
+				<div class="card-header">
+					<h3 class="card-title">VIEW SPPB</h3>
+				</div>
+				
+				<div class="card-body">
+					<div class="mb-5 hover-scroll-x">
+						<div class="d-grid">
+							<ul class="nav nav-tabs flex-nowrap text-nowrap">
+								<li class="nav-item">
+									<a class="nav-link active btn btn-active-light btn-color-gray-600 btn-active-light-primary rounded-bottom-0" data-bs-toggle="tab" href="#spp">
+										<span class="fs-4 fw-bold">SPP</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link btn btn-active-light btn-color-gray-600 btn-active-light-success rounded-bottom-0" data-bs-toggle="tab" href="#rute_pengiriman">
+										<span class="fs-4 fw-bold">Rute Pengiriman</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link btn btn-active-light btn-color-gray-600 btn-active-light-info rounded-bottom-0" data-bs-toggle="tab" href="#kontrak">
+										<span class="fs-4 fw-bold">Kontrak</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link btn btn-active-light btn-color-gray-600 btn-active-light-danger rounded-bottom-0" data-bs-toggle="tab" href="#spprb">
+										<span class="fs-4 fw-bold">List SPPRB</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link btn btn-active-light btn-color-gray-600 btn-active-light-warning rounded-bottom-0" data-bs-toggle="tab" href="#angkutan">
+										<span class="fs-4 fw-bold">List SP3</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
+					<div class="tab-content" id="myTabContent">
+						<div class="tab-pane fade show active" id="spp" role="tabpanel">
+							@include('pages.spp.view-spp')
+						</div>
+						<div class="tab-pane fade" id="rute_pengiriman" role="tabpanel">
+							@include('pages.spp.view-rute')
+						</div>
+						<div class="tab-pane fade" id="kontrak" role="tabpanel">
+							@include('pages.spp.view-kontrak')
+						</div>
+						<div class="tab-pane fade" id="spprb" role="tabpanel">
+							@include('pages.spp.view-spprb')
+						</div>
+						<div class="tab-pane fade" id="angkutan" role="tabpanel">
+							@include('pages.spp.view-angkutan')
+						</div>
+					</div>
 				</div>
 
 			</div>
-		<!--end::Col-->
+		</div>
 	</div>
 	<!--end::Row-->
 </div>
