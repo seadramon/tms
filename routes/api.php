@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Customer\PelangganController;
 use App\Http\Controllers\Api\Driver\LoginController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\Internal\KalenderController;
@@ -30,5 +31,9 @@ Route::name('api.')->namespace('Api')->group(function() {
 
     Route::name('internal.')->prefix('internal')->namespace('Internal')->group(function() {
         Route::post('kalender-daily', [KalenderController::class, 'daily'])->name('daily');
+    });
+    
+    Route::name('pelanggan.')->prefix('pelanggan')->namespace('Pelanggan')->group(function() {
+        Route::get('search', [PelangganController::class, 'search'])->name('search');
     });
 });
