@@ -105,7 +105,7 @@
                             </table>
                         </div>
                 
-                        <br><br>
+                        <div class="separator separator-dashed border-primary my-10"></div>
                 
                         <div class="row">
                             <div class="form-group col-lg-12">
@@ -126,7 +126,7 @@
 
                             <div class="form-group col-lg-3">
                                 <label class="form-label">Tanggal</label>
-                                {!! Form::text('tgl_sp3', $data->tgl_sp3, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('tgl_sp3', $data->tgl_sp3 ? date('d-m-Y', strtotime($data->tgl_sp3)), ['class'=>'form-control', 'disabled']) !!}
                             </div>
                 
                             <div class="form-group col-lg-6">
@@ -161,12 +161,12 @@
                 
                             <div class="form-group col-lg-3">
                                 <label class="form-label">Tanggal Penyerahan</label>
-                                {!! Form::text('jadwal1', $data->jadwal1, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('jadwal1', $data->jadwal1 ? date('d-m-Y', strtotime($data->jadwal1)), ['class'=>'form-control', 'disabled']) !!}
                             </div>
                 
                             <div class="form-group col-lg-3">
                                 <label class="form-label">&nbsp;</label>
-                                {!! Form::text('jadwal2', $data->jadwal2, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('jadwal2', $data->jadwal2 ? date('d-m-Y', strtotime($data->jadwal2)), ['class'=>'form-control', 'disabled']) !!}
                             </div>
                 
                             <div class="form-group col-lg-6">
@@ -185,7 +185,7 @@
                             </div>
                         </div>
                         
-                        <br><br>
+                        <div class="separator separator-dashed border-primary my-10"></div>
                 
                         <div class="hover-scroll-overlay-y h-400px px-5">
                             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
@@ -273,7 +273,7 @@
                             </table>
                         </div>
                 
-                        <br><br>
+                        <div class="separator separator-dashed border-primary my-10"></div>
                 
                         <div id="material_tambahan">
                             <div class="form-group">
@@ -296,14 +296,14 @@
                             </div>
                         </div>
                 
-                        <br><br>
+                        <div class="separator separator-dashed border-primary my-10"></div>
                 
                         <div class="form-group">
                             <label class="form-label">Keterangan</label>
                             <textarea id="keterangan" rows="5" class="col-md-12" disabled>{{ $data->keterangan }}</textarea>
                         </div>
                 
-                        <br><br>
+                        <div class="separator separator-dashed border-primary my-10"></div>
                 
                         <div class="form-group">
                             <label class="form-label">Dokumen Tagihan harus melampirkan :</label>

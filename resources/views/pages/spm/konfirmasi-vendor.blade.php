@@ -106,6 +106,8 @@
                     </div>
                 </div>
 
+                <div class="separator separator-dashed border-primary my-10"></div>
+
                 <div class="form-group row mt-5">
                     <p>Detail Muat</p>
                     <table class="table">

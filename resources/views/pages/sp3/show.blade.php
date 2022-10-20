@@ -128,7 +128,7 @@
                             </table>
                         </div>
                 
-                        <br><br>
+                        <div class="separator separator-dashed border-primary my-10"></div>
                 
                         <div class="row">
                             <div class="form-group col-lg-12">
@@ -247,7 +247,7 @@
                         @php
                             $readonly = $sat_harsat != 'volume';
                         @endphp
-                        <br><br>
+                        <div class="separator separator-dashed border-primary my-10"></div>
                         <h3>Detail Pekerjaan</h3>
                         {{-- <table class="table table-row-bordered text-center">
                             <thead>
@@ -377,7 +377,7 @@
                             </tr>
                         </table>
                 
-                        <br><br>
+                        <div class="separator separator-dashed border-primary my-10"></div>
                 
                         @if(!blank($materialTambahan))
                             <h3>Material Tambahan</h3>
@@ -407,14 +407,14 @@
                             </div>
                         @endif
                 
-                        <br><br>
+                        <div class="separator separator-dashed border-primary my-10"></div>
                 
                         <div class="form-group">
                             <label class="form-label">Keterangan</label>
                             <textarea name="keterangan" id="keterangan" rows="5" class="col-md-12" readonly>{{ $data->keterangan }}</textarea>
                         </div>
                 
-                        <br><br>
+                        <div class="separator separator-dashed border-primary my-10"></div>
                 
                         <div class="form-group">
                             <label class="form-label">Dokumen Tagihan harus melampirkan :</label>

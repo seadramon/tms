@@ -71,7 +71,7 @@
             </table>
         </div>
 
-        <br><br>
+        <div class="separator separator-dashed border-primary my-10"></div>
 
         <div class="row">
             <div class="form-group col-lg-12">
@@ -94,7 +94,7 @@
                 <label class="form-label">Tanggal</label>
                 <div class="col-lg-12">
                     <div class="input-group date">
-                        {!! Form::text('tgl_sp3', null, ['class'=>'form-control datepicker', 'id'=>'tgl_sp3']) !!}
+                        {!! Form::text('tgl_sp3', $data->tgl_sp3 ? date('d-m-Y', strtotime($data->tgl_sp3)), ['class'=>'form-control datepicker', 'id'=>'tgl_sp3']) !!}
                         <div class="input-group-append">
                             <span class="input-group-text" style="display: block">
                                 <i class="la la-calendar-check-o"></i>
@@ -142,7 +142,7 @@
                 <label class="form-label">Tanggal Penyerahan</label>
                 <div class="col-lg-12">
                     <div class="input-group date">
-                        {!! Form::text('jadwal1', null, ['class'=>'form-control datepicker', 'id'=>'jadwal1']) !!}
+                        {!! Form::text('jadwal1', $data->jadwal1 ? date('d-m-Y', strtotime($data->jadwal1)) : null, ['class'=>'form-control datepicker', 'id'=>'jadwal1']) !!}
                         <div class="input-group-append">
                             <span class="input-group-text" style="display: block">
                                 <i class="la la-calendar-check-o"></i>
@@ -156,7 +156,7 @@
                 <label class="form-label">&nbsp;</label>
                 <div class="col-lg-12">
                     <div class="input-group date">
-                        {!! Form::text('jadwal2', null, ['class'=>'form-control datepicker', 'id'=>'jadwal2']) !!}
+                        {!! Form::text('jadwal2', $data->jadwal2 ? date('d-m-Y', strtotime($data->jadwal2)) : null, ['class'=>'form-control datepicker', 'id'=>'jadwal2']) !!}
                         <div class="input-group-append">
                             <span class="input-group-text" style="display: block">
                                 <i class="la la-calendar-check-o"></i>
@@ -190,7 +190,7 @@
         @php
             $readonly = $sat_harsat != 'volume';
         @endphp
-        <br><br>
+        <div class="separator separator-dashed border-primary my-10"></div>
         <h3>Detail Pekerjaan</h3>
         {{-- <table class="table table-row-bordered text-center">
             <thead>
@@ -336,7 +336,7 @@
             </tr>
         </table>
 
-        <br><br>
+        <div class="separator separator-dashed border-primary my-10"></div>
 
         <h3>Material Tambahan</h3>
         <div id="material_tambahan">
@@ -401,14 +401,14 @@
             </div>
         </div>
 
-        <br><br>
+        <div class="separator separator-dashed border-primary my-10"></div>
 
         <div class="form-group">
             <label class="form-label">Keterangan</label>
             <textarea name="keterangan" id="keterangan" rows="5" class="col-md-12">{{ $data->keterangan }}</textarea>
         </div>
 
-        <br><br>
+        <div class="separator separator-dashed border-primary my-10"></div>
 
         <div class="form-group">
             <label class="form-label">Dokumen Tagihan harus melampirkan :</label>

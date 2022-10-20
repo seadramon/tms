@@ -46,6 +46,8 @@
             </tbody>
         </table>
 
+        <div class="separator separator-dashed border-primary my-10"></div>
+
         <div class="form-group row">
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 required ">No. NPP</label>
@@ -98,7 +100,7 @@
                 <input class="form-control" type="text" readonly value="{{ $kp }}" />
             </div>
         </div>
-
+        <div class="separator separator-dashed border-primary my-10"></div>
         <div class="form-group row mt-5">
             <table class="table">
                 <thead>
