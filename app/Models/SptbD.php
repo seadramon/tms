@@ -17,6 +17,6 @@ class SptbD extends Model
 
     public function sptbh()
 	{
-		return $this->belongsTo(sptb_h::class, 'no_sptb', 'no_sptb');
+		return $this->belongsTo(SptbH::class, 'no_sptb', 'no_sptb');
 	}
 }
