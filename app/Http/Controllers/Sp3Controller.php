@@ -79,8 +79,7 @@ class Sp3Controller extends Controller
     public function data(Request $request)
     {
         $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
-        $joinQuery = '(select )last_sp3';
-        $query = Sp3::with('vendor', 'sp3D')
+       $query = Sp3::with('vendor', 'sp3D')
             ->join(DB::raw($joinQuery), function($join) {
                 $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
             })

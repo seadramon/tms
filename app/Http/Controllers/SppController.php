@@ -395,7 +395,7 @@ class SppController extends Controller
         $arrData['spprb'] = VSpprbRi::with(['produk', 'pat'])
             ->where('v_spprb_ri.no_npp', $arrData['no_npp'])
             ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
-            ->select('v_spprb_ri.spprblast', 'v_spprb_ri.kd_produk', 'v_spprb_ri.vol_spprb', 'spprb_h.jadwal1', 
+            ->select('v_spprb_ri.pat_to', 'v_spprb_ri.spprblast', 'v_spprb_ri.kd_produk', 'v_spprb_ri.vol_spprb', 'spprb_h.jadwal1', 
                 'spprb_h.jadwal2')
             ->get();
 
