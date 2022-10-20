@@ -26,7 +26,7 @@
         <div class="hover-scroll-overlay-y h-400px">
             <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
                 <tbody>
-                    @foreach($detailPesanan as $pesanan)
+                    @foreach($detailPesanan as $key => $pesanan)
                         @php
                             $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
                             $pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
