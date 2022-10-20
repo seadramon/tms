@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\Customer\PelangganController;
+use App\Http\Controllers\Api\Pelanggan\PelangganController;
 use App\Http\Controllers\Api\Driver\LoginController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\Internal\KalenderController;
@@ -35,5 +35,6 @@ Route::name('api.')->namespace('Api')->group(function() {
     
     Route::name('pelanggan.')->prefix('pelanggan')->namespace('Pelanggan')->group(function() {
         Route::get('search', [PelangganController::class, 'search'])->name('search');
+        Route::post('register', [PelangganController::class, 'register'])->name('register');
     });
 });

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Storage;
+
 if (!function_exists('nominal')) {
     function nominal($nominal){
         return number_format($nominal, 2);
@@ -22,4 +24,16 @@ if (!function_exists('getNow')) {
 	    
 	    return $data[0]->saiki;
 	}
+}
+if (!function_exists('cekDir')) {
+	function cekDir($dir, $disk = "local")
+    {
+        /*if (!\Storage::disk('sftp')->exists($dir)) {
+            Storage::disk('sftp')->makeDirectory($dir);
+        }*/
+
+        if (!Storage::disk($disk)->exists($dir)) {
+            Storage::disk($disk)->makeDirectory($dir, 0777, true);
+        }
+    }
 }

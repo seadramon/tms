@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Customer;
+namespace App\Http\Resources\Pelanggan;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
