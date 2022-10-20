@@ -202,10 +202,12 @@ class Sp3Controller extends Controller
         $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
             ->get()
             ->pluck('no_ban', 'no_ban');
+        $ban = ["" => "---Pilih---"] + $ban;
 
         $kontrak = Kontrak::where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
             ->get()
             ->pluck('no_kontrak', 'no_kontrak');
+        $kontrak = ["" => "---Pilih---"] + $kontrak;
 
         $vendor = Vendor::where('vendor_id', $parameters['vendor_id'])->first();
 
@@ -260,8 +262,9 @@ class Sp3Controller extends Controller
 
         $kd_material = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
-            ->pluck('name', 'kd_material')
-            ->toArray();
+            ->pluck('name', 'kd_material');
+        $kd_material = ["" => "---Pilih---"] + $kd_material;
+        
 
         $html = view('pages.sp3.box2', [
             'detailPesanan' => $detailPesanan,

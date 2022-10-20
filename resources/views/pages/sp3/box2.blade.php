@@ -4,27 +4,25 @@
     </div>
 
     <div class="card-body">
-        <table class="table table-row-bordered text-center">
-            <thead>
-                <tr>
-                    <th rowspan="2" style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
-                    <th colspan="2">Pesanan</th>
-                    <th colspan="2">Total SP3/SPK Sebelumnya</th>
-                    <th colspan="2">Volume Sisa</th>
-                </tr>
-                
-                <tr>
-                    <th>Vol (Btg)</th>
-                    <th>Vol (Ton)</th>
-                    <th>Vol (Btg)</th>
-                    <th>Vol (Ton)</th>
-                    <th>Vol (Btg)</th>
-                    <th>Vol (Ton)</th>
-                </tr>
-            </thead>
-        </table>
         <div class="hover-scroll-overlay-y h-400px">
             <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
+                        <th colspan="2">Pesanan</th>
+                        <th colspan="2">Total SP3/SPK Sebelumnya</th>
+                        <th colspan="2">Volume Sisa</th>
+                    </tr>
+                    
+                    <tr>
+                        <th>Vol (Btg)</th>
+                        <th>Vol (Ton)</th>
+                        <th>Vol (Btg)</th>
+                        <th>Vol (Ton)</th>
+                        <th>Vol (Btg)</th>
+                        <th>Vol (Ton)</th>
+                    </tr>
+                </thead>
                 <tbody>
                     @foreach($detailPesanan as $key => $pesanan)
                         @php
@@ -54,7 +52,7 @@
             </table>
         </div>
 
-        <br><br>
+        <div class="separator separator-dashed border-primary my-10"></div>
 
         <div class="row">
             <div class="form-group col-lg-12">
@@ -114,7 +112,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Spesifikasi</label>
-                {!! Form::select('kd_material', $kd_material, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_material']) !!}
+                {!! Form::select('kd_material', $kd_material, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_material', 'required']) !!}
             </div>
 
             <div class="form-group col-lg-3">
@@ -169,27 +167,30 @@
         @php
             $readonly = $sat_harsat != 'volume';
         @endphp
-        <br><br>
+        <div class="separator separator-dashed border-primary my-10"></div>
         <h3>Detail Pekerjaan</h3>
-        <table class="table table-row-bordered text-center">
-            <thead>
-                <tr>
-                    <th style="width: 10%;">Unit</th>
-                    <th style="width: 14%;">Tipe</th>
-                    <th style="width: 12%;">Jarak (KM)</th>
-                    <th style="width: 13%;">Vol (Btg)</th>
-                    <th style="width: 13%;">Vol (Ton)</th>
-                    @if ($sat_harsat != 'ritase')
-                        <th style="width: 10%;">Satuan</th>
-                    @endif
-                    <th style="width: 15%;">Harsat {{ $sat_harsat == 'volume' ? '[Btg/Ton]' : 'Rit' }}</th>
-                    <th style="width: 10%;">Jumlah</th>
-                    <th style="width: 3%;"></th>
-                </tr>
-            </thead>
-        </table>
+        <div class="form-group" style="margin-top: 20px">
+            <button type="button" class="btn btn-light-primary" id="add-detail">
+                <i class="la la-plus"></i>Tambah
+            </button>
+        </div>
         <div class="hover-scroll-overlay-y h-400px">
             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Unit</th>
+                        <th style="width: 14%;">Tipe</th>
+                        <th style="width: 12%;">Jarak (KM)</th>
+                        <th style="width: 13%;">Vol (Btg)</th>
+                        <th style="width: 13%;">Vol (Ton)</th>
+                        @if ($sat_harsat != 'ritase')
+                            <th style="width: 10%;">Satuan</th>
+                        @endif
+                        <th style="width: 15%;">Harsat {{ $sat_harsat == 'volume' ? '[Btg/Ton]' : 'Rit' }}</th>
+                        <th style="width: 10%;">Jumlah</th>
+                        <th style="width: 3%;"></th>
+                    </tr>
+                </thead>
                 <tbody>
                     @php
                         $produk = $detailPesanan->mapWithKeys(function($item){
@@ -241,13 +242,6 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="form-group" style="margin-top: 20px">
-            <button type="button" class="btn btn-light-primary" id="add-detail">
-                <i class="la la-plus"></i>Tambah
-            </button>
-        </div>
-
         <table class="table table-row-bordered text-center">
             <tr>
                 <th style="text-align: right; width: 72%">Subtotal</th>
@@ -279,7 +273,7 @@
             </tr>
         </table>
 
-        <br><br>
+        <div class="separator separator-dashed border-primary my-10"></div>
 
         <h3>Material Tambahan</h3>
         <div id="material_tambahan">
@@ -318,14 +312,14 @@
             </div>
         </div>
 
-        <br><br>
+        <div class="separator separator-dashed border-primary my-10"></div>
 
         <div class="form-group">
             <label class="form-label">Keterangan</label>
             <textarea name="keterangan" id="keterangan" rows="5" class="col-md-12"></textarea>
         </div>
 
-        <br><br>
+        <div class="separator separator-dashed border-primary my-10"></div>
 
         <div class="form-group">
             <label class="form-label">Dokumen Tagihan harus melampirkan :</label>
