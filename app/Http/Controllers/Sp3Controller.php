@@ -447,7 +447,9 @@ class Sp3Controller extends Controller
         
         $data = Sp3::find($noSp3);
 
-        $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+        $detailPesanan = MonOp::with(['produk', 'sp3D' => function($sql) use ($noSp3) {
+                $sql->whereNotIn('no_sp3', [$noSp3]);
+            }, 'vSpprbRi'])
             ->where('no_npp', $data->no_npp)
             ->get();
 
@@ -455,6 +457,7 @@ class Sp3Controller extends Controller
         
         $sp3D = Sp3D::whereNoNpp($data->no_npp)
             ->whereIn('kd_produk', $kd_produks)
+            ->whereNotIn('no_sp3', [$noSp3])
             ->get()
             ->sortByDesc('no_sp3')
             ->groupBy([
@@ -569,7 +572,9 @@ class Sp3Controller extends Controller
 
         $data = Sp3::find($noSp3);
 
-        $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+        $detailPesanan = MonOp::with(['produk', 'sp3D' => function($sql) use ($noSp3) {
+                $sql->whereNotIn('no_sp3', [$noSp3]);
+            }, 'vSpprbRi'])
             ->where('no_npp', $data->no_npp)
             ->get();
 
@@ -577,6 +582,7 @@ class Sp3Controller extends Controller
         
         $sp3D = Sp3D::whereNoNpp($data->no_npp)
             ->whereIn('kd_produk', $kd_produks)
+            ->whereNotIn('no_sp3', [$noSp3])
             ->get()
             ->sortByDesc('no_sp3')
             ->groupBy([
@@ -825,6 +831,7 @@ class Sp3Controller extends Controller
     
         $sp3D = Sp3D::whereNoNpp($data->no_npp)
             ->whereIn('kd_produk', $kd_produks)
+            ->whereNotIn('no_sp3', [$noSp3])
             ->get()
             ->sortByDesc('no_sp3')
             ->groupBy([
