@@ -79,7 +79,7 @@ class Sp3Controller extends Controller
     public function data(Request $request)
     {
         $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
-       $query = Sp3::with('vendor', 'sp3D')
+        $query = Sp3::with('vendor', 'sp3D')
             ->join(DB::raw($joinQuery), function($join) {
                 $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
             })
@@ -115,7 +115,7 @@ class Sp3Controller extends Controller
                         });
                     })->sum('vol');
                     $vol_sp3 = $model->sp3D->sum('vol_akhir');
-                    $vol = round($vol_sptb / $vol_sp3 * 100);
+                    $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100);
                     if($vol >= 100){
                         $vol = 100;
                         $badge = 'success';
@@ -145,7 +145,7 @@ class Sp3Controller extends Controller
 
                     return $edit;
                 })
-                ->rawColumns(['menu', 'approval'])
+                ->rawColumns(['menu', 'approval', 'progress_vol'])
                 ->toJson();
     }
 
