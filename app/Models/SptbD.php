@@ -14,4 +14,9 @@ class SptbD extends Model
 	protected $keyType = 'string';
 	public $incrementing = false;
 	public $timestamps = false;
+
+    public function sptbh()
+	{
+		return $this->belongsTo(sptb_h::class, 'no_sptb', 'no_sptb');
+	}
 }

@@ -17,6 +17,7 @@ use App\Models\Sp3D;
 use App\Models\Sp3D2;
 use App\Models\Sp3Dokumen;
 use App\Models\Sp3Pic;
+use App\Models\SptbD;
 use App\Models\TrMaterial;
 use App\Models\Vendor;
 use App\Models\Views\VSpprbRi;
@@ -78,7 +79,8 @@ class Sp3Controller extends Controller
     public function data(Request $request)
     {
         $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
-        $query = Sp3::with('vendor')
+        $joinQuery = '(select )last_sp3';
+        $query = Sp3::with('vendor', 'sp3D')
             ->join(DB::raw($joinQuery), function($join) {
                 $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
             })
@@ -105,6 +107,26 @@ class Sp3Controller extends Controller
                         $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved 2</span>';
                     }
                     return $teks;
+                })
+                ->addColumn('progress_vol', function ($model) {
+                    $vol_sptb = SptbD::whereHas('sptbh',function($sql) use ($model) {
+                        $sql->where('no_npp', $model->no_npp);
+                        $sql->whereHas('spmh',function($sql) use ($model) {
+                            $sql->where('vendor_id', $model->vendor_id);
+                        });
+                    })->sum('vol');
+                    $vol_sp3 = $model->sp3D->sum('vol_akhir');
+                    $vol = round($vol_sptb / $vol_sp3 * 100);
+                    if($vol >= 100){
+                        $vol = 100;
+                        $badge = 'success';
+                    }elseif($vol >= 75){
+                        $vol = 100;
+                        $badge = 'warning';
+                    }else{
+                        $badge = 'dark';
+                    }
+                    return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
                 })
                 ->addColumn('menu', function ($model) {
                     $edit = '<div class="btn-group">
@@ -201,12 +223,12 @@ class Sp3Controller extends Controller
 
         $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
             ->get()
-            ->pluck('no_ban', 'no_ban');
+            ->pluck('no_ban', 'no_ban')->toArray();
         $ban = ["" => "---Pilih---"] + $ban;
 
         $kontrak = Kontrak::where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
             ->get()
-            ->pluck('no_kontrak', 'no_kontrak');
+            ->pluck('no_kontrak', 'no_kontrak')->toArray();
         $kontrak = ["" => "---Pilih---"] + $kontrak;
 
         $vendor = Vendor::where('vendor_id', $parameters['vendor_id'])->first();
@@ -262,7 +284,7 @@ class Sp3Controller extends Controller
 
         $kd_material = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
-            ->pluck('name', 'kd_material');
+            ->pluck('name', 'kd_material')->toArray();
         $kd_material = ["" => "---Pilih---"] + $kd_material;
         
 

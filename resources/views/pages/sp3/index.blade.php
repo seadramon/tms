@@ -152,7 +152,7 @@
 	                {data: 'tgl_sp3', name: 'tgl_sp3', defaultContent: '-'},
 	                {data: 'vendor.nama', name: 'vendor.nama', defaultContent: '-'},
 	                {data: 'approval', name: 'app1', defaultContent: '-'},
-	                {defaultContent: '-'},
+	                {data: 'progress_vol', name: 'progress_vol', orderable: false, searchable: false, defaultContent: '-'},
 	                {defaultContent: '-'},
 	                {defaultContent: '-'},
 	                {data: 'menu', orderable: false, searchable: false}
