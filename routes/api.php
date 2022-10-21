@@ -36,5 +36,10 @@ Route::name('api.')->namespace('Api')->group(function() {
     Route::name('pelanggan.')->prefix('pelanggan')->namespace('Pelanggan')->group(function() {
         Route::get('search', [PelangganController::class, 'search'])->name('search');
         Route::post('register', [PelangganController::class, 'register'])->name('register');
+        Route::post('login', [PelangganController::class, 'login'])->name('login');
+
+        Route::middleware('auth:sanctum')->group(function() {
+            Route::post('login1', [PelangganController::class, 'login1'])->name('login1');
+        });
     });
 });
