@@ -4,7 +4,9 @@
     </div>
 
     <div class="card-body">
-        <div id="chart-container" style="margin-bottom: 20px;"></div>
+        <div class="box-ui-loading-chart">
+            <div id="chart-container" style="margin-bottom: 20px;"></div>
+        </div>
 
         <table id="tabel_pemenuhan_armada" class="table table-row-bordered gy-5" style="vertical-align: middle;">
             <thead>

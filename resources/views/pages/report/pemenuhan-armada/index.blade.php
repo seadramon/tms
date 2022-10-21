@@ -36,8 +36,13 @@
         margin-bottom: 0px;
     }
 
-    .form-group{
+    .form-group {
         margin-bottom: 5px;
+    }
+
+    .dt-buttons {
+        float: right;
+        display: block;
     }
 </style>
 @endsection
@@ -64,7 +69,13 @@
         'Oktober',
         'November',
         'Desember'
-    ]
+    ];
+
+    var target = document.querySelector(".box-ui-loading-chart");
+            
+    var blockUI = new KTBlockUI(target, {
+        message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Loading data...</div>',
+    });
 
 	// Class definition
 	var KTDatatablesServerSide = function () {
@@ -79,23 +90,27 @@
 				language: {
   					lengthMenu: "Show _MENU_",
  				},
- 				dom:
-					"<'row'" +
-					"<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-					"<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-					">" +
-
-					"<'table-responsive'tr>" +
-
-					"<'row'" +
-					"<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-					"<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-					">",
+ 				dom: 'Bfrtip',
 	            searchDelay: 500,
 	            processing: true,
 	            serverSide: true,
 	            order: [[0, 'desc']],
 	            stateSave: true,
+                searching: false,
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Export Excel',
+                        className: 'btn-success',
+                        action: exportDatatables
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'Export PDF',
+                        className: 'btn-danger',
+                        action: exportDatatables
+                    }
+                ],
 	            ajax: {
                     url: "{{ route('report-pemenuhan-armada.data') }}",
                     type: "POST",
@@ -168,36 +183,75 @@
                 'periode' : $("#periode").val()
             },
             dataType: 'json',
+            beforeSend: function() {
+                blockUI.block();
+            },
+            complete: function() {
+                blockUI.release();
+            },
             success: function(result) {
                 $("#chart-container").html('');
 
                 var kategori = [];
                 var totalRencana = [];
                 var totalRealisasi = [];
-                
+                var isRencanaEmpty, isRealisasiEmpty;
 
-                result.rencana.forEach(element => {
+                for (let i = 1; i <= listBulan.length; i++) {
+                    isRencanaEmpty = true;
+                    isRealisasiEmpty = true;
+                    
                     kategori.push(
                         {
-                            label: listBulan[parseInt(element.bulan)-1]
+                            label: listBulan[i-1]
                         }
                     )
 
-                    totalRencana.push(
-                        {
-                            value: element.total
-                        }
-                    )
-                });
+                    result.rencana.forEach(element => {
+                        if(element.bulan == i){
+                            totalRencana.push(
+                                {
+                                    value: element.total
+                                }
+                            )
 
-                result.realisasi.forEach(element => {
-                    totalRealisasi[parseInt(element.bulan)-1] = {value: element.total};
-                });
+                            isRencanaEmpty = false;
+                        }
+                    });
+
+                    if(isRencanaEmpty){
+                        totalRencana.push(
+                            {
+                                value: 0
+                            }
+                        )
+                    }
+
+                    result.realisasi.forEach(element => {
+                        if(element.bulan == i){
+                            totalRealisasi.push(
+                                {
+                                    value: element.total
+                                }
+                            )
+
+                            isRealisasiEmpty = false;
+                        }
+                    });
+
+                    if(isRealisasiEmpty){
+                        totalRealisasi.push(
+                            {
+                                value: 0
+                            }
+                        )
+                    }
+                }
 
                 $("#chart-container").insertFusionCharts({
                     type: "msline",
                     width: "100%",
-                    height: "100%",
+                    height: "500",
                     dataFormat: "json",
                     dataSource: {
                         chart: {
@@ -205,7 +259,7 @@
                             subcaption: $("#periode").val(),
                             showhovereffect: "1",
                             drawcrossline: "1",
-                            plottooltext: "<b>$dataValue</b> $seriesName",
+                            plottooltext: "<b>$dataValue</b>",
                             theme: "fusion"
                         },
                         categories: [
@@ -230,6 +284,46 @@
                 console.log(result);
             }
         });
+    }
+
+    function exportDatatables(e, dt, button, config) {
+        var self = this;
+        var oldStart = dt.settings()[0]._iDisplayStart;
+
+        dt.one('preXhr', function (e, s, data) {
+            // Just this once, load all data from the server...
+            data.start = 0;
+            data.length = 2147483647;
+
+            dt.one('preDraw', function (e, settings) {
+                // Call the original action function
+                if (button[0].className.indexOf('buttons-excel') >= 0) {
+                    $.fn.dataTable.ext.buttons.excelHtml5.available(dt, config) ?
+                        $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config) :
+                        $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
+                } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
+                    $.fn.dataTable.ext.buttons.pdfHtml5.available(dt, config) ?
+                        $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button, config) :
+                        $.fn.dataTable.ext.buttons.pdfFlash.action.call(self, e, dt, button, config);
+                }
+
+                dt.one('preXhr', function (e, s, data) {
+                    // DataTables thinks the first item displayed is index 0, but we're not drawing that.
+                    // Set the property to what it was before exporting.
+                    settings._iDisplayStart = oldStart;
+                    data.start = oldStart;
+                });
+
+                // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
+                setTimeout(dt.ajax.reload, 0);
+                
+                // Prevent rendering of the full data to the DOM
+                return false;
+            });
+        });
+
+        // Requery the server with the new one-time export settings
+        dt.ajax.reload();
     }
 </script>
 @endsection
