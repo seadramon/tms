@@ -24,7 +24,7 @@
 			<div class="col-lg-6">
 				<div class="form-group">
 					<label class="fs-6 fw-bold mt-2 mb-3">NO SPP</label>
-					{!! Form::text('no_spp', 'AUTO', ['class'=>'form-control form-control-solid', 'id'=>'no_spp_input', 'readonly']) !!}
+					{!! Form::text('no_spp', $noSppb, ['class'=>'form-control form-control-solid', 'id'=>'no_spp_input', 'readonly']) !!}
 				</div>	
 			</div>
 
