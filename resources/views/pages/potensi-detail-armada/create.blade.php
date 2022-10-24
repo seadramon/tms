@@ -61,7 +61,7 @@
                                             </td>
                                             <td>{{ $row->jml_rit }}</td>
                                             <td>RIT PER HARI</td>
-                                            <td>{{ $row->pat->ket ?? 'Tidak diketahui' }}</td>
+                                            <td>{{ $row->pat ?? 'Tidak diketahui' }}</td>
                                             <td>{{ $row->jarak_km }}</td>
                                             <td class="text-center">
                                                 <a href="javascript:void(0)" class="btn btn-icon btn-secondary expandChildTable"><i class="fa fa-eye"></i></a>
@@ -117,7 +117,7 @@
                     @php $i=1; @endphp
                     @foreach($muat as $item)
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="kt_accordion_1_header_1">
+                        <h2 class="accordion-header" id="kt_accordion_{{ $i }}_header_{{ $i }}">
                                 <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_{{ $i }}_body_{{ $i }}" aria-expanded="false" aria-controls="kt_accordion_{{ $i }}_body_{{ $i }}">
                                     Rute Pengiriman {{ $i }}
                                 </button>
@@ -127,16 +127,8 @@
                                     <div class="row">
                                         <div class="col-md-6" style="margin-bottom:10px;">
                                             <div class="row">
-                                                <div class="col-md-4">
-                                                    <label class="form-label mt-2">PBB Muat</label>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <select class="form-select" data-control="select2" data-placeholder="Select PBB Muat..">
-                                                        <option></option>
-                                                        @foreach($pat as $row)
-                                                            <option value="{{ $row->kd_pat }}">{{ $row->ket }}</option>
-                                                        @endforeach
-                                                    </select>
+                                                <div class="col-md-12">
+                                                    <label class="form-label mt-2">PBB Muat : {{ $item->pat ?? 'Tidak diketahui' }}</label>
                                                 </div>
                                             </div>
                                             <div id="list_checkpoint" style="padding-top: 5px;"></div>

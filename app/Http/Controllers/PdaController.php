@@ -31,17 +31,13 @@ class PdaController extends Controller
         $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
         $muat = VPotensiMuat::with('pat')->where('no_npp',$no_npp)->get();
 
-        // query from v_spprb_ri
-        // where no_npp = no_npp and pat_to = v_potensi_muat.ppb_muat
-        // join to tb_produk using kd_produk
-        // groupby spprb_d.kd_produk, tb_produk.tipe
 
         $collection_table = new Collection();
         foreach($muat as $row){
             $spprbRi = VSpprbRi::with('produk')
                         ->where('no_npp',$row->no_npp)
                         ->where('pat_to',$row->ppb_muat)
-                       // ->groupBy('spprb_d.kd_produk','tb_produk.tipe')
+                        //->groupBy('spprb_d.kd_produk','tb_produk.tipe')
                         ->get();
 
             $collection_table->push((object)[
@@ -58,7 +54,7 @@ class PdaController extends Controller
 
 
         $trmaterial = TrMaterial::where('kd_jmaterial','T')->get();
-        // return response()->json($muat);
+        // return response()->json($collection_table);
         return view('pages.potensi-detail-armada.create', ['pat' => $pat, 'muat' => $collection_table, 'trmaterial' => $trmaterial]);
     }
 
