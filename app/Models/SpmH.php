@@ -50,4 +50,14 @@ class SpmH extends Model
     {
     	return $this->belongsTo(Pat::class, 'pat_to', 'kd_pat');
     }
+
+    public function sptbh()
+    {
+        return $this->belongsTo(SptbH::class, 'no_spm', 'no_spm');
+    }
+
+    public function armada()
+    {
+        return $this->belongsTo(Armada::class, 'no_pol', 'nopol');
+    }
 }

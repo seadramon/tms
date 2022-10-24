@@ -14,6 +14,7 @@ use App\Http\Controllers\MasterDriverController;
 use App\Http\Controllers\MasterArmadaController;
 use App\Http\Controllers\PdaController;
 use App\Http\Controllers\PricelistAngkutanController;
+use App\Http\Controllers\Report\PemenuhanArmadaController;
 use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaController;
 use App\Http\Controllers\LoginVendorController;
 use App\Http\Middleware\EnsureSessionIsValid;
@@ -90,7 +91,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	    Route::resource('/',  PricelistAngkutanController::class)->except([
 			'destroy'
-		])->parameters(['' => 'sptb']);
+		])->parameters(['' => 'pricelist-angkutan']);
 
 		Route::post('/get-lokasi-pemuatan', [PricelistAngkutanController::class, 'getLokasiPemuatan'])->name('get-lokasi-pemuatan');
 		Route::post('/upload-excel', [PricelistAngkutanController::class, 'uploadExcel'])->name('upload-excel');
@@ -149,6 +150,15 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 		Route::get('detail-weekly', [KalenderPengirimanController::class, 'detailWeekly'])->name('detail-weekly');
 		Route::post('detail-weekly-data', [KalenderPengirimanController::class, 'detailWeeklyData'])->name('detail-weekly-data');
+	});
+
+	Route::group(['prefix' => 'report-pemenuhan-armada', 'as' => 'report-pemenuhan-armada.'], function(){
+		Route::post('/data', [PemenuhanArmadaController::class, 'data'])->name('data');
+		Route::post('/chart', [PemenuhanArmadaController::class, 'chart'])->name('chart');
+
+	    Route::resource('/',  PemenuhanArmadaController::class)->except([
+			'destroy', 'show'
+		])->parameters(['' => 'report-pemenuhan-armada']);
 	});
 });
 

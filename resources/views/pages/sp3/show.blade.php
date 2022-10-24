@@ -32,7 +32,7 @@
                             
                             <div class="col-lg-6 custom-form">
                                 <label class="form-label col-sm-3 custom-label">No. SP3 / SPK</label>
-                                {!! Form::text('no_sp3', 'AUTO', ['class'=>'form-control', 'id'=>'no_sp3', 'readonly']) !!}
+                                {!! Form::text('no_sp3', $data->no_sp3, ['class'=>'form-control', 'id'=>'no_sp3', 'readonly']) !!}
                             </div>
                         </div>
                 
