@@ -24,21 +24,62 @@
                     <div class="row">
                         <div class="col-md-12 table-responsive">
                             <table class="table table-striped gy-7 gs-7">
-                                <tr class="text-lg-center text-bold">
-                                    <th>NPP</th>
-                                    <th>VOL TOTAL (BTG)</th>
-                                    <th>VOL TOTAL (TON)</th>
-                                    <th>TANGGAL AWAL DISTRIBUSI</th>
-                                    <th>TANGGAL AKHIR DISTRIBUSI</th>
-                                    <th>JENIS ARMADA</th>
-                                    <th>TOTAL RIT</th>
-                                    <th>RIT PER HARI</th>
-                                    <th>PBB MUAT</th>
-                                    <th>JARAK</th>
-                                </tr>
-                                <tr>
-                                    <td class="text-lg-center" colspan="10">data tidak ditemukan..</td>
-                                </tr>
+                                <thead>
+                                    <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                        <th>NPP</th>
+                                        <th>VOL TOTAL (BTG)</th>
+                                        <th>VOL TOTAL (TON)</th>
+                                        <th>TANGGAL AWAL DISTRIBUSI</th>
+                                        <th>TANGGAL AKHIR DISTRIBUSI</th>
+                                        <th>JENIS ARMADA</th>
+                                        <th>TOTAL RIT</th>
+                                        <th>RIT PER HARI</th>
+                                        <th>PBB MUAT</th>
+                                        <th>JARAK</th>
+                                        <tr></tr>
+                                    </tr>
+                                </thead>
+                                <tbody style="border-bottom: 1px solid grey;">
+                                    @if($muat == null)
+                                        <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                            <td class="text-lg-center" colspan="10">data tidak ditemukan..</td>
+                                        </tr>
+                                    @else
+                                        <?php $i=1; ?>
+                                        @foreach($muat as $row)
+                                            <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                                <td>{{ $row->no_npp }}</td>
+                                                <td>{{ $row->vol_btg }}</td>
+                                                <td>TON</td>
+                                                <td>{{ date('d-m-Y', strtotime($row->jadwal3)) }}</td>
+                                                <td>{{ date('d-m-Y', strtotime($row->jadwal4)) }}</td>
+                                                <td>
+                                                    <select class="form-select" data-control="select2" data-placeholder="Select Armada..">
+                                                        <option></option>
+                                                        @foreach($trmaterial as $row)
+                                                            <option value="{{ $row->kd_material }}">{{ $row->uraian }} {{ $row->spesifikasi }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td>{{ $row->jml_rit }}</td>
+                                                <td>RIT PER HARI</td>
+                                                <td>{{ $row->pat->ket ?? 'Tidak diketahui' }}</td>
+                                                <td>{{ $row->jarak_km }}</td>
+                                                <td class="text-lg-center">
+                                                    <a href="javascript:void(0)" class="expandChildTable"><i class="fa fa-eye"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr class="childTableRow" style="display: none;">
+                                                <td colspan="11">
+                                                    <br>hidden row
+                                                    <br>hidden row
+                                                    <br>hidden row
+                                                </td>
+                                            </tr>
+                                            <?php $i++; ?>
+                                        @endforeach
+                                    @endif
+                                </tbody>
                             </table>
                             <hr style="border-top: 1px dotted black;">
                             <table class="table table-striped gy-7 gs-7">
@@ -456,6 +497,15 @@
 
 @section('js')
 <script type="text/javascript">
+
+
+$(function() {
+    $('.expandChildTable').on('click', function() {
+        $(this).toggleClass('selected').closest('tr').next().toggle();
+    })
+});
+
+
 // delete checkpoint
 $(document).ready(function(){
     $(document).on('click', '.delete_rute', function(e) {
