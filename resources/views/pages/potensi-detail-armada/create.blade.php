@@ -23,31 +23,31 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12 table-responsive">
-                            <table class="table table-striped gy-7 gs-7">
-                                <thead>
-                                    <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
-                                        <th>NPP</th>
+                            <table class="table table-striped table-condensed gy-2 gs-2">
+                                <thead style="background-color: #1e1e2d; color:white;">
+                                    <tr class="text-lg-center border border-gray-400" style="font-size: 10px; font-weight: bold;">
+                                        <th style="vertical-align: middle;">NPP</th>
                                         <th>VOL TOTAL (BTG)</th>
                                         <th>VOL TOTAL (TON)</th>
-                                        <th>TANGGAL AWAL DISTRIBUSI</th>
-                                        <th>TANGGAL AKHIR DISTRIBUSI</th>
-                                        <th>JENIS ARMADA</th>
-                                        <th>TOTAL RIT</th>
-                                        <th>RIT PER HARI</th>
-                                        <th>PBB MUAT</th>
-                                        <th>JARAK</th>
-                                        <tr></tr>
+                                        <th style="vertical-align: middle;">TANGGAL AWAL DISTRIBUSI</th>
+                                        <th style="vertical-align: middle;">TANGGAL AKHIR DISTRIBUSI</th>
+                                        <th style="vertical-align: middle;">JENIS ARMADA</th>
+                                        <th style="vertical-align: middle;">TOTAL RIT</th>
+                                        <th style="vertical-align: middle;">RIT PER HARI</th>
+                                        <th style="vertical-align: middle;">PBB MUAT</th>
+                                        <th style="vertical-align: middle;">JARAK</th>
+                                        <th style="vertical-align: middle;">opsi</th>
                                     </tr>
                                 </thead>
                                 <tbody style="border-bottom: 1px solid grey;">
                                     @if($muat == null)
-                                        <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                        <tr class="text-lg-center border border-gray-400">
                                             <td class="text-lg-center" colspan="10">data tidak ditemukan..</td>
                                         </tr>
                                     @else
                                         <?php $i=1; ?>
                                         @foreach($muat as $row)
-                                            <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                            <tr class="text-lg-center border border-gray-400">
                                                 <td>{{ $row->no_npp }}</td>
                                                 <td>{{ $row->vol_btg }}</td>
                                                 <td>TON</td>
@@ -56,8 +56,8 @@
                                                 <td>
                                                     <select class="form-select" data-control="select2" data-placeholder="Select Armada..">
                                                         <option></option>
-                                                        @foreach($trmaterial as $row)
-                                                            <option value="{{ $row->kd_material }}">{{ $row->uraian }} {{ $row->spesifikasi }}</option>
+                                                        @foreach($trmaterial as $item)
+                                                            <option value="{{ $item->kd_material }}">{{ $item->uraian }} {{ $item->spesifikasi }}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
@@ -65,15 +65,32 @@
                                                 <td>RIT PER HARI</td>
                                                 <td>{{ $row->pat->ket ?? 'Tidak diketahui' }}</td>
                                                 <td>{{ $row->jarak_km }}</td>
-                                                <td class="text-lg-center">
-                                                    <a href="javascript:void(0)" class="expandChildTable"><i class="fa fa-eye"></i></a>
+                                                <td class="text-center">
+                                                    <a href="javascript:void(0)" class="btn btn-icon btn-secondary expandChildTable"><i class="fa fa-eye"></i></a>
                                                 </td>
                                             </tr>
                                             <tr class="childTableRow" style="display: none;">
                                                 <td colspan="11">
-                                                    <br>hidden row
-                                                    <br>hidden row
-                                                    <br>hidden row
+                                                    <table class="table table-condensed">
+                                                        <thead>
+                                                            <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                                                <th>Tipe Produk</th>
+                                                                <th>Kode Produk</th>
+                                                                <th>Vol Total BTG</th>
+                                                                <th>Vol Total TON</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="border-bottom: 1px solid grey;">
+                                                             @foreach ($row->spprbri as $childItem)
+                                                                <tr class="text-lg-center fw-semibold text-gray-800 border border-gray-400">
+                                                                    <td>{{ $childItem->produk->tipe }}</td>
+                                                                    <td>{{ $childItem->kd_produk }}</td>
+                                                                    <td>{{ $childItem->vol_spprb }}</td>
+                                                                    <td>{{ $childItem->vol_spprb * $childItem->produk->vol_m3 * 2.5 }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
                                                 </td>
                                             </tr>
                                             <?php $i++; ?>
