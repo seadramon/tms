@@ -24,11 +24,29 @@
                     <div class="row">
                         <div class="col-md-12 table-responsive">
                             <table class="table table-striped gy-7 gs-7">
+                                <tr class="text-lg-center text-bold">
+                                    <th>NPP</th>
+                                    <th>VOL TOTAL (BTG)</th>
+                                    <th>VOL TOTAL (TON)</th>
+                                    <th>TANGGAL AWAL DISTRIBUSI</th>
+                                    <th>TANGGAL AKHIR DISTRIBUSI</th>
+                                    <th>JENIS ARMADA</th>
+                                    <th>TOTAL RIT</th>
+                                    <th>RIT PER HARI</th>
+                                    <th>PBB MUAT</th>
+                                    <th>JARAK</th>
+                                </tr>
+                                <tr>
+                                    <td class="text-lg-center" colspan="10">data tidak ditemukan..</td>
+                                </tr>
+                            </table>
+                            <hr style="border-top: 1px dotted black;">
+                            <table class="table table-striped gy-7 gs-7">
                                 <tr>
                                     <td>Jalan</td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
+                                            <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="jalan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Baik
                                             </label>
@@ -36,7 +54,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
+                                            <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="jalan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Kurang Baik
                                             </label>
@@ -44,7 +62,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
+                                            <input class="form-check-input" type="radio" value="rusak" id="flexCheckDefault" name="jalan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Rusak
                                             </label>
@@ -52,7 +70,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
+                                            <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Menanjak
                                             </label>
@@ -60,7 +78,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
+                                            <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Berkelok
                                             </label>
@@ -68,7 +86,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
+                                            <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Lain - Lain
                                             </label>
@@ -79,7 +97,7 @@
                                     <td>Jembatan</td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="Jembatan"/>
+                                            <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="Jembatan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Baik
                                             </label>
@@ -87,7 +105,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="Jembatan"/>
+                                            <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="Jembatan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Kurang Baik
                                             </label>
@@ -95,7 +113,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="Jembatan"/>
+                                            <input class="form-check-input" type="radio" value="tidak_ada" id="flexCheckDefault" name="Jembatan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Tidak Ada
                                             </label>
@@ -106,7 +124,7 @@
                                     <td>Jalan Alternatif</td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
+                                            <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="jalan_alternatif"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Baik
                                             </label>
@@ -114,7 +132,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
+                                            <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="jalan_alternatif"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Kurang Baik
                                             </label>
@@ -122,7 +140,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
+                                            <input class="form-check-input" type="radio" value="rusak" id="flexCheckDefault" name="jalan_alternatif"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Rusak
                                             </label>
@@ -130,7 +148,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
+                                            <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan_alternatif"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Menanjak
                                             </label>
@@ -138,7 +156,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
+                                            <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan_alternatif"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Berkelok
                                             </label>
@@ -146,7 +164,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
+                                            <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan_alternatif"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Lain - Lain
                                             </label>
@@ -157,49 +175,31 @@
                                     <td>Langsir</td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
+                                            <input class="form-check-input" type="radio" value="tidak_ada" id="flexCheckDefault" name="langsir"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Tidak Ada
                                             </label>
                                         </div>
-                                        <div class="form-check form-check-custom form-check-solid mt-1">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                < 500 M
-                                            </label>
-                                        </div>
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
+                                            <input class="form-check-input" type="radio" value="mobil" id="flexCheckDefault" name="langsir"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Mobil
                                             </label>
                                         </div>
-                                        <div class="form-check form-check-custom form-check-solid mt-1">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                500 s/d 1.000 M
-                                            </label>
-                                        </div>
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
+                                            <input class="form-check-input" type="radio" value="gerobak" id="flexCheckDefault" name="langsir"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Gerobak
                                             </label>
                                         </div>
-                                        <div class="form-check form-check-custom form-check-solid mt-1">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                > 1.000 M 
-                                            </label>
-                                        </div>
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
+                                            <input class="form-check-input" type="radio" value="roll_geser" id="flexCheckDefault" name="langsir"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Roll Geser
                                             </label>
@@ -207,7 +207,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
+                                            <input class="form-check-input" type="radio" value="manusia" id="flexCheckDefault" name="langsir"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Manusia
                                             </label>
@@ -215,7 +215,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
+                                            <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="langsir"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Lain - Lain
                                             </label>
@@ -223,10 +223,40 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Jarak Langsir</td>
+                                    <td>
+                                        <div class="form-check form-check-custom form-check-solid mt-1">
+                                            <input class="form-check-input" type="radio" value="500" id="flexCheckDefault" name="jarak_langsir"/>
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                < 500 M
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-custom form-check-solid mt-1">
+                                            <input class="form-check-input" type="radio" value="500_1000" id="flexCheckDefault" name="jarak_langsir"/>
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                500 s/d 1.000 M
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-custom form-check-solid mt-1">
+                                            <input class="form-check-input" type="radio" value="1000" id="flexCheckDefault" name="jarak_langsir"/>
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                > 1.000 M
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
                                     <td>Metode Penurunan</td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="penurunan"/>
+                                            <input class="form-check-input" type="radio" value="crene" id="flexCheckDefault" name="penurunan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Crane
                                             </label>
@@ -234,7 +264,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="penurunan"/>
+                                            <input class="form-check-input" type="radio" value="portal" id="flexCheckDefault" name="penurunan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Portal
                                             </label>
@@ -242,7 +272,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="penurunan"/>
+                                            <input class="form-check-input" type="radio" value="manual" id="flexCheckDefault" name="penurunan"/>
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Manual
                                             </label>
@@ -252,11 +282,11 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
-                            </table>   
-                        </div>                     
-                    </div>                    
+                            </table>
+                        </div>
+                    </div>
                 <!-- end of card-body -->
-                </div>            
+                </div>
             </div>
         </div>
         <!--end::Col-->
@@ -270,7 +300,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Prakiraan Pencitraan Peta Rute Pengiriman</h3>
                 </div>
-            
+
                 <div class="card-body">
                     @if(count($errors) > 0)
                         @foreach($errors->all() as $error)
@@ -295,9 +325,9 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>  
-                            <div id="list_checkpoint" style="padding-top: 5px;"></div> 
-                           
+                            </div>
+                            <div id="list_checkpoint" style="padding-top: 5px;"></div>
+
                         </div>
                         <div class="col-md-6">
                             <div class="row">
@@ -318,8 +348,8 @@
                                 <div class="col-md-4">
                                     <input type="text" class="form-control input-sm" placeholder="Latitude">
                                 </div>
-                            </div> 
-                           
+                            </div>
+
                         </div>
                     </div>
                     <div class="row mt-5">
@@ -342,10 +372,10 @@
                                 <div id="panel"></div>
                             </div>
                         </div>
-                    </div>  
+                    </div>
                 <!-- end of card-body -->
                 </div>
-            
+
                 <div class="card-footer" style="text-align: right;">
                     <a href="{{ URL::previous() }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
                     <input type="submit" class="btn btn-success" value="Simpan">
@@ -432,11 +462,11 @@ $(document).ready(function(){
         $(this).parent().parent().parent().remove();
     });
 
-   
+
     $("#add_checkpoint").click(function(){
         var lat = $('#checkpoint_lat').val();
         var lng = $('#checkpoint_lng').val();
-        
+
         $('#list_checkpoint').append(
             '<div class="col-md-12" style="padding-bottom: 5px;">'+
                 '<div class="row">'+
@@ -449,7 +479,7 @@ $(document).ready(function(){
                     '<div class="col-md-2" style="text-align:center;">'+
                         '<a href="javascript:void(0)" class="btn btn-icon btn-danger delete_rute align-right"><i class="fas fa-times"></i></a>'+
                     '</div>'+
-                '</div>'+ 
+                '</div>'+
             '</div>');
     });
 
@@ -469,7 +499,7 @@ $(document).ready(function(){
                     stopover: true
                 });
         });
-     
+
         const map = new google.maps.Map(document.getElementById("rute_map"), {
             zoom: 6,
             // center: { lat: -7.258621, lng: 112.750281 }, // Indonesia.
@@ -495,13 +525,13 @@ $(document).ready(function(){
             directionsService,
             directionsRenderer
         );
-        
 
-        function displayRoute(service, display) {  
+
+        function displayRoute(service, display) {
             service.route({
                 origin: { location: { lat: -6.218410109901146, lng: 106.79832075524945 } }, //GBK -6.218410109901146, 106.79832075524945
                 destination: { location: { lat: -6.180274999666274, lng: 106.82641519051303 } }, // Monas -6.180274999666274, 106.82641519051303
-                waypoints: waypts,  
+                waypoints: waypts,
                 // [ values
                 //     // { location: { lat: -7.258621, lng: 112.750281 } },
                 //     // { location: "Broken Hill, NSW" },

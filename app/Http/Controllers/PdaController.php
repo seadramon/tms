@@ -17,13 +17,15 @@ use App\Models\Pat;
 
 class PdaController extends Controller
 {
-    // public function create(){
-    //     $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
-    //     return view('pages.potensi-detail-armada.create', ['pat' => $pat]);
-    // }
+    public function create(){
+        $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
+        return view('pages.potensi-detail-armada.create', ['pat' => $pat]);
+    }
 
-    public funtion edit(){
-        
+    public function edit($no_npp){
+        $no_npp = '211A0009BL';
+        $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
+        return view('pages.potensi-detail-armada.create', ['pat' => $pat]);
     }
 
 }
