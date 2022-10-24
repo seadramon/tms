@@ -20,6 +20,7 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Log;
 
 class SppController extends Controller
@@ -143,7 +144,7 @@ class SppController extends Controller
                             <li><a class="dropdown-item" href="'. route('spp.edit', ['spp' => $noSppb]) .'">Edit</a></li>
                             <li><a class="dropdown-item" href="'. route('spp.amandemen', ['spp' => $noSppb]) .'">Amandemen</a></li>
                             '.$approval.'
-                            <li><a class="dropdown-item" href="#">Print</a></li>
+                            <li><a class="dropdown-item" href="'. route('spp.print', ['spp' => $noSppb]) .'">Print</a></li>
                             <li><a class="dropdown-item" href="#">Hapus</a></li>
                         </ul>
                         </div>';
@@ -379,6 +380,51 @@ class SppController extends Controller
         ];
     }
 
+    public function print($spp)
+    {
+        $noSppb = str_replace("|", "/", $spp);
+        $data = SppbH::find($noSppb);
+
+        $noNpp = $data->no_npp;
+
+        $pesanans = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+            ->where('no_npp', $noNpp)
+            ->get();
+        $dataPesanan = [];
+
+        if (count($pesanans) > 0) {
+            foreach ($pesanans as $pesanan) {
+                $volm3 = !empty($pesanan->vol_m3)?$pesanan->vol_m3:1;
+                $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
+                $pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
+                $sppVolBtg = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
+                $sppVolTon = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;
+                $sisaBtg = $pesananVolBtg - $sppVolBtg;
+                $sisaTon = $pesananVolTon - $sppVolTon;
+                $persen = 0;
+                if ($pesananVolBtg > 0) {
+                    $persen = $sisaBtg / $pesananVolBtg * 100;
+                }
+
+                $dataPesanan[$pesanan->kd_produk_konfirmasi] = [
+                    'sisaBtg' => $sisaBtg,
+                    'sppVolBtg' => $sppVolBtg,
+                    'pesananVolBtg' => nominal($pesananVolBtg)
+                ];
+            }
+        }
+// dd($dataPesanan);
+        $pdf = Pdf::loadView('prints.spp', [
+            'data' => $data,
+            'dataPesanan' => $dataPesanan
+        ]);
+
+        $filename = "SPP-Report";
+
+        return $pdf->setPaper('a4', 'portrait')
+            ->stream($filename . '.pdf');
+    }
+
     public function edit($spp)
     {
         $arrData = $this->editData($spp, 'edit');
@@ -494,7 +540,6 @@ class SppController extends Controller
             return redirect()->route('spp.index');
         } catch(Exception $e) {
             DB::rollback();
-            dd($e);
             Log::error($e->getMessage());
             $flasher->addError('Terjadi error silahkan coba beberapa saat lagi.');
 
