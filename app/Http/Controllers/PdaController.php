@@ -27,7 +27,7 @@ class PdaController extends Controller
     }
 
     public function edit($no_npp){
-        $no_npp = '211A0009BL';
+        //$no_npp = '211A0009BL';
         $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
         $muat = VPotensiMuat::with('pat')->where('no_npp',$no_npp)->get();
 
