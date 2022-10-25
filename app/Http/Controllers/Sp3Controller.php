@@ -447,14 +447,21 @@ class Sp3Controller extends Controller
         
         $data = Sp3::find($noSp3);
 
-        $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+        $detailPesanan = MonOp::with(['produk', 'sp3D' => function($sql) use ($noSp3) {
+                $sql->whereNotIn('no_sp3', [$noSp3]);
+            }, 'vSpprbRi'])
             ->where('no_npp', $data->no_npp)
             ->get();
 
         $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
         
+        $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))nosp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
         $sp3D = Sp3D::whereNoNpp($data->no_npp)
             ->whereIn('kd_produk', $kd_produks)
+            ->whereNotIn('no_sp3', [$noSp3])
+            ->join(DB::raw($joinQuery), function($join) {
+                $join->on('sp3_d.no_sp3', '=', 'last_sp3.nosp3');
+            })
             ->get()
             ->sortByDesc('no_sp3')
             ->groupBy([
@@ -569,14 +576,21 @@ class Sp3Controller extends Controller
 
         $data = Sp3::find($noSp3);
 
-        $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+        $detailPesanan = MonOp::with(['produk', 'sp3D' => function($sql) use ($noSp3) {
+                $sql->whereNotIn('no_sp3', [$noSp3]);
+            }, 'vSpprbRi'])
             ->where('no_npp', $data->no_npp)
             ->get();
 
         $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
         
+        $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))nosp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
         $sp3D = Sp3D::whereNoNpp($data->no_npp)
             ->whereIn('kd_produk', $kd_produks)
+            ->whereNotIn('no_sp3', [$noSp3])
+            ->join(DB::raw($joinQuery), function($join) {
+                $join->on('sp3_d.no_sp3', '=', 'last_sp3.nosp3');
+            })
             ->get()
             ->sortByDesc('no_sp3')
             ->groupBy([
@@ -823,8 +837,13 @@ class Sp3Controller extends Controller
 
         $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
     
+        $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))nosp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
         $sp3D = Sp3D::whereNoNpp($data->no_npp)
             ->whereIn('kd_produk', $kd_produks)
+            ->whereNotIn('no_sp3', [$noSp3])
+            ->join(DB::raw($joinQuery), function($join) {
+                $join->on('sp3_d.no_sp3', '=', 'last_sp3.nosp3');
+            })
             ->get()
             ->sortByDesc('no_sp3')
             ->groupBy([

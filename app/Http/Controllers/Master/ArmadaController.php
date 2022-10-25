@@ -59,8 +59,7 @@ class ArmadaController extends Controller
 
     public function create()
     {
-        $jenis = TrMaterial::where('kd_jmaterial', 'J')
-            ->where('kd_material', 'LIKE', 'JA%')
+        $jenis = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
             ->mapWithKeys(function($item){
                 return [$item->kd_material => $item->kd_material . ' | ' . $item->name];
@@ -73,15 +72,15 @@ class ArmadaController extends Controller
         for($i=0; $i<10; $i++){
             $tahun[$rentangTahun + $i] = $rentangTahun + $i;
         }
-        
+
         $tahun = ["" => "Pilih Tahun Pembuatan"] + $tahun;
-        
+
         $status = [
             'aktif'     => 'Aktif',
             'muat'      => 'Muat',
             'storing'   => 'Storing',
         ];
-            
+
         $status = ["" => "Pilih Status"] + $status;
 
         $driver = Driver::where('vendor_id', 'WBP004')
@@ -93,9 +92,9 @@ class ArmadaController extends Controller
         $driver = ["" => "Pilih Driver"] + $driver;
 
         return view('pages.master.armada.create', [
-            'jenis'  => $jenis, 
-            'tahun'  => $tahun, 
-            'status' => $status, 
+            'jenis'  => $jenis,
+            'tahun'  => $tahun,
+            'status' => $status,
             'driver' => $driver
         ]);
     }
@@ -104,7 +103,7 @@ class ArmadaController extends Controller
     {
         try {
             DB::beginTransaction();
-                        
+
             Validator::make($request->all(), [
                 'kd_armada'         => 'required',
                 'tahun'             => 'required',
@@ -232,23 +231,23 @@ class ArmadaController extends Controller
             })
             ->all();
         $jenis = ["" => "Pilih Jenis Armada"] + $jenis;
-        
+
         $tahun = [];
 
         $rentangTahun = date('Y') - 10;
-        
+
         for($i=0; $i<10; $i++){
             $tahun[$rentangTahun + $i] = $rentangTahun + $i;
         }
-        
+
         $tahun = ["" => "Pilih Tahun Pembuatan"] + $tahun;
-        
+
         $status = [
             'aktif'     => 'Aktif',
             'muat'      => 'Muat',
             'storing'   => 'Storing',
         ];
-            
+
         $status = ["" => "Pilih Status"] + $status;
 
         $driver = Driver::where('vendor_id', 'WBP004')
@@ -304,18 +303,18 @@ class ArmadaController extends Controller
                 if ($request->hasFile($param_foto)) {
                     $file = $request->file($param_foto);
                     $extension = $file->getClientOriginalExtension();
-    
+
                     $dir = 'vendor/' . $armada->vendor_id . '/' . 'armada/' . $armada->id;
-    
+
                     if (!Storage::disk('local')->exists($dir)) {
                         Storage::disk('local')->makeDirectory($dir, 0777, true);
                     }
-    
+
                     $fileName = $row . '.' . $extension;
                     $fullPath = $dir .'/'. $fileName;
-    
+
                     Storage::disk('local')->put($fullPath, File::get($file));
-    
+
                     $armada->foto_stnk = $fullPath;
                 }
             }

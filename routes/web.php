@@ -61,6 +61,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::get('/data', [SppController::class, 'data'])->name('data');
 	    Route::get('/spp-edit/{spp}', [SppController::class, 'edit'])->name('edit');
 	    Route::get('/spp-amandemen/{spp}', [SppController::class, 'amandemen'])->name('amandemen');
+	    Route::get('/spp-print/{spp}', [SppController::class, 'print'])->name('print');
 	    Route::resource('/',  SppController::class)->except([
 	        'destroy', 'edit'
 	    ])->parameters(['' => 'spp']);
@@ -124,6 +125,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	Route::group(['prefix' => 'potensi-detail-armada', 'as' => 'potensi.detail.armada.'], function(){
 		Route::get('/create',	[PdaController::class, 'create'])->name('create');
+		Route::get('/{no_npp}/edit',	[PdaController::class, 'edit'])->name('edit');
 	});
 
     Route::group(['prefix' => '/spm', 'as' => 'spm.'], function(){

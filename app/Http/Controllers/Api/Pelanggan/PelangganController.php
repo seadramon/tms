@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class PelangganController extends Controller
@@ -42,7 +43,7 @@ class PelangganController extends Controller
                 'pelanggan_id' => ['required', Rule::exists('pelanggan', 'pelanggan_id')],
                 'nama'         => 'required',
                 'ktp'          => 'required|size:16|unique:App\Models\PelangganUser,ktp',
-                'no_hp'        => 'required',
+                'no_hp'        => 'required|starts_with:08|min:8|max:12',
                 'password'     => 'required'
             ])->validate();
 
@@ -77,6 +78,41 @@ class PelangganController extends Controller
             'message' => $message,
             'data' => $data
         ], $code);
+    }
+
+    public function login(Request $request)
+    {
+        $code    = 200;
+        $message = "Success";
+        $data    = null;
+
+        try {
+            Validator::make($request->all(), [
+                'no_hp'    => 'required|starts_with:08|min:8|max:12',
+                'password' => 'required'
+            ])->validate();
+            $user = PelangganUser::where('no_hp', $request->no_hp)->first();
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'no_hp' => ['The provided credentials are incorrect.'],
+                ]);
+            }
+            $data['token'] = $user->createToken('mobile')->plainTextToken;
+        } catch (Exception $e) {
+            $code = 400;
+            $message = $e->getMessage();
+        }
+
+        return response()->json([
+            'success' => $code == 200 ? true : false,
+            'message' => $message,
+            'data' => $data
+        ], $code);
+    }
+
+    public function login1(Request $request)
+    {
+        return response()->json($request->user());
     }
 }
 

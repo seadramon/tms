@@ -431,8 +431,6 @@ class SpmController extends Controller
 
         $logo = base64_encode($logo);
 
-        // return view('pages.spm.print', compact('spmh', 'logo'));
-
         return Pdf::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
             ->loadView('pages.spm.print', ['spmh' => $spmh, 'logo' => $logo])->download('Surat Permintaan Muat.pdf');
         
