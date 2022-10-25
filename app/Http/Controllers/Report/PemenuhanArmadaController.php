@@ -65,17 +65,17 @@ class PemenuhanArmadaController extends Controller
             'sptb_h.tgl_sptb as tgl_sptb', 'vendor.nama as nama_vendor', 'tms_armadas.detail as jenis_armada')
             ->leftJoin('sppb_h', 'sppb_h.no_sppb', '=', 'spm_h.no_sppb')
             ->leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
-            ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'sptb_h.pat_to')
+            ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'sptb_h.kd_pat')
             ->leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
             ->leftJoin('vendor', 'vendor.vendor_id', '=', 'spm_h.vendor_id')
             ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 
         if($request->kd_pat){
-            $query->where('sptb_h.pat_to', $request->kd_pat);
+            $query->where('sptb_h.kd_pat', $request->kd_pat);
         }
 
         if($request->pbb_muat){
-            $query->where('sptb_h.pat_to', $request->pbb_muat);
+            $query->where('sptb_h.kd_pat', $request->pbb_muat);
         }
 
         if($request->vendor_id){
@@ -113,11 +113,11 @@ class PemenuhanArmadaController extends Controller
             ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 
         if($request->kd_pat){
-            $rencana->where('sptb_h.pat_to', $request->kd_pat);
+            $rencana->where('sptb_h.kd_pat', $request->kd_pat);
         }
 
         if($request->pbb_muat){
-            $rencana->where('sptb_h.pat_to', $request->pbb_muat);
+            $rencana->where('sptb_h.kd_pat', $request->pbb_muat);
         }
 
         if($request->vendor_id){
