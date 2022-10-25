@@ -31,4 +31,39 @@ class SppbH extends Model
     {
         return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
     }
+
+    public function personal()
+    {
+        return $this->belongsTo(Personal::class, 'app_empid', 'employee_id');
+    }
+
+    public function personal2()
+    {
+        return $this->belongsTo(Personal::class, 'app2_empid', 'employee_id');
+    }
+
+    public function personal3()
+    {
+        return $this->belongsTo(Personal::class, 'app3_empid', 'employee_id');
+    }
+
+    public function createdby()
+    {
+        return $this->belongsTo(Personal::class, 'created_by', 'employee_id');
+    }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'app_jbt', 'kd_jbt');
+    }
+
+    public function jabatan2()
+    {
+        return $this->belongsTo(Jabatan::class, 'app2_jbt', 'kd_jbt');
+    }
+
+    public function jabatan3()
+    {
+        return $this->belongsTo(Jabatan::class, 'app3_jbt', 'kd_jbt');
+    }
 }
