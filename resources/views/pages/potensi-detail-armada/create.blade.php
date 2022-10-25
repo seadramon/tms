@@ -12,349 +12,439 @@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <!--begin::Content container-->
 <div id="kt_content_container" class="container-xxl">
-     <!--begin::Row-->
-     <div class="row g-5 g-xl-8">
-        <!--begin::Col-->
-        <div class="col-12 mb-md-5 mb-xl-10">
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h3 class="card-title">Detail Rute Pengiriman</h3>
+    <!--begin::Col-->
+    <div class="col-12 mb-md-5 mb-xl-10">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="card-title">List Potensi Kebutuhan Armada</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-striped table-condensed gy-2 gs-2">
+                            <thead style="background-color: #1e1e2d; color:white;">
+                                <tr class="text-lg-center border border-gray-400" style="font-size: 10px; font-weight: bold;">
+                                    <th style="vertical-align: middle;">NPP</th>
+                                    <th>VOL TOTAL (BTG)</th>
+                                    <th>VOL TOTAL (TON)</th>
+                                    <th style="vertical-align: middle;">TANGGAL AWAL DISTRIBUSI</th>
+                                    <th style="vertical-align: middle;">TANGGAL AKHIR DISTRIBUSI</th>
+                                    <th style="vertical-align: middle;">JENIS ARMADA</th>
+                                    <th style="vertical-align: middle;">TOTAL RIT</th>
+                                    <th style="vertical-align: middle;">RIT PER HARI</th>
+                                    <th style="vertical-align: middle;">PBB MUAT</th>
+                                    <th style="vertical-align: middle;">JARAK</th>
+                                    <th style="vertical-align: middle;">opsi</th>
+                                </tr>
+                            </thead>
+                            <tbody style="border-bottom: 1px solid grey;">
+                                @if($muat == null)
+                                    <tr class="text-lg-center border border-gray-400">
+                                        <td class="text-lg-center" colspan="10">data tidak ditemukan..</td>
+                                    </tr>
+                                @else
+                                    <?php $i=1; ?>
+                                    @foreach($muat as $row)
+                                        <tr class="text-lg-center border border-gray-400">
+                                            <td>{{ $row->no_npp }}</td>
+                                            <td>{{ $row->vol_btg }}</td>
+                                            <td>TON</td>
+                                            <td>{{ date('d-m-Y', strtotime($row->jadwal3)) }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($row->jadwal4)) }}</td>
+                                            <td>
+                                                <select class="form-select" data-control="select2" data-placeholder="Select Armada..">
+                                                    <option></option>
+                                                    @foreach($trmaterial as $item)
+                                                        <option value="{{ $item->kd_material }}">{{ $item->uraian }} {{ $item->spesifikasi }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>{{ $row->jml_rit }}</td>
+                                            <td>RIT PER HARI</td>
+                                            <td>{{ $row->pat ?? 'Tidak diketahui' }}</td>
+                                            <td>{{ $row->jarak_km }}</td>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0)" class="btn btn-icon btn-secondary expandChildTable"><i class="fa fa-eye"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr class="childTableRow text-lg-center border border-gray-400" style="display: none;">
+                                            <td colspan="11">
+                                                <table class="table table-condensed table-rounded table-striped border">
+                                                    <thead>
+                                                        <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                                            <th>Tipe Produk</th>
+                                                            <th>Kode Produk</th>
+                                                            <th>Vol Total BTG</th>
+                                                            <th>Vol Total TON</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="border-bottom: 1px solid black;">
+                                                            @foreach ($row->spprbri as $childItem)
+                                                            <tr class="text-lg-center fw-semibold text-gray-800 border border-gray-400">
+                                                                <td>{{ $childItem->produk->tipe }}</td>
+                                                                <td>{{ $childItem->kd_produk }}</td>
+                                                                <td>{{ $childItem->vol_spprb }}</td>
+                                                                <td>{{ $childItem->vol_spprb * $childItem->produk->vol_m3 * 2.5 }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <?php $i++; ?>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12 table-responsive">
-                            <table class="table table-striped gy-7 gs-7">
-                                <tr>
-                                    <td>Jalan</td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Baik
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Kurang Baik
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Rusak
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Menanjak
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Berkelok
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Lain - Lain
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Jembatan</td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="Jembatan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Baik
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="Jembatan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Kurang Baik
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="Jembatan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Tidak Ada
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Jalan Alternatif</td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Baik
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Kurang Baik
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Rusak
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Menanjak
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Berkelok
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="jalan_alternatif"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Lain - Lain
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Langsir</td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Tidak Ada
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-custom form-check-solid mt-1">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                < 500 M
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Mobil
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-custom form-check-solid mt-1">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                500 s/d 1.000 M
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Gerobak
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-custom form-check-solid mt-1">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                > 1.000 M 
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Roll Geser
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Manusia
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="langsir"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Lain - Lain
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Metode Penurunan</td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="penurunan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Crane
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="penurunan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Portal
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-check-custom form-check-solid">
-                                            <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="penurunan"/>
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Manual
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </table>   
-                        </div>                     
-                    </div>                    
-                <!-- end of card-body -->
-                </div>            
+            <!-- end of card-body -->
             </div>
         </div>
-        <!--end::Col-->
     </div>
-    <!--end::Row-->
-    <!--begin::Row-->
-    <div class="row g-5 g-xl-8">
-        <!--begin::Col-->
-        <div class="col-12 mb-md-5 mb-xl-10">
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h3 class="card-title">Prakiraan Pencitraan Peta Rute Pengiriman</h3>
-                </div>
-            
-                <div class="card-body">
-                    @if(count($errors) > 0)
-                        @foreach($errors->all() as $error)
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Error!</strong> {{ $error }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endforeach
-                    @endif
+    <!--end::Col-->
 
-                    <div class="row">
-                        <div class="col-md-6" style="margin-bottom:10px;">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="form-label mt-2">PBB Muat</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <select class="form-select" data-control="select2" data-placeholder="Select PBB Muat..">
-                                        <option></option>
-                                        @foreach($pat as $row)
-                                            <option value="{{ $row->kd_pat }}">{{ $row->ket }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>  
-                            <div id="list_checkpoint" style="padding-top: 5px;"></div> 
-                           
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="form-label mt-2">Lokasi Tujuan</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control input-sm" placeholder="">
-                                </div>
-                            </div>
-                            <div class="row" style="padding-top: 10px;">
-                                <div class="col-md-4">
-                                    <label class="form-label mt-2">Lat/Long</label>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control input-sm" placeholder="Latitude">
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control input-sm" placeholder="Latitude">
-                                </div>
-                            </div> 
-                           
-                        </div>
-                    </div>
-                    <div class="row mt-5">
-                        <div class="col-md-6">
-                            <a style="width: 100%;" href="javacript:void(0)" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_1"><i class="fas fa-add"></i> Tambah Rute</a>
+    <!--begin::Col for Accordion-->
+    <div class="col-12 mb-md-5 mb-xl-10">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="card-title">Prakiraan Pencitraan Peta Rute Pengiriman</h3>
+            </div>
 
-                        </div>
-                        <div class="col-md-6">
-                            <a style="width: 100%;" href="javascript:void(0)" class="btn btn-block btn-danger" id="create_rute">Generate Rutes</a>
-                        </div>
-                    </div>
-                    <hr style="border-top: 1px dotted black;">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div id="rute_map" style="height:500px;"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <div id="sidebar" class="scroll h-500px px-5">
-                                <p>Total Distance: <span id="total"></span></p>
-                                <div id="panel"></div>
+            <div class="card-body">
+                <!--begin::Accordion-->
+                <div class="accordion" id="kt_accordion_1">
+                    @php $i=1; @endphp
+                    @foreach($muat as $item)
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="kt_accordion_{{ $i }}_header_{{ $i }}">
+                                <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_{{ $i }}_body_{{ $i }}" aria-expanded="false" aria-controls="kt_accordion_{{ $i }}_body_{{ $i }}">
+                                    Rute Pengiriman {{ $i }}
+                                </button>
+                            </h2>
+                            <div id="kt_accordion_{{ $i }}_body_{{ $i }}" class="accordion-collapse collapse" aria-labelledby="kt_accordion_{{ $i }}_header_{{ $i }}" data-bs-parent="#kt_accordion_{{ $i }}">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6" style="margin-bottom:10px;">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="form-label mt-2">PBB Muat : {{ $item->pat ?? 'Tidak diketahui' }}</label>
+                                                </div>
+                                            </div>
+                                            <div id="list_checkpoint" style="padding-top: 5px;"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label class="form-label mt-2">Lokasi Tujuan</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control input-sm" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 10px;">
+                                                <div class="col-md-4">
+                                                    <label class="form-label mt-2">Lat/Long</label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" class="form-control input-sm" placeholder="Latitude">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" class="form-control input-sm" placeholder="Latitude">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5">
+                                        <div class="col-md-6">
+                                            <a style="width: 100%;" href="javacript:void(0)" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_1"><i class="fas fa-add"></i> Tambah Rute</a>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a style="width: 100%;" href="javascript:void(0)" class="btn btn-block btn-danger" id="create_rute">Generate Rutes</a>
+                                        </div>
+                                    </div>
+                                    <hr style="border-top: 1px dotted black;">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div id="rute_map" style="height:500px;"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div id="sidebar" class="scroll h-500px px-5">
+                                                <p>Total Distance: <span id="total"></span></p>
+                                                <div id="panel"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>  
-                <!-- end of card-body -->
+                    @php $i++ @endphp
+                    @endforeach
                 </div>
-            
-                <div class="card-footer" style="text-align: right;">
-                    <a href="{{ URL::previous() }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
-                    <input type="submit" class="btn btn-success" value="Simpan">
-                </div>
+                <!--end::Accordion-->
             </div>
         </div>
-        <!--end::Col-->
     </div>
-    <!--end::Row-->
+    {{-- <hr style="border-top: 1px dotted black;"> --}}
+
+    <div class="col-12 mb-md-5 mb-xl-10">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="card-title">Detail Rute Pengiriman</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <tr>
+                        <td>Jalan</td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="jalan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Baik
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="jalan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Kurang Baik
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="rusak" id="flexCheckDefault" name="jalan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Rusak
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Menanjak
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Berkelok
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Lain - Lain
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jembatan</td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="Jembatan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Baik
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="Jembatan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Kurang Baik
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="tidak_ada" id="flexCheckDefault" name="Jembatan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Tidak Ada
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jalan Alternatif</td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="jalan_alternatif"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Baik
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="jalan_alternatif"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Kurang Baik
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="rusak" id="flexCheckDefault" name="jalan_alternatif"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Rusak
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan_alternatif"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Menanjak
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan_alternatif"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Berkelok
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan_alternatif"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Lain - Lain
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Langsir</td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="tidak_ada" id="flexCheckDefault" name="langsir"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Tidak Ada
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="mobil" id="flexCheckDefault" name="langsir"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Mobil
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="gerobak" id="flexCheckDefault" name="langsir"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Gerobak
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="roll_geser" id="flexCheckDefault" name="langsir"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Roll Geser
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="manusia" id="flexCheckDefault" name="langsir"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Manusia
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="langsir"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Lain - Lain
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jarak Langsir</td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid mt-1">
+                                <input class="form-check-input" type="radio" value="500" id="flexCheckDefault" name="jarak_langsir"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    < 500 M
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid mt-1">
+                                <input class="form-check-input" type="radio" value="500_1000" id="flexCheckDefault" name="jarak_langsir"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    500 s/d 1.000 M
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid mt-1">
+                                <input class="form-check-input" type="radio" value="1000" id="flexCheckDefault" name="jarak_langsir"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    > 1.000 M
+                                </label>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Metode Penurunan</td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="crene" id="flexCheckDefault" name="penurunan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Crane
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="portal" id="flexCheckDefault" name="penurunan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Portal
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-check-custom form-check-solid">
+                                <input class="form-check-input" type="radio" value="manual" id="flexCheckDefault" name="penurunan"/>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Manual
+                                </label>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card-footer" style="text-align: right;">
+                <a href="{{ URL::previous() }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
+                <input type="submit" class="btn btn-success" value="Simpan">
+            </div>
+        </div>
+    </div>
+    <!--end::Col-->
 </div>
 <!--end::Content container-->
 
@@ -401,7 +491,6 @@
 </div>
 <!-- end of modals -->
 
-
 @endsection
 
 @section('css')
@@ -426,17 +515,26 @@
 
 @section('js')
 <script type="text/javascript">
+
+// show detail list on table
+$(function() {
+    $('.expandChildTable').on('click', function() {
+        $(this).toggleClass('selected').closest('tr').next().toggle();
+    })
+});
+
+
 // delete checkpoint
 $(document).ready(function(){
     $(document).on('click', '.delete_rute', function(e) {
         $(this).parent().parent().parent().remove();
     });
 
-   
+
     $("#add_checkpoint").click(function(){
         var lat = $('#checkpoint_lat').val();
         var lng = $('#checkpoint_lng').val();
-        
+
         $('#list_checkpoint').append(
             '<div class="col-md-12" style="padding-bottom: 5px;">'+
                 '<div class="row">'+
@@ -449,7 +547,7 @@ $(document).ready(function(){
                     '<div class="col-md-2" style="text-align:center;">'+
                         '<a href="javascript:void(0)" class="btn btn-icon btn-danger delete_rute align-right"><i class="fas fa-times"></i></a>'+
                     '</div>'+
-                '</div>'+ 
+                '</div>'+
             '</div>');
     });
 
@@ -469,7 +567,7 @@ $(document).ready(function(){
                     stopover: true
                 });
         });
-     
+
         const map = new google.maps.Map(document.getElementById("rute_map"), {
             zoom: 6,
             // center: { lat: -7.258621, lng: 112.750281 }, // Indonesia.
@@ -495,13 +593,13 @@ $(document).ready(function(){
             directionsService,
             directionsRenderer
         );
-        
 
-        function displayRoute(service, display) {  
+
+        function displayRoute(service, display) {
             service.route({
                 origin: { location: { lat: -6.218410109901146, lng: 106.79832075524945 } }, //GBK -6.218410109901146, 106.79832075524945
                 destination: { location: { lat: -6.180274999666274, lng: 106.82641519051303 } }, // Monas -6.180274999666274, 106.82641519051303
-                waypoints: waypts,  
+                waypoints: waypts,
                 // [ values
                 //     // { location: { lat: -7.258621, lng: 112.750281 } },
                 //     // { location: "Broken Hill, NSW" },
@@ -604,6 +702,8 @@ $(document).ready(function(){
         marker.setMap(map);
 	}
 </script>
+
+
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0f2vYkUlCd6XCyu17DBElvuxyf_4quCU&libraries=places&callback=initMap&language=id"></script>
 @endsection
