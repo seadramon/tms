@@ -384,8 +384,6 @@
         {
             "name": "dompdf/dompdf",
             "version": "v2.0.1",
-<<<<<<< HEAD
-=======
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
@@ -448,7 +446,6 @@
         {
             "name": "dragonmantank/cron-expression",
             "version": "v3.3.1",
->>>>>>> main
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
@@ -4183,8 +4180,6 @@
         {
             "name": "sabberworm/php-css-parser",
             "version": "8.4.0",
-<<<<<<< HEAD
-=======
             "source": {
                 "type": "git",
                 "url": "https://github.com/sabberworm/PHP-CSS-Parser.git",
@@ -4238,7 +4233,6 @@
         {
             "name": "symfony/console",
             "version": "v6.1.4",
->>>>>>> main
             "source": {
                 "type": "git",
                 "url": "https://github.com/sabberworm/PHP-CSS-Parser.git",
