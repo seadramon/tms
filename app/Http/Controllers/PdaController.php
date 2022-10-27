@@ -14,6 +14,7 @@ use Storage;
 use Validator;
 
 use App\Models\Pat;
+use App\Models\Npp;
 use App\Models\TrMaterial;
 use App\Models\Views\VPotensiMuat;
 use App\Models\Views\VSpprbRi;
@@ -52,9 +53,24 @@ class PdaController extends Controller
             ]);
         }
 
+        $sqlNpp = Npp::select('npp.nama_proyek', 
+            'npp.nama_pelanggan', 
+            'npp.no_npp', 
+            'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec', 
+            'tb_pat.ket as pat', 
+            'npp.kd_pat', 
+            'tb_pat.singkatan',
+            'info_pasar_h.lat as info_pasar_lat','info_pasar_h.lang as info_pasar_long',
+            'tb_region.lat as tb_region_lat','tb_region.lang as tb_region_long')
+        ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
+        ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
+        ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'npp.kd_pat')
+        ->where('npp.no_npp', $no_npp)
+        ->first();
+
 
         $trmaterial = TrMaterial::where('kd_jmaterial','T')->get();
-        // return response()->json($collection_table);
+        // return response()->json($sqlNpp);
         return view('pages.potensi-detail-armada.create', ['pat' => $pat, 'muat' => $collection_table, 'trmaterial' => $trmaterial]);
     }
 
