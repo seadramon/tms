@@ -195,58 +195,24 @@
                 var kategori = [];
                 var totalRencana = [];
                 var totalRealisasi = [];
-                var isRencanaEmpty, isRealisasiEmpty;
 
-                for (let i = 1; i <= listBulan.length; i++) {
-                    isRencanaEmpty = true;
-                    isRealisasiEmpty = true;
-                    
+                result.rencana.forEach(element => {
                     kategori.push(
                         {
-                            label: listBulan[i-1]
+                            label: listBulan[parseInt(element.bulan)-1]
                         }
                     )
 
-                    result.rencana.forEach(element => {
-                        if(element.bulan == i){
-                            totalRencana.push(
-                                {
-                                    value: element.total
-                                }
-                            )
-
-                            isRencanaEmpty = false;
+                    totalRencana.push(
+                        {
+                            value: element.total
                         }
-                    });
+                    )
+                });
 
-                    if(isRencanaEmpty){
-                        totalRencana.push(
-                            {
-                                value: 0
-                            }
-                        )
-                    }
-
-                    result.realisasi.forEach(element => {
-                        if(element.bulan == i){
-                            totalRealisasi.push(
-                                {
-                                    value: element.total
-                                }
-                            )
-
-                            isRealisasiEmpty = false;
-                        }
-                    });
-
-                    if(isRealisasiEmpty){
-                        totalRealisasi.push(
-                            {
-                                value: 0
-                            }
-                        )
-                    }
-                }
+                result.realisasi.forEach(element => {
+                    totalRealisasi[parseInt(element.bulan)-1] = {value: element.total};
+                });
 
                 $("#chart-container").insertFusionCharts({
                     type: "msline",
