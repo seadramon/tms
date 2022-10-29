@@ -20,6 +20,7 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Log;
 
 class SppController extends Controller
@@ -84,7 +85,7 @@ class SppController extends Controller
                 $sppb = $model->detail->sum('vol');
 
                 if ($sppb > 0) {
-                    $res = $sptb / $sppb;
+                    $res = round($sptb / $sppb);
                 }
 
                 return $res . '%';
@@ -104,21 +105,21 @@ class SppController extends Controller
                 switch (true) {
                     case ($model->app == 0):
                         $approve = route('spp-approve.approval', [
-                            'urutan' => 'first', 
+                            'urutan' => 'first',
                             'nosppb' => $noSppb
                         ]);
                         $caption = "Approve First";
                         break;
                     case ($model->app == 1 && $model->app2 == 0):
                         $approve = route('spp-approve.approval', [
-                            'urutan' => 'second', 
+                            'urutan' => 'second',
                             'nosppb' => $noSppb
                         ]);
                         $caption = "Approve Second";
                         break;
                     case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0):
                         $approve = route('spp-approve.approval', [
-                            'urutan' => 'third', 
+                            'urutan' => 'third',
                             'nosppb' => $noSppb
                         ]);
                         $caption = "Approve Third";
@@ -143,7 +144,7 @@ class SppController extends Controller
                             <li><a class="dropdown-item" href="'. route('spp.edit', ['spp' => $noSppb]) .'">Edit</a></li>
                             <li><a class="dropdown-item" href="'. route('spp.amandemen', ['spp' => $noSppb]) .'">Amandemen</a></li>
                             '.$approval.'
-                            <li><a class="dropdown-item" href="#">Print</a></li>
+                            <li><a class="dropdown-item" href="'. route('spp.print', ['spp' => $noSppb]) .'">Print</a></li>
                             <li><a class="dropdown-item" href="#">Hapus</a></li>
                         </ul>
                         </div>';
@@ -188,7 +189,7 @@ class SppController extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             Validator::make($request->all(), [
                 'jenis'   => 'required',
                 'no_npp'   => 'required',
@@ -202,7 +203,7 @@ class SppController extends Controller
                 ->get();
 
             $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
-        
+
             $sp3D = Sp3D::whereNoNpp($noNpp)
                 ->whereIn('kd_produk', $kd_produks)
                 ->get()
@@ -213,12 +214,12 @@ class SppController extends Controller
                     }
                 ], true);
 
-            $sqlNpp = Npp::select('npp.nama_proyek', 
-                    'npp.nama_pelanggan', 
-                    'npp.no_npp', 
-                    'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec', 
-                    'tb_pat.ket as pat', 
-                    'npp.kd_pat', 
+            $sqlNpp = Npp::select('npp.nama_proyek',
+                    'npp.nama_pelanggan',
+                    'npp.no_npp',
+                    'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec',
+                    'tb_pat.ket as pat',
+                    'npp.kd_pat',
                     'tb_pat.singkatan')
                 ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
                 ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
@@ -351,7 +352,7 @@ class SppController extends Controller
             ->get();
 
         $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
-        
+
         $sp3D = Sp3D::whereNoNpp($noNpp)
             ->whereIn('kd_produk', $kd_produks)
             ->get()
@@ -379,6 +380,51 @@ class SppController extends Controller
         ];
     }
 
+    public function print($spp)
+    {
+        $noSppb = str_replace("|", "/", $spp);
+        $data = SppbH::find($noSppb);
+
+        $noNpp = $data->no_npp;
+
+        $pesanans = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
+            ->where('no_npp', $noNpp)
+            ->get();
+        $dataPesanan = [];
+
+        if (count($pesanans) > 0) {
+            foreach ($pesanans as $pesanan) {
+                $volm3 = !empty($pesanan->vol_m3)?$pesanan->vol_m3:1;
+                $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
+                $pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
+                $sppVolBtg = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
+                $sppVolTon = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;
+                $sisaBtg = $pesananVolBtg - $sppVolBtg;
+                $sisaTon = $pesananVolTon - $sppVolTon;
+                $persen = 0;
+                if ($pesananVolBtg > 0) {
+                    $persen = $sisaBtg / $pesananVolBtg * 100;
+                }
+
+                $dataPesanan[$pesanan->kd_produk_konfirmasi] = [
+                    'sisaBtg' => $sisaBtg,
+                    'sppVolBtg' => $sppVolBtg,
+                    'pesananVolBtg' => nominal($pesananVolBtg)
+                ];
+            }
+        }
+// dd($dataPesanan);
+        $pdf = Pdf::loadView('prints.spp', [
+            'data' => $data,
+            'dataPesanan' => $dataPesanan
+        ]);
+
+        $filename = "SPP-Report";
+
+        return $pdf->setPaper('a4', 'portrait')
+            ->stream($filename . '.pdf');
+    }
+
     public function edit($spp)
     {
         $arrData = $this->editData($spp, 'edit');
@@ -395,7 +441,7 @@ class SppController extends Controller
         $arrData['spprb'] = VSpprbRi::with(['produk', 'pat'])
             ->where('v_spprb_ri.no_npp', $arrData['no_npp'])
             ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
-            ->select('v_spprb_ri.pat_to', 'v_spprb_ri.spprblast', 'v_spprb_ri.kd_produk', 'v_spprb_ri.vol_spprb', 'spprb_h.jadwal1', 
+            ->select('v_spprb_ri.pat_to', 'v_spprb_ri.spprblast', 'v_spprb_ri.kd_produk', 'v_spprb_ri.vol_spprb', 'spprb_h.jadwal1',
                 'spprb_h.jadwal2')
             ->get();
 
@@ -411,9 +457,9 @@ class SppController extends Controller
                 $arrData['kontrak'] = DB::table('KD_SEPEDM_D')
                     ->where('no_proyek', $npp->no_info)
                     ->where('no_dok', '12')
-                    ->whereRaw("P_KE = (select 
-                            max(P_KE) 
-                        from 
+                    ->whereRaw("P_KE = (select
+                            max(P_KE)
+                        from
                             KD_SEPEDM_D
                         WHERE
                             NO_DOK = '12'
@@ -494,7 +540,6 @@ class SppController extends Controller
             return redirect()->route('spp.index');
         } catch(Exception $e) {
             DB::rollback();
-            dd($e);
             Log::error($e->getMessage());
             $flasher->addError('Terjadi error silahkan coba beberapa saat lagi.');
 

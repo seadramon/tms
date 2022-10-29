@@ -15,4 +15,16 @@ class Personal extends Model
 
     const CREATED_AT = 'created_date';
     const UPDATED_AT = 'last_update_date';
+
+    protected $appends = ["full_name"];
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_title .' '. $this->first_name . ' ' . $this->last_name . ' ' . $this->last_title;
+    }
+
+    public function jabatan()
+    {
+    	return $this->belongsTo(Jabatan::class, 'kd_jbt', 'kd_jbt');
+    }
 }
