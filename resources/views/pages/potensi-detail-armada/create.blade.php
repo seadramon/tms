@@ -78,13 +78,13 @@
                                                             <th>Vol Total TON</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody style="border-bottom: 1px solid black;">
+                                                    <tbody style="border-bottom: 1px solid grey;">
                                                             @foreach ($row->spprbri as $childItem)
-                                                            <tr class="text-lg-center fw-semibold text-gray-800 border border-gray-400">
+                                                            <tr class="text-lg-center border border-gray-400" >
                                                                 <td>{{ $childItem->produk->tipe }}</td>
                                                                 <td>{{ $childItem->kd_produk }}</td>
                                                                 <td>{{ $childItem->vol_spprb }}</td>
-                                                                <td>{{ $childItem->vol_spprb * $childItem->produk->vol_m3 * 2.5 }}</td>
+                                                                <td>{{ ($childItem->vol_spprb * $childItem->produk->vol_m3) * 2.5  }}</td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -131,15 +131,15 @@
                                                     <label class="form-label mt-2">PBB Muat : {{ $item->pat ?? 'Tidak diketahui' }}</label>
                                                 </div>
                                             </div>
-                                            <div id="list_checkpoint" style="padding-top: 5px;"></div>
+                                            <div id="list_checkpoint_{{ $i }}" style="padding-top: 5px;"></div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <label class="form-label mt-2">Lokasi Tujuan</label>
+                                                    <label class="form-label mt-2">Lokasi Awal</label>
                                                 </div>
                                                 <div class="col-md-8">
-                                                    <input type="text" class="form-control input-sm" placeholder="">
+                                                    <input type="text" class="form-control input-sm" readonly value="auto">
                                                 </div>
                                             </div>
                                             <div class="row" style="padding-top: 10px;">
@@ -147,10 +147,30 @@
                                                     <label class="form-label mt-2">Lat/Long</label>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" class="form-control input-sm" placeholder="Latitude">
+                                                    <input id="lat_source_{{ $i }}" type="text" class="form-control input-sm" placeholder="Latitude" readonly value="{{ $item->lat_source }}">
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" class="form-control input-sm" placeholder="Latitude">
+                                                    <input id="long_source_{{ $i }}" type="text" class="form-control input-sm" placeholder="Longitude" readonly value="{{ $item->long_source }}">
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label class="form-label mt-2">Lokasi Tujuan</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control input-sm" readonly value="{{ $item->destination ?? 'Tidak ditemukan' }}">
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 10px;">
+                                                <div class="col-md-4">
+                                                    <label class="form-label mt-2">Lat/Long</label>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" id="lat_dest_{{ $i }}" class="form-control input-sm" placeholder="Latitude" readonly value="{{ $item->lat_dest }}">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" id="long_dest_{{ $i }}" class="form-control input-sm" placeholder="Longitude" readonly value="{{ $item->long_dest }}">
                                                 </div>
                                             </div>
 
@@ -158,22 +178,36 @@
                                     </div>
                                     <div class="row mt-5">
                                         <div class="col-md-6">
-                                            <a style="width: 100%;" href="javacript:void(0)" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_1"><i class="fas fa-add"></i> Tambah Rute</a>
+                                            <a
+                                                style="width: 100%;"
+                                                href="javacript:void(0)"
+                                                class="btn btn-success open-AddBookDialog"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#kt_modal_1"
+                                                data-map="{{ $i }}">
+                                                <i class="fas fa-add"></i> Tambah Rute
+                                            </a>
 
                                         </div>
                                         <div class="col-md-6">
-                                            <a style="width: 100%;" href="javascript:void(0)" class="btn btn-block btn-danger" id="create_rute">Generate Rutes</a>
+                                            <a style="width: 100%;"
+                                                {{-- href="javascript:void(0)" --}}
+                                                class="btn btn-block btn-danger"
+                                                id="create_rute"
+                                                onclick="generate_map({{ $i }})">Generate Rutes
+                                            </a>
+
                                         </div>
                                     </div>
                                     <hr style="border-top: 1px dotted black;">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <div id="rute_map" style="height:500px;"></div>
+                                            <div id="rute_map_{{ $i }}" style="height:500px;"></div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div id="sidebar" class="scroll h-500px px-5">
-                                                <p>Total Distance: <span id="total"></span></p>
-                                                <div id="panel"></div>
+                                            <div id="sidebar_{{ $i }}" class="scroll h-500px px-5">
+                                                <p>Total Distance: <span id="total_{{ $i }}"></span></p>
+                                                <div id="panel_{{ $i }}"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -472,10 +506,11 @@
                         <div id="location-error"></div>
                     </div>
                 </div>
-                <div id="map" style="height:500px;"></div>
+                <div id="map_add" style="height:500px;"></div>
                 <div id="current" hidden="">Nothing yet...</div>
                 <input id="checkpoint_lat" hidden="" type="text" />
                 <input id="checkpoint_lng" hidden="" type="text" />
+                <input id="mapId" type="text" hidden="" />
                 <div id="infowindow-content">
                     <img src="" width="16" height="16" id="place-icon"> <span
                         id="place-name" class="title"></span><br> <span
@@ -523,187 +558,201 @@ $(function() {
     })
 });
 
+$(document).on("click", ".open-AddBookDialog", function () {
+    var mapId = $(this).data('map');
+    $(".modal-body #mapId").val( mapId );
+    $('#add_checkpoint').attr('onClick', 'addCheckpoint(' +mapId+ ');');
+});
 
 // delete checkpoint
 $(document).ready(function(){
     $(document).on('click', '.delete_rute', function(e) {
         $(this).parent().parent().parent().remove();
     });
-
-
-    $("#add_checkpoint").click(function(){
-        var lat = $('#checkpoint_lat').val();
-        var lng = $('#checkpoint_lng').val();
-
-        $('#list_checkpoint').append(
-            '<div class="col-md-12" style="padding-bottom: 5px;">'+
-                '<div class="row">'+
-                    '<div class="col-md-4">'+
-                        '<label class="form-label mt-2"></label>'+
-                    '</div>'+
-                    '<div class="col-md-6">'+
-                        '<input name="checkpoint[]" type="text" class="form-control input-sm" placeholder="" value="'+ lat +','+ lng +'">'+
-                    '</div>'+
-                    '<div class="col-md-2" style="text-align:center;">'+
-                        '<a href="javascript:void(0)" class="btn btn-icon btn-danger delete_rute align-right"><i class="fas fa-times"></i></a>'+
-                    '</div>'+
-                '</div>'+
-            '</div>');
-    });
-
-    $(document).on('click', '#create_rute', function(e) {
-        $('#panel').empty();
-        $('#total').empty();
-
-        var waypts = [];
-        $("input[name='checkpoint[]']")
-            .map(function(){
-                var temp = $(this).val().split(',');
-                waypts.push({
-                    location: {
-                        lat: parseFloat(temp[0]),
-                        lng: parseFloat(temp[1])
-                    },
-                    stopover: true
-                });
-        });
-
-        const map = new google.maps.Map(document.getElementById("rute_map"), {
-            zoom: 6,
-            // center: { lat: -7.258621, lng: 112.750281 }, // Indonesia.
-            center: { lat: -6.2297419, lng: 106.7594782 }, // Jakarta. -6.2297419,106.7594782
-        });
-        const directionsService = new google.maps.DirectionsService();
-        const directionsRenderer = new google.maps.DirectionsRenderer({
-            draggable: true,
-            map,
-            panel: document.getElementById("panel"),
-        });
-
-        directionsRenderer.addListener("directions_changed", () => {
-            const directions = directionsRenderer.getDirections();
-
-            if (directions) {
-                computeTotalDistance(directions);
-            }
-        });
-        displayRoute(
-            // "Surabaya, Surabaya City, East Java, Indonesia",
-            // "Sidoarjo, Sidoarjo Regency, East Java, Indonesia",
-            directionsService,
-            directionsRenderer
-        );
-
-
-        function displayRoute(service, display) {
-            service.route({
-                origin: { location: { lat: -6.218410109901146, lng: 106.79832075524945 } }, //GBK -6.218410109901146, 106.79832075524945
-                destination: { location: { lat: -6.180274999666274, lng: 106.82641519051303 } }, // Monas -6.180274999666274, 106.82641519051303
-                waypoints: waypts,
-                // [ values
-                //     // { location: { lat: -7.258621, lng: 112.750281 } },
-                //     // { location: "Broken Hill, NSW" },
-                // ],
-                travelMode: google.maps.TravelMode.DRIVING,
-                // avoidTolls: true,
-                })
-                .then((result) => {
-                    display.setDirections(result);
-                })
-                .catch((e) => {
-                    alert("Could not display directions due to: " + e);
-                });
-        }
-
-        function computeTotalDistance(result) {
-            let total = 0;
-            const myroute = result.routes[0];
-
-            if (!myroute) {
-                return;
-            }
-
-            for (let i = 0; i < myroute.legs.length; i++) {
-                total += myroute.legs[i].distance.value;
-            }
-
-            total = total / 1000;
-            document.getElementById("total").innerHTML = total + " km";
-        }
-
-        window.initMap = initMap;
-
-    });
 });
 </script>
 
-
 <script type="text/javascript">
-	function initMap() {
-		var centerCoordinates = new google.maps.LatLng(-0.789275, 113.921327); // indonesia
-		var map = new google.maps.Map(document.getElementById('map'), {
-			center : centerCoordinates,
-			zoom : 6
-		});
-		var card = document.getElementById('pac-card');
-		var input = document.getElementById('pac-input');
-		var infowindowContent = document.getElementById('infowindow-content');
+function addCheckpoint(increment){
+    var lat = $('#checkpoint_lat').val();
+    var lng = $('#checkpoint_lng').val();
 
-		map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+    $('#list_checkpoint_' + increment).append(
+    '<div class="row">'+
+        '<div class="col-md-12" style="padding-bottom: 5px;">'+
+            '<div class="row">'+
+                '<div class="col-md-10">'+
+                    '<input name="checkpoint'+ increment +'[]" type="text" class="form-control input-sm" placeholder="" value="'+ lat +','+ lng +'">'+
+                '</div>'+
+                '<div class="col-md-2" style="text-align:center;">'+
+                    '<a href="javascript:void(0)" class="btn btn-icon btn-danger delete_rute align-right"><i class="fas fa-times"></i></a>'+
+                '</div>'+
+            '</div>'+
+        '</div>'+
+    '</div>');
+}
 
-		var autocomplete = new google.maps.places.Autocomplete(input);
-		var infowindow = new google.maps.InfoWindow();
-		infowindow.setContent(infowindowContent);
+function initMap() {
+    var centerCoordinates = new google.maps.LatLng(-0.789275, 113.921327); // indonesia
+    var map = new google.maps.Map(document.getElementById('map_add'), {
+        center : centerCoordinates,
+        zoom : 6
+    });
+    var card = document.getElementById('pac-card');
+    var input = document.getElementById('pac-input');
+    var infowindowContent = document.getElementById('infowindow-content');
 
-		var marker = new google.maps.Marker({
-			map : map,
-            draggable: true
-		});
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
 
-		autocomplete.addListener('place_changed',function() {
-			document.getElementById("location-error").style.display = 'none';
-			infowindow.close();
-			marker.setVisible(false);
-			var place = autocomplete.getPlace();
-			if (!place.geometry) {
-				document.getElementById("location-error").style.display = 'inline-block';
-				document.getElementById("location-error").innerHTML = "Cannot Locate '" + input.value + "' on map";
-				return;
-			}
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    var infowindow = new google.maps.InfoWindow();
+    infowindow.setContent(infowindowContent);
 
-			map.fitBounds(place.geometry.viewport);
-			marker.setPosition(place.geometry.location);
-			marker.setVisible(true);
+    var marker = new google.maps.Marker({
+        map : map,
+        draggable: true
+    });
 
-			infowindowContent.children['place-icon'].src = place.icon;
-			infowindowContent.children['place-name'].textContent = place.name;
-			infowindowContent.children['place-address'].textContent = input.value;
-			infowindow.open(map, marker);
+    autocomplete.addListener('place_changed',function() {
+        document.getElementById("location-error").style.display = 'none';
+        infowindow.close();
+        marker.setVisible(false);
+        var place = autocomplete.getPlace();
+        if (!place.geometry) {
+            document.getElementById("location-error").style.display = 'inline-block';
+            document.getElementById("location-error").innerHTML = "Cannot Locate '" + input.value + "' on map";
+            return;
+        }
 
-            $('#checkpoint_lat').val(place.geometry.location.lat().toFixed(6));
-            $('#checkpoint_lng').val(place.geometry.location.lng().toFixed(6));
-		});
+        map.fitBounds(place.geometry.viewport);
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
 
-        google.maps.event.addListener(marker, 'dragend', function (evt) {
-            $('#checkpoint_lat').val(evt.latLng.lat().toFixed(6));
-            $('#checkpoint_lng').val(evt.latLng.lng().toFixed(6));
+        infowindowContent.children['place-icon'].src = place.icon;
+        infowindowContent.children['place-name'].textContent = place.name;
+        infowindowContent.children['place-address'].textContent = input.value;
+        infowindow.open(map, marker);
 
-            infowindow.close();
-			marker.setVisible(false);
-            marker.setMap(map);
-			marker.setVisible(true);
-        });
+        $('#checkpoint_lat').val(place.geometry.location.lat().toFixed(6));
+        $('#checkpoint_lng').val(place.geometry.location.lng().toFixed(6));
+    });
 
-        google.maps.event.addListener(marker, 'dragstart', function (evt) {
-            document.getElementById('current').innerHTML = '<p>Currently dragging marker...</p>';
-        });
+    google.maps.event.addListener(marker, 'dragend', function (evt) {
+        $('#checkpoint_lat').val(evt.latLng.lat().toFixed(6));
+        $('#checkpoint_lng').val(evt.latLng.lng().toFixed(6));
 
-        map.setCenter(marker.position);
+        infowindow.close();
+        marker.setVisible(false);
         marker.setMap(map);
-	}
+        marker.setVisible(true);
+    });
+
+    google.maps.event.addListener(marker, 'dragstart', function (evt) {
+        document.getElementById('current').innerHTML = '<p>Currently dragging marker...</p>';
+    });
+
+    map.setCenter(marker.position);
+    marker.setMap(map);
+}
+
+// map for each rute
+function generate_map(increment) {
+    $('#panel_' + increment).empty();
+    $('#total_' + increment).empty();
+
+    var waypts = [];
+    $("input[name='checkpoint"+ increment +"[]']")
+        .map(function(){
+            var temp = $(this).val().split(',');
+            waypts.push({
+                location: {
+                    lat: parseFloat(temp[0]),
+                    lng: parseFloat(temp[1])
+                },
+                stopover: true
+            });
+    });
+
+    const map = new google.maps.Map(document.getElementById("rute_map_"+ increment), {
+        zoom: 6,
+        // center: { lat: -7.258621, lng: 112.750281 }, // Indonesia.
+        center: { lat: -6.2297419, lng: 106.7594782 }, // Jakarta. -6.2297419,106.7594782
+    });
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer({
+        draggable: true,
+        map,
+        panel: document.getElementById("panel_"+ increment),
+    });
+
+    directionsRenderer.addListener("directions_changed", () => {
+        const directions = directionsRenderer.getDirections();
+
+        if (directions) {
+            computeTotalDistance(directions);
+        }
+    });
+    displayRoute(
+        // "Surabaya, Surabaya City, East Java, Indonesia",
+        // "Sidoarjo, Sidoarjo Regency, East Java, Indonesia",
+        directionsService,
+        directionsRenderer
+    );
+
+
+    function displayRoute(service, display) {
+        service.route({
+            // origin: { location: { lat: -6.218410109901146, lng: 106.79832075524945 } }, //GBK -6.218410109901146, 106.79832075524945
+            // destination: { location: { lat: -6.180274999666274, lng: 106.82641519051303 } }, // Monas -6.180274999666274, 106.82641519051303
+            origin: {
+                location: {
+                    lat: parseFloat($('#lat_source_' + increment).val()),
+                    lng: parseFloat($('#long_source_' + increment).val())
+                }
+            },
+            destination: {
+                location: {
+                    lat: parseFloat($('#lat_dest_' + increment).val()),
+                    lng: parseFloat($('#long_dest_' + increment).val())
+                }
+            },
+            waypoints: waypts,
+            // [ values
+            //     // { location: { lat: -7.258621, lng: 112.750281 } },
+            //     // { location: "Broken Hill, NSW" },
+            // ],
+            travelMode: google.maps.TravelMode.DRIVING,
+            // avoidTolls: true,
+            })
+            .then((result) => {
+                display.setDirections(result);
+            })
+            .catch((e) => {
+                alert("Could not display directions due to: " + e);
+            });
+    }
+
+    function computeTotalDistance(result) {
+        let total = 0;
+        const myroute = result.routes[0];
+
+        if (!myroute) {
+            return;
+        }
+
+        for (let i = 0; i < myroute.legs.length; i++) {
+            total += myroute.legs[i].distance.value;
+        }
+
+        total = total / 1000;
+        document.getElementById("total_"+ increment).innerHTML = total + " km";
+    }
+
+    window.initMap = initMap;
+}
 </script>
 
 
-<script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0f2vYkUlCd6XCyu17DBElvuxyf_4quCU&libraries=places&callback=initMap&language=id"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0f2vYkUlCd6XCyu17DBElvuxyf_4quCU&libraries=places&callback=initMap&language=id"></script>
 @endsection
