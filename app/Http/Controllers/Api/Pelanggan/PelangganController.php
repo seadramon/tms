@@ -98,6 +98,7 @@ class PelangganController extends Controller
                 ]);
             }
             $data['token'] = $user->createToken('mobile')->plainTextToken;
+            $data['user'] = $user;
         } catch (Exception $e) {
             $code = 400;
             $message = $e->getMessage();
