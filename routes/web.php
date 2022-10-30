@@ -142,6 +142,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
         Route::post('/get-jml-segmen', [SpmController::class, 'getJmlSegmen'])->name('get-jml-segmen');
 		Route::get('/konfirmasi-vendor/{spm}', [SpmController::class, 'create_konfirmasi_vendor'])->name('create-konfirmasi-vendor');
 		Route::post('/store-konfirmasi-vendor', [SpmController::class, 'store_konfirmasi_vendor'])->name('store-konfirmasi-vendor');
+		Route::get('/print/{no_sppb}', [SpmController::class, 'print'])->name('print');
 	});
 
 	Route::group(['prefix' => 'kalender-pengirimian', 'as' => 'kalender-pengiriman.'], function() {
