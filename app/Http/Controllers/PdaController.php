@@ -29,7 +29,7 @@ class PdaController extends Controller
     }
 
     public function edit($no_npp){
-        //$no_npp = '211A0009BL';
+        $no_npp = '211A0009BL';
         $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
         $muat = VPotensiMuat::with('pat')->where('no_npp',$no_npp)->get();
 
@@ -66,6 +66,7 @@ class PdaController extends Controller
 
             $collection_table->push((object)[
                 'no_npp' => $row->no_npp,
+                'ppb_muat' => $row->ppb_muat,
                 'vol_btg' => $row->vol_btg,
                 'jadwal3' => $row->jadwal3,
                 'jadwal4' => $row->jadwal4,
@@ -88,11 +89,31 @@ class PdaController extends Controller
     }
 
     public function store(Request $request){
-        $data = new PotensiH();
-        $data->no_npp = $request->no_npp;
-        $data->kd_material = $request->kd_material;
-        $data->jenis_armada = $request->jenis_armada;
-        $data->pat_to = $request->pbb_muat;
+        $postCount = count($request->no_npp);
+        $i = 0;
+        foreach($request->no_npp as $row){
+            $data = new PotensiH();
+            $data->no_npp = $request->no_npp[$i];
+            $sKdMaterial = explode('|',$request->kd_material[$i]);
+            $data->kd_material = $sKdMaterial[0];
+            $data->jenis_armada = $sKdMaterial[1];
+            $data->pat_to = $request->ppb_muat[$i];
+            $data->source_lat = $request->source_lat[$i];
+            $data->source_long = $request->source_long[$i];
+            $data->dest_lat = $request->dest_lat[$i];
+            $data->dest_long = $request->dest_long[$i];
+            $data->checkpoints = json_encode((object)$request->checkpoint_.$i+1);
+            $data->rute = null;
+            $data->jalan = $request->jalan;
+            $data->jembatan = $request->jembatan;
+            $data->jalan_alt = $request->jalan_alternatif;
+            $data->langsir = $request->langsir;
+            $data->jarak_langsir = $request->jarak_langsir;
+            $data->metode = $request->metode;
+            $data->save();
+            $i++;
+        }
+
         return response()->json($request);
     }
 
