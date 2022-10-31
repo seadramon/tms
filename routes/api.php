@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Pelanggan\PelangganController;
 use App\Http\Controllers\Api\Driver\LoginController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\Internal\KalenderController;
+use App\Http\Controllers\Api\Pelanggan\NppController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,7 @@ Route::name('api.')->namespace('Api')->group(function() {
 
         Route::middleware('auth:sanctum')->group(function() {
             Route::post('login1', [PelangganController::class, 'login1'])->name('login1');
+            Route::get('npp', [NppController::class, 'index'])->name('npp');
         });
     });
 });

@@ -24,6 +24,8 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SpmController extends Controller
 {
@@ -58,6 +60,7 @@ class SpmController extends Controller
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-id="'. $model->no_spm .'">Konfirmasi</a></li>
                             <li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>
+                            <li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>
                             <li><a class="dropdown-item delete" href="#">Hapus</a></li>
                         </ul>
                         </div>';
@@ -418,5 +421,19 @@ class SpmController extends Controller
         $flasher->addSuccess('Data has been update successfully!');
 
         return redirect()->route('spm.create');
+    }
+
+    public function print($no_spm){
+        $no_spm = str_replace('|', '/', $no_spm); // '0350/SPM/I/2008';
+        
+        $spmh = SpmH::find($no_spm);
+        
+        $logo = Storage::get("public/tms.png");
+
+        $logo = base64_encode($logo);
+
+        return Pdf::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+            ->loadView('pages.spm.print', ['spmh' => $spmh, 'logo' => $logo])->stream('Surat Permintaan Muat.pdf');
+        
     }
 }

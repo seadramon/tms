@@ -12,4 +12,9 @@ class PelangganUser extends Model
     use HasFactory, SoftDeletes, HasApiTokens;
 
     protected $table = 'tms_pelanggan_users';
+
+    public function pelanggan()
+    {
+    	return $this->belongsTo(Pelanggan::class, 'pelanggan_id', 'pelanggan_id');
+    }
 }
