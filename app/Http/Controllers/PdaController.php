@@ -29,7 +29,7 @@ class PdaController extends Controller
     }
 
     public function edit($no_npp){
-        $no_npp = '211A0009BL';
+        
         $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
         $muat = VPotensiMuat::with('pat')->where('no_npp',$no_npp)->get();
 
@@ -63,6 +63,10 @@ class PdaController extends Controller
                     ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'npp.kd_pat')
                     ->where('npp.no_npp', $row->no_npp)
                     ->first();
+            
+            $potensiH = PotensiH::where('no_npp',$row->no_npp)
+                    ->where('pat_to', $row->ppb_muat)
+                    ->first();
 
             $collection_table->push((object)[
                 'no_npp' => $row->no_npp,
@@ -78,7 +82,8 @@ class PdaController extends Controller
                 'long_source' => $spprbRi[0]->ppb_muat->lng_gps,
                 'lat_dest' => $sqlNpp->info_pasar_lat ?? $sqlNpp->tb_region_lat,
                 'long_dest' => $sqlNpp->info_pasar_long ?? $sqlNpp->tb_region_long,
-                'destination' => $sqlNpp->kab. ',' . $sqlNpp->kec
+                'destination' => $sqlNpp->kab. ',' . $sqlNpp->kec,
+                'potensiH' => $potensiH
             ]);
         }
 
@@ -89,10 +94,19 @@ class PdaController extends Controller
     }
 
     public function store(Request $request){
-        $postCount = count($request->no_npp);
+        
         $i = 0;
+        
         foreach($request->no_npp as $row){
-            $data = new PotensiH();
+            
+            $data = PotensiH::where('no_npp',$request->no_npp[$i])
+                        ->where('pat_to', $request->ppb_muat[$i])
+                        ->first();
+            
+            if($data == null){
+                $data = new PotensiH();
+            }
+           
             $data->no_npp = $request->no_npp[$i];
             $sKdMaterial = explode('|',$request->kd_material[$i]);
             $data->kd_material = $sKdMaterial[0];
@@ -102,7 +116,10 @@ class PdaController extends Controller
             $data->source_long = $request->source_long[$i];
             $data->dest_lat = $request->dest_lat[$i];
             $data->dest_long = $request->dest_long[$i];
-            $data->checkpoints = json_encode((object)$request->checkpoint_.$i+1);
+
+            $ck = 'checkpoint_'.$i+1;
+
+            $data->checkpoints = json_encode($request->$ck);
             $data->rute = null;
             $data->jalan = $request->jalan;
             $data->jembatan = $request->jembatan;
@@ -112,9 +129,10 @@ class PdaController extends Controller
             $data->metode = $request->metode;
             $data->save();
             $i++;
-        }
 
-        return response()->json($request);
+        }
+        
+        return redirect()->route('potensi.detail.armada.edit', ['no_npp' => $request->no_npp[0]]); 
     }
 
 }

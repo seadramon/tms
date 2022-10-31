@@ -61,7 +61,13 @@
                                                     <select class="form-select" data-control="select2" data-placeholder="Select Armada.." name="kd_material[]">
                                                         <option></option>
                                                         @foreach($trmaterial as $item)
-                                                            <option value="{{ $item->kd_material }}|{{ $item->uraian }} {{ $item->spesifikasi }}">{{ $item->uraian }} {{ $item->spesifikasi }}</option>
+                                                            @if(!empty($row->potensiH))
+                                                                @if($row->potensiH->kd_material == $item->kd_material)
+                                                                    <option value="{{ $item->kd_material }}|{{ $item->uraian }} {{ $item->spesifikasi }}" selected="">{{ $item->uraian }} {{ $item->spesifikasi }}</option>
+                                                                @else
+                                                                <option value="{{ $item->kd_material }}|{{ $item->uraian }} {{ $item->spesifikasi }}">{{ $item->uraian }} {{ $item->spesifikasi }}</option>
+                                                                @endif
+                                                            @endif
                                                         @endforeach
                                                     </select>
                                                 </td>
@@ -138,7 +144,24 @@
                                                         <input type="text" name="ppb_muat[]" value="{{ $item->ppb_muat ?? null }}" hidden="" />
                                                     </div>
                                                 </div>
-                                                <div id="list_checkpoint_{{ $i }}" style="padding-top: 5px;"></div>
+                                                <div id="list_checkpoint_{{ $i }}" style="padding-top: 5px;">
+                                                    @if($item->potensiH != null)
+                                                        @foreach( json_decode($item->potensiH->checkpoints,true) as $row)
+                                                            <div class="row">
+                                                                <div class="col-md-12" style="padding-bottom: 5px;">
+                                                                    <div class="row">
+                                                                        <div class="col-md-10">
+                                                                            <input name="checkpoint_{{ $i }}[]" type="text" class="form-control input-sm" placeholder="" value="{{ $row }}">
+                                                                        </div>
+                                                                        <div class="col-md-2" style="text-align:center;">
+                                                                            <a href="javascript:void(0)" class="btn btn-icon btn-danger delete_rute align-right"><i class="fas fa-times"></i></a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <input
@@ -217,7 +240,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @php $i++ @endphp
+                        @php $i++; @endphp
                         @endforeach
                     </div>
                     <!--end::Accordion-->
@@ -237,7 +260,13 @@
                             <td>Jalan</td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="jalan"/>
+                                    <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="jalan"
+                                        @if(!empty($muat[0]->potensiH))
+                                            @if($muat[0]->potensiH->jalan == 'baik') 
+                                                checked=""
+                                            @endif
+                                        @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Baik
                                     </label>
@@ -245,7 +274,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="jalan"/>
+                                    <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="jalan"
+                                        @if(!empty($muat[0]->potensiH))
+                                            @if($muat[0]->potensiH->jalan == 'kurang_baik') 
+                                                checked=""
+                                            @endif
+                                        @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Kurang Baik
                                     </label>
@@ -253,7 +288,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="rusak" id="flexCheckDefault" name="jalan"/>
+                                    <input class="form-check-input" type="radio" value="rusak" id="flexCheckDefault" name="jalan"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jalan == 'rusak') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Rusak
                                     </label>
@@ -261,7 +302,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan"/>
+                                    <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan" 
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jalan == 'menanjak') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Menanjak
                                     </label>
@@ -269,7 +316,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan"/>
+                                    <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jalan == 'berkelok') 
+                                            checked=""
+                                        @endif 
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Berkelok
                                     </label>
@@ -277,7 +330,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan"/>
+                                    <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jalan == 'lain_lain') 
+                                            checked=""
+                                        @endif
+                                    @endif 
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Lain - Lain
                                     </label>
@@ -288,7 +347,13 @@
                             <td>Jembatan</td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="jembatan"/>
+                                    <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="jembatan"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jembatan == 'baik') 
+                                            checked=""
+                                        @endif 
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Baik
                                     </label>
@@ -296,7 +361,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="jembatan"/>
+                                    <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="jembatan"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jembatan == 'kurang_baik') 
+                                            checked=""
+                                        @endif
+                                    @endif  
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Kurang Baik
                                     </label>
@@ -304,7 +375,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="tidak_ada" id="flexCheckDefault" name="jembatan"/>
+                                    <input class="form-check-input" type="radio" value="tidak_ada" id="flexCheckDefault" name="jembatan"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jembatan == 'tidak_ada') 
+                                            checked=""
+                                        @endif  
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Tidak Ada
                                     </label>
@@ -315,7 +392,13 @@
                             <td>Jalan Alternatif</td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="jalan_alternatif"/>
+                                    <input class="form-check-input" type="radio" value="baik" id="flexCheckDefault" name="jalan_alternatif"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jalan_alt == 'baik') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Baik
                                     </label>
@@ -323,7 +406,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="jalan_alternatif"/>
+                                    <input class="form-check-input" type="radio" value="kurang_baik" id="flexCheckDefault" name="jalan_alternatif"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jalan_alt == 'kurang_baik') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Kurang Baik
                                     </label>
@@ -331,7 +420,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="rusak" id="flexCheckDefault" name="jalan_alternatif"/>
+                                    <input class="form-check-input" type="radio" value="rusak" id="flexCheckDefault" name="jalan_alternatif"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jalan_alt == 'rusak') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Rusak
                                     </label>
@@ -339,7 +434,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan_alternatif"/>
+                                    <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan_alternatif"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jalan_alt == 'menanjak') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Menanjak
                                     </label>
@@ -347,7 +448,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan_alternatif"/>
+                                    <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan_alternatif"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jalan_alt == 'berkelok') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Berkelok
                                     </label>
@@ -355,7 +462,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan_alternatif"/>
+                                    <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan_alternatif"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jalan_alt == 'lain_lain') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Lain - Lain
                                     </label>
@@ -366,7 +479,13 @@
                             <td>Langsir</td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="tidak_ada" id="flexCheckDefault" name="langsir"/>
+                                    <input class="form-check-input" type="radio" value="tidak_ada" id="flexCheckDefault" name="langsir"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->langsir == 'tidak_ada') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Tidak Ada
                                     </label>
@@ -374,7 +493,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="mobil" id="flexCheckDefault" name="langsir"/>
+                                    <input class="form-check-input" type="radio" value="mobil" id="flexCheckDefault" name="langsir"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->langsir == 'mobil') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Mobil
                                     </label>
@@ -382,7 +507,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="gerobak" id="flexCheckDefault" name="langsir"/>
+                                    <input class="form-check-input" type="radio" value="gerobak" id="flexCheckDefault" name="langsir"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->langsir == 'gerobak') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Gerobak
                                     </label>
@@ -390,7 +521,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="roll_geser" id="flexCheckDefault" name="langsir"/>
+                                    <input class="form-check-input" type="radio" value="roll_geser" id="flexCheckDefault" name="langsir"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->langsir == 'roll_geser') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Roll Geser
                                     </label>
@@ -398,7 +535,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="manusia" id="flexCheckDefault" name="langsir"/>
+                                    <input class="form-check-input" type="radio" value="manusia" id="flexCheckDefault" name="langsir"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->langsir == 'manusia') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Manusia
                                     </label>
@@ -406,7 +549,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="langsir"/>
+                                    <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="langsir"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->langsir == 'lain_lain') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Lain - Lain
                                     </label>
@@ -417,7 +566,13 @@
                             <td>Jarak Langsir</td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid mt-1">
-                                    <input class="form-check-input" type="radio" value="500" id="flexCheckDefault" name="jarak_langsir"/>
+                                    <input class="form-check-input" type="radio" value="500" id="flexCheckDefault" name="jarak_langsir"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jarak_langsir == '500') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         < 500 M
                                     </label>
@@ -425,7 +580,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid mt-1">
-                                    <input class="form-check-input" type="radio" value="500_1000" id="flexCheckDefault" name="jarak_langsir"/>
+                                    <input class="form-check-input" type="radio" value="500_1000" id="flexCheckDefault" name="jarak_langsir"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jarak_langsir == '500_1000') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         500 s/d 1.000 M
                                     </label>
@@ -433,7 +594,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid mt-1">
-                                    <input class="form-check-input" type="radio" value="1000" id="flexCheckDefault" name="jarak_langsir"/>
+                                    <input class="form-check-input" type="radio" value="1000" id="flexCheckDefault" name="jarak_langsir"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->jarak_langsir == '1000') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         > 1.000 M
                                     </label>
@@ -447,7 +614,13 @@
                             <td>Metode Penurunan</td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="crene" id="flexCheckDefault" name="metode"/>
+                                    <input class="form-check-input" type="radio" value="crene" id="flexCheckDefault" name="metode"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->metode == 'crene') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Crane
                                     </label>
@@ -455,7 +628,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="portal" id="flexCheckDefault" name="metode"/>
+                                    <input class="form-check-input" type="radio" value="portal" id="flexCheckDefault" name="metode"
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->metode == 'portal') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Portal
                                     </label>
@@ -463,7 +642,13 @@
                             </td>
                             <td>
                                 <div class="form-check form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="radio" value="manual" id="flexCheckDefault" name="metode"/>
+                                    <input class="form-check-input" type="radio" value="manual" id="flexCheckDefault" name="metode" 
+                                    @if(!empty($muat[0]->potensiH))
+                                        @if($muat[0]->potensiH->metode == 'manual') 
+                                            checked=""
+                                        @endif
+                                    @endif
+                                    />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Manual
                                     </label>
@@ -669,7 +854,7 @@ function generate_map(increment) {
     $('#total_' + increment).empty();
 
     var waypts = [];
-    $("input[name='checkpoint"+ increment +"[]']")
+    $("input[name='checkpoint_"+ increment +"[]']")
         .map(function(){
             var temp = $(this).val().split(',');
             waypts.push({
@@ -683,7 +868,6 @@ function generate_map(increment) {
 
     const map = new google.maps.Map(document.getElementById("rute_map_"+ increment), {
         zoom: 6,
-        // center: { lat: -7.258621, lng: 112.750281 }, // Indonesia.
         center: { lat: -6.2297419, lng: 106.7594782 }, // Jakarta. -6.2297419,106.7594782
     });
     const directionsService = new google.maps.DirectionsService();
