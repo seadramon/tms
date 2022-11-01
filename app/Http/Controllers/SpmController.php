@@ -19,6 +19,7 @@ use App\Models\Vendor;
 use App\Models\Npp;
 use App\Models\Sbu;
 use Exception;
+use File;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
@@ -427,8 +428,8 @@ class SpmController extends Controller
         
         $spmh = SpmH::find($no_spm);
         
-        $logo = Storage::get("public/tms.png");
-
+        $logo = File::get(public_path('assets/media/logos/tms.png'));
+        
         $logo = base64_encode($logo);
 
         return Pdf::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
