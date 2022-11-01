@@ -29,7 +29,7 @@ class PdaController extends Controller
     }
 
     public function edit($no_npp){
-        
+
         $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
         $muat = VPotensiMuat::with('pat')->where('no_npp',$no_npp)->get();
 
@@ -63,7 +63,7 @@ class PdaController extends Controller
                     ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'npp.kd_pat')
                     ->where('npp.no_npp', $row->no_npp)
                     ->first();
-            
+
             $potensiH = PotensiH::where('no_npp',$row->no_npp)
                     ->where('pat_to', $row->ppb_muat)
                     ->first();
@@ -94,19 +94,19 @@ class PdaController extends Controller
     }
 
     public function store(Request $request){
-        
+
         $i = 0;
-        
+
         foreach($request->no_npp as $row){
-            
+
             $data = PotensiH::where('no_npp',$request->no_npp[$i])
                         ->where('pat_to', $request->ppb_muat[$i])
                         ->first();
-            
+
             if($data == null){
                 $data = new PotensiH();
             }
-           
+
             $data->no_npp = $request->no_npp[$i];
             $sKdMaterial = explode('|',$request->kd_material[$i]);
             $data->kd_material = $sKdMaterial[0];
@@ -121,18 +121,26 @@ class PdaController extends Controller
 
             $data->checkpoints = json_encode($request->$ck);
             $data->rute = null;
-            $data->jalan = $request->jalan;
-            $data->jembatan = $request->jembatan;
-            $data->jalan_alt = $request->jalan_alternatif;
-            $data->langsir = $request->langsir;
-            $data->jarak_langsir = $request->jarak_langsir;
-            $data->metode = $request->metode;
+            $jalan = 'jalan_'.$i;
+            $data->jalan = $request->$jalan;
+            $jembatan = 'jembatan_'.$i;
+            $data->jembatan = $request->$jembatan;
+            $jalan_alternatif = 'jalan_alternatif_'.$i;
+            $data->jalan_alt = $request->$jalan_alternatif;
+            $langsir = 'langsir_'.$i;
+            $data->langsir = $request->$langsir;
+            $jarak_langsir = 'jarak_langsir_'.$i;
+            $data->jarak_langsir = $request->$jarak_langsir;
+            $metode = 'metode_'.$i;
+            $data->metode = $request->$metode;
             $data->save();
             $i++;
 
         }
-        
-        return redirect()->route('potensi.detail.armada.edit', ['no_npp' => $request->no_npp[0]]); 
+
+        //  return response()->json($request);
+
+        return redirect()->route('potensi.detail.armada.edit', ['no_npp' => $request->no_npp[0]]);
     }
 
 }
