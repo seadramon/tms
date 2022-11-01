@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Driver\LoginController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\Internal\KalenderController;
 use App\Http\Controllers\Api\Internal\NppController;
+use App\Http\Controllers\Api\Internal\PelangganController as InternalPelangganController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +33,8 @@ Route::name('api.')->namespace('Api')->group(function() {
 
     Route::name('internal.')->prefix('internal')->namespace('Internal')->group(function() {
         Route::post('kalender-daily', [KalenderController::class, 'daily'])->name('daily');
-        Route::get('npp/{pat}', [NppController::class, 'index'])->name('npp');
+        Route::get('npp/{pat}', [InternalPelangganController::class, 'nppList'])->name('npp');
+        Route::get('pelanggan-list', [InternalPelangganController::class, 'index'])->name('npp');
     });
     
     Route::name('pelanggan.')->prefix('pelanggan')->namespace('Pelanggan')->group(function() {
