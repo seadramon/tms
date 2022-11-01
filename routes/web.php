@@ -125,7 +125,9 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	Route::group(['prefix' => 'potensi-detail-armada', 'as' => 'potensi.detail.armada.'], function(){
 		Route::get('/create',	[PdaController::class, 'create'])->name('create');
-		Route::get('/{no_npp}/edit',	[PdaController::class, 'edit'])->name('edit');
+
+        Route::get('/{no_npp}/edit',	[PdaController::class, 'edit'])->name('edit');
+        Route::post('/store',	[PdaController::class, 'store'])->name('store');
 	});
 
     Route::group(['prefix' => '/spm', 'as' => 'spm.'], function(){

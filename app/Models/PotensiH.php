@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class PotensiH extends Model
 {
     use HasFactory;
+    protected $table = 'tms_potensi_h';
 }
