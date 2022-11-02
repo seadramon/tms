@@ -134,7 +134,7 @@
                                         Rute Pengiriman {{ $i }}
                                     </button>
                                 </h2>
-                                <div id="kt_accordion_{{ $i }}_body_{{ $i }}" class="accordion-collapse collapse" aria-labelledby="kt_accordion_{{ $i }}_header_{{ $i }}" data-bs-parent="#kt_accordion_{{ $i }}">
+                                <div id="kt_accordion_{{ $i }}_body_{{ $i }}" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_{{ $i }}_header_{{ $i }}">
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col-md-6" style="margin-bottom:10px;">
@@ -736,9 +736,10 @@
 
 @section('js')
 <script type="text/javascript">
-
-$(function(){
-    $('.create_rute').trigger('click');
+$(document).ready(function () {
+    for (i = 1; i <= $('.create_rute').length; i++) {
+        generate_map(i);
+    } 
 });
 
 // show detail list on table
