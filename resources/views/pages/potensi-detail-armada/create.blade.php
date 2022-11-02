@@ -9,8 +9,7 @@
 @endsection
 
 @section('content')
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-
+{{-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> --}}
 <!--begin::Content container-->
 <form action="{{ route('potensi.detail.armada.store') }}" method="post" >
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -654,7 +653,7 @@
                 </div>
 
                 <div class="card-footer" style="text-align: right;">
-                    <a href="{{ URL::previous() }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
+                    <a href="{{ route('potensi.detail.armada.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
                     <input type="submit" class="btn btn-success" value="Simpan">
                 </div>
 

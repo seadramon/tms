@@ -226,7 +226,8 @@ class PdaController extends Controller
 
         //  return response()->json($request);
 
-        return redirect()->route('potensi.detail.armada.edit', ['no_npp' => $request->no_npp[0]]);
+        return redirect()->route('potensi.detail.armada.index');
+        // return redirect()->route('potensi.detail.armada.edit', ['no_npp' => $request->no_npp[0]]);
     }
 
 }
