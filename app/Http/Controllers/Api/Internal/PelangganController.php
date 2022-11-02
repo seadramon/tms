@@ -37,7 +37,7 @@ class PelangganController extends Controller
         try {
             DB::beginTransaction();
 
-            $user = PelangganUser::whereStatus('new')->whereId($request->user_id)->firstOrFail();
+            $user = PelangganUser::whereStatus('new')->find($request->user_id);
             $user->status = 'active';
             $user->save();
             foreach ($request->npp as $row) {
