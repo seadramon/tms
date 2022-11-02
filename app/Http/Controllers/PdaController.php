@@ -8,10 +8,6 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Yajra\DataTables\Facades\DataTables;
-use DB;
-use Session;
-use Storage;
-use Validator;
 
 use App\Models\Pat;
 use App\Models\Npp;
@@ -19,10 +15,100 @@ use App\Models\TrMaterial;
 use App\Models\Views\VPotensiMuat;
 use App\Models\Views\VSpprbRi;
 use App\Models\PotensiH;
-
+use Illuminate\Support\Facades\DB;
 
 class PdaController extends Controller
 {
+    public function index(){
+        $months = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember'
+        ];
+        $labelSemua = ["" => "Semua"];
+
+        $kd_pat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['1', '4', '5'])
+            ->get()
+            ->pluck('singkatan', 'kd_pat')
+            ->toArray();
+
+        $kd_pat = $labelSemua + $kd_pat;
+
+        $ppb_muat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['2', '4', '5'])
+            ->get()
+            ->pluck('singkatan', 'kd_pat')
+            ->toArray();
+
+        $ppb_muat = $labelSemua + $ppb_muat;
+        $bulan1 = $labelSemua + ['di' => '=', 'dari' => 'Dari'];
+        $bulan2 = $labelSemua + $months;
+        return view('pages.potensi-detail-armada.index', [
+            'kd_pat' => $kd_pat,
+            'ppb_muat' => $ppb_muat,
+            'bulan1' => $bulan1,
+            'bulan2' => $bulan2,
+        ]);
+    }
+
+    public function data(Request $request)
+    {
+        $query = VPotensiMuat::with('ppbmuat')->select('*');
+        if($request->unitkerja != ''){
+            $query->whereKdPat($request->unitkerja);
+        }
+        if($request->ppbmuat != ''){
+            $query->wherePpbMuat($request->ppbmuat);
+        }
+        if($request->bulan1 != '' && $request->bulan1 != ''){
+            if($request->bulan1 == 'di'){
+                $start = date('Y-' . $request->bulan2 . '-01 00:00:00');
+                $end = date('Y-' . $request->bulan2 . '-t 23:59:59');
+            }else{
+                $start = date('Y-' . $request->bulan2 . '-01 00:00:00');
+                $end = date('Y-12-t 23:59:59');
+            }
+            $query->whereBetween('jadwal3', [$start, $end]);
+        }
+
+        return DataTables::eloquent($query)
+                ->editColumn('vol_btg', function ($model) {
+                    return number_format($model->vol_btg);
+                })
+                ->editColumn('jadwal3', function ($model) {
+                    return $model->jadwal3 ? date('d-m-y', strtotime($model->jadwal3)) : '-';
+                })
+                ->editColumn('jadwal4', function ($model) {
+                    return $model->jadwal4 ? date('d-m-y', strtotime($model->jadwal4)) : '-';
+                })
+                ->addColumn('rit_hari', function ($model) {
+                    if($model->jadwal3 == null || $model->jadwal4 == null){
+                        return 0;
+                    }
+                    return round($model->jml_rit / (strtotime($model->jadwal4) - strtotime($model->jadwal3)) / (3600*24));
+                })
+                ->addColumn('status', function ($model) {
+                    $column = '';
+
+                    return $column;
+                })
+                ->addColumn('menu', function ($model) {
+                    $column = '<a href="' . route('potensi.detail.armada.edit', ['no_npp' => $model->no_npp]) . '" class="btn btn-outline btn-sm btn-outline-dashed btn-outline-dark btn-active-light-dark">Edit</a>';
+
+                    return $column;
+                })
+                ->rawColumns(['menu', 'status'])
+                ->toJson();
+    }
+
     public function create(){
         $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
         return view('pages.potensi-detail-armada.create', ['pat' => $pat]);
