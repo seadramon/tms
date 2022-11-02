@@ -204,20 +204,20 @@ class PdaController extends Controller
             $data->dest_long = $request->dest_long[$i];
 
             $ck = 'checkpoint_'.$i+1;
+            $jalan = 'jalan_'.$i+1;
+            $jembatan = 'jembatan_'.$i+1;
+            $jalan_alternatif = 'jalan_alternatif_'.$i+1;
+            $langsir = 'langsir_'.$i+1;
+            $jarak_langsir = 'jarak_langsir_'.$i+1;
+            $metode = 'metode_'.$i+1;
 
             $data->checkpoints = json_encode($request->$ck);
             $data->rute = null;
-            $jalan = 'jalan_'.$i;
             $data->jalan = $request->$jalan;
-            $jembatan = 'jembatan_'.$i;
             $data->jembatan = $request->$jembatan;
-            $jalan_alternatif = 'jalan_alternatif_'.$i;
             $data->jalan_alt = $request->$jalan_alternatif;
-            $langsir = 'langsir_'.$i;
             $data->langsir = $request->$langsir;
-            $jarak_langsir = 'jarak_langsir_'.$i;
             $data->jarak_langsir = $request->$jarak_langsir;
-            $metode = 'metode_'.$i;
             $data->metode = $request->$metode;
             $data->save();
             $i++;
