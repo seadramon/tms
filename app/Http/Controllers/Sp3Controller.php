@@ -100,10 +100,10 @@ class Sp3Controller extends Controller
                 ->addColumn('approval', function ($model) {
                     $teks = '';
                     if($model->app1 == 1){
-                        $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved 1</span>';
+                        $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
                     }
                     if($model->app2 == 1){
-                        $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved 2</span>';
+                        $teks .= '<span class="badge badge-light-success mr-2 mb-2">MDiv&nbsp;<i class="fas fa-check text-success"></i></span>';
                     }
                     return $teks;
                 })

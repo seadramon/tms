@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Validation\ValidationException;
 
 class PricelistAngkutanController extends Controller
 {   
@@ -31,11 +32,11 @@ class PricelistAngkutanController extends Controller
 
         return DataTables::eloquent($query)
             ->addColumn('angkutan', function ($model) {
-                $item = $model->pad->map(function($d){ return $d->angkutan->name; });
+                $item = $model->pad->unique('kd_material')->map(function($d){ return $d->angkutan->name; });
                 return implode("<br>", $item->all());
             })
             ->addColumn('pemuatan', function ($model) {
-                $item = $model->pad->map(function($d){ return $d->unit_muat; });
+                $item = $model->pad->unique('kd_muat')->map(function($d){ return $d->unit_muat; });
                 return implode("<br>", $item->all());
             })
             ->addColumn('menu', function ($model) {
@@ -90,10 +91,14 @@ class PricelistAngkutanController extends Controller
 
     public function getLokasiPemuatan(Request $request)
     {
+        $years = [];
+        for ($i=0; $i < 3; $i++) { 
+            $years[] = date('y', strtotime('-' . $i . ' years'));
+        }
         $data = match ($request->jenis_muat) {
             'unit'      => Pat::get()->pluck('ket', 'kd_pat'),
-            'vendor'    => Vendor::get()->pluck('nama', 'vendor_id'),
-            'site'      => Npp::get()->pluck('nama_proyek', 'no_npp'),
+            'vendor'    => Vendor::where('sync_eproc', 1)->get()->pluck('nama', 'vendor_id'),
+            'site'      => Npp::whereIn(DB::raw('SUBSTR(no_npp, 1, 2)'), $years)->get()->pluck('nama_proyek', 'no_npp'),
             default     => Pat::get()->pluck('ket', 'kd_pat')
         };
         
@@ -120,16 +125,23 @@ class PricelistAngkutanController extends Controller
                 'kd_pat'        => 'required'
             ])->validate();
 
-            $pricelistAngkutanH = new PricelistAngkutanH();
-            $pricelistAngkutanH->kd_pat = $request->kd_pat;
-            $pricelistAngkutanH->tahun = $request->tahun;
+            $pricelistAngkutanH = PricelistAngkutanH::firstOrNew([
+                'kd_pat' => $request->kd_pat,
+                'tahun'  => $request->tahun
+            ]);
             $pricelistAngkutanH->save();
 
             $j=0;
             $countHarsat = 0;
 
             for($i=0; $i < count($request->kd_material); $i++){
-                $pricelistAngkutanD = new PricelistAngkutanD();
+                // $pricelistAngkutanD = PricelistAngkutanD::firstOrNew([
+                //     'pah_id' => $pricelistAngkutanH->id,
+                //     'kd_material'  => $request->kd_material[$i],
+                //     'jenis_muat'  => $request->kd_material[$i],
+                // ]);;
+                // throw ValidationException::withMessages(['your error message']);
+                $pricelistAngkutanD = new PricelistAngkutanD;
                 $pricelistAngkutanD->pah_id = $pricelistAngkutanH->id;
                 $pricelistAngkutanD->kd_material = $request->kd_material[$i];
                 $pricelistAngkutanD->jenis_muat = $request->jenis_muat[$i];
@@ -137,7 +149,6 @@ class PricelistAngkutanController extends Controller
                 $pricelistAngkutanD->tgl_mulai = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->tgl_mulai[$i]))."', 'YYYY-MM-DD')");
                 $pricelistAngkutanD->tgl_selesai = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->tgl_selesai[$i]))."', 'YYYY-MM-DD')");
                 $pricelistAngkutanD->save();
-
                 $countHarsat += $request->count_harsat[$i];
 
                 for($j; $j < $countHarsat; $j++){

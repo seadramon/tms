@@ -23,24 +23,24 @@
 
                 <div class="card-body">
                     <div class="form-group row">
-                        <div class="col-lg-6 custom-form">
+                        <div class="col-lg-6 custom-form mb-2">
                             <label class="form-label col-sm-3 custom-label">Unit Kerja</label>
                             {!! Form::select('pat', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pat']) !!}
                         </div>
                         
-                        <div class="col-lg-6 custom-form">
+                        <div class="col-lg-6 custom-form mb-2">
                             <label class="form-label col-sm-3 custom-label">Lokasi Muat</label>
                             {!! Form::select('pbbMuat', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pbbMuat']) !!}
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <div class="col-lg-6 custom-form">
+                        <div class="col-lg-6 custom-form mb-2">
                             <label class="form-label col-sm-3 custom-label">Periode</label>
                         {!! Form::select('periode', $periode, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'periode']) !!}
                         </div>
                         
-                        <div class="col-lg-6 custom-form">
+                        <div class="col-lg-6 custom-form mb-2">
                             <label class="form-label col-sm-3 custom-label">Cut Off</label>
                             {!! Form::select('rangeCutOff', $rangeCutOff, null, ['class'=>'form-control form-select-solid col-sm-1', 'data-control'=>'select2', 'id'=>'rangeCutOff']) !!}
                             {!! Form::select('monthCutOff', $monthCutOff, null, ['class'=>'form-control form-select-solid col-sm-2', 'data-control'=>'select2', 'id'=>'monthCutOff']) !!}
@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <div class="col-lg-6 custom-form">
+                        <div class="col-lg-6 custom-form mb-2">
                             <label class="form-label col-sm-3 custom-label">Status SP3/SPK</label>
                             {!! Form::select('status', $status, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'status']) !!}
                         </div>
