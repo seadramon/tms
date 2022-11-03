@@ -93,10 +93,13 @@ class SppController extends Controller
             ->addColumn('approval', function ($model) {
                 $teks = '';
                 if($model->app == 1){
-                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved 1</span>';
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 if($model->app2 == 1){
-                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved 2</span>';
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">Vendor&nbsp;<i class="fas fa-check text-success"></i></span>';
+                }
+                if($model->app3 == 1){
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MDiv&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 return $teks;
             })
@@ -445,8 +448,12 @@ class SppController extends Controller
                 'spprb_h.jadwal2')
             ->get();
 
+        $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
         $arrData['angkutan'] = SppbH::join('spprb_h', 'spprb_h.no_spprb', '=', 'sppb_h.no_spprb')
                 ->join('sp3_h', 'sp3_h.no_npp', '=', 'spprb_h.no_npp')
+                ->join(DB::raw($joinQuery), function($join) {
+                    $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
+                })
                 ->join('vendor', 'vendor.vendor_id', '=', 'sp3_h.vendor_id')
                 ->select('spprb_h.no_spprb', 'sp3_h.no_sp3', 'sp3_h.app1', 'sp3_h.app2', 'sp3_h.st_wf', 'vendor.nama as vendorname', DB::raw("(SELECT sum(vol_akhir) FROM sp3_d WHERE NO_SP3 = sp3_h.NO_SP3) AS volakhir"), DB::raw("(SELECT sum(VOL_TON_AKHIR) FROM sp3_d WHERE NO_SP3 = sp3_h.NO_SP3) AS voltonakhir"))
                 ->where('sppb_h.no_sppb', $arrData['noSppb'])

@@ -2,27 +2,25 @@
 	<div class="col-lg-12">
 		<h3 class="card-title">Detail Pesanan NPP</h3>
 
-		<table class="table table-row-bordered text-center">
-			<thead>
-				<tr>
-					<th rowspan="2" style="vertical-align: middle; text-align: left">Nama/Tipe Produk</th>
-					<th colspan="2">Pesanan</th>
-					<th colspan="2">SPP Sebelumnya</th>
-					<th colspan="3">Volume Sisa</th>
-				</tr>
-				<tr>
-					<th>Vol(Btg)</th>
-					<th>Vol(Ton)</th>
-					<th>Vol(Btg)</th>
-					<th>Vol(Ton)</th>
-					<th>Vol(Btg)</th>
-					<th>Vol(Ton)</th>
-					<th>%</th>
-				</tr>
-			</thead>
-		</table>
 		<div class="hover-scroll-overlay-y h-400px">
             <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
+				<thead>
+					<tr>
+						<th rowspan="2" style="vertical-align: middle; text-align: left">Nama/Tipe Produk</th>
+						<th colspan="2">Pesanan</th>
+						<th colspan="2">SPP Sebelumnya</th>
+						<th colspan="3">Volume Sisa</th>
+					</tr>
+					<tr>
+						<th>Vol(Btg)</th>
+						<th>Vol(Ton)</th>
+						<th>Vol(Btg)</th>
+						<th>Vol(Ton)</th>
+						<th>Vol(Btg)</th>
+						<th>Vol(Ton)</th>
+						<th>%</th>
+					</tr>
+				</thead>
 				<tbody>
 					@if (count($tblPesanan) > 0)
 						@foreach($tblPesanan as $pesanan)
@@ -116,22 +114,20 @@
 		<!-- Detail Pekerjaan -->
 		<div class="col-lg-12 mt-10">
 			<h3 class="card-title">Detail Rencana Produk</h3>
-			<table class="table table-row-bordered text-center">
-				<thead>
-					<tr class="fw-bolder fs-6 text-gray-800">
-						<th style="width: 5%">No</th>
-						<th style="width: 20%;text-align: left;">Nama Produk</th>
-						<th style="width: 15%">Kode Produk</th>
-						<th style="width: 15%">Saat Ini</th>
-						<th style="width: 15%">S.d Saat ini</th>
-						<th style="width: 15%">Keterangan</th>
-						<th style="width: 5%">Segmen</th>
-						<th style="width: 10%">Jumlah Segmen</th>
-					</tr>
-				</thead>
-			</table>
 			<div class="hover-scroll-overlay-y h-400px">
-	            <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
+				<table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
+					<thead>
+						<tr class="fw-bolder fs-6 text-gray-800">
+							<th style="width: 5%">No</th>
+							<th style="width: 20%;text-align: left;">Nama Produk</th>
+							<th style="width: 15%">Kode Produk</th>
+							<th style="width: 15%">Saat Ini</th>
+							<th style="width: 15%">S.d Saat ini</th>
+							<th style="width: 15%">Keterangan</th>
+							<th style="width: 5%">Segmen</th>
+							<th style="width: 10%">Jumlah Segmen</th>
+						</tr>
+					</thead>
 					<tbody>
 						@if (count($data->detail) > 0 && count($tblPesanan) > 0)
 							<?php $i = 1; ?>

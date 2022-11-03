@@ -34,7 +34,8 @@ Route::name('api.')->namespace('Api')->group(function() {
     Route::name('internal.')->prefix('internal')->namespace('Internal')->group(function() {
         Route::post('kalender-daily', [KalenderController::class, 'daily'])->name('daily');
         Route::get('npp/{pat}', [InternalPelangganController::class, 'nppList'])->name('npp');
-        Route::get('pelanggan-list', [InternalPelangganController::class, 'index'])->name('npp');
+        Route::get('pelanggan-list', [InternalPelangganController::class, 'index'])->name('pelanggan-list');
+        Route::post('pelanggan-approve', [InternalPelangganController::class, 'approve'])->name('pelanggan-approve');
     });
     
     Route::name('pelanggan.')->prefix('pelanggan')->namespace('Pelanggan')->group(function() {

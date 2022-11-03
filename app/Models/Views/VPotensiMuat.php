@@ -19,4 +19,14 @@ class VPotensiMuat extends Model
     {
     	return $this->belongsTo(Pat::class, 'ppb_muat', 'kd_pat');
     }
+    
+    public function ppbmuat()
+    {
+    	return $this->belongsTo(Pat::class, 'ppb_muat', 'kd_pat');
+    }
+
+    public function unitkerja()
+    {
+    	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
+    }
 }

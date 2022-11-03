@@ -9,8 +9,7 @@
 @endsection
 
 @section('content')
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-
+{{-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> --}}
 <!--begin::Content container-->
 <form action="{{ route('potensi.detail.armada.store') }}" method="post" >
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -138,7 +137,7 @@
                                         Rute Pengiriman {{ $i }}
                                     </button>
                                 </h2>
-                                <div id="kt_accordion_{{ $i }}_body_{{ $i }}" class="accordion-collapse collapse" aria-labelledby="kt_accordion_{{ $i }}_header_{{ $i }}" data-bs-parent="#kt_accordion_{{ $i }}">
+                                <div id="kt_accordion_{{ $i }}_body_{{ $i }}" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_{{ $i }}_header_{{ $i }}">
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col-md-6" style="margin-bottom:10px;">
@@ -658,7 +657,7 @@
                 </div>
 
                 <div class="card-footer" style="text-align: right;">
-                    <a href="{{ URL::previous() }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
+                    <a href="{{ route('potensi.detail.armada.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
                     <input type="submit" class="btn btn-success" value="Simpan">
                 </div>
 
@@ -740,9 +739,10 @@
 
 @section('js')
 <script type="text/javascript">
-
-$(function(){
-    $('.create_rute').trigger('click');
+$(document).ready(function () {
+    for (i = 1; i <= $('.create_rute').length; i++) {
+        generate_map(i);
+    } 
 });
 
 // show detail list on table

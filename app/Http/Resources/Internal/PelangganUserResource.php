@@ -16,6 +16,7 @@ class PelangganUserResource extends JsonResource
     {
         $pelanggan = $this->pelanggan;
         return [
+            "id"           => $this->id,
             "pelanggan_id" => $this->pelanggan_id,
             "nama"         => $this->nama,
             "ktp"          => $this->ktp,
