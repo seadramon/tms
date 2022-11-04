@@ -64,9 +64,13 @@
                                                                 @if($row->potensiH->kd_material == $item->kd_material)
                                                                     <option value="{{ $item->kd_material }}|{{ $item->uraian }} {{ $item->spesifikasi }}" selected="">{{ $item->uraian }} {{ $item->spesifikasi }}</option>
                                                                 @else
-                                                                <option value="{{ $item->kd_material }}|{{ $item->uraian }} {{ $item->spesifikasi }}">{{ $item->uraian }} {{ $item->spesifikasi }}</option>
+                                                                    <option value="{{ $item->kd_material }}|{{ $item->uraian }} {{ $item->spesifikasi }}">{{ $item->uraian }} {{ $item->spesifikasi }}</option>
                                                                 @endif
+                                                            @else
+                                                                <option value="{{ $item->kd_material }}|{{ $item->uraian }} {{ $item->spesifikasi }}">{{ $item->uraian }} {{ $item->spesifikasi }}</option>
+
                                                             @endif
+
                                                         @endforeach
                                                     </select>
                                                 </td>
