@@ -1,5 +1,140 @@
+<!-- Begin Table -->
+<table class="table table-condesed">
+    <thead style="background-color: darkblue;">
+        <tr class="border border-gray-100 text-lg-center" style="font-size: 12px; font-weight: bold; color:white;">
+            <th width="10%" style="vertical-align: middle;">NPP</th>
+            <th width="10%" style="vertical-align: middle;">PELANGGAN</th>
+            <th width="10%" style="vertical-align: middle;">PROYEK</th>
+            <th width="10%" style="vertical-align: middle;">TOTAL RIT</th>
+            <th width="1%" style="vertical-align: middle; background-color: lavenderblush; color:black;">
+                    S <hr style="margin-top: -4px; margin-bottom: -4px;">
+                    <span style="font-size: 8px;">1</span>
+            </th>
+            <th width="1%" style="vertical-align: middle; background-color: cornflowerblue;">
+                S<hr style="margin-top: -4px; margin-bottom: -4px;">
+                <span style="font-size: 8px;">2</span>
+            </th>
+            <th width="1%" style="vertical-align: middle; background-color: cornflowerblue;">
+                R <hr style="margin-top: -4px; margin-bottom: -4px;">
+                <span style="font-size: 8px;">3</span>
+            </th>
+            <th width="1%" style="vertical-align: middle; background-color: cornflowerblue;">
+                K<hr style="margin-top: -4px; margin-bottom: -4px;">
+                <span style="font-size: 8px;">4</span>
+            </th>
+            <th width="1%" style="vertical-align: middle; background-color: cornflowerblue;">
+                J <hr style="margin-top: -4px; margin-bottom: -4px;">
+                <span style="font-size: 8px;">5</span>
+            </th>
+            <th width="1%" style="vertical-align: middle; background-color: cornflowerblue;">
+                S<hr style="margin-top: -4px; margin-bottom: -4px;">
+                <span style="font-size: 8px;">6</span>
+            </th>
+            <th width="1%" style="vertical-align: middle; color:red; background-color: cornflowerblue;">
+                M<hr style="margin-top: -4px; margin-bottom: -4px;">
+                <span style="font-size: 8px; color:red;">7</span>
+            </th>
+            <th width="10%" style="vertical-align: middle;">JENIS ARMADA</th>
+            <th width="10%" style="vertical-align: middle;">PPB MUAT</th>
+            <th width="13%" style="vertical-align: middle;" class="text-center">ACTION</th>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $i = 1;
+        @endphp
+        @foreach ($data as $key => $row)
+        <tr class="text-gray-800 border border-gray-100" style="font-size: 11px;">
+            <td width="10%" class="text-center">{{$row->first()->sppb->no_npp}}</td>
+            <td width="10%">{{$row->first()->sppb->npp->nama_pelanggan}}</td>
+            <td width="10%">{{$row->first()->sppb->npp->nama_proyek}}</td>
+            <td width="10%" class="text-center" style="background-color: darkblue; color:white; vertical-align: middle; font-weight: bolder;">25</td>
+            <td width="1%" class="text-center" style="background-color: lavenderblush; color:black; vertical-align: middle; font-weight: bolder;">4</td>
+            <td width="1%" class="text-center" style="background-color: cornflowerblue; color:white; vertical-align: middle; font-weight: bolder;">6</td>
+            <td width="1%" class="text-center" style="background-color: cornflowerblue; color:white; vertical-align: middle; font-weight: bolder;">8</td>
+            <td width="1%" class="text-center" style="background-color: cornflowerblue; color:white; vertical-align: middle; font-weight: bolder;">3</td>
+            <td width="1%" class="text-center" style="background-color: cornflowerblue; color:white; vertical-align: middle; font-weight: bolder;">4</td>
+            <td width="1%" class="text-center" style="background-color: cornflowerblue; color:white; vertical-align: middle; font-weight: bolder;"></td>
+            <td width="1%" class="text-center" style="background-color: cornflowerblue; color:white; vertical-align: middle; font-weight: bolder;"></td>
+            <td class="text-center" width="15%">-</td>
+            <td class="text-center" width="15%">{{($row->first()->pat->ket ?? 'Unknown' )}}</td>
+            <td class="text-center" width="13%">
+                <a href="javascript:void(0)" class="expandChildTable"><i class="fa fa-eye"></i></a>
+            </td>
+        </tr>
+        <tr class="childTableRow" style="display: none;">
+            <td colspan="14" style="padding-top:0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px;">
+                <table class="table" style="margin-bottom:0px; ">
+                    <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
+                        <td width="30.3%" colspan="3"></td>
+                        <td width="9.7%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
+                        <td class="text-center" width="1.6%" style="font-weight: bolder;">4</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">6</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">8</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">3</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">4</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
+                        <td colspan="3" class="text-center" width="42%"></td>
+                    </tr>
+                    <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
+                        <td width="30.3%" colspan="3"></td>
+                        <td width="9.7%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
+                        <td class="text-center" width="1.6%" style="font-weight: bolder;">4</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">6</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">8</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">3</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">4</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
+                        <td colspan="3" class="text-center" width="42%"></td>
+                    </tr>
+                    <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
+                        <td width="30.3%" colspan="3"></td>
+                        <td width="9.7%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
+                        <td class="text-center" width="1.6%" style="font-weight: bolder;">4</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">6</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">8</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">3</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">4</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
+                        <td colspan="3" class="text-center" width="42%"></td>
+                    </tr>
+                    <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
+                        <td width="30.3%" colspan="3"></td>
+                        <td width="9.7%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
+                        <td class="text-center" width="1.6%" style="font-weight: bolder;">4</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">6</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">8</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">3</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">4</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
+                        <td colspan="3" class="text-center" width="42%"></td>
+                    </tr>
+                    <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
+                        <td width="30.3%" colspan="3"></td>
+                        <td width="9.7%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
+                        <td class="text-center" width="1.6%" style="font-weight: bolder;">4</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">6</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">8</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">3</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">4</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
+                        <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
+                        <td colspan="3" class="text-center" width="42%"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+
 <!--begin::Accordion-->
-<div class="accordion" id="kt_accordion_1">
+{{-- <div class="accordion" id="kt_accordion_1">
     @php
         $i = 1;
     @endphp
@@ -7,7 +142,10 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="kt_accordion_1_header_{{ $i }}">
                 <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_{{ $i }}" aria-expanded="true" aria-controls="kt_accordion_1_body_{{ $i }}">
-                    <span class="badge badge-light-dark badge-lg" style="margin-right: 20px;">{{$row->first()->sppb->no_npp}}</span><span class="badge badge-outline badge-primary badge-lg" style="margin-right: 20px;">{{$row->first()->sppb->npp->nama_pelanggan}}</span><span class="badge badge-outline badge-danger badge-lg" style="margin-right: 20px;">{{$row->first()->sppb->npp->nama_proyek}}</span><span class="badge badge-outline badge-info badge-lg" style="margin-right: 20px;">{{($row->first()->pat->ket ?? 'Unknown')}}</span>
+                    <span class="badge badge-light-dark badge-lg" style="margin-right: 20px;">{{$row->first()->sppb->no_npp}}</span>
+                    <span class="badge badge-outline badge-primary badge-lg" style="margin-right: 20px;">{{$row->first()->sppb->npp->nama_pelanggan}}</span>
+                    <span class="badge badge-outline badge-danger badge-lg" style="margin-right: 20px;">{{$row->first()->sppb->npp->nama_proyek}}</span>
+                    <span class="badge badge-outline badge-info badge-lg" style="margin-right: 20px;">{{($row->first()->pat->ket ?? 'Unknown')}}</span>
                 </button>
             </h2>
             <div id="kt_accordion_1_body_{{ $i }}" class="accordion-collapse collapse" aria-labelledby="kt_accordion_1_header_{{ $i }}" data-bs-parent="#kt_accordion_1">
@@ -101,5 +239,17 @@
             $i++;
         @endphp
     @endforeach
-</div>
+</div> --}}
 <!--end::Accordion-->
+
+
+<script type="text/javascript">
+
+
+    // show detail list on table
+    $(function() {
+        $('.expandChildTable').on('click', function() {
+            $(this).toggleClass('selected').closest('tr').next().toggle();
+        })
+    });
+</script>
