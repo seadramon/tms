@@ -45,7 +45,7 @@
 	</div>
 
 	<div class="col-12 mt-5">
-		@include('pages.spp.part-edit')
+		@include('pages.spp.part-edit-view')
 	</div>
 	<!-- end box 2 -->
 
