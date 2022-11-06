@@ -193,6 +193,7 @@ class PricelistAngkutanController extends Controller
             $tahun[$i] = $i;
         }
         
+        
         $kd_material = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
             ->pluck('name', 'kd_material')
