@@ -15,7 +15,7 @@
         <div class="col-12 mb-md-5 mb-xl-10">
             <div class="card shadow-sm" id="div-card">
                 <div class="card-header">
-                    <h3 class="card-title">Kalender Pengiriman</h3>
+                    <h3 class="card-title">Kalender Pengiriman Weekly</h3>
                     {{-- <div class="card-toolbar">
                         <a href="{{route('sp3.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
                     </div> --}}
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="card-body py-5" id="data-weekly">
-                    
+
                 </div>
                 <div class="card-footer">
                 </div>
@@ -65,7 +65,7 @@
         display: flex;
     }
     .custom-label {
-        display: flex; 
+        display: flex;
         align-items: center;
         margin-bottom: 0px;
     }
