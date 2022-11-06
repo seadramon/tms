@@ -287,11 +287,17 @@
                                                         </label>
                                                     </div>
                                                 </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan_{{ $i }}"
+                                                        <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan2_{{ $i }}"
                                                         @if(!empty($item->potensiH))
-                                                            @if($item->potensiH->jalan == 'menanjak')
+                                                            @if($item->potensiH->jalan2 == 'menanjak')
                                                                 checked=""
                                                             @endif
                                                         @endif
@@ -303,9 +309,9 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan_{{ $i }}"
+                                                        <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan2_{{ $i }}"
                                                         @if(!empty($item->potensiH))
-                                                            @if($item->potensiH->jalan == 'berkelok')
+                                                            @if($item->potensiH->jalan2 == 'berkelok')
                                                                 checked=""
                                                             @endif
                                                         @endif
@@ -317,9 +323,9 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan_{{ $i }}"
+                                                        <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan2_{{ $i }}"
                                                         @if(!empty($item->potensiH))
-                                                            @if($item->potensiH->jalan == 'lain_lain')
+                                                            @if($item->potensiH->jalan2 == 'lain_lain')
                                                                 checked=""
                                                             @endif
                                                         @endif
@@ -329,6 +335,9 @@
                                                         </label>
                                                     </div>
                                                 </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                             </tr>
                                             <tr>
                                                 <td>Jembatan</td>
@@ -374,6 +383,9 @@
                                                         </label>
                                                     </div>
                                                 </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                             </tr>
                                             <tr>
                                                 <td>Jalan Alternatif</td>
@@ -419,11 +431,17 @@
                                                         </label>
                                                     </div>
                                                 </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan_alternatif_{{ $i }}"
+                                                        <input class="form-check-input" type="radio" value="menanjak" id="flexCheckDefault" name="jalan_alternatif2_{{ $i }}"
                                                         @if(!empty($item->potensiH))
-                                                            @if($item->potensiH->jalan_alt == 'menanjak')
+                                                            @if($item->potensiH->jalan_alt2 == 'menanjak')
                                                                 checked=""
                                                             @endif
                                                         @endif
@@ -435,9 +453,9 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan_alternatif_{{ $i }}"
+                                                        <input class="form-check-input" type="radio" value="berkelok" id="flexCheckDefault" name="jalan_alternatif2_{{ $i }}"
                                                         @if(!empty($item->potensiH))
-                                                            @if($item->potensiH->jalan_alt == 'berkelok')
+                                                            @if($item->potensiH->jalan_alt2 == 'berkelok')
                                                                 checked=""
                                                             @endif
                                                         @endif
@@ -449,9 +467,9 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan_alternatif_{{ $i }}"
+                                                        <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="jalan_alternatif2_{{ $i }}"
                                                         @if(!empty($item->potensiH))
-                                                            @if($item->potensiH->jalan_alt == 'lain_lain')
+                                                            @if($item->potensiH->jalan_alt2 == 'lain_lain')
                                                                 checked=""
                                                             @endif
                                                         @endif
@@ -461,6 +479,9 @@
                                                         </label>
                                                     </div>
                                                 </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                             </tr>
                                             <tr>
                                                 <td>Langsir</td>
@@ -742,7 +763,7 @@
 $(document).ready(function () {
     for (i = 1; i <= $('.create_rute').length; i++) {
         generate_map(i);
-    } 
+    }
 });
 
 // show detail list on table
