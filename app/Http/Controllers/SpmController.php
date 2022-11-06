@@ -32,14 +32,35 @@ class SpmController extends Controller
 {
     public function index()
     {
-        $vendor = [
-            "" => 'Please Select Data'
-        ];
+        $vendor = [];
 
         return view('pages.spm.index', [
             'vendor' => $vendor
         ]);
-    }   
+    }
+
+    public function selectPat(Request $request)
+    {
+        $pat = $request->pat;
+        $result = [];
+
+        if (!empty($pat)) {
+            $jalurs = DB::table('oee_ref_jalur_h')
+                ->where('kode_pat', $pat)
+                ->get();
+
+            if (count($jalurs) > 0) {
+                foreach ($jalurs as $row) {
+                    $result[] = [
+                        'id' => $row->jalur,
+                        'text' => $row->jalur.'. '.$row->fungsi_jalur
+                    ];
+                }
+            }
+        }
+
+        return response()->json($result);
+    }
     
     public function data(Request $request)
     {
@@ -59,7 +80,7 @@ class SpmController extends Controller
                             Action
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-id="'. $model->no_spm .'">Konfirmasi</a></li>
+                            <li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-pat="'. $model->pat_to .'" data-id="'. $model->no_spm .'">Konfirmasi</a></li>
                             <li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>
                             <li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>
                             <li><a class="dropdown-item delete" href="#">Hapus</a></li>
@@ -316,6 +337,7 @@ class SpmController extends Controller
             $data->app1_empid = session('TMP_NIP') ?? '12345';
             $data->app1_jbt = !empty(session('TMP_KDJBT')) ? str_replace("JBT", "", session('TMP_KDJBT')) : '12345';
             $data->app1_date = getNow();
+            $data->jalur = !empty($request->jalur)?implode("|", $request->jalur):null;
             $data->save();
 
             DB::commit();

@@ -88,8 +88,8 @@
                         
                         <div class="form-group row">
                             <div class="col-lg-12 custom-form">
-                                <label class="form-label col-sm-3 custom-label">Vendor</label>
-                                {!! Form::select('vendor_id', $vendor, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'vendor_id']) !!}
+                                <label class="form-label col-sm-3 custom-label">Jalur</label>
+                                {!! Form::select('jalur[]', $vendor, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'jalur_id', 'multiple' => 'multiple']) !!}
                             </div>
                         </div>
 
@@ -195,7 +195,24 @@
 
     $(document).on("click", ".konfirmasi", function () {
         var id = $(this).data('id');
+        var pat = $(this).data('pat');
         $("#no_spm").val(id);
+
+        $('#jalur_id').val(null).trigger('change');
+        var data = [{
+            id: 1,
+            text: 'Barn owl'
+        }];
+
+        $.ajax({
+            type:"get",
+            url: "{{ route('spm.select-pat') }}?pat=" + pat,
+            success: function(res) {
+                $("#jalur_id").select2({
+                    data: res
+                })     
+            }
+        });
     });
 
     $("#modal_konfirmasi_form").submit(function(event) {

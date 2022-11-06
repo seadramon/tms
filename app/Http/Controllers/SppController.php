@@ -105,6 +105,8 @@ class SppController extends Controller
             })
             ->addColumn('menu', function ($model) {
                 $noSppb = str_replace("/", "|", $model->no_sppb);
+                $sumVolApp2 = $model->detail->sum('app2_vol');
+                
                 switch (true) {
                     case ($model->app == 0):
                         $approve = route('spp-approve.approval', [
@@ -120,7 +122,7 @@ class SppController extends Controller
                         ]);
                         $caption = "Approve Second";
                         break;
-                    case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0):
+                    case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0 && $sumVolApp2 == 0):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'third',
                             'nosppb' => $noSppb
@@ -137,7 +139,7 @@ class SppController extends Controller
                 } else {
                     $approval = "";
                 }
-// dd($approve);
+
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Action
