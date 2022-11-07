@@ -48,28 +48,13 @@
 @endsection
 @section('js')
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
-<script type="text/javascript" src="https://rawgit.com/fusioncharts/fusioncharts-jquery-plugin/develop/dist/fusioncharts.jqueryplugin.min.js"></script>
-<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+<script src="{{ asset('assets/fusion/js/fusioncharts.js') }}"></script>
+<script src="{{ asset('assets/fusion/js/themes/fusioncharts.theme.fusion.js') }}"></script>
+<script src="{{ asset('assets/fusion/js/jquery-fusioncharts.min.js') }}"></script>
 <script type="text/javascript">
 	"use strict";
 
     var isShowBox2 = false;
-
-    var listBulan = [
-        'Januari',
-        'Februari',
-        'Maret',
-        'April',
-        'Mei',
-        'Juni',
-        'Juli',
-        'Agustus',
-        'September',
-        'Oktober',
-        'November',
-        'Desember'
-    ];
 
     var target = document.querySelector(".box-ui-loading-chart");
             
@@ -192,28 +177,6 @@
             success: function(result) {
                 $("#chart-container").html('');
 
-                var kategori = [];
-                var totalRencana = [];
-                var totalRealisasi = [];
-
-                result.rencana.forEach(element => {
-                    kategori.push(
-                        {
-                            label: listBulan[parseInt(element.bulan)-1]
-                        }
-                    )
-
-                    totalRencana.push(
-                        {
-                            value: element.total
-                        }
-                    )
-                });
-
-                result.realisasi.forEach(element => {
-                    totalRealisasi[parseInt(element.bulan)-1] = {value: element.total};
-                });
-
                 $("#chart-container").insertFusionCharts({
                     type: "msline",
                     width: "100%",
@@ -230,17 +193,17 @@
                         },
                         categories: [
                             {
-                                category: kategori
+                                category: result.kategori
                             }
                         ],
                         dataset: [
                             {
                                 seriesname: "Rencana",
-                                data: totalRencana
+                                data: result.rencana
                             },
                             {
                                 seriesname: "Realisasi",
-                                data: totalRealisasi
+                                data: result.realisasi
                             },
                         ]
                     }

@@ -109,6 +109,7 @@ class PemenuhanArmadaController extends Controller
     {
         $rencana = SpmH::select(DB::raw('extract(MONTH from tgl_spm) as bulan'), DB::raw('count(*) as total'))
             ->groupby(DB::raw('extract (MONTH from tgl_spm)'))
+            ->orderBy('bulan')
             ->leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
             ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 
@@ -141,6 +142,7 @@ class PemenuhanArmadaController extends Controller
 
         $realisasi = SptbH::select(DB::raw('extract(MONTH from tgl_sptb) as bulan'), DB::raw('count(*) as total'))
             ->groupby(DB::raw('extract (MONTH from tgl_sptb)'))
+            ->orderBy('bulan')
             ->whereHas('spmh', function($query) use ($request){
                 $query->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 
@@ -170,9 +172,32 @@ class PemenuhanArmadaController extends Controller
                 }
             })->get();
 
+        $listBulan = getListBulan();
+
+        $kategori = [];
+        $totalRencana = [];
+        $totalRealisasi = [];
+
+        foreach ($rencana as $renc) {
+            $kategori[] = [
+               'label' => $listBulan[((int)$renc->bulan)-1]
+            ];
+
+            $totalRencana[] = [
+                'value' => $renc->total
+            ];
+        }
+
+        foreach ($realisasi as $real) {
+            $totalRealisasi[((int)$real->bulan)-1] = [
+                'value' => $real->total
+            ];
+        }
+        
         return [
-            'rencana'   => $rencana,
-            'realisasi' => $realisasi
+            'kategori'  => $kategori,
+            'rencana'   => $totalRencana,
+            'realisasi' => $totalRealisasi
         ];
     }
 }

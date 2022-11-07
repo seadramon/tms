@@ -25,15 +25,36 @@ if (!function_exists('getNow')) {
 	    return $data[0]->saiki;
 	}
 }
+
 if (!function_exists('cekDir')) {
-	function cekDir($dir, $disk = "local")
+    function cekDir($dir, $disk = "local")
     {
         /*if (!\Storage::disk('sftp')->exists($dir)) {
             Storage::disk('sftp')->makeDirectory($dir);
         }*/
-
+        
         if (!Storage::disk($disk)->exists($dir)) {
             Storage::disk($disk)->makeDirectory($dir, 0777, true);
         }
+    }
+}
+
+if (!function_exists('getListBulan')) {
+    function getListBulan()
+    {
+        return [
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember'
+        ];
     }
 }
