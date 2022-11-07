@@ -25,22 +25,28 @@
                     <div class="form-group row mb-2">
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 custom-label">Unit Kerja</label>
-                            {!! Form::select('pat', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pat']) !!}
+                            {!! Form::select('unitkerja', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'unitkerja']) !!}
                         </div>
                         <div class="col-lg-6 custom-form">
-                            <label class="form-label col-sm-3 custom-label">Unit Kerja</label>
-                            {!! Form::select('pat', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pat1']) !!}
+                            <label class="form-label col-sm-3 custom-label">PPB Muat</label>
+                            {!! Form::select('ppbmuat', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'ppbmuat']) !!}
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row mb-2">
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 custom-label">Periode Pengiriman</label>
-                            {!! Form::select('periode', $periode, date('Y'), ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'periode']) !!}
+                            {!! Form::select('tahun', $periode, date('Y'), ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'tahun']) !!}
                         </div>
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 custom-label">Periode Minggu</label>
-                            {!! Form::select('periode_minggu', $periode_minggu, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'periode1']) !!}
+                            {!! Form::select('minggu', $periode_minggu, $active_week, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'minggu']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <div class="col-lg-6 custom-form">
+                            <label class="form-label col-sm-3 custom-label">&nbsp;</label>
+                            <button class="btn btn-primary" id="filter">Filter</button>
                         </div>
                     </div>
                 </div>
@@ -80,19 +86,30 @@
 
     $(document).ready(function() {
         loadData();
+        $("#filter").click(function(){
+            loadData();
+        });
     });
 
     function loadData(){
         blockUI.block();
         $.ajax({
             type:"post",
-            url: "{{ route('kalender-pengiriman.detail-weekly-data') }}",
+            url: "{{ route('kalender-pengiriman.detail-weekly-data') }}?" + getParam(),
             data: {_token: "{{ csrf_token() }}"},
             success: function(result){
                 blockUI.release();
                 $("#data-weekly").html(result)
             }
         });
+    }
+
+    function getParam(){
+        var unitkerja = $("#unitkerja").val();
+        var ppbmuat = $("#ppbmuat").val();
+        var tahun = $("#tahun").val();
+        var minggu = $("#minggu").val();
+        return $.param({unitkerja, ppbmuat, tahun, minggu});
     }
 </script>
 @endsection

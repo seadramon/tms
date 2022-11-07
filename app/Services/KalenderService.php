@@ -4,6 +4,9 @@ namespace App\Services;
 use App\Models\Sp3;
 use App\Models\SpmH;
 use App\Models\SppbH;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 
 class KalenderService {
 
@@ -81,4 +84,18 @@ class KalenderService {
 		}
         return $data;
     }
+
+	public static function createDateRangeArray($start, $end, $format = 'Y-m-d')
+	{
+		$period = new DatePeriod(
+			new DateTime($start),
+			new DateInterval('P1D'),
+			new DateTime(date('Y-m-d', strtotime('+1 day ' . $end)))
+	    );
+		$data = [];
+		foreach ($period as $key => $value) {
+			$data[] = $value->format($format);       
+		}
+		return $data;
+	}
 }

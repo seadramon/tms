@@ -57,6 +57,9 @@
 @section('js')
 <script src="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js') }}"></script>
 <script type="text/javascript">
+ 	$(document).ready(function() {
+		
+    });
 	const element = document.getElementById("kalender-pengiriman");
 
 	var todayDate = moment().startOf("day");
@@ -68,16 +71,16 @@
 	var calendarEl = document.getElementById("kalender-pengiriman");
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 		headerToolbar: {
-			left: "",
+			left: "prev,next",
 			center: "title",
-			right: "dayGridMonth,timeGridWeek"
+			right: ""
 		},
 
 		height: 800,
 		contentHeight: 780,
 		aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
 
-		// nowIndicator: true,
+		nowIndicator: true,
 		now: TODAY + "T09:25:00", // just for demo
 
 		views: {
@@ -148,9 +151,19 @@
 				content = '<span class=\"badge badge-circle badge-light-success\" style=\"margin-left: 5px;\">' + arg.event.title + '</span>';
 			}
 			return { html: content };
+		},
+		viewRender: function(view, element) {
+			var b = $('#calendar').fullCalendar('getDate');
+			alert(b.format('L'));
 		}
 	});
 
 	calendar.render();
+
+	// $('body').on('click', 'button.fc-prev-button, button.fc-next-button', function() {
+	// 	start = calendar.getCurrentData().dateProfile.activeRange.start.toISOString().slice(0, 10);
+	// 	end = calendar.getCurrentData().dateProfile.activeRange.end.toISOString().slice(0, 10);
+	// 	alert(start + " " + end);
+	// });
 </script>
 @endsection
