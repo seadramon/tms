@@ -107,9 +107,9 @@ class PemenuhanArmadaController extends Controller
 
     public function chart(Request $request)
     {
-        $rencana = SpmH::select(DB::raw('extract(MONTH from tgl_spm) as bulan'), DB::raw('count(*) as total'))
-            ->groupby(DB::raw('extract (MONTH from tgl_spm)'))
-            ->orderBy('bulan')
+        $rencana = SpmH::select(DB::raw("EXTRACT(MONTH from tgl_spm) || '-' || EXTRACT(YEAR from tgl_spm) as thbl"), DB::raw('count(*) as total'))
+            ->groupby(DB::raw("EXTRACT(MONTH from tgl_spm) || '-' || EXTRACT(YEAR from tgl_spm)"))
+            ->orderBy(DB::raw('EXTRACT(YEAR FROM tgl_spm) || '-' || EXTRACT(MONTH FROM tgl_spm)'))
             ->leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
             ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 
@@ -139,10 +139,10 @@ class PemenuhanArmadaController extends Controller
         }
 
         $rencana = $rencana->get();
-
-        $realisasi = SptbH::select(DB::raw('extract(MONTH from tgl_sptb) as bulan'), DB::raw('count(*) as total'))
-            ->groupby(DB::raw('extract (MONTH from tgl_sptb)'))
-            ->orderBy('bulan')
+        
+        $realisasi = SptbH::select(DB::raw("EXTRACT(MONTH from tgl_sptb) || '-' || EXTRACT(YEAR from tgl_sptb) as thbl"), DB::raw('count(*) as total'))
+            ->groupby(DB::raw("EXTRACT(MONTH from tgl_sptb) || '-' || EXTRACT(YEAR from tgl_sptb)"))
+            ->orderBy(DB::raw('EXTRACT(YEAR FROM tgl_spm) || '-' || EXTRACT(MONTH FROM tgl_spm)'))
             ->whereHas('spmh', function($query) use ($request){
                 $query->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 
@@ -179,8 +179,10 @@ class PemenuhanArmadaController extends Controller
         $totalRealisasi = [];
 
         foreach ($rencana as $renc) {
+            $thbl = explode('-', $renc->thbl);
+
             $kategori[] = [
-               'label' => $listBulan[((int)$renc->bulan)-1]
+               'label' => $listBulan[((int)$thbl[0])-1] . substr($thbl[1], -2)
             ];
 
             $totalRencana[] = [
@@ -189,7 +191,9 @@ class PemenuhanArmadaController extends Controller
         }
 
         foreach ($realisasi as $real) {
-            $totalRealisasi[((int)$real->bulan)-1] = [
+            $thbl = explode('-', $renc->thbl);
+
+            $totalRealisasi[((int)$thbl[0])-1] = [
                 'value' => $real->total
             ];
         }
