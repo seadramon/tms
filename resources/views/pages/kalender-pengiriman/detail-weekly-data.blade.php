@@ -10,7 +10,7 @@
                 @php
                     $day = $dow[date('w', strtotime($row))] ?? "X";
                 @endphp
-                <th width="1%" style="vertical-align: middle; background-color: cornflowerblue;">
+                <th width="1.2%" style="vertical-align: middle; background-color: cornflowerblue;">
                     {{$day}}<hr style="margin-top: -4px; margin-bottom: -4px;">
                     <span style="font-size: 8px;">{{$i+1}}</span>
                 </th>
@@ -30,11 +30,11 @@
                 <td width="10%">{{$row->first()->sppb->npp->nama_pelanggan ?? 'Unknown Npp'}}</td>
                 <td width="10%">{{$row->first()->sppb->npp->nama_proyek ?? 'Unknown Npp'}}</td>
                 <td width="10%" class="text-center" style="background-color: darkblue; color:white; vertical-align: middle; font-weight: bolder;">{{$row->count()}}</td>
-                @foreach ($dates as $i => $row)
+                @foreach ($dates as $i => $baris)
                     @php
-                        $daily_key = $key . '_' . $row;
+                        $daily_key = $key . '_' . $baris;
                     @endphp
-                    <td width="1%" class="text-center" style="background-color: lavenderblush; color:black; vertical-align: middle; font-weight: bolder;">
+                    <td width="1.2%" class="text-center" style="background-color: lavenderblush; color:black; vertical-align: middle; font-weight: bolder;">
                         {{count($data_daily[$daily_key] ?? [])}}
                     </td>
                 @endforeach
@@ -45,67 +45,67 @@
                 </td>
             </tr>
             <tr class="childTableRow" style="display: none;">
-                <td colspan="14" style="padding-top:0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px;">
-                    <table class="table" style="margin-bottom:0px; ">
+                <td colspan="15" style="padding-top:0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px;">
+                    <table class="table" style="margin-bottom:0px; " style="width: 100%;">
                         <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
-                            <td width="30.3%" colspan="3"></td>
-                            <td width="9.7%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
-                            <td class="text-center" width="1.6%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">6</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">8</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">3</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
-                            <td colspan="3" class="text-center" width="42%"></td>
+                            <td width="33%" colspan="3"></td>
+                            <td width="10.3%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">6</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">8</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">3</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
+                            <td colspan="3" class="text-center" width="48.3%"></td>
                         </tr>
                         <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
-                            <td width="30.3%" colspan="3"></td>
-                            <td width="9.7%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
-                            <td class="text-center" width="1.6%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">6</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">8</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">3</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
-                            <td colspan="3" class="text-center" width="42%"></td>
+                            <td width="33%" colspan="3"></td>
+                            <td width="10.3%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">6</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">8</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">3</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
+                            <td colspan="3" class="text-center" width="48.3%"></td>
                         </tr>
                         <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
-                            <td width="30.3%" colspan="3"></td>
-                            <td width="9.7%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
-                            <td class="text-center" width="1.6%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">6</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">8</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">3</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
-                            <td colspan="3" class="text-center" width="42%"></td>
+                            <td width="33%" colspan="3"></td>
+                            <td width="10.3%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">6</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">8</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">3</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
+                            <td colspan="3" class="text-center" width="48.3%"></td>
                         </tr>
                         <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
-                            <td width="30.3%" colspan="3"></td>
-                            <td width="9.7%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
-                            <td class="text-center" width="1.6%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">6</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">8</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">3</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
-                            <td colspan="3" class="text-center" width="42%"></td>
+                            <td width="33%" colspan="3"></td>
+                            <td width="10.3%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">6</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">8</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">3</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
+                            <td colspan="3" class="text-center" width="48.3%"></td>
                         </tr>
                         <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
-                            <td width="30.3%" colspan="3"></td>
-                            <td width="9.7%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
-                            <td class="text-center" width="1.6%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">6</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">8</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">3</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
-                            <td class="text-center" width="1%" style="font-weight: bolder;">0</td>
-                            <td colspan="3" class="text-center" width="42%"></td>
+                            <td width="33%" colspan="3"></td>
+                            <td width="10.3%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">6</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">8</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">3</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
+                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
+                            <td colspan="3" class="text-center" width="48.3%"></td>
                         </tr>
                     </table>
                 </td>
