@@ -143,7 +143,7 @@
 	                {data: 'jenis_armada', name: 'jenis_armada', defaultContent: '-'},
 	                {data: 'jml_rit', name: 'jml_rit', defaultContent: '-'},
 	                {data: 'rit_hari', name: 'jml_rit', defaultContent: '-'},
-	                {data: 'ppbmuat.singkatan', name: 'tb_pat.singkatan', defaultContent: '-'},
+	                {data: 'ppbmuat.singkatan', name: 'ppbmuat.singkatan', defaultContent: '-', orderable: false, searchable: false},
 	                {data: 'jarak_km', name: 'jarak_km', defaultContent: '-'},
 	                {data: 'status', orderable: false, searchable: false},
 	                {data: 'menu', orderable: false, searchable: false}
