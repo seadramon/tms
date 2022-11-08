@@ -78,11 +78,11 @@ class KalenderPengirimanController extends Controller
 			->get();
 
 		$data = $spm->groupBy(function($item){
-			return $item->sppb->no_npp . '_' . $item->sppb->npp->nama_proyek . '_' . ($item->pat->ket ?? 'Unknown');
+			return $item->sppb->no_npp . '_' . ($item->sppb->npp->nama_proyek ?? 'UnknownNpp') . '_' . ($item->pat->ket ?? 'Unknown');
 		});
 
 		$data_daily = $spm->groupBy(function($item){
-			return $item->sppb->no_npp . '_' . $item->sppb->npp->nama_proyek . '_' . ($item->pat->ket ?? 'Unknown') . '_' . date('Ymd', strtotime($item->tgl_spm));
+			return $item->sppb->no_npp . '_' . ($item->sppb->npp->nama_proyek ?? 'UnknownNpp') . '_' . ($item->pat->ket ?? 'Unknown') . '_' . date('Ymd', strtotime($item->tgl_spm));
 		});
 
 		$dates = KalenderService::createDateRangeArray(date('Y-m-d', strtotime($week->tgl_awal)), date('Y-m-d', strtotime($week->tgl_akhir)), 'Ymd');
