@@ -26,7 +26,7 @@
         @endphp
         @foreach ($data as $key => $row)
             <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; vertical-align: middle;">
-                <td width="10%" class="text-center">{{$row->first()->sppb->no_npp}}</td>
+                <td width="10%" class="text-center">{{$row->first()->sppb->no_npp ?? 'UnknownSppb'}}</td>
                 <td width="10%">{{$row->first()->sppb->npp->nama_pelanggan ?? 'Unknown Npp'}}</td>
                 <td width="10%">{{$row->first()->sppb->npp->nama_proyek ?? 'Unknown Npp'}}</td>
                 <td width="10%" class="text-center" style="background-color: darkblue; color:white; vertical-align: middle; font-weight: bolder;">{{$row->count()}}</td>
@@ -35,7 +35,7 @@
                         $daily_key = $key . '_' . $row;
                     @endphp
                     <td width="1%" class="text-center" style="background-color: lavenderblush; color:black; vertical-align: middle; font-weight: bolder;">
-                        {{$data_daily[$daily_key]->count()}}
+                        {{count($data_daily[$daily_key] ?? [])}}
                     </td>
                 @endforeach
                 <td class="text-center" width="15%">{{ $row->first()->armada->jenis->name ?? '-' }}</td>
