@@ -224,7 +224,7 @@ class ArmadaController extends Controller
     {
         $data = Armada::find($id);
 
-        $jenis = TrMaterial::where('kd_jmaterial', 'J')
+        $jenis = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
             ->mapWithKeys(function($item){
                 return [$item->kd_material => $item->kd_material . ' | ' . $item->name];

@@ -8,7 +8,7 @@
             <th width="10%" style="vertical-align: middle;">TOTAL RIT</th>
             @foreach ($dates as $i => $row)
                 @php
-                    $day = $dow[date('w', strtotime($row))];
+                    $day = $dow[date('w', strtotime($row))] ?? "X";
                 @endphp
                 <th width="1%" style="vertical-align: middle; background-color: cornflowerblue;">
                     {{$day}}<hr style="margin-top: -4px; margin-bottom: -4px;">
