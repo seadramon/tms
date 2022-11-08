@@ -487,7 +487,7 @@
                                                 <td>Langsir</td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="tidak_ada" id="flexCheckDefault" name="langsir_{{ $i }}"
+                                                        <input class="form-check-input langsir_{{ $i }}" type="radio" value="tidak_ada" id="flexCheckDefault" name="langsir_{{ $i }}" onclick="langsir_term({{ $i }});"
                                                         @if(!empty($item->potensiH))
                                                             @if($item->potensiH->langsir == 'tidak_ada')
                                                                 checked=""
@@ -501,7 +501,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="mobil" id="flexCheckDefault" name="langsir_{{ $i }}"
+                                                        <input class="form-check-input langsir_{{ $i }}" type="radio" value="mobil" id="flexCheckDefault" name="langsir_{{ $i }}" 
                                                         @if(!empty($item->potensiH))
                                                             @if($item->potensiH->langsir == 'mobil')
                                                                 checked=""
@@ -515,7 +515,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="gerobak" id="flexCheckDefault" name="langsir_{{ $i }}"
+                                                        <input class="form-check-input langsir_{{ $i }}" type="radio" value="gerobak" id="flexCheckDefault" name="langsir_{{ $i }}" 
                                                         @if(!empty($item->potensiH))
                                                             @if($item->potensiH->langsir == 'gerobak')
                                                                 checked=""
@@ -529,7 +529,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="roll_geser" id="flexCheckDefault" name="langsir_{{ $i }}"
+                                                        <input class="form-check-input langsir_{{ $i }}" type="radio" value="roll_geser" id="flexCheckDefault" name="langsir_{{ $i }}" 
                                                         @if(!empty($item->potensiH))
                                                             @if($item->potensiH->langsir == 'roll_geser')
                                                                 checked=""
@@ -543,7 +543,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="manusia" id="flexCheckDefault" name="langsir_{{ $i }}"
+                                                        <input class="form-check-input langsir_{{ $i }}" type="radio" value="manusia" id="flexCheckDefault" name="langsir_{{ $i }}" 
                                                         @if(!empty($item->potensiH))
                                                             @if($item->potensiH->langsir == 'manusia')
                                                                 checked=""
@@ -557,7 +557,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
-                                                        <input class="form-check-input" type="radio" value="lain_lain" id="flexCheckDefault" name="langsir_{{ $i }}"
+                                                        <input class="form-check-input langsir_{{ $i }}" type="radio" value="lain_lain" id="flexCheckDefault" name="langsir_{{ $i }}"
                                                         @if(!empty($item->potensiH))
                                                             @if($item->potensiH->langsir == 'lain_lain')
                                                                 checked=""
@@ -574,7 +574,7 @@
                                                 <td>Jarak Langsir</td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid mt-1">
-                                                        <input class="form-check-input" type="radio" value="500" id="flexCheckDefault" name="jarak_langsir_{{ $i }}"
+                                                        <input class="form-check-input jarak_langsir_{{ $i }}" type="radio" value="500" id="flexCheckDefault" name="jarak_langsir_{{ $i }}"
                                                         @if(!empty($item->potensiH))
                                                             @if($item->potensiH->jarak_langsir == '500')
                                                                 checked=""
@@ -588,7 +588,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid mt-1">
-                                                        <input class="form-check-input" type="radio" value="500_1000" id="flexCheckDefault" name="jarak_langsir_{{ $i }}"
+                                                        <input class="form-check-input jarak_langsir_{{ $i }}" type="radio" value="500_1000" id="flexCheckDefault" name="jarak_langsir_{{ $i }}"
                                                         @if(!empty($item->potensiH))
                                                             @if($item->potensiH->jarak_langsir == '500_1000')
                                                                 checked=""
@@ -602,7 +602,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid mt-1">
-                                                        <input class="form-check-input" type="radio" value="1000" id="flexCheckDefault" name="jarak_langsir_{{ $i }}"
+                                                        <input class="form-check-input jarak_langsir_{{ $i }}" type="radio" value="1000" id="flexCheckDefault" name="jarak_langsir_{{ $i }}"
                                                         @if(!empty($item->potensiH))
                                                             @if($item->potensiH->jarak_langsir == '1000')
                                                                 checked=""
@@ -760,6 +760,20 @@
 
 @section('js')
 <script type="text/javascript">
+
+function langsir_term(i){
+    $('.langsir_'+ i).click(function () {
+        if (this.value === 'tidak_ada') {
+            $(".jarak_langsir_" + i).removeAttr("checked");
+            $(".jarak_langsir_" + i).prop("checked", false);
+            $(".jarak_langsir_" + i).attr('disabled', 'true');
+        }
+        else{
+            $(".jarak_langsir_" + i).removeAttr('disabled');
+        }
+    });
+}
+
 $(document).ready(function () {
     for (i = 1; i <= $('.create_rute').length; i++) {
         generate_map(i);
