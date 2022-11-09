@@ -157,7 +157,7 @@
         </table> 
 
         <div class="text-right text-margin">
-            {{ $spmh->pat?->ket }}, {{ date('d-m-Y') }}
+            {{ $spmh->pat?->kota }}, {{ date('d-m-Y') }}
         </div>
 
         <table class="table-sign text-center">
@@ -167,7 +167,7 @@
                     <td class="header-sign">Administrasi Distribusi,</td>
                 </tr>
                 <tr>
-                    <td>{{ $spmh->armada?->driver?->nama }}</td>
+                    <td>{{ $spmh->app2_name }}</td>
                     <td>
                         {{-- {{ $spmh->armada?->driver?->nama }} --}}
                     </td>

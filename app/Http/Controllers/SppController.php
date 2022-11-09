@@ -93,13 +93,13 @@ class SppController extends Controller
             ->addColumn('approval', function ($model) {
                 $teks = '';
                 if($model->app == 1){
-                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">KSDM&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 if($model->app2 == 1){
-                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">Vendor&nbsp;<i class="fas fa-check text-success"></i></span>';
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">PEO&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 if($model->app3 == 1){
-                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MDiv&nbsp;<i class="fas fa-check text-success"></i></span>';
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 return $teks;
             })

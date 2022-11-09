@@ -60,4 +60,9 @@ class SpmH extends Model
     {
         return $this->belongsTo(Armada::class, 'no_pol', 'nopol');
     }
+
+    public function approval()
+    {
+        return $this->belongsTo(Personal::class, 'app1_empid', 'employee_id');
+    }
 }

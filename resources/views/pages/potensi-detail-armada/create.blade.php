@@ -53,7 +53,7 @@
                                                     <input type="text" value="{{ $row->no_npp }}" name="no_npp[]" hidden="" />
                                                 </td>
                                                 <td>{{ $row->vol_btg }}</td>
-                                                <td>Ton</td>
+                                                <td>{{ $row->tonase }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal3)) }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal4)) }}</td>
                                                 <td>
@@ -148,7 +148,7 @@
                                                     </div>
                                                 </div>
                                                 <div id="list_checkpoint_{{ $i }}" style="padding-top: 5px;">
-                                                    @if($item->potensiH != null && $item->potensiH->checkpoints != null)
+                                                    @if($item->potensiH != null && !in_array($item->potensiH->checkpoints, [null, "null"]))
                                                         @foreach( json_decode($item->potensiH->checkpoints ?? "[]",true) as $row)
                                                             <div class="row">
                                                                 <div class="col-md-12" style="padding-bottom: 5px;">

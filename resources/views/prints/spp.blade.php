@@ -167,7 +167,7 @@
             </tr>
             <tr>
                 <td>-</td>
-                <td>Catatan</td>
+                <td>Catatan Pelaksana</td>
                 <td>:{{ $data->catatan }}</td>
             </tr>
             <tr>

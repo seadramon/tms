@@ -219,7 +219,7 @@ class PdaController extends Controller
             $jarak_langsir = 'jarak_langsir_'.$i+1;
             $metode = 'metode_'.$i+1;
 
-            $data->checkpoints = json_encode($request->$ck);
+            $data->checkpoints = $request->$ck ? json_encode($request->$ck) : null;
             $data->rute = null;
             $data->jalan = $request->$jalan;
             $data->jalan2 = $request->$jalan2;
