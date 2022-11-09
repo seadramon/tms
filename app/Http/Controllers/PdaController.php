@@ -164,6 +164,7 @@ class PdaController extends Controller
                 'no_npp' => $row->no_npp,
                 'ppb_muat' => $row->ppb_muat,
                 'vol_btg' => $row->vol_btg,
+                'tonase' => $row->tonase,
                 'jadwal3' => $row->jadwal3,
                 'jadwal4' => $row->jadwal4,
                 'jml_rit' => $row->jml_rit,
