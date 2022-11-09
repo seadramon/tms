@@ -26,7 +26,7 @@
                 <label class="form-label col-sm-3 custom-label">Periode</label>
                 <div class="col-lg-9">
                     <div class="input-group date">
-                        {!! Form::text('periode', null, ['class'=>'form-control datepicker', 'id'=>'periode']) !!}
+                        {!! Form::text('periode', null, ['class'=>'form-control datepicker', 'id'=>'periode', 'readonly']) !!}
                         <div class="input-group-append">
                             <span class="input-group-text" style="display: block">
                                 <i class="la la-calendar-check-o"></i>
