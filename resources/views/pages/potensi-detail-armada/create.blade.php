@@ -148,7 +148,7 @@
                                                     </div>
                                                 </div>
                                                 <div id="list_checkpoint_{{ $i }}" style="padding-top: 5px;">
-                                                    @if($item->potensiH != null)
+                                                    @if($item->potensiH != null && $item->potensiH->checkpoints != null)
                                                         @foreach( json_decode($item->potensiH->checkpoints ?? "[]",true) as $row)
                                                             <div class="row">
                                                                 <div class="col-md-12" style="padding-bottom: 5px;">
