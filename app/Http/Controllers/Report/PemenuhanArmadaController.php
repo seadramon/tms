@@ -107,26 +107,26 @@ class PemenuhanArmadaController extends Controller
 
     public function chart(Request $request)
     {
-        $rencana = SpmH::select(DB::raw("EXTRACT(MONTH from tgl_spm) || '-' || EXTRACT(YEAR from tgl_spm) as thbl"), DB::raw('count(*) as total'))
-            ->groupby(DB::raw("EXTRACT(MONTH from tgl_spm) || '-' || EXTRACT(YEAR from tgl_spm)"))
-            ->orderBy(DB::raw("EXTRACT(YEAR FROM tgl_spm) || '-' || EXTRACT(MONTH FROM tgl_spm)"))
+        $baseQuery = SpmH::select(DB::raw("EXTRACT(YEAR from tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0') as thbl"), DB::raw('count(*) as total'))
+            ->groupby(DB::raw("EXTRACT(YEAR from tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0')"))
+            ->orderBy(DB::raw("EXTRACT(YEAR FROM tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0')"))
             ->leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
             ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 
         if($request->kd_pat){
-            $rencana->where('sptb_h.kd_pat', $request->kd_pat);
+            $baseQuery->where('sptb_h.kd_pat', $request->kd_pat);
         }
 
         if($request->pbb_muat){
-            $rencana->where('sptb_h.kd_pat', $request->pbb_muat);
+            $baseQuery->where('sptb_h.kd_pat', $request->pbb_muat);
         }
 
         if($request->vendor_id){
-            $rencana->where('spm_h.vendor_id', $request->vendor_id);
+            $baseQuery->where('spm_h.vendor_id', $request->vendor_id);
         }
 
         if($request->kd_material){
-            $rencana->where('tms_armadas.kd_armada', $request->kd_material);
+            $baseQuery->where('tms_armadas.kd_armada', $request->kd_material);
         }
 
         if($request->periode){
@@ -135,66 +135,41 @@ class PemenuhanArmadaController extends Controller
             $periode[0] = date('Y-m-d', strtotime($periode[0]));
             $periode[1] = date('Y-m-d', strtotime($periode[1]));
 
-            $rencana->whereBetween('spm_h.tgl_spm', $periode);
+            $baseQuery->whereBetween('spm_h.tgl_spm', $periode);
         }
 
-        $rencana = $rencana->get();
+        $realisasi = $baseQuery;
         
-        $realisasi = SptbH::select(DB::raw("EXTRACT(MONTH from tgl_sptb) || '-' || EXTRACT(YEAR from tgl_sptb) as thbl"), DB::raw('count(*) as total'))
-            ->groupby(DB::raw("EXTRACT(MONTH from tgl_sptb) || '-' || EXTRACT(YEAR from tgl_sptb)"))
-            ->orderBy(DB::raw("EXTRACT(YEAR FROM tgl_spm) || '-' || EXTRACT(MONTH FROM tgl_spm)"))
-            ->whereHas('spmh', function($query) use ($request){
-                $query->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
+        $rencana = $baseQuery->get();
 
-                if($request->kd_pat){
-                    $query->where('pat_to', $request->kd_pat);
-                }
-
-                if($request->pbb_muat){
-                    $query->where('pat_to', $request->pbb_muat);
-                }
-
-                if($request->vendor_id){
-                    $query->where('spm_h.vendor_id', $request->vendor_id);
-                }
-
-                if($request->kd_material){
-                    $query->where('tms_armadas.kd_armada', $request->kd_material);
-                }
-
-                if($request->periode){
-                    $periode = explode(' - ', $request->periode);
-
-                    $periode[0] = date('Y-m-d', strtotime($periode[0]));
-                    $periode[1] = date('Y-m-d', strtotime($periode[1]));
-
-                    $query->whereBetween('spm_h.tgl_spm', $periode);
-                }
-            })->get();
+        $realisasi = $realisasi->whereHas('sptbh')->get();
 
         $listBulan = getListBulan();
 
         $kategori = [];
         $totalRencana = [];
         $totalRealisasi = [];
+        $listRealisasi = [];
+
+        foreach ($realisasi as $real) {
+            $listRealisasi[$real->thbl] = [
+                'value' => $real->total
+            ];
+        }
 
         foreach ($rencana as $renc) {
             $thbl = explode('-', $renc->thbl);
 
             $kategori[] = [
-               'label' => $listBulan[((int)$thbl[0])-1] . substr($thbl[1], -2)
+               'label' => $listBulan[((int)$thbl[1])-1] . substr($thbl[0], -2)
             ];
 
             $totalRencana[] = [
                 'value' => $renc->total
             ];
-        }
-
-        foreach ($realisasi as $real) {
-            $thbl = explode('-', $renc->thbl);
-
-            $totalRealisasi[((int)$thbl[0])-1] = [
-                'value' => $real->total
+            
+            $totalRealisasi[] = [
+                'value' => array_key_exists($renc->thbl, $listRealisasi) ? $listRealisasi[$renc->thbl]['value'] : 0
             ];
         }
         

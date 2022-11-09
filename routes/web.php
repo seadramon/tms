@@ -85,6 +85,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    ])->parameters(['' => 'sptb']);
 
 		Route::post('/get-spm', [SptbController::class, 'getSpm'])->name('get-spm');
+		Route::post('/set-konfirmasi', [SptbController::class, 'setKonfirmasi'])->name('set-konfirmasi');
 	});
 
 	Route::group(['prefix' => '/pricelist-angkutan', 'as' => 'pricelist-angkutan.'], function(){

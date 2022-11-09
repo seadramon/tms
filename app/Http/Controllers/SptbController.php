@@ -38,6 +38,7 @@ class SptbController extends Controller
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="' . route('sptb.edit', str_replace('/', '|', $model->no_sptb)) . '">Edit</a></li>
+                            <li><a class="dropdown-item set-konfirmasi" href="javascript:void(0)" data-id="'. $model->no_sptb .'">Konfirmasi</a></li>
                         </ul>
                         </div>';
 
@@ -285,5 +286,24 @@ class SptbController extends Controller
         }
 
         return redirect()->route('sptb.index');
+    }
+
+    public function setKonfirmasi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = SptbH::find($request->id);
+            $data->app_pelanggan = 1;
+            $data->save();
+
+            DB::commit();
+
+            return response()->json(['status' => 'success']);
+        } catch(Exception $e) {
+            DB::rollback();
+
+            return response()->json(['status' => 'failed']);
+        }
     }
 }
