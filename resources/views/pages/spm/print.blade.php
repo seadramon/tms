@@ -124,6 +124,9 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $total_spmd = $spmh->spmd->count();
+                @endphp
                 @foreach($spmh->spmd as $key => $spmd)
                     @php
                         $total = ($total ?? 0) + ($spmd->vol ?? 0);
@@ -131,7 +134,10 @@
 
                     <tr>
                         <td style="width: 5%;" class="text-center">{{ $key+1 }}</td>
-                        <td style="width: 20%;">{{ $spmd->produk?->ket }}</td>
+                        @if ($key == 0)
+                            <td style="width: 20%;" rowspan="{{$total_spmd}}">{{ $sbu->ket ?? "Unknown" }}</td>
+                            
+                        @endif
                         <td style="width: 20%;" class="text-center">{{ $spmd->produk?->tipe }}</td>
                         <td style="width: 10%;" class="text-right">{{ $spmd->vol }}</td>
                         <td style="width: 5%;"></td>
@@ -156,20 +162,16 @@
             </tbody>
         </table> 
 
-        <div class="text-right text-margin">
-            {{ $spmh->pat?->kota }}, {{ date('d-m-Y') }}
-        </div>
-
         <table class="table-sign text-center">
             <tbody>
                 <tr>
-                    <td class="header-sign">Pengemudi,</td>
-                    <td class="header-sign">Administrasi Distribusi,</td>
+                    <td class="header-sign"><br>Pengemudi,</td>
+                    <td class="header-sign">{{ $npp->kota }}, {{ date('d/m/Y') }}<br>Administrasi Distribusi,</td>
                 </tr>
                 <tr>
                     <td>{{ $spmh->app2_name }}</td>
                     <td>
-                        {{-- {{ $spmh->armada?->driver?->nama }} --}}
+                        {{ $spmh->approval->full_name }}
                     </td>
                 </tr>
             </tbody>

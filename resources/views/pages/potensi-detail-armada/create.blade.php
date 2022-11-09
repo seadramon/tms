@@ -52,8 +52,8 @@
                                                     {{ $row->no_npp }}
                                                     <input type="text" value="{{ $row->no_npp }}" name="no_npp[]" hidden="" />
                                                 </td>
-                                                <td>{{ $row->vol_btg }}</td>
-                                                <td>{{ $row->tonase }}</td>
+                                                <td>{{ number_format($row->vol_btg) }}</td>
+                                                <td>{{ number_format($row->tonase) }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal3)) }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal4)) }}</td>
                                                 <td>
@@ -74,7 +74,7 @@
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td>{{ $row->jml_rit ?? '0' }}</td>
+                                                <td>{{ number_format(round($row->jml_rit)) ?? '0' }}</td>
                                                 <td></td>
                                                 <td>{{ $row->pat ?? 'Tidak diketahui' }}</td>
                                                 <td>{{ $row->jarak_km ?? '0' }}</td>

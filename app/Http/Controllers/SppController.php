@@ -418,9 +418,24 @@ class SppController extends Controller
                 ];
             }
         }
-// dd($dataPesanan);
+        $npp = Npp::select('npp.nama_proyek',
+                    'npp.nama_pelanggan',
+                    'npp.no_npp',
+                    'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec',
+                    'tb_pat.ket as pat',
+                    'tb_pat.kota',
+                    'npp.kd_pat',
+                    'spnpp.no_konfirmasi',
+                    'tb_pat.singkatan')
+                ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
+                ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
+                ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'npp.kd_pat')
+                ->leftJoin('spnpp', 'spnpp.no_npp', '=', 'npp.no_npp')
+                ->where('npp.no_npp', $noNpp)
+                ->first();
         $pdf = Pdf::loadView('prints.spp', [
             'data' => $data,
+            'npp' => $npp,
             'dataPesanan' => $dataPesanan
         ]);
 

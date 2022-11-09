@@ -18,8 +18,6 @@ use App\Models\MsNoDokumen;
 use App\Models\Vendor;
 use App\Models\Npp;
 use App\Models\Sbu;
-use Exception;
-use File;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +25,8 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
+use Illuminate\Support\Facades\File;
 
 class SpmController extends Controller
 {
@@ -449,14 +449,28 @@ class SpmController extends Controller
     public function print($no_spm){
         $no_spm = str_replace('|', '/', $no_spm); // '0350/SPM/I/2008';
         
-        $spmh = SpmH::find($no_spm);
+        $spmh = SpmH::with('spmd', 'sppb')->find($no_spm);
+        $sbu = DB::table('tb_sbu')->where('kd_sbu', substr($spmh->spmd->first()->kd_produk, 0, 1))->first();
+        $npp = Npp::select('npp.no_npp',
+                    'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec',
+                    'tb_pat.ket as pat',
+                    'tb_pat.kota',
+                    'npp.kd_pat')
+                ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
+                ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
+                ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'npp.kd_pat')
+                ->leftJoin('spnpp', 'spnpp.no_npp', '=', 'npp.no_npp')
+                ->where('npp.no_npp', $spmh->sppb->no_npp)
+                ->first();
         
-        $logo = File::get(public_path('assets/media/logos/tms.png'));
+        $logo = File::get(public_path('assets/media/logos/wikabeton.jpg'));
         
         $logo = base64_encode($logo);
 
+        // return response()->json($npp);
+
         return Pdf::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-            ->loadView('pages.spm.print', ['spmh' => $spmh, 'logo' => $logo])->stream('Surat Permintaan Muat.pdf');
+            ->loadView('pages.spm.print', ['spmh' => $spmh, 'logo' => $logo, 'sbu' => $sbu, 'npp' => $npp])->stream('Surat Permintaan Muat.pdf');
         
     }
 }
