@@ -137,7 +137,7 @@
 	            columns: [
 	                {data: 'no_npp', name: 'no_npp', defaultContent: '-'},
 	                {data: 'vol_btg', name: 'vol_btg', defaultContent: '-'},
-	                {data: 'vol_btg', name: 'vol_btg', defaultContent: '-'},
+	                {data: 'tonase', name: 'tonase', defaultContent: '-'},
 	                {data: 'jadwal3', name: 'jadwal3', defaultContent: '-'},
 	                {data: 'jadwal4', name: 'jadwal4', defaultContent: '-'},
 	                {data: 'jenis_armada', name: 'jenis_armada', defaultContent: '-'},

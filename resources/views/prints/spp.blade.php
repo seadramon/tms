@@ -200,15 +200,15 @@
             <tr>
                 <td>
                     {{ !empty($data->app_empid)?$data->personal->full_name:'' }}<br>
-                    {{ !empty($data->app_jbt)?$data->personal->jabatan->ket:'' }}
+                    {{ !empty($data->app_empid)?$data->personal->jabatan->ket:'' }}
                 </td>
                 <td>
                     {{ !empty($data->app2_empid)?$data->personal2->full_name:'' }}<br>
-                    {{ !empty($data->app2_jbt)?$data->personal2->jabatan->ket:'' }}
+                    {{ !empty($data->app2_empid)?$data->personal2->jabatan->ket:'' }}
                 </td>
                 <td>
                     {{ !empty($data->app3_empid)?$data->personal3->full_name:'' }}<br>
-                    {{ !empty($data->app3_jbt)?$data->personal3->jabatan->ket:'' }}
+                    {{ !empty($data->app3_empid)?$data->personal3->jabatan->ket:'' }}
                 </td>
                 <td>
                     {{ $data->created_by }}<br>

@@ -109,7 +109,7 @@ class PemenuhanArmadaController extends Controller
     {
         $rencana = SpmH::select(DB::raw("EXTRACT(MONTH from tgl_spm) || '-' || EXTRACT(YEAR from tgl_spm) as thbl"), DB::raw('count(*) as total'))
             ->groupby(DB::raw("EXTRACT(MONTH from tgl_spm) || '-' || EXTRACT(YEAR from tgl_spm)"))
-            ->orderBy(DB::raw('EXTRACT(YEAR FROM tgl_spm) || '-' || EXTRACT(MONTH FROM tgl_spm)'))
+            ->orderBy(DB::raw("EXTRACT(YEAR FROM tgl_spm) || '-' || EXTRACT(MONTH FROM tgl_spm)"))
             ->leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
             ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 
@@ -142,7 +142,7 @@ class PemenuhanArmadaController extends Controller
         
         $realisasi = SptbH::select(DB::raw("EXTRACT(MONTH from tgl_sptb) || '-' || EXTRACT(YEAR from tgl_sptb) as thbl"), DB::raw('count(*) as total'))
             ->groupby(DB::raw("EXTRACT(MONTH from tgl_sptb) || '-' || EXTRACT(YEAR from tgl_sptb)"))
-            ->orderBy(DB::raw('EXTRACT(YEAR FROM tgl_spm) || '-' || EXTRACT(MONTH FROM tgl_spm)'))
+            ->orderBy(DB::raw("EXTRACT(YEAR FROM tgl_spm) || '-' || EXTRACT(MONTH FROM tgl_spm)"))
             ->whereHas('spmh', function($query) use ($request){
                 $query->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 

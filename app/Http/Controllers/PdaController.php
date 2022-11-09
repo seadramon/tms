@@ -83,6 +83,12 @@ class PdaController extends Controller
                 ->editColumn('vol_btg', function ($model) {
                     return number_format($model->vol_btg);
                 })
+                ->editColumn('tonase', function ($model) {
+                    return number_format(round($model->tonase));
+                })
+                ->editColumn('jml_rit', function ($model) {
+                    return number_format(round($model->jml_rit));
+                })
                 ->editColumn('jadwal3', function ($model) {
                     return $model->jadwal3 ? date('d-m-y', strtotime($model->jadwal3)) : '-';
                 })
@@ -93,7 +99,7 @@ class PdaController extends Controller
                     if($model->jadwal3 == null || $model->jadwal4 == null){
                         return 0;
                     }
-                    return round($model->jml_rit / (strtotime($model->jadwal4) - strtotime($model->jadwal3)) / (3600*24));
+                    return round($model->jml_rit / (strtotime($model->jadwal4) - strtotime($model->jadwal3)) / (3600*24), 2);
                 })
                 ->addColumn('status', function ($model) {
                     $column = '';

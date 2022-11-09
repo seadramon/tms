@@ -43,10 +43,14 @@ class KalenderPengirimanController extends Controller
 		$periode_minggu = KalenderMg::whereTh('2022')
 			->whereKdPat('1A')
 			->get()
-			->mapWithKeys(function($item){ 
-				return [$item->mg => (int)$item->mg]; 
+			->sortBy(function ($item) {
+				return (int) $item->mg;
 			})
-			->sort()
+			->mapWithKeys(function($item){ 
+				$awal = date('d/m/Y', strtotime($item->tgl_awal));
+				$akhir = date('d/m/Y', strtotime($item->tgl_akhir));
+				return [$item->mg => "Minggu ke-" . $item->mg . " ({$awal}-{$akhir})"]; 
+			})
 			->all();
 
 		$active_week = DB::select("select  WOS.\"FNC_GETMG\" (to_Date('" . date('d/m/Y') . "','dd/mm/yyyy'), '1A') minggu from dual")[0]->minggu;
@@ -68,7 +72,7 @@ class KalenderPengirimanController extends Controller
 			4 => 'K',
 			5 => 'J',
 			6 => 'S',
-			7 => 'M'
+			0 => 'M'
 		];
 		// $spm = SpmH::with('sppb.npp', 'pat', 'armada.jenis')->whereBetween('tgl_spm', ['2008-06-01 00:00:00', '2008-06-30 23:59:59'])
 		// 	->get();

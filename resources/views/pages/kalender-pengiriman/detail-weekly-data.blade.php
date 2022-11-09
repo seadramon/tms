@@ -9,10 +9,11 @@
             @foreach ($dates as $i => $row)
                 @php
                     $day = $dow[date('w', strtotime($row))] ?? "X";
+                    $tgl = date('d', strtotime($row));
                 @endphp
                 <th width="1.2%" style="vertical-align: middle; background-color: cornflowerblue;">
                     {{$day}}<hr style="margin-top: -4px; margin-bottom: -4px;">
-                    <span style="font-size: 8px;">{{$i+1}}</span>
+                    <span style="font-size: 8px;">{{$tgl}}</span>
                 </th>
             @endforeach
             <th width="10%" style="vertical-align: middle;">JENIS ARMADA</th>
