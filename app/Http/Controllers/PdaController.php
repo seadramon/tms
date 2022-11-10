@@ -99,7 +99,7 @@ class PdaController extends Controller
                     if($model->jadwal3 == null || $model->jadwal4 == null){
                         return 0;
                     }
-                    return round($model->jml_rit / (strtotime($model->jadwal4) - strtotime($model->jadwal3)) / (3600*24), 2);
+                    return round(round($model->jml_rit) / (strtotime($model->jadwal4) - strtotime($model->jadwal3)) / (3600*24), 2);
                 })
                 ->addColumn('status', function ($model) {
                     $column = '';

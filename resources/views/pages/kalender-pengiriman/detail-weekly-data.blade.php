@@ -1,15 +1,32 @@
 <!-- Begin Table -->
+@php
+    
+@endphp
 <table class="table table-condesed">
-    <thead style="background-color: darkblue;">
+    <thead style="">
         <tr class="border border-gray-100 text-lg-center" style="font-size: 12px; font-weight: bold; color:white;">
+            <th width="30%" style="vertical-align: middle;" colspan="3"></th>
+            <th width="10%" style="vertical-align: middle; background-color: #ace1af;">TOTAL: {{$data->sum(function($item){ return $item->count(); })}}</th>
+            @foreach ($dates as $i => $baris)
+                @php
+                    $day = $dow[date('w', strtotime($baris))] ?? "X";
+                    $tgl = date('d', strtotime($baris));
+                @endphp
+                <th width="1.2%" style="vertical-align: middle; background-color: #ace1af;">
+                    {{$data->map(function($item, $key) use ($data_daily, $baris) { $daily_key = $key . '_' . $baris; return count($data_daily[$daily_key] ?? []); })->values()->sum()}}
+                </th>
+            @endforeach
+            <th width="33%" style="vertical-align: middle;" colspan="3"></th>
+        </tr>
+        <tr class="border border-gray-100 text-lg-center" style="font-size: 12px; font-weight: bold; color:white;background-color: darkblue;">
             <th width="10%" style="vertical-align: middle;">NPP</th>
             <th width="10%" style="vertical-align: middle;">PELANGGAN</th>
             <th width="10%" style="vertical-align: middle;">PROYEK</th>
             <th width="10%" style="vertical-align: middle;">TOTAL RIT</th>
-            @foreach ($dates as $i => $row)
+            @foreach ($dates as $i => $baris)
                 @php
-                    $day = $dow[date('w', strtotime($row))] ?? "X";
-                    $tgl = date('d', strtotime($row));
+                    $day = $dow[date('w', strtotime($baris))] ?? "X";
+                    $tgl = date('d', strtotime($baris));
                 @endphp
                 <th width="1.2%" style="vertical-align: middle; background-color: cornflowerblue;">
                     {{$day}}<hr style="margin-top: -4px; margin-bottom: -4px;">
