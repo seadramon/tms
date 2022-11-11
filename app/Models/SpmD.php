@@ -21,4 +21,8 @@ class SpmD extends Model
 	{
 		return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
 	}
+    public function spmh()
+	{
+		return $this->belongsTo(SpmH::class, 'no_spm', 'no_spm');
+	}
 }

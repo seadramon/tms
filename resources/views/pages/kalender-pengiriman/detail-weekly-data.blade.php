@@ -65,66 +65,19 @@
             <tr class="childTableRow" style="display: none;">
                 <td colspan="15" style="padding-top:0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px;">
                     <table class="table" style="margin-bottom:0px; " style="width: 100%;">
-                        <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
-                            <td width="33%" colspan="3"></td>
-                            <td width="10.3%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">6</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">8</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">3</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
-                            <td colspan="3" class="text-center" width="48.3%"></td>
-                        </tr>
-                        <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
-                            <td width="33%" colspan="3"></td>
-                            <td width="10.3%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">6</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">8</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">3</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
-                            <td colspan="3" class="text-center" width="48.3%"></td>
-                        </tr>
-                        <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
-                            <td width="33%" colspan="3"></td>
-                            <td width="10.3%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">6</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">8</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">3</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
-                            <td colspan="3" class="text-center" width="48.3%"></td>
-                        </tr>
-                        <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
-                            <td width="33%" colspan="3"></td>
-                            <td width="10.3%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">6</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">8</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">3</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
-                            <td colspan="3" class="text-center" width="48.3%"></td>
-                        </tr>
-                        <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
-                            <td width="33%" colspan="3"></td>
-                            <td width="10.3%" style="background-color: #f2f2f2;">50 B0 BM 15 7 B K3.5</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">6</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">8</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">3</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">4</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
-                            <td class="text-center" width="1.2%" style="font-weight: bolder;">0</td>
-                            <td colspan="3" class="text-center" width="48.3%"></td>
-                        </tr>
+                        @foreach ($detail[$key]->keys() as $produk)
+                            <tr class="text-gray-800 border border-gray-100" style="font-size: 11px; border-bottom: 1px solid #f5f8fa !important;">
+                                <td style="width: 33%;" colspan="3"></td>
+                                <td style="width: 10.3%;" style="background-color: #f2f2f2;">{{$produk}}</td>
+                                @foreach ($dates as $i => $baris)
+                                    <td class="text-center" style="width: {{1.3 + (0.15 * $i)}}%;" style="font-weight: bolder;">
+                                        {{ count($detail[$key][$produk][$baris] ?? []) }}
+                                    </td>
+                                @endforeach
+                                <td colspan="3" class="text-center" style="width: 48.3%;"></td>
+                            </tr>
+                            
+                        @endforeach
                     </table>
                 </td>
             </tr>
