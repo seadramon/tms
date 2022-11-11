@@ -92,8 +92,8 @@ class KalenderPengirimanController extends Controller
 			return ($item->sppb->no_npp ?? 'UnknownSppb') . '_' . ($item->sppb->npp->nama_proyek ?? 'UnknownNpp') . '_' . ($item->pat->ket ?? 'Unknown') . '_' . date('Ymd', strtotime($item->tgl_spm));
 		});
 
-		$spmd = SpmD::with('spmh.sppb.npp', 'spmh.pat', 'produk')->whereHas('spmh', function($sql){
-				$sql->whereBetween('tgl_spm', ['2008-06-01 00:00:00', '2008-06-30 23:59:59']);
+		$spmd = SpmD::with('spmh.sppb.npp', 'spmh.pat', 'produk')->whereHas('spmh', function($sql) use ($week){
+				$sql->whereBetween('tgl_spm', [$week->tgl_awal, date('Y-m-d 23:59:59', strtotime($week->tgl_akhir))]);
 			})->get();
 		$detail = $spmd->groupBy([
 				function($item){
