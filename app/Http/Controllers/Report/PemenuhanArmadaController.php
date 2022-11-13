@@ -51,11 +51,17 @@ class PemenuhanArmadaController extends Controller
 
         $pbb_muat = $labelSemua + $pbb_muat;
 
+        $tipe = [
+            'bulanan' => 'Bulanan',
+            'harian' => 'Harian'
+        ];
+
         return view('pages.report.pemenuhan-armada.index', compact(
             'kd_pat',
             'vendor_id',
             'kd_material',
-            'pbb_muat'
+            'pbb_muat',
+            'tipe'
         ));
     }
 
@@ -107,11 +113,18 @@ class PemenuhanArmadaController extends Controller
 
     public function chart(Request $request)
     {
-        $baseQuery = SpmH::select(DB::raw("EXTRACT(YEAR from tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0') as thbl"), DB::raw('count(*) as total'))
-            ->groupby(DB::raw("EXTRACT(YEAR from tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0')"))
-            ->orderBy(DB::raw("EXTRACT(YEAR FROM tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0')"))
-            ->leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
+        $baseQuery = SpmH::leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
             ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
+
+        if($request->tipe == 'bulanan'){
+            $baseQuery->select(DB::raw("EXTRACT(YEAR from tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0') as thbl"), DB::raw('count(*) as total'))
+                ->groupby(DB::raw("EXTRACT(YEAR from tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0')"))
+                ->orderBy(DB::raw("EXTRACT(YEAR FROM tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0')"));
+        }else{
+            $baseQuery->select(DB::raw("EXTRACT(YEAR from tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0') || '-' || LPAD(EXTRACT(DAY from tgl_spm), 2, '0') as thbl"), DB::raw('count(*) as total'))
+                ->groupby(DB::raw("EXTRACT(YEAR from tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0') || '-' || LPAD(EXTRACT(DAY from tgl_spm), 2, '0')"))
+                ->orderBy(DB::raw("EXTRACT(YEAR FROM tgl_spm) || '-' || LPAD(EXTRACT(MONTH FROM tgl_spm), 2, '0') || '-' || LPAD(EXTRACT(DAY FROM tgl_spm), 2, '0')"));
+        }
 
         if($request->kd_pat){
             $baseQuery->where('sptb_h.kd_pat', $request->kd_pat);
@@ -138,11 +151,11 @@ class PemenuhanArmadaController extends Controller
             $baseQuery->whereBetween('spm_h.tgl_spm', $periode);
         }
 
-        $realisasi = $baseQuery;
+        $realisasi = clone $baseQuery;
+        
+        $realisasi = $realisasi->whereHas('sptbh')->get();
         
         $rencana = $baseQuery->get();
-
-        $realisasi = $realisasi->whereHas('sptbh')->get();
 
         $listBulan = getListBulan();
 
@@ -160,14 +173,20 @@ class PemenuhanArmadaController extends Controller
         foreach ($rencana as $renc) {
             $thbl = explode('-', $renc->thbl);
 
-            $kategori[] = [
-               'label' => $listBulan[((int)$thbl[1])-1] . substr($thbl[0], -2)
-            ];
+            if($request->tipe == 'bulanan'){
+                $kategori[] = [
+                    'label' => $listBulan[((int)$thbl[1])-1] . substr($thbl[0], -2)
+                ];
+            }else{
+                $kategori[] = [
+                    'label' => $thbl[2] . $listBulan[((int)$thbl[1])-1] . substr($thbl[0], -2)
+                ];
+            }
 
             $totalRencana[] = [
                 'value' => $renc->total
             ];
-            
+
             $totalRealisasi[] = [
                 'value' => array_key_exists($renc->thbl, $listRealisasi) ? $listRealisasi[$renc->thbl]['value'] : 0
             ];
@@ -177,6 +196,96 @@ class PemenuhanArmadaController extends Controller
             'kategori'  => $kategori,
             'rencana'   => $totalRencana,
             'realisasi' => $totalRealisasi
+        ];
+    }
+
+    public function boxData(Request $request)
+    {
+        $baseQuery = SpmH::leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
+            ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol')
+            ->leftJoin('spm_d', 'spm_d.no_spm', '=', 'spm_h.no_spm')
+            ->leftJoin('vendor', 'vendor.vendor_id', '=', 'spm_h.vendor_id');
+
+        if($request->kd_pat){
+            $baseQuery->where('sptb_h.kd_pat', $request->kd_pat);
+        }
+
+        if($request->pbb_muat){
+            $baseQuery->where('sptb_h.kd_pat', $request->pbb_muat);
+        }
+
+        if($request->vendor_id){
+            $baseQuery->where('spm_h.vendor_id', $request->vendor_id);
+        }
+
+        if($request->kd_material){
+            $baseQuery->where('tms_armadas.kd_armada', $request->kd_material);
+        }
+
+        if($request->periode){
+            $periode = explode(' - ', $request->periode);
+
+            $periode[0] = date('Y-m-d', strtotime($periode[0]));
+            $periode[1] = date('Y-m-d', strtotime($periode[1]));
+
+            $baseQuery->whereBetween('spm_h.tgl_spm', $periode);
+        }
+
+        $box1 = clone $baseQuery;
+        $box1 = $box1->select(DB::raw("spm_h.vendor_id"), DB::raw("vendor.nama"), DB::raw('sum(spm_d.vol) as total'))
+            ->groupby(DB::raw("spm_h.vendor_id"), DB::raw("vendor.nama"))
+            ->orderBy('total', 'desc')
+            ->limit(5)
+            ->get();
+
+        $box2Sptb = clone $baseQuery;
+        $box2Sptb = $box2Sptb->whereHas('sptbh')->count();
+
+        $box2Spm = clone $baseQuery;
+        $box2Spm = $box2Spm->count();
+
+        $box2 = number_format(($box2Sptb / $box2Spm * 100), 2, ',', '');
+
+        $box3Dipercepat1 = clone $baseQuery;
+        $box3Dipercepat1 = $box3Dipercepat1->select(DB::raw('sum(spm_d.vol) as total'))
+            ->whereHas('sptbh', function($query){
+                $query->where('sptb_h.tgl_sptb', '<', DB::raw('spm_h.tgl_spm'));
+            })->first()->total ?? 0;
+
+        $box3Dipercepat2 = clone $baseQuery;
+        $box3Dipercepat2 = $box3Dipercepat2->select(DB::raw('sum(spm_d.vol) as total'))
+            ->first()->total ?? 0;
+
+        $box3Dipercepat = number_format(($box3Dipercepat1 / $box3Dipercepat2 * 100), 2, ',', '');
+
+        $box3TepatWaktu1 = clone $baseQuery;
+        $box3TepatWaktu1 = $box3TepatWaktu1->select(DB::raw('sum(spm_d.vol) as total'))
+            ->whereHas('sptbh', function($query){
+                $query->where('sptb_h.tgl_sptb', '=', DB::raw('spm_h.tgl_spm'));
+            })->first()->total ?? 0;
+
+        $box3TepatWaktu2 = clone $baseQuery;
+        $box3TepatWaktu2 = $box3TepatWaktu2->select(DB::raw('sum(spm_d.vol) as total'))
+            ->first()->total ?? 0;
+
+        $box3TepatWaktu = number_format(($box3TepatWaktu1 / $box3TepatWaktu2 * 100), 2, ',', '');
+
+        $box3Terlambat1 = clone $baseQuery;
+        $box3Terlambat1 = $box3Terlambat1->select(DB::raw('sum(spm_d.vol) as total'))
+            ->whereHas('sptbh', function($query){
+                $query->where('sptb_h.tgl_sptb', '>', DB::raw('spm_h.tgl_spm'));
+            })->first()->total ?? 0;
+
+        $box3Terlambat2 = clone $baseQuery;
+        $box3Terlambat2 = $box3Terlambat2->select(DB::raw('sum(spm_d.vol) as total'))
+            ->first()->total ?? 0;
+
+        $box3Terlambat = number_format(($box3Terlambat1 / $box3Terlambat2 * 100), 2, ',', '');
+        
+        return [
+            'box1'  => $box1,
+            'box2'  => [$box2, $box2Sptb, $box2Spm],
+            'box3'  => [$box3Dipercepat, $box3TepatWaktu, $box3Terlambat]
         ];
     }
 }
