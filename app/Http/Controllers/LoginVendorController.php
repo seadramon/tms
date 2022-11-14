@@ -1,17 +1,18 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Hash;
-use Session;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
-use Log;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class LoginVendorController extends Controller
 {
     public function index()
     {
+		// return session()->exists('TMP_WBSESSID');
         return view('pages.tms-vendor.auth.login');
     }
 
@@ -66,13 +67,14 @@ class LoginVendorController extends Controller
     			return false;
     		}
     	} catch(Exception $e) {
-    		log::info(_METHOD_." ".$e->getMessage());
+    		Log::info($e->getMessage());
     		return false;
     	}
     }
 
     public function signOut() {
         Session::flush();
+		Session::forget('TMP_WBSESSID');
         Auth::logout();
   
         return redirect()->route('vendor.login');

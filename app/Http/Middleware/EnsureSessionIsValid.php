@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -18,16 +19,22 @@ class EnsureSessionIsValid
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->has('sessid')) {
-            if(!session()->exists('TMP_WBSESSID')){
-                return redirect()->away(env('LOGIN_URL'));
-            }
-        }else{
-            if(session('TMP_WBSESSID') != $request->sessid){
-                $this->generateSession($request->sessid);
-            }
+        if($request->has('sessid')){
+            $this->generateSession($request->sessid);
         }
-        return $next($request);
+        if (session()->exists('TMP_WBSESSID') || Auth::check()) {
+            return $next($request);
+        }else{
+            return redirect()->route('vendor.login');
+        }
+        // else{
+        //     if(session()->has('TMP_WBSESSID')){
+        //         $this->generateSession($request->sessid);
+        //     }else{
+        //         if(Auth::check())
+        //     }
+        // }
+        
     }
 
     private function generateSession($session_id)

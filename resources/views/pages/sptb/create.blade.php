@@ -272,7 +272,7 @@
                     
                     $('#container-produk').append(`
                         <div class="form-group col-lg-6">
-                            <input type="text" class="form-control" value="` + result.spm.spmd[i].kd_produk + ' - ' + result.spm.spmd[i].ket + `" readonly style="background-color: var(--kt-input-disabled-bg);">
+                            <input type="text" class="form-control" value="` + result.spm.spmd[i].kd_produk + ' - ' + result.spm.spmd[i].tipe + `" readonly style="background-color: var(--kt-input-disabled-bg);">
                             <input type="hidden" name="kd_produk[]" class="form-control" value="` + result.spm.spmd[i].kd_produk + `">
                         </div>
                         <div class="form-group col-lg-3">

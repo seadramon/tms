@@ -17,6 +17,7 @@ use App\Http\Controllers\PricelistAngkutanController;
 use App\Http\Controllers\Report\PemenuhanArmadaController;
 use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaController;
 use App\Http\Controllers\LoginVendorController;
+use App\Http\Controllers\RoleController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 use App\Models\User;
@@ -168,8 +169,18 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 			'destroy', 'show'
 		])->parameters(['' => 'report-pemenuhan-armada']);
 	});
+
+	Route::controller(RoleController::class)->prefix('setting-akses-menu')->name('setting.akses.menu.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/data', 'data')->name('data');
+        Route::get('/setting/{id}', 'setting')->name('setting');
+        Route::post('/update', 'update_setting')->name('update.setting');
+        Route::post('/tree-data', 'tree_data')->name('tree.data');
+        Route::get('/delete-setting/{id}', 'delete_setting')->name('delete.setting');
+    });
 });
 
+Route::get('logout',	[LoginVendorController::class, 'signOut'])->name('logout');
 
 // VENDOR
 Route::group(['prefix' => '/vendor', 'as' => 'vendor.'], function(){
@@ -177,13 +188,14 @@ Route::group(['prefix' => '/vendor', 'as' => 'vendor.'], function(){
 	Route::get('/login',	[LoginVendorController::class, 'index'])->name('login');
 	Route::post('/login',	[LoginVendorController::class, 'postLogin'])->name('post-login');
 
+
 	Route::middleware('auth')->group(function () {
 
 		Route::get('/testing', function () {
 			return view('pages.tms-vendor.home');
 		});
 
-		Route::get('/logout',	[LoginVendorController::class, 'signOut'])->name('logout');
+		
 	});
 
 });
