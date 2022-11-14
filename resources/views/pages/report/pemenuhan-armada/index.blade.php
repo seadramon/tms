@@ -44,6 +44,28 @@
         float: right;
         display: block;
     }
+
+    p {
+        display: inline;
+        font-weight: bold;
+    }
+
+    .box2-style1 {
+        font-size: 60px;
+    }
+
+    .box2-style2 {
+        font-size: 30px;
+    }
+
+    .box2-style3 {
+        font-size: 15px;
+    }
+
+    .box2-style4 {
+        font-size: 15px;
+        font-weight: normal;
+    }
 </style>
 @endsection
 @section('js')
@@ -59,6 +81,12 @@
     var target = document.querySelector(".box-ui-loading-chart");
             
     var blockUI = new KTBlockUI(target, {
+        message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Loading data...</div>',
+    });
+
+    var targetBox = document.querySelector(".box-ui-loading-box-data");
+            
+    var blockUIBox = new KTBlockUI(targetBox, {
         message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Loading data...</div>',
     });
 
@@ -165,7 +193,8 @@
                 'pbb_muat' : $("#pbb_muat").val(),
                 'vendor_id' : $("#vendor_id").val(),
                 'kd_material' : $("#kd_material").val(),
-                'periode' : $("#periode").val()
+                'periode' : $("#periode").val(),
+                'tipe' : $("#tipe").val()
             },
             dataType: 'json',
             beforeSend: function() {
@@ -208,6 +237,64 @@
                         ]
                     }
                 });
+            },
+            error: function(result) {
+                console.log(result);
+            }
+        });
+
+        $.ajax({
+            url: "{{ route('report-pemenuhan-armada.box-data') }}",
+            type: "POST",
+            data: {
+                '_token': '{{ csrf_token() }}',
+                'kd_pat' : $("#kd_pat").val(),
+                'pbb_muat' : $("#pbb_muat").val(),
+                'vendor_id' : $("#vendor_id").val(),
+                'kd_material' : $("#kd_material").val(),
+                'periode' : $("#periode").val(),
+                'tipe' : $("#tipe").val()
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                blockUIBox.block();
+            },
+            complete: function() {
+                blockUIBox.release();
+            },
+            success: function(result) {
+                $("#box1-content").html('');
+
+                result.box1.forEach(element => {
+                    $("#box1-content").append(`
+                        <tr>
+                            <td class="text-center">` + element.rn + `</td>
+                            <td>` + element.nama + `</td>
+                            <td class="text-center">` + element.total + `</td>
+                        </tr>
+                    `); 
+                });
+
+                $("#box2-content1").html(result.box2[0]);
+                $("#box2-content2").html('%');
+                $("#box2-content3").html(result.box2[1] + ' SPtB');
+                $("#box2-content4").html('/');
+                $("#box2-content5").html(result.box2[2] + ' SPM');
+
+                $("#box3-content").html(`
+                    <tr>
+                        <td>Dipercepat</td>
+                        <td class="text-center">` + result.box3[0] + `</td>
+                    </tr>
+                    <tr>
+                        <td>Tepat Waktu</td>
+                        <td class="text-center">` + result.box3[1] + `</td>
+                    </tr>
+                    <tr>
+                        <td>Terlambat</td>
+                        <td class="text-center">` + result.box3[2] + `</td>
+                    </tr>
+                `);
             },
             error: function(result) {
                 console.log(result);

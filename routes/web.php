@@ -163,6 +163,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	Route::group(['prefix' => 'report-pemenuhan-armada', 'as' => 'report-pemenuhan-armada.'], function(){
 		Route::post('/data', [PemenuhanArmadaController::class, 'data'])->name('data');
 		Route::post('/chart', [PemenuhanArmadaController::class, 'chart'])->name('chart');
+		Route::post('/box-data', [PemenuhanArmadaController::class, 'boxData'])->name('box-data');
 
 	    Route::resource('/',  PemenuhanArmadaController::class)->except([
 			'destroy', 'show'
