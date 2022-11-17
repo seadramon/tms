@@ -59,7 +59,11 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	Route::group(['prefix' => '/spp', 'as' => 'spp.'], function(){
 	    Route::post('/destroy', [SppController::class, 'destroy'])->name('destroy');
 	    Route::post('/draft', [SppController::class, 'createDraft'])->name('draft');
+
 	    Route::get('/data', [SppController::class, 'data'])->name('data');
+	    Route::get('/data-spprb', [SppController::class, 'dataSpprb'])->name('data-spprb');
+	    Route::get('/data-angkutan', [SppController::class, 'dataAngkutan'])->name('data-angkutan');
+
 	    Route::get('/spp-edit/{spp}', [SppController::class, 'edit'])->name('edit');
 	    Route::get('/spp-amandemen/{spp}', [SppController::class, 'amandemen'])->name('amandemen');
 	    Route::get('/spp-print/{spp}', [SppController::class, 'print'])->name('print');
