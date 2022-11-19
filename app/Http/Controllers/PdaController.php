@@ -221,7 +221,10 @@ class PdaController extends Controller
             $data->jalan_alt = $request->$jalan_alternatif;
             $data->jalan_alt2 = $request->$jalan_alternatif2;
             $data->langsir = $request->$langsir;
-            $data->jarak_langsir = $request->$jarak_langsir;
+            if($request->$langsir != 'tidak_ada'){
+                $data->jarak_langsir = $request->$jarak_langsir;
+            }
+
             $data->metode = $request->$metode;
             $data->save();
             $i++;
