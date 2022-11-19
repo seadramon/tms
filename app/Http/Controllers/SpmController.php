@@ -61,7 +61,7 @@ class SpmController extends Controller
 
         return response()->json($result);
     }
-    
+
     public function data(Request $request)
     {
         $query = SpmH::with(['sppb', 'vendornya']);
@@ -80,6 +80,7 @@ class SpmController extends Controller
                             Action
                         </button>
                         <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="' . route('spm.edit', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Edit</a></li>
                             <li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-pat="'. $model->pat_to .'" data-id="'. $model->no_spm .'">Konfirmasi</a></li>
                             <li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>
                             <li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>
@@ -91,7 +92,7 @@ class SpmController extends Controller
             })
             ->rawColumns(['menu', 'status'])
             ->toJson();
-    } 
+    }
 
     /**
      * Display a listing of the resource.
@@ -448,15 +449,107 @@ class SpmController extends Controller
 
     public function print($no_spm){
         $no_spm = str_replace('|', '/', $no_spm); // '0350/SPM/I/2008';
-        
+
         $spmh = SpmH::find($no_spm);
-        
+
         $logo = File::get(public_path('assets/media/logos/tms.png'));
-        
+
         $logo = base64_encode($logo);
 
         return Pdf::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
             ->loadView('pages.spm.print', ['spmh' => $spmh, 'logo' => $logo])->stream('Surat Permintaan Muat.pdf');
-        
+
+    }
+
+    public function edit($spm){
+        $nospm = str_replace("|", "/", $spm);
+        $data = SpmH::with('pat')->where('no_spm',$nospm)->first();
+        return view('pages.spm.edit', [
+            'data' => $data
+        ]);
+    }
+
+    public function getDataEditBox2(Request $request){
+
+        $no_spp = $request->no_spp;
+
+        $detail_spp = SppbD::with('produk')->where('no_sppb',$request->no_spp)->get();
+
+        $collection_table = new Collection();
+        foreach($detail_spp as $item){
+
+            $data_segmen = SppbD::select('jml_segmen','app2_vol')
+                ->where('no_sppb',$no_spp)
+                ->where('kd_produk',$item->produk->kd_produk)
+                ->first();
+
+            $spm = SpmH::with(['spmd' => function($sql) use ($item){
+                    $sql->where('kd_produk',$item->produk->kd_produk);
+                }])
+                ->where('no_sppb',$no_spp)
+                ->first();
+                $jml = 0;
+                if(!empty($spm)){
+                    foreach($spm->spmd as $row){
+                        $jml = $jml + $row->vol;
+                    }
+                }
+
+            $sppdis_vol_btg = DB::table('SPM_H')
+                ->selectRaw('SUM(SPTB_D.VOL) as sppdis_vol_btg')
+                ->join('SPTB_H','SPTB_H.NO_SPM','=','SPM_H.NO_SPM')
+                ->join('SPTB_D','SPTB_H.NO_SPTB','=','SPTB_D.NO_SPTB')
+                ->where('SPM_H.NO_SPPB',$request->no_spp)
+                ->groupBy('SPM_H.NO_SPM','SPM_H.NO_SPPB','SPTB_H.NO_SPM','SPTB_D.NO_SPTB')
+                ->first();
+
+            $collection_table->push((object)[
+                'kode_produk' => $item->produk->kd_produk,
+                'type_produk' => $item->produk->kd_produk.' - '.$item->produk->tipe,
+                'spp_vol_btg' => $item->app2_vol,
+                'spp_vol_ton' => 0,
+                'sppdis_vol_btg' => $sppdis_vol_btg->sppdis_vol_btg ?? 0,
+                'sppdis_vol_ton' => 0,
+                'segmen' => $data_segmen->jml_segmen,
+                'spm' => $jml,
+                'vol_sppb' => $data_segmen->app2_vol
+            ]);
+        }
+
+
+        $no_npp = SppbH::select('no_npp')->where('no_sppb',$request->no_spp)->first();
+        $no_spprb = SpprbH::with('pat')->where('no_npp',$no_npp->no_npp)->first();
+        $pelanggan = Npp::select('nama_pelanggan','nama_proyek')->where('no_npp',$no_npp->no_npp)->first();
+        $vendor_angkutan = Vendor::where('vendor_id','LIKE','WB%')->where('sync_eproc',1)->get();
+        $tujuan = Npp::with('infoPasar.region')->first();
+
+        $jarak = Sp3D::where('no_npp',$no_npp->no_npp)->where('pat_to',$no_spprb->pat->kd_pat)->first();
+        if(empty($jarak)){
+            $jarak = 0;
+        }
+
+        $kondisiPenyerahan = [
+            'L' => 'LOKO',
+            'F' => 'FRANKO',
+            'T' => 'TERPASANG',
+            'D' => 'DISPENSASI'
+        ];
+
+        $kondisiPenyerahanDipilih = $no_npp->no_npp ? $kondisiPenyerahan[strtoupper(substr($no_npp->no_npp, -1))] : 'LOKO';
+
+        $html = view('pages.spm.edit-box2', [
+            'no_npp' => $no_npp->no_npp,
+            'no_spprb' => $no_spprb->no_spprb,
+            'detail_spp' => $collection_table,
+            'no_spp' => $no_spp,
+            'vendor_angkutan' => $vendor_angkutan,
+            'kp'=> $kondisiPenyerahanDipilih,
+            'pelanggan' => $pelanggan->nama_pelanggan,
+            'nama_proyek' => $pelanggan->nama_proyek,
+            'tujuan' => $tujuan,
+            'jarak' => $jarak
+        ])->render();
+
+        return response()->json( array('success' => true, 'html'=> $html) );
     }
 }
