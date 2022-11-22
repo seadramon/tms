@@ -34,7 +34,7 @@ class EnsureSessionIsValid
                     $sql->where('route_name', $route);
                 })
                 ->first();
-            Session::put('TMS_ACTION_MENU', json_encode($rm->action_menu ?? null));
+            Session::put('TMS_ACTION_MENU', json_encode($rm->action_menu ?? []));
             return $next($request);
         }else{
             return redirect()->route('vendor.login');
