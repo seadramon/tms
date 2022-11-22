@@ -11,9 +11,7 @@ use App\Models\RoleMenu;
 use App\Models\RoleMenuMobile;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
-use DB;
-use Session;
-use Validator;
+use Illuminate\Support\Str;
 
 class RoleController extends Controller
 {
@@ -71,11 +69,23 @@ class RoleController extends Controller
                 'icon' => $icon,
                 'li_attr' => ['val_id'=>$row->id],
                 'state' => [
-                    'selected' => $row->in_role == null || in_array($row->level, [1, 3])  ? false : true,
+                    'selected' => ($row->in_role == null) || in_array($row->level, [1, 3]) || (count($row->action) > 0)  ? false : true,
                     'opened' => true
                 ]
             ];
-            
+            foreach ($row->action as $action) {
+                $json[] = [
+                    'id' => $row->id . "|" . $action, 
+                    'parent' => $row->id,
+                    'text' => Str::camel($action),
+                    'icon' => 'fa-solid fa-location-crosshairs',
+                    'li_attr' => ['val_id' => $row->id . "|" . $action],
+                    'state' => [
+                        'selected' => in_array($action, $row->in_role->action_menu ?? []) ? true : false,
+                        'opened' => true
+                    ]
+                ];
+            }
         }
 
         // $data = MenuMobile::with(['in_role' => function($sql) use ($request){
@@ -114,9 +124,10 @@ class RoleController extends Controller
 
     public function update_setting(Request $request)
     {
-        // return response()->json($request->all());
         $id = $request->role_id;
-        $data = $request->data;
+        $data = collect($request->data)->filter(function($item){ return !str_contains($item, '|'); });
+        $actions = collect($request->data)->filter(function($item){ return str_contains($item, '|'); })->groupBy(function($item){ return explode('|', $item)[0]; });
+        // return response()->json($actions[1]->map(function($item){ return explode("|", $item)[1]; }));
         
         $clearing = RoleMenu::where('role_id',$id)->delete();
        
@@ -177,6 +188,14 @@ class RoleController extends Controller
                     }
                 }
             }
+        }
+        foreach ($actions as $key => $rows) {
+            $action_menu = collect($rows)->map(function($item){ return explode("|", $item)[1]; });
+            $input = new RoleMenu;
+            $input->role_id     = $id;
+            $input->menu_id     = $key;
+            $input->action_menu = $action_menu->all();
+            $input->save();
         }                       
         return 'success';
     }

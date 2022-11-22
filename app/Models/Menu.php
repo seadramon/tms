@@ -10,6 +10,10 @@ class Menu extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = [
+        'action' => 'array',
+    ];
+
     public function in_role()
     {
         return $this->belongsTo(RoleMenu::class, 'id', 'menu_id');

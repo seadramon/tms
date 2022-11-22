@@ -63,20 +63,28 @@
                             <div class="separator separator-dashed border-primary my-10"></div>
                             <div class="row mb-5">
                                 <div class="form-group col-lg-6">
+                                    <input type="hidden" name="index[1]" id="index_1" value="1">
+                                </div>
+                                <div class="form-group col-lg-6" style="text-align: right;">
+                                    <button type="button" class="btn btn-light-danger btn_hapus mt-8" id="btn_hapus_1" data-id="1">
+                                        <i class="la la-trash"></i>Hapus
+                                    </button>
+                                </div>
+                                <div class="form-group col-lg-6">
                                     <label class="form-label">Jenis Angkutan</label>
-                                    {!! Form::select('kd_material[]', $kd_material, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_material_1', 'data-id'=>'1']) !!}
+                                    {!! Form::select('kd_material[1]', $kd_material, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_material_1', 'data-id'=>'1']) !!}
                                 </div>
         
                                 <div class="form-group col-lg-6">
                                     <label class="form-label">Jenis Pemuatan</label>
-                                    {!! Form::select('jenis_muat[]', $jenis_muat, null, ['class'=>'form-control form-select-solid jenis_muat', 'data-control'=>'select2', 'id'=>'jenis_muat_1', 'data-id'=>'1', 'required']) !!}
+                                    {!! Form::select('jenis_muat[1]', $jenis_muat, null, ['class'=>'form-control form-select-solid jenis_muat', 'data-control'=>'select2', 'id'=>'jenis_muat_1', 'data-id'=>'1', 'required']) !!}
                                 </div>
         
                                 <div class="form-group col-lg-3">
                                     <label class="form-label">Tanggal Mulai Berlaku</label>
                                     <div class="col-lg-12">
                                         <div class="input-group date">
-                                            {!! Form::text('tgl_mulai[]', null, ['class'=>'form-control datepicker', 'id'=>'tgl_mulai_1', 'data-id'=>'1']) !!}
+                                            {!! Form::text('tgl_mulai[1]', $awal, ['class'=>'form-control datepicker', 'id'=>'tgl_mulai_1', 'data-id'=>'1']) !!}
                                             <div class="input-group-append">
                                                 <span class="input-group-text" style="display: block">
                                                     <i class="la la-calendar-check-o"></i>
@@ -90,7 +98,7 @@
                                     <label class="form-label">Tanggal Selesai Berlaku</label>
                                     <div class="col-lg-12">
                                         <div class="input-group date">
-                                            {!! Form::text('tgl_selesai[]', null, ['class'=>'form-control datepicker', 'id'=>'tgl_selesai_1', 'data-id'=>'1']) !!}
+                                            {!! Form::text('tgl_selesai[1]', $akhir, ['class'=>'form-control datepicker', 'id'=>'tgl_selesai_1', 'data-id'=>'1']) !!}
                                             <div class="input-group-append">
                                                 <span class="input-group-text" style="display: block">
                                                     <i class="la la-calendar-check-o"></i>
@@ -102,14 +110,14 @@
         
                                 <div class="form-group col-lg-6">
                                     <label class="form-label">Lokasi Pemuatan</label>
-                                    <select class="form-control form-select-solid" data-control="select2" name="kd_muat[]" id="kd_muat_1" data-id="1" required>
+                                    <select class="form-control form-select-solid" data-control="select2" name="kd_muat[1]" id="kd_muat_1" data-id="1" required>
                                         <option value="">Pilih Jenis Pemuatan terlebih dahulu!</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group col-lg-4">
                                     <label class="form-label">Upload File Excel (Harga Satuan)</label>
-                                    {!! Form::file('file_excel[]', ['class'=>'form-control', 'id'=>'file_excel_1', 'data-id'=>'1', "accept" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]) !!}
+                                    {!! Form::file('file_excel[1]', ['class'=>'form-control', 'id'=>'file_excel_1', 'data-id'=>'1', "accept" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]) !!}
                                 </div>
         
                                 <div class="form-group col-lg-2">
@@ -118,10 +126,9 @@
                                         Upload Excel
                                     </button>
                                 </div>
-                                <div class="form-group col-lg-6" style="text-align: right;">
-                                    <button type="button" class="btn btn-light-danger btn_hapus mt-8" id="btn_hapus_1" data-id="1">
-                                        <i class="la la-trash"></i>Hapus
-                                    </button>
+                                <div class="form-group col-lg-6">
+                                    <label class="form-label">Vendor</label>
+                                    {!! Form::select('vendor[1][]', $vendor, null, ['class'=>'form-control form-select-solid vendor', 'data-control'=>'select2', 'id'=>'vendor_1', 'data-id'=>'1', 'multiple' => true, 'required']) !!}
                                 </div>
                             </div>
 
@@ -248,6 +255,7 @@
             
             formData.append('file_excel', fileExcel);
             formData.append('_token', '{{ csrf_token() }}');
+            formData.append('index', dataId);
 
             $.ajax({
                 url: "{{ route('pricelist-angkutan.upload-excel') }}",
@@ -287,20 +295,33 @@
         //Set Box Id
         clone.id = 'box_' + newIndex;
         
-        //Set Id
+        //Set Id and name
         clone.getElementsByTagName('select')[0].id = 'kd_material_' + newIndex;
+        clone.getElementsByTagName('select')[0].name = 'kd_material[' + newIndex + ']';
         clone.getElementsByTagName('select')[1].id = 'jenis_muat_' + newIndex;
+        clone.getElementsByTagName('select')[1].name = 'jenis_muat[' + newIndex + ']';
         clone.getElementsByTagName('select')[2].id = 'kd_muat_' + newIndex;
-        clone.getElementsByTagName('input')[0].id = 'tgl_mulai_' + newIndex;
-        clone.getElementsByTagName('input')[1].id = 'tgl_selesai_' + newIndex;
-        clone.getElementsByTagName('input')[2].id = 'file_excel_' + newIndex;
+        clone.getElementsByTagName('select')[2].name = 'kd_muat[' + newIndex + ']';
+        clone.getElementsByTagName('select')[3].id = 'vendor_' + newIndex;
+        clone.getElementsByTagName('select')[3].name = 'vendor[' + newIndex + '][]';
+        clone.getElementsByTagName('input')[0].id = 'index_' + newIndex;
+        clone.getElementsByTagName('input')[0].name = 'index[' + newIndex + ']';
+        clone.getElementsByTagName('input')[1].id = 'tgl_mulai_' + newIndex;
+        clone.getElementsByTagName('input')[1].name = 'tgl_mulai[' + newIndex + ']';
+        clone.getElementsByTagName('input')[2].id = 'tgl_selesai_' + newIndex;
+        clone.getElementsByTagName('input')[2].name = 'tgl_selesai[' + newIndex + ']';
+        clone.getElementsByTagName('input')[3].id = 'file_excel_' + newIndex;
+        clone.getElementsByTagName('input')[3].name = 'file_excel[' + newIndex + ']';
         clone.getElementsByTagName('button')[0].id = 'upload_excel_' + newIndex;
         clone.getElementsByTagName('button')[1].id = 'btn_hapus_' + newIndex;
         // clone.getElementsByTagName('button')[2].id = 'btn_tambah_' + newIndex;
-        clone.getElementsByTagName('div')[16].id = 'container_harsat_' + newIndex;
+        clone.getElementsByTagName('div')[18].id = 'container_harsat_' + newIndex;
 
         // add new box to end of div
         $('#container_pricelist_angkutan').append(clone);
+
+        //set value on index
+        $('#index_' + newIndex).val(newIndex);
         
         //Set Data Id
         $('#box_' + newIndex).attr('data-id', newIndex);
@@ -318,6 +339,7 @@
         //Set Required
         $('#jenis_muat_' + newIndex).attr('required');
         $('#kd_muat_' + newIndex).attr('required');
+        $('#vendor_' + newIndex).attr('required');
         
         //Remove Disable
         $('#kd_material_' + newIndex).removeAttr('disabled');
@@ -331,12 +353,14 @@
         $('#kd_material_' + newIndex).select2();
         $('#jenis_muat_' + newIndex).select2();
         $('#kd_muat_' + newIndex).select2();
+        $('#vendor_' + newIndex).select2();
         
         //Handle duplicate select2
         if(isFirstAdd){
             $('#box_' + newIndex).find('.select2-container').eq(1).remove();
             $('#box_' + newIndex).find('.select2-container').eq(2).remove();
-            $('#box_' + newIndex).find('.select2-container').last().remove();
+            $('#box_' + newIndex).find('.select2-container').eq(3).remove();
+            // $('#box_' + newIndex).find('.select2-container').last().remove();
 
             isFirstAdd = false;
         }

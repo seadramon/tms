@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 class SpmController extends Controller
@@ -75,14 +76,30 @@ class SpmController extends Controller
                 return $status;
             })
             ->addColumn('menu', function ($model) {
+                $list = '';
+                    if(Auth::check()){
+                        
+                    }else{
+                        $action = json_decode(session('TMS_ACTION_MENU'));
+                        if(in_array('konfirmasi', $action)){
+                            $list .= '<li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-pat="'. $model->pat_to .'" data-id="'. $model->no_spm .'">Konfirmasi</a></li>';
+                        }
+                        if(in_array('konfirmasi_vendor', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>';
+                        }
+                        if(in_array('print', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>';
+                        }
+                        if(in_array('buat_sptb', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sptb.create', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Buat SPTB</a></li>';
+                        }
+                    }
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Action
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-pat="'. $model->pat_to .'" data-id="'. $model->no_spm .'">Konfirmasi</a></li>
-                            <li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>
-                            <li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>
+                            ' . $list . '
                             <li><a class="dropdown-item delete" href="#">Hapus</a></li>
                         </ul>
                         </div>';

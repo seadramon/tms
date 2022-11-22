@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Log;
 
 class SppController extends Controller
@@ -106,23 +107,24 @@ class SppController extends Controller
             ->addColumn('menu', function ($model) {
                 $noSppb = str_replace("/", "|", $model->no_sppb);
                 $sumVolApp2 = $model->detail->sum('app2_vol');
-                
+                $approval = "";
+                $action = json_decode(session('TMS_ACTION_MENU'));
                 switch (true) {
-                    case ($model->app == 0):
+                    case ($model->app == 0 && in_array('approve1', $action)):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'first',
                             'nosppb' => $noSppb
                         ]);
                         $caption = "Approve First";
                         break;
-                    case ($model->app == 1 && $model->app2 == 0):
+                    case ($model->app == 1 && $model->app2 == 0 && in_array('approve2', $action)):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'second',
                             'nosppb' => $noSppb
                         ]);
                         $caption = "Approve Second";
                         break;
-                    case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0 && $sumVolApp2 == 0):
+                    case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0 && $sumVolApp2 == 0 && in_array('approve3', $action)):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'third',
                             'nosppb' => $noSppb
@@ -136,20 +138,32 @@ class SppController extends Controller
                 }
                 if ($approve!="") {
                     $approval = '<li><a class="dropdown-item" href="'.$approve.'">'. $caption .'</a></li>';
-                } else {
-                    $approval = "";
                 }
+                $list = '';
+                if(Auth::check()){
+                    
+                }else{
+                    if(in_array('view', $action)){
+                        $list .= '<li><a class="dropdown-item" href="'. route('spp.show', ['spp' => $noSppb]) .'">View</a></li>';
+                    }
+                    if(in_array('edit', $action)){
+                        $list .= '<li><a class="dropdown-item" href="'. route('spp.edit', ['spp' => $noSppb]) .'">Edit</a></li>';
+                    }
+                    if(in_array('amandemen', $action)){
+                        $list .= '<li><a class="dropdown-item" href="'. route('spp.amandemen', ['spp' => $noSppb]) .'">Amandemen</a></li>';
+                    }
+                    if(in_array('print', $action)){
+                        $list .= '<li><a class="dropdown-item" href="'. route('spp.print', ['spp' => $noSppb]) .'">Print</a></li>';
+                    }
+                }
+                $list .= $approval;
 
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Action
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="'. route('spp.show', ['spp' => $noSppb]) .'">View</a></li>
-                            <li><a class="dropdown-item" href="'. route('spp.edit', ['spp' => $noSppb]) .'">Edit</a></li>
-                            <li><a class="dropdown-item" href="'. route('spp.amandemen', ['spp' => $noSppb]) .'">Amandemen</a></li>
-                            '.$approval.'
-                            <li><a class="dropdown-item" href="'. route('spp.print', ['spp' => $noSppb]) .'">Print</a></li>
+                            ' . $list . '
                             <li><a class="dropdown-item" href="#">Hapus</a></li>
                         </ul>
                         </div>';

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class PricelistAngkutanController extends Controller
@@ -40,13 +41,24 @@ class PricelistAngkutanController extends Controller
                 return implode("<br>", $item->all());
             })
             ->addColumn('menu', function ($model) {
+                $list = '';
+                if(Auth::check()){
+                    
+                }else{
+                    $action = json_decode(session('TMS_ACTION_MENU'));
+                    if(in_array('edit', $action)){
+                        $list .= '<li><a class="dropdown-item" href="' . route('pricelist-angkutan.edit', str_replace('/', '|', $model->id)) . '">Edit</a></li>';
+                    }
+                    if(in_array('view', $action)){
+                        $list .= '<li><a class="dropdown-item" href="' . route('pricelist-angkutan.show', str_replace('/', '|', $model->id)) . '">View</a></li>';
+                    }
+                }
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Action
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="' . route('pricelist-angkutan.show', str_replace('/', '|', $model->id)) . '">View</a></li>
-                            <li><a class="dropdown-item" href="' . route('pricelist-angkutan.edit', str_replace('/', '|', $model->id)) . '">Edit</a></li>
+                            ' . $list . '
                         </ul>
                         </div>';
 
@@ -84,8 +96,13 @@ class PricelistAngkutanController extends Controller
         
         $jenis_muat = ["" => "Pilih Jenis Pemuatan"] + $jenis_muat;
 
+        $vendor = Vendor::where('sync_eproc', 1)->get()->pluck('nama', 'vendor_id')->toArray();
+        // $vendor = ["" => "Pilih Vendor"] + $vendor;
+        $awal = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AWAL_THN\" ('" . date('Y') . "') tgl FROM dual")[0]->tgl);
+        $akhir = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AKHIR_THN\" ('" . date('Y') . "') tgl FROM dual")[0]->tgl);
+
         return view('pages.pricelist-angkutan.create', compact(
-            'kd_pat', 'tahun', 'kd_material', 'jenis_muat'
+            'kd_pat', 'tahun', 'kd_material', 'jenis_muat', 'vendor', 'awal', 'akhir'
         ));
     }
 
@@ -110,7 +127,8 @@ class PricelistAngkutanController extends Controller
         $array = (new PricelistImport)->toArray($request->file_excel);
         
         $html = view('pages.pricelist-angkutan.table-harsat', [
-            'listData' => $array[0]
+            'listData' => $array[0],
+            'index' => $request->index
         ])->render();
         
         return response()->json(array('success' => true, 'html'=> $html));
@@ -118,6 +136,7 @@ class PricelistAngkutanController extends Controller
 
     public function store(Request $request, FlasherInterface $flasher)
     {
+        // return response()->json($request->all());
         try {
             DB::beginTransaction();
                         
@@ -134,7 +153,9 @@ class PricelistAngkutanController extends Controller
             $j=0;
             $countHarsat = 0;
 
-            for($i=0; $i < count($request->kd_material); $i++){
+            foreach ($request->index as $key => $i) {
+            // }
+            // for($i=0; $i < count($request->kd_material); $i++){
                 // $pricelistAngkutanD = PricelistAngkutanD::firstOrNew([
                 //     'pah_id' => $pricelistAngkutanH->id,
                 //     'kd_material'  => $request->kd_material[$i],
@@ -148,16 +169,17 @@ class PricelistAngkutanController extends Controller
                 $pricelistAngkutanD->kd_muat = $request->kd_muat[$i];
                 $pricelistAngkutanD->tgl_mulai = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->tgl_mulai[$i]))."', 'YYYY-MM-DD')");
                 $pricelistAngkutanD->tgl_selesai = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->tgl_selesai[$i]))."', 'YYYY-MM-DD')");
+                $pricelistAngkutanD->vendors = implode('|', $request->vendor[$i]);
                 $pricelistAngkutanD->save();
                 $countHarsat += $request->count_harsat[$i];
 
-                for($j; $j < $countHarsat; $j++){
+                for($j = 0; $j < (int) $request->count_harsat[$i]; $j++){
                     $pricelistAngkutanD2 = new PricelistAngkutanD2();
                     $pricelistAngkutanD2->pad_id = $pricelistAngkutanD->id;
-                    $pricelistAngkutanD2->range_min = $request->range_min[$j];
-                    $pricelistAngkutanD2->range_max = $request->range_max[$j];
-                    $pricelistAngkutanD2->h_pusat = $request->h_pusat[$j];
-                    $pricelistAngkutanD2->h_final = $request->h_final[$j];
+                    $pricelistAngkutanD2->range_min = $request->range_min[$i][$j];
+                    $pricelistAngkutanD2->range_max = $request->range_max[$i][$j];
+                    $pricelistAngkutanD2->h_pusat = $request->h_pusat[$i][$j];
+                    $pricelistAngkutanD2->h_final = $request->h_final[$i][$j];
                     $pricelistAngkutanD2->save();
                 }
             }
@@ -207,13 +229,20 @@ class PricelistAngkutanController extends Controller
         
         $jenis_muat = ["" => "Pilih Jenis Pemuatan"] + $jenis_muat;
 
+        $vendor = Vendor::where('sync_eproc', 1)->get()->pluck('nama', 'vendor_id')->toArray();
+        // $vendor = ["" => "Pilih Vendor"] + $vendor;
+        $awal = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AWAL_THN\" ('" . date('Y') . "') tgl FROM dual")[0]->tgl);
+        $akhir = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AKHIR_THN\" ('" . date('Y') . "') tgl FROM dual")[0]->tgl);
+
+
         return view('pages.pricelist-angkutan.edit', compact(
-            'data', 'kd_pat', 'tahun', 'kd_material', 'jenis_muat'
+            'data', 'kd_pat', 'tahun', 'kd_material', 'jenis_muat', 'vendor', 'awal', 'akhir'
         ));
     }
 
     public function update(Request $request, FlasherInterface $flasher, $id)
     {
+        // return response()->json($request->all());
         try {
             DB::beginTransaction();
                         
@@ -236,7 +265,8 @@ class PricelistAngkutanController extends Controller
             $pricelistAngkutanH->pad->each(function($d){ $d->pad2()->delete(); });
             $pricelistAngkutanH->pad()->delete();
             
-            for($i=0; $i < count($request->kd_material); $i++){
+            // for($i=0; $i < count($request->kd_material); $i++){
+            foreach ($request->index as $key => $i) {
                 $pricelistAngkutanD = PricelistAngkutanD::withTrashed()->firstOrNew([
                     'pah_id'      => $pricelistAngkutanH->id,
                     'kd_material' => $request->kd_material[$i],
@@ -248,21 +278,23 @@ class PricelistAngkutanController extends Controller
                 }
                 $pricelistAngkutanD->tgl_mulai = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->tgl_mulai[$i]))."', 'YYYY-MM-DD')");
                 $pricelistAngkutanD->tgl_selesai = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->tgl_selesai[$i]))."', 'YYYY-MM-DD')");
+                $pricelistAngkutanD->vendors = implode('|', $request->vendor[$i]);
                 $pricelistAngkutanD->save();
 
                 $countHarsat += $request->count_harsat[$i];
 
-                for($j; $j < $countHarsat; $j++){
+                // for($j; $j < $countHarsat; $j++){
+                for($j = 0; $j < (int) $request->count_harsat[$i]; $j++){
                     $pricelistAngkutanD2 = PricelistAngkutanD2::withTrashed()->firstOrNew([
                         'pad_id' => $pricelistAngkutanD->id,
-                        'range_min'  => $request->range_min[$j],
-                        'range_max'  => $request->range_max[$j]
+                        'range_min'  => $request->range_min[$i][$j],
+                        'range_max'  => $request->range_max[$i][$j]
                     ]);
                     if($pricelistAngkutanD2->id){
                         $pricelistAngkutanD2->restore();
                     }
-                    $pricelistAngkutanD2->h_pusat = $request->h_pusat[$j];
-                    $pricelistAngkutanD2->h_final = $request->h_final[$j];
+                    $pricelistAngkutanD2->h_pusat = $request->h_pusat[$i][$j];
+                    $pricelistAngkutanD2->h_final = $request->h_final[$i][$j];
                     $pricelistAngkutanD2->save();
                 }
             }
@@ -276,7 +308,7 @@ class PricelistAngkutanController extends Controller
 
             $flasher->addError($e->getMessage());
 
-            return redirect()->back()->withInput()->withErrors($e->getMessage());
+            return redirect()->back()->withErrors($e->getMessage());
         }
 
         return redirect()->route('pricelist-angkutan.index');
@@ -310,9 +342,10 @@ class PricelistAngkutanController extends Controller
         ];
         
         $jenis_muat = ["" => "Pilih Jenis Pemuatan"] + $jenis_muat;
+        $vendor = Vendor::where('sync_eproc', 1)->get()->pluck('nama', 'vendor_id')->toArray();
 
         return view('pages.pricelist-angkutan.show', compact(
-            'data', 'kd_pat', 'tahun', 'kd_material', 'jenis_muat'
+            'data', 'kd_pat', 'tahun', 'kd_material', 'jenis_muat', 'vendor'
         ));
     }
 }

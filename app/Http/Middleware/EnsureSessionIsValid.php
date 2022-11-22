@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Menu;
+use App\Models\Role;
+use App\Models\RoleMenu;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +26,15 @@ class EnsureSessionIsValid
             $this->generateSession($request->sessid);
         }
         if (session()->exists('TMP_WBSESSID') || Auth::check()) {
+            $route = str_replace('.data', '.index', $request->route()->getName());
+            $rm = RoleMenu::whereHas('role', function($sql){
+                    $sql->where('grpid', session('TMP_ROLE'));
+                })
+                ->whereHas('menu', function($sql) use ($route) {
+                    $sql->where('route_name', $route);
+                })
+                ->first();
+            Session::put('TMS_ACTION_MENU', json_encode($rm->action_menu ?? null));
             return $next($request);
         }else{
             return redirect()->route('vendor.login');

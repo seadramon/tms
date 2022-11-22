@@ -22,35 +22,69 @@ class MenuSeeder extends Seeder
                 'route_name' => 'sp3.index',
                 'icon' => 'fas fa-atom fs-3',
                 'level' => '0',
-                'sequence' => '0100'
+                'sequence' => '0100',
+                'action' => [
+                    'create',
+                    'view',
+                    'edit',
+                    'amandemen',
+                    'approve1',
+                    'approve2',
+                ]
             ],
             [
                 'name' => 'SPP',
                 'route_name' => 'spp.index',
                 'icon' => 'fas fa-atom fs-3',
                 'level' => '0',
-                'sequence' => '0200'
+                'sequence' => '0200',
+                'action' => [
+                    'create',
+                    'view',
+                    'edit',
+                    'amandemen',
+                    'approve1',
+                    'approve2',
+                    'approve3',
+                    'print',
+                ]
             ],
             [
                 'name' => 'SPM',
                 'route_name' => 'spm.index',
                 'icon' => 'fas fa-atom fs-3',
                 'level' => '0',
-                'sequence' => '0300'
+                'sequence' => '0300',
+                'action' => [
+                    'create',
+                    'konfirmasi',
+                    'konfirmasi_vendor',
+                    'print',
+                    'buat_sptb'
+                ]
             ],
             [
                 'name' => 'SPTB',
                 'route_name' => 'sptb.index',
                 'icon' => 'fas fa-atom fs-3',
                 'level' => '0',
-                'sequence' => '0400'
+                'sequence' => '0400',
+                'action' => [
+                    'create',
+                    'edit',
+                    'konfirmasi'
+                ]
             ],
             [
                 'name' => 'Pricelist Angkutan',
                 'route_name' => 'pricelist-angkutan.index',
                 'icon' => 'fas fa-atom fs-3',
                 'level' => '0',
-                'sequence' => '0500'
+                'sequence' => '0500',
+                'action' => [
+                    'view',
+                    'edit',
+                ]
             ],
             [
                 'name' => 'Master',
@@ -142,6 +176,7 @@ class MenuSeeder extends Seeder
             $menu->route_name = $item['route_name'];
             $menu->icon       = $item['icon'];
             $menu->level      = $item['level'];
+            $menu->action     = $item['action'] ?? [];
 
             $menu->seq        = $item['sequence'];
             if(in_array($item['level'], [2, 3])){

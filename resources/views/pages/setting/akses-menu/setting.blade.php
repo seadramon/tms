@@ -105,10 +105,10 @@
                             },
                         success: function(result) {
                             // swal("Menu Successfully Update");
-                            flasher.success("Data telah berhasil ditambahkan!");
-                            setTimeout(function() { 
-                                window.location=window.location;
-                            },1000);
+                            // flasher.success("Data telah berhasil ditambahkan!");
+                            // setTimeout(function() { 
+                            //     window.location=window.location;
+                            // },1000);
                             console.log(result);
                         },
                         error: function(xhr, ajaxOptions, thrownError) {

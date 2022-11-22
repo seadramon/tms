@@ -24,12 +24,15 @@ use App\Models\Views\VSpprbRi;
 use Exception;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class Sp3Controller extends Controller
 {
     public function index(){
+        // return response()->json(json_decode(session('TMS_ACTION_MENU')));
         $labelSemua = ["" => "Semua"];
 
         $pat = Pat::all()->pluck('ket', 'kd_pat')->toArray();
@@ -128,16 +131,33 @@ class Sp3Controller extends Controller
                     return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
                 })
                 ->addColumn('menu', function ($model) {
+                    $list = '';
+                    if(Auth::check()){
+                        
+                    }else{
+                        $action = json_decode(session('TMS_ACTION_MENU'));
+                        if(in_array('view', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
+                        }
+                        if(in_array('edit', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sp3.edit', str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>';
+                        }
+                        if(in_array('amandemen', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sp3.amandemen', str_replace('/', '|', $model->no_sp3)) . '">Amandemen</a></li>';
+                        }
+                        if(in_array('approve1', $action) && $model->app1 == 0){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['first', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
+                        }
+                        if(in_array('approve2', $action) && $model->app1 == 1){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
+                        }
+                    }
                     $edit = '<div class="btn-group">
                                 <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Action
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>
-                                <li><a class="dropdown-item" href="' . route('sp3.edit', str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>
-                                <li><a class="dropdown-item" href="' . route('sp3.amandemen', str_replace('/', '|', $model->no_sp3)) . '">Amandemen</a></li>
-                                <li><a class="dropdown-item" href="#">Adendum</a></li>
-                                <li><a class="dropdown-item" href="' . route('sp3.get-approve', [!$model->app1 ? 'first' : 'second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>
+                                ' . $list . '
                                 <li><a class="dropdown-item" href="#">Print</a></li>
                                 <li><a class="dropdown-item" href="#">Hapus</a></li>
                             </ul>

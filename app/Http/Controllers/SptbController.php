@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class SptbController extends Controller
 {
@@ -32,13 +33,24 @@ class SptbController extends Controller
                 return Carbon::createFromFormat('Y-m-d H:i:s', $model->tgl_sptb)->format('d-m-Y');
             })
             ->addColumn('menu', function ($model) {
+                $list = '';
+                if(Auth::check()){
+                    
+                }else{
+                    $action = json_decode(session('TMS_ACTION_MENU'));
+                    if(in_array('edit', $action)){
+                        $list .= '<li><a class="dropdown-item" href="' . route('sptb.edit', str_replace('/', '|', $model->no_sptb)) . '">Edit</a></li>';
+                    }
+                    if(in_array('konfirmasi', $action)){
+                        $list .= '<li><a class="dropdown-item set-konfirmasi" href="javascript:void(0)" data-id="'. $model->no_sptb .'">Konfirmasi</a></li>';
+                    }
+                }
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Action
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="' . route('sptb.edit', str_replace('/', '|', $model->no_sptb)) . '">Edit</a></li>
-                            <li><a class="dropdown-item set-konfirmasi" href="javascript:void(0)" data-id="'. $model->no_sptb .'">Konfirmasi</a></li>
+                            ' . $list . '
                         </ul>
                         </div>';
 
@@ -48,11 +60,9 @@ class SptbController extends Controller
             ->toJson();
     }
     
-    public function create()
+    public function create(Request $request)
     {
-        $no_spm = SpmH::where('app2', 1)
-            ->pluck('no_spm', 'no_spm')
-            ->toArray();
+        $no_spm = SpmH::pluck('no_spm', 'no_spm')->toArray();
             
         $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
 
@@ -62,15 +72,16 @@ class SptbController extends Controller
         ];
 
         $jns_sptb = ["" => "Pilih Jenis SPTB"] + $jns_sptb;
+        $spm = $request->has('spm') ? str_replace('|', '/', $request->spm) : null;
 
         return view('pages.sptb.create', compact(
-            'no_spm', 'jns_sptb'
+            'no_spm', 'jns_sptb', 'spm'
         ));
     }
 
     public function getSpm(Request $request)
     {
-        $spmH = SpmH::with(['sppbh', 'vendor', 'pat', 'spmd'])
+        $spmH = SpmH::with(['sppbh', 'vendor', 'pat', 'spmd.produk'])
             ->where('no_spm', $request->no_spm)
             ->first();
 

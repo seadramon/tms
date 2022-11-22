@@ -9,4 +9,18 @@ class RoleMenu extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'action_menu' => 'array',
+    ];
+
+    public function role()
+	{
+		return $this->belongsTo(Role::class, 'role_id');
+	}
+
+    public function menu()
+	{
+		return $this->belongsTo(Menu::class, 'menu_id');
+	}
+
 }

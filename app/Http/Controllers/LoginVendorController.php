@@ -30,7 +30,7 @@ class LoginVendorController extends Controller
             if (Auth::loginUsingId($validate->id)) {
 	            $request->session()->regenerate();
 	 
-	            return redirect()->intended('vendor.testing');
+	            return redirect()->to('/');
 	        }
  		} else {
             return back()->withErrors([
@@ -48,6 +48,10 @@ class LoginVendorController extends Controller
     			->first();
     		
     		if ($data) {
+				$trader = DB::connection('oracle-eproc')
+					->table(DB::raw('"m_trader"'))
+					->where('trader_id', $data->trader_id)
+					->first();
     			$user = User::updateOrCreate(
     				[
     					'username' => $data->username,
@@ -56,6 +60,7 @@ class LoginVendorController extends Controller
     				[
     					'user_id' => $data->user_id,
     					'trader_id' => $data->trader_id,
+    					'vendor_id' => $trader->trader_id ?? null,
     					'fullname' => $data->fullname,
     					'phone' => $data->phone,
     					'position' => $data->position

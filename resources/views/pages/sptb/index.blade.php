@@ -17,7 +17,9 @@
                 <div class="card-header">
                     <h3 class="card-title">List SPTB</h3>
                     <div class="card-toolbar">
-                        <a href="{{route('sptb.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
+						@if (in_array('create', json_decode(session('TMS_ACTION_MENU'))))
+							<a href="{{route('sptb.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
+						@endif
                     </div>
                 </div>
 

@@ -55,7 +55,7 @@ class KalenderPengirimanController extends Controller
 			->all();
 
 		$active_week = DB::select("select  WOS.\"FNC_GETMG\" (to_Date('" . date('d/m/Y') . "','dd/mm/yyyy'), '1A') minggu from dual")[0]->minggu;
-        
+
 		return view('pages.kalender-pengiriman.detail-weekly', [
 			'pat'            => $pat,
 			'periode'        => $periode,
