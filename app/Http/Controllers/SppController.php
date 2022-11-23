@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Log;
+ use Carbon\Carbon;
 
 class SppController extends Controller
 {
@@ -171,6 +172,74 @@ class SppController extends Controller
                 return $edit;
             })
             ->rawColumns(['menu', 'waktu', 'approval'])
+            ->toJson();
+    }
+
+    public function dataSpprb(Request $request)
+    {
+        $noNpp = !empty($request->no_npp)?$request->no_npp:null;
+        
+        $query = VSpprbRi::with(['produk', 'pat'])
+        ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
+        ->select('v_spprb_ri.pat_to', 'v_spprb_ri.spprblast', 'v_spprb_ri.kd_produk', 'v_spprb_ri.vol_spprb', 'spprb_h.jadwal1',
+            'spprb_h.jadwal2');
+
+        if (!empty($noNpp)) {
+            $query->where('v_spprb_ri.no_npp', $noNpp);
+        }
+
+        return DataTables::eloquent($query)
+            ->editColumn('jadwal1', function ($model) {
+                return Carbon::createFromFormat('Y-m-d H:i:s', $model->jadwal1)->format('d-m-Y');
+            })
+            ->editColumn('jadwal2', function ($model) {
+                return $model->jadwal2 ? Carbon::createFromFormat('Y-m-d H:i:s', $model->jadwal2)->format('d-m-Y') : '-';
+            })
+            ->toJson();
+    }
+
+    public function dataAngkutan(Request $request)
+    {
+        $noSppb = !empty($request->noSppb)?$request->noSppb:null;
+
+        $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
+        $query = SppbH::join('spprb_h', 'spprb_h.no_spprb', '=', 'sppb_h.no_spprb')
+            ->join('sp3_h', 'sp3_h.no_npp', '=', 'spprb_h.no_npp')
+            ->join(DB::raw($joinQuery), function($join) {
+                $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
+            })
+            ->join('vendor', 'vendor.vendor_id', '=', 'sp3_h.vendor_id')
+            ->select('spprb_h.no_spprb', 'sp3_h.no_sp3', 'sp3_h.app1', 'sp3_h.app2', 'sp3_h.st_wf', 'vendor.nama as vendorname', DB::raw("(SELECT sum(vol_akhir) FROM sp3_d WHERE NO_SP3 = sp3_h.NO_SP3) AS volakhir"), DB::raw("(SELECT sum(VOL_TON_AKHIR) FROM sp3_d WHERE NO_SP3 = sp3_h.NO_SP3) AS voltonakhir"));
+
+        if (!empty($noNpp)) {
+            $query->where('sppb_h.no_sppb', $noSppb);
+        }
+
+        return DataTables::eloquent($query)
+            ->addColumn('status', function ($model) {
+                $html = "";
+                switch (true) {
+                    case $model->st_wf == 0:
+                        $a = '<i class="fa fa-square" style="color:yellow; font-size:20px;"></i>';
+                        break;
+                    case $model->st_wf == 1 && $model->app1 == 0:
+                        $a = '<i class="fa fa-square" style="color:orange; font-size:20px;"></i>';
+                        break;
+                    case $model->st_wf == 1 && $model->app1 == 1:
+                        $a = '<i class="fa fa-square" style="color:green; font-size:20px;"></i>';
+                        break;
+                    
+                }
+
+                if ($model->app2 == 1) {
+                    $b = '<i class="fa fa-square" style="color:green; font-size:20px;"></i>';
+                } else {
+                    $b = '<i class="fa fa-square" style="color:grey; font-size:20px;"></i>';
+                }
+
+                return $a.'&nbsp;'.$b;
+            })
+            ->rawColumns(['status'])
             ->toJson();
     }
 
