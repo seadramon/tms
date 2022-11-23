@@ -102,7 +102,12 @@
 <script type="text/javascript">
 
 $( document ).ready(function() {	
-	$("#daterange").daterangepicker();
+	$("#daterange").daterangepicker({
+		locale: {
+            format: 'DD-MM-YYYY'
+		}
+	});
+	
 
 	$(".select2spprb").select2({
 		ajax: {
@@ -180,5 +185,11 @@ $( document ).ready(function() {
 		})
 	});
 });
+function sdSaatIni(vol, urutan) {
+	let saatIni = $("#id-saatini-" + urutan).val();
+	let hitungan = parseInt(vol) + parseInt(saatIni);
+
+	$("#id-sdsaatini-" + urutan).val(hitungan);
+}
 </script>
 @endsection

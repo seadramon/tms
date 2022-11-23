@@ -194,17 +194,3 @@
 			</div>	
 		</div>
 </div>
-<script type="text/javascript">
-	$("#daterange").daterangepicker({
-		locale: {
-            format: 'DD-MM-YYYY'
-		}
-	});
-	
-	function sdSaatIni(vol, urutan) {
-		let saatIni = $("#id-saatini-" + urutan).val();
-		let hitungan = parseInt(vol) + parseInt(saatIni);
-	
-		$("#id-sdsaatini-" + urutan).val(hitungan);
-	}
-</script>
