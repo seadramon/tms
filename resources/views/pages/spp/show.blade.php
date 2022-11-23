@@ -272,7 +272,7 @@ var KTDatatablesServerSide = function () {
 			language: {
 				lengthMenu: "Show _MENU_",
 			},
-			dom: 'Bfrtip',
+			dom: 'lBfrtip',
             searchDelay: 500,
             processing: true,
             serverSide: true,
@@ -314,7 +314,7 @@ var KTDatatablesServerSide = function () {
 			language: {
 				lengthMenu: "Show _MENU_",
 			},
-			dom: 'Bfrtip',
+			dom: 'lBfrtip',
             searchDelay: 500,
             processing: true,
             serverSide: true,
