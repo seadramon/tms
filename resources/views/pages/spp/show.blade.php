@@ -1,6 +1,45 @@
 @extends('layout.layout2')
 @section('css')
-<style type="text/css">
+<link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css"/>
+<style>
+	.custom-form {
+		display: flex;
+	}
+	.custom-label {
+		display: flex; 
+		align-items: center;
+		margin-bottom: 0px;
+	}
+	.form-group {
+        margin-bottom: 5px;
+    }
+
+    .dt-buttons {
+        float: right;
+        display: block;
+    }
+
+    p {
+        display: inline;
+        font-weight: bold;
+    }
+
+    .box2-style1 {
+        font-size: 60px;
+    }
+
+    .box2-style2 {
+        font-size: 30px;
+    }
+
+    .box2-style3 {
+        font-size: 15px;
+    }
+
+    .box2-style4 {
+        font-size: 15px;
+        font-weight: normal;
+    }
 </style>
 @endsection
 
@@ -84,7 +123,6 @@
 @endsection
 @section('css')
 <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css"/>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0f2vYkUlCd6XCyu17DBElvuxyf_4quCU&libraries=places&callback=initMap&language=id"></script>
 <style>
 	.custom-form {
 		display: flex;
@@ -97,6 +135,7 @@
 </style>
 @endsection
 @section('js')
+<script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <script type="text/javascript">
 
 $( document ).ready(function() {	
@@ -217,6 +256,152 @@ $(document).ready(function(){
         $(this).parent().parent().parent().remove();
     });
 });
+
+"use strict";
+
+// Class definition
+var KTDatatablesServerSide = function () {
+    // Shared variables
+    var table;
+    var dt;
+    var filterPayment;
+
+    // Private functions SPPRB
+    var initDatatable = function () {
+        dt = $("#tabel_spprb").DataTable({
+			language: {
+				lengthMenu: "Show _MENU_",
+			},
+			dom: 'Bfrtip',
+            searchDelay: 500,
+            processing: true,
+            serverSide: true,
+            order: [[0, 'desc']],
+            stateSave: true,
+            searching: false,
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: 'Export Excel',
+                    className: 'btn-success',
+                    action: exportDatatables
+                },
+                {
+                    extend: 'pdf',
+                    text: 'Export PDF',
+                    className: 'btn-danger',
+                    action: exportDatatables
+                }
+            ],
+            ajax: "{{ route('spp.data-spprb') }}" + '?no_npp=' + "{{ $no_npp }}",
+            columns: [
+                {data: 'spprblast', defaultContent: '-'},
+                {data: 'pat.ket', defaultContent: '-'},
+                {data: 'produk.tipe', defaultContent: '-'},
+                {data: 'kd_produk', defaultContent: '-'},
+                {data: 'jadwal1', defaultContent: '-'},
+                {data: 'jadwal2', defaultContent: '-'},
+                {data: 'vol_spprb', defaultContent: '-'},
+            ],
+        });
+
+        table = dt.$;
+    }
+
+    // Private functions SP3
+    var initDatatableAngkutan = function () {
+        dtAngkutan = $("#tabel_angkutan").DataTable({
+			language: {
+				lengthMenu: "Show _MENU_",
+			},
+			dom: 'Bfrtip',
+            searchDelay: 500,
+            processing: true,
+            serverSide: true,
+            order: [[0, 'desc']],
+            stateSave: true,
+            searching: false,
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: 'Export Excel',
+                    className: 'btn-success',
+                    action: exportDatatables
+                },
+                {
+                    extend: 'pdf',
+                    text: 'Export PDF',
+                    className: 'btn-danger',
+                    action: exportDatatables
+                }
+            ],
+            ajax: "{{ route('spp.data-angkutan') }}" + '?noSppb=' + "{{ $noSppb }}",
+            columns: [
+                {data: 'no_sp3', defaultContent: '-'},
+                {data: 'vendorname', defaultContent: '-'},
+                {data: 'volakhir', defaultContent: '-'},
+                {data: 'voltonakhir', defaultContent: '-'},
+                {data: 'status', defaultContent: '-'},
+            ],
+        });
+
+        table = dtAngkutan.n$;
+    }
+    
+    // Public methods
+    return {
+        init: function () {
+            initDatatable();
+            initDatatableAngkutan();
+        }
+    }
+}();
+
+// On document ready
+KTUtil.onDOMContentLoaded(function () {
+	console.log('test');
+    KTDatatablesServerSide.init();
+});
+
+function exportDatatables(e, dt, button, config) {
+        var self = this;
+        var oldStart = dt.settings()[0]._iDisplayStart;
+
+        dt.one('preXhr', function (e, s, data) {
+            // Just this once, load all data from the server...
+            data.start = 0;
+            data.length = 2147483647;
+
+            dt.one('preDraw', function (e, settings) {
+                // Call the original action function
+                if (button[0].className.indexOf('buttons-excel') >= 0) {
+                    $.fn.dataTable.ext.buttons.excelHtml5.available(dt, config) ?
+                        $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config) :
+                        $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
+                } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
+                    $.fn.dataTable.ext.buttons.pdfHtml5.available(dt, config) ?
+                        $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button, config) :
+                        $.fn.dataTable.ext.buttons.pdfFlash.action.call(self, e, dt, button, config);
+                }
+
+                dt.one('preXhr', function (e, s, data) {
+                    // DataTables thinks the first item displayed is index 0, but we're not drawing that.
+                    // Set the property to what it was before exporting.
+                    settings._iDisplayStart = oldStart;
+                    data.start = oldStart;
+                });
+
+                // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
+                setTimeout(dt.ajax.reload, 0);
+                
+                // Prevent rendering of the full data to the DOM
+                return false;
+            });
+        });
+
+        // Requery the server with the new one-time export settings
+        dt.ajax.reload();
+    }
 </script>
 
 <script type="text/javascript">
@@ -397,9 +582,5 @@ function generate_map(increment) {
     window.initMap = initMap;
 }
 </script>
-
-
-
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0f2vYkUlCd6XCyu17DBElvuxyf_4quCU&libraries=places&callback=initMap&language=id"></script>
-
 @endsection
