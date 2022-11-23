@@ -66,6 +66,9 @@ class SpmController extends Controller
     public function data(Request $request)
     {
         $query = SpmH::with(['sppb', 'vendornya']);
+        if(Auth::check()){
+            $query->whereVendorId(Auth::user()->vendor_id);
+        }
         return DataTables::eloquent($query)
             ->editColumn('tgl_spm', function ($model) {
                 return date('d-m-Y', strtotime($model->tgl_spm));

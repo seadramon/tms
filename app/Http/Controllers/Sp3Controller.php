@@ -95,6 +95,10 @@ class Sp3Controller extends Controller
         if($request->periode){
             $query->whereYear('tgl_sp3', $request->periode);
         }
+        
+        if(Auth::check()){
+            $query->whereVendorId(Auth::user()->vendor_id);
+        }
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_sp3', function ($model) {

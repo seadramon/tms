@@ -27,6 +27,11 @@ class SptbController extends Controller
     public function data()
     {
         $query = SptbH::with(['spmh', 'npp'])->select('*');
+        if(Auth::check()){
+            $query->whereHas('spmh', function($sql){
+                $sql->whereVendorId(Auth::user()->vendor_id);
+            });
+        }
 
         return DataTables::eloquent($query)
             ->editColumn('tgl_sptb', function ($model) {
