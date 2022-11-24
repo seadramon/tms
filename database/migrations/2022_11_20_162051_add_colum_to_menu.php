@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('menus', function (Blueprint $table) {
+        Schema::table('tms_menus', function (Blueprint $table) {
             $table->text('action')->nullable();
         });
-        Schema::table('role_menus', function (Blueprint $table) {
+        Schema::table('tms_role_menus', function (Blueprint $table) {
             $table->text('action_menu')->nullable();
         });
         Schema::table('tms_users', function (Blueprint $table) {
@@ -34,10 +34,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('menus', function (Blueprint $table) {
+        Schema::table('tms_menus', function (Blueprint $table) {
             $table->dropColumn(['action']);
         });
-        Schema::table('role_menus', function (Blueprint $table) {
+        Schema::table('tms_role_menus', function (Blueprint $table) {
             $table->dropColumn(['action_menu']);
         });
         Schema::table('tms_users', function (Blueprint $table) {
