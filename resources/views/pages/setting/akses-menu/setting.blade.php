@@ -104,7 +104,7 @@
                                 role_id : $('#role_id').val(),
                             },
                         success: function(result) {
-                            swal("Menu Successfully Update");
+                            // swal("Menu Successfully Update");
                             flasher.success("Data telah berhasil ditambahkan!");
                             setTimeout(function() { 
                                 window.location=window.location;

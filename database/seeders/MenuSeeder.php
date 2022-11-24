@@ -82,6 +82,7 @@ class MenuSeeder extends Seeder
                 'level' => '0',
                 'sequence' => '0500',
                 'action' => [
+                    'create',
                     'view',
                     'edit',
                 ]

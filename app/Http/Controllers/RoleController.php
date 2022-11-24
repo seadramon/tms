@@ -191,9 +191,10 @@ class RoleController extends Controller
         }
         foreach ($actions as $key => $rows) {
             $action_menu = collect($rows)->map(function($item){ return explode("|", $item)[1]; });
-            $input = new RoleMenu;
-            $input->role_id     = $id;
-            $input->menu_id     = $key;
+            $input = RoleMenu::firstOrNew([
+                'role_id' => $id,
+                'menu_id'  => $key
+            ]);
             $input->action_menu = $action_menu->all();
             $input->save();
         }                       
