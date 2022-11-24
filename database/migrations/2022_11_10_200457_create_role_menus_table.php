@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('role_menus', function (Blueprint $table) {
+        Schema::create('tms_role_menus', function (Blueprint $table) {
             $table->id();
             $table->foreignId('role_id')->constrained();
             $table->foreignId('menu_id')->constrained();
@@ -28,7 +28,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_menus');
+        Schema::dropIfExists('tms_role_menus');
     }
 };
 

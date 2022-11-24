@@ -10,6 +10,9 @@ class Menu extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = "tms_menus";
+
+
     protected $casts = [
         'action' => 'array',
     ];

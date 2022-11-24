@@ -9,6 +9,9 @@ class RoleMenu extends Model
 {
     use HasFactory;
 
+    protected $table = "tms_role_menus";
+
+
     protected $casts = [
         'action_menu' => 'array',
     ];

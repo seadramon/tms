@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('tms_menus', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->nullable();
             $table->string('route_name', 50)->nullable();
@@ -33,7 +33,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('tms_menus');
     }
 };
 

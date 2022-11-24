@@ -10,6 +10,9 @@ class Role extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = "tms_roles";
+
+
     public function menus()
     {
         return $this->belongsToMany(Menu::class, 'role_menus');

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('tms_roles', function (Blueprint $table) {
             $table->id();
             $table->string('grpid', 50)->nullable();
             $table->string('name', 50)->nullable();
@@ -29,7 +29,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('tms_roles');
     }
 };
 
