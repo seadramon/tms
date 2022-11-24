@@ -16,7 +16,7 @@
         @foreach ($listData as $key => $data)
             <tr>
                 <td>
-                    {{ sprintf('%03s', ((int) $key+1)) }}
+                    {{ ($key+1) }}
                     <input type="hidden" name="key_harsat[{{$index}}][]" value="{{ $key }}">
                 </td>
                 <td>

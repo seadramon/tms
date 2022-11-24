@@ -152,7 +152,7 @@
                                             @foreach ($pad->pad2 as $key2 => $pad2)
                                                 <tr>
                                                     <td>
-                                                        {{ sprintf('%03s', ((int) $key2+1)) }}
+                                                        {{ ($key2+1) }}
                                                         <input type="hidden" name="key_harsat[{{ ($key+1) }}][]" value="{{ $key2 }}">
                                                     </td>
                                                     <td>

@@ -270,16 +270,16 @@
                         <tr>
                             <td class="text-center">` + element.rn + `</td>
                             <td>` + element.nama + `</td>
-                            <td class="text-center">` + element.total + `</td>
+                            <td class="text-center">` + $.number( element.total, 2 ) + `</td>
                         </tr>
                     `); 
                 });
 
                 $("#box2-content1").html(result.box2[0]);
                 $("#box2-content2").html('%');
-                $("#box2-content3").html(result.box2[1] + ' SPtB');
+                $("#box2-content3").html($.number( result.box2[1], 2 ) + ' SPtB');
                 $("#box2-content4").html('/');
-                $("#box2-content5").html(result.box2[2] + ' SPM');
+                $("#box2-content5").html($.number( result.box2[2], 2 ) + ' SPM');
 
                 $("#box3-content").html(`
                     <tr>

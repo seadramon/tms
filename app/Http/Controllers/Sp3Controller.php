@@ -82,7 +82,7 @@ class Sp3Controller extends Controller
     public function data(Request $request)
     {
         $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
-        $query = Sp3::with('vendor', 'sp3D')
+        $query = Sp3::with('vendor', 'sp3D', 'unitkerja')
             ->join(DB::raw($joinQuery), function($join) {
                 $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
             })
@@ -97,7 +97,7 @@ class Sp3Controller extends Controller
         }
         
         if(Auth::check()){
-            $query->whereVendorId(Auth::user()->vendor_id);
+            $query->whereVendorId(Auth::user()->vendor_id)->where('app1', 1);
         }
 
         return DataTables::eloquent($query)
@@ -114,6 +114,13 @@ class Sp3Controller extends Controller
                     }
                     return $teks;
                 })
+                ->addColumn('custom', function ($model) {
+                    if(Auth::check()){
+                        return $model->unitkerja->ket;
+                    }else{
+                        return $model->vendor->nama;
+                    }
+                })
                 ->addColumn('progress_vol', function ($model) {
                     $vol_sptb = SptbD::whereHas('sptbh',function($sql) use ($model) {
                         $sql->where('no_npp', $model->no_npp);
@@ -127,7 +134,6 @@ class Sp3Controller extends Controller
                         $vol = 100;
                         $badge = 'success';
                     }elseif($vol >= 75){
-                        $vol = 100;
                         $badge = 'warning';
                     }else{
                         $badge = 'dark';
@@ -169,7 +175,7 @@ class Sp3Controller extends Controller
 
                     return $edit;
                 })
-                ->rawColumns(['menu', 'approval', 'progress_vol'])
+                ->rawColumns(['menu', 'approval', 'progress_vol', 'custom'])
                 ->toJson();
     }
 
@@ -444,7 +450,7 @@ class Sp3Controller extends Controller
             for($i=0; $i < count($request->dokumen_asli); $i++){
                 $sp3Dokumen = new Sp3Dokumen();
 
-                $sp3Dokumen->no_sp3 = $newNoSp3;
+                $sp3Dokumen->no_sp3 = $noSp3;
                 $sp3Dokumen->dok_id = $i + 1;
                 $sp3Dokumen->asli = $request->dokumen_asli[$i];
                 $sp3Dokumen->copy = $request->dokumen_copy[$i];
@@ -469,7 +475,7 @@ class Sp3Controller extends Controller
     {
         $noSp3 = str_replace('|', '/', $noSp3);
         
-        $data = Sp3::find($noSp3);
+        $data = Sp3::with('sp3D')->find($noSp3);
 
         $detailPesanan = MonOp::with(['produk', 'sp3D' => function($sql) use ($noSp3) {
                 $sql->whereNotIn('no_sp3', [$noSp3]);
@@ -570,6 +576,15 @@ class Sp3Controller extends Controller
 
         $isAmandemen = str_contains(request()->url(), 'amandemen');
 
+        $sptbd = SptbD::whereHas('sptbh', function($sql) use ($data){
+                $sql->whereNoNpp($data->no_npp);
+                $sql->whereHas('spmh', function($sql1) use ($data){
+                    $sql1->whereVendorId($data->vendor_id);
+                });
+            })
+            ->get()
+            ->groupBy('kd_produk');
+
         return view('pages.sp3.show', compact(
             'data',
             'detailPesanan',
@@ -586,6 +601,7 @@ class Sp3Controller extends Controller
             'ppn',
             'pph',
             'sp3D',
+            'sptbd',
             'sat_harsat',
             'listPic',
             'detailPekerjaan',
@@ -704,6 +720,15 @@ class Sp3Controller extends Controller
             ->pluck('name', 'kd_material')
             ->toArray();
 
+        $sptbd = SptbD::whereHas('sptbh', function($sql) use ($data){
+                $sql->whereNoNpp($data->no_npp);
+                $sql->whereHas('spmh', function($sql1) use ($data){
+                    $sql1->whereVendorId($data->vendor_id);
+                });
+            })
+            ->get()
+            ->groupBy('kd_produk');
+
         return view('pages.sp3.edit', compact(
             'data',
             'detailPesanan',
@@ -720,6 +745,7 @@ class Sp3Controller extends Controller
             'ppn',
             'pph',
             'sp3D',
+            'sptbd',
             'sat_harsat',
             'listPic',
             'detailPekerjaan',
@@ -923,9 +949,9 @@ class Sp3Controller extends Controller
             $data->app1_date = date('Y-m-d H:i:s');
         }else{
             $data->app2 = 1;
-            $data->app2_empid = session('TMP_NIP') ?? '12345';
-            $data->app2_jbt = session('TMP_KDJBT') ?? '12345';
+            $data->app2_jbt = Auth::user()->position ?? '';
             $data->app2_date = date('Y-m-d H:i:s');
+            $data->app2_name = Auth::user()->name ?? '';
         }
 
         $data->save();

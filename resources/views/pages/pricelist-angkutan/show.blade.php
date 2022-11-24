@@ -121,7 +121,7 @@
                                             @foreach ($pad->pad2 as $key2 => $pad2)
                                                 <tr>
                                                     <td>
-                                                        {{ sprintf('%03s', ((int) $key2+1)) }}
+                                                        {{ ($key2+1) }}
                                                         <input type="hidden" name="key_harsat[{{($key+1)}}][]" value="{{ $key2 }}">
                                                     </td>
                                                     <td>
@@ -130,11 +130,11 @@
                                                         <input type="hidden" name="range_max[{{($key+1)}}][]" value="{{ $pad2->range_max }}">
                                                     </td>
                                                     <td>
-                                                        {{ $pad2->h_pusat }}
+                                                        {{ number_format($pad2->h_pusat) }}
                                                         <input type="hidden" name="h_pusat[{{($key+1)}}][]" value="{{ $pad2->h_pusat }}">
                                                     </td>
                                                     <td>
-                                                        {{ $pad2->h_final }}
+                                                        {{ number_format($pad2->h_final) }}
                                                         <input type="hidden" name="h_final[{{($key+1)}}][]" value="{{ $pad2->h_final }}">
                                                     </td>
                                                 </tr>

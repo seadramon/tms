@@ -213,36 +213,49 @@ class SppController extends Controller
                 $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
             })
             ->join('vendor', 'vendor.vendor_id', '=', 'sp3_h.vendor_id')
+            ->where('sppb_h.no_sppb', $noSppb)
             ->select('spprb_h.no_spprb', 'sp3_h.no_sp3', 'sp3_h.app1', 'sp3_h.app2', 'sp3_h.st_wf', 'vendor.nama as vendorname', DB::raw("(SELECT sum(vol_akhir) FROM sp3_d WHERE NO_SP3 = sp3_h.NO_SP3) AS volakhir"), DB::raw("(SELECT sum(VOL_TON_AKHIR) FROM sp3_d WHERE NO_SP3 = sp3_h.NO_SP3) AS voltonakhir"));
 
-        if (!empty($noNpp)) {
-            $query->where('sppb_h.no_sppb', $noSppb);
-        }
-
         return DataTables::eloquent($query)
-            ->addColumn('status', function ($model) {
-                $html = "";
-                switch (true) {
-                    case $model->st_wf == 0:
-                        $a = '<i class="fa fa-square" style="color:yellow; font-size:20px;"></i>';
-                        break;
-                    case $model->st_wf == 1 && $model->app1 == 0:
-                        $a = '<i class="fa fa-square" style="color:orange; font-size:20px;"></i>';
-                        break;
-                    case $model->st_wf == 1 && $model->app1 == 1:
-                        $a = '<i class="fa fa-square" style="color:green; font-size:20px;"></i>';
-                        break;
-                    
-                }
-
-                if ($model->app2 == 1) {
-                    $b = '<i class="fa fa-square" style="color:green; font-size:20px;"></i>';
-                } else {
-                    $b = '<i class="fa fa-square" style="color:grey; font-size:20px;"></i>';
-                }
-
-                return $a.'&nbsp;'.$b;
+            ->editColumn('volakhir', function ($model) {
+                return number_format($model->volakhir, 2);
             })
+            ->editColumn('voltonakhir', function ($model) {
+                return number_format($model->voltonakhir, 2);
+            })
+            ->addColumn('status', function ($model) {
+                $teks = '';
+                if($model->app1 == 1){
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
+                }
+                if($model->app2 == 1){
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MDiv&nbsp;<i class="fas fa-check text-success"></i></span>';
+                }
+                return $teks;
+            })
+            // ->addColumn('status', function ($model) {
+            //     $html = "";
+            //     switch (true) {
+            //         case $model->st_wf == 0:
+            //             $a = '<i class="fa fa-square" style="color:yellow; font-size:20px;"></i>';
+            //             break;
+            //         case $model->st_wf == 1 && $model->app1 == 0:
+            //             $a = '<i class="fa fa-square" style="color:orange; font-size:20px;"></i>';
+            //             break;
+            //         case $model->st_wf == 1 && $model->app1 == 1:
+            //             $a = '<i class="fa fa-square" style="color:green; font-size:20px;"></i>';
+            //             break;
+                    
+            //     }
+
+            //     if ($model->app2 == 1) {
+            //         $b = '<i class="fa fa-square" style="color:green; font-size:20px;"></i>';
+            //     } else {
+            //         $b = '<i class="fa fa-square" style="color:grey; font-size:20px;"></i>';
+            //     }
+
+            //     return $a.'&nbsp;'.$b;
+            // })
             ->rawColumns(['status'])
             ->toJson();
     }

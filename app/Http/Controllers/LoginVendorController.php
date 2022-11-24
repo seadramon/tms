@@ -61,9 +61,10 @@ class LoginVendorController extends Controller
     					'user_id' => $data->user_id,
     					'trader_id' => $data->trader_id,
     					'vendor_id' => $trader->trader_id ?? null,
+    					'name' => $trader->pimpinan_nama ?? null,
     					'fullname' => $data->fullname,
     					'phone' => $data->phone,
-    					'position' => $data->position
+    					'position' => $trader->pimpinan_jabatan ?? null
     				]
     			);
 

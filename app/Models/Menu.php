@@ -24,7 +24,7 @@ class Menu extends Model
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'role_menus');
+        return $this->belongsToMany(Role::class, 'tms_role_menus');
     }
 
     public function childmenus()

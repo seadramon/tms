@@ -263,6 +263,7 @@
 		<!--end::Vendors Javascript-->
 		<!--begin::Custom Javascript(used by this page)-->
 		<script type="text/javascript" src="{{asset('js/lazy/jquery.lazy.min.js')}}"></script>
+		<script type="text/javascript" src="{{asset('js/number/jquery-number.js')}}"></script>
 		<!--end::Custom Javascript-->
 		<script type="text/javascript">
 			$(document).on('keyup', '.decimal', function(){

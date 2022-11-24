@@ -190,6 +190,41 @@
         @php
             $readonly = $sat_harsat != 'volume';
         @endphp
+        @if ($isAmandemen)
+            <div class="separator separator-dashed border-primary my-10"></div>
+            <h3>Volume Distribusi</h3>
+            <div class="hover-scroll-overlay-y h-400px">
+                <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
+                            <th>Volume SP3</th>
+                            <th>Volume Distribusi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($detailPesanan as $pesanan)
+                            @php
+                                $pesananVolBtg = $pesanan->vol_konfirmasi ?? 0;
+                                $pesananVolTon = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
+                                $sp3dVolBtg    = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
+                                $sp3dVolTon    = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;
+                                $sisaVolBtg    = $pesananVolBtg - $sp3dVolBtg;
+                                $sisaVolTon    = $pesananVolTon - $sp3dVolTon;
+                                $distribusi    = ($sptbd[$pesanan->kd_produk_konfirmasi] ?? null) ? $sptbd[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->vol; }) : 0;
+                            @endphp
+                            
+                            <tr>
+                                <td style="text-align: left">{{ $pesanan->produk->tipe }} / {{$pesanan->kd_produk_konfirmasi}}</td>
+                                
+                                <td>{{ nominal($pesananVolBtg) }}</td>
+                                <td>{{ nominal($distribusi) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
         <div class="separator separator-dashed border-primary my-10"></div>
         <h3>Detail Pekerjaan</h3>
         {{-- <table class="table table-row-bordered text-center">

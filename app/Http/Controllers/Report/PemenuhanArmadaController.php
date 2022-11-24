@@ -204,7 +204,8 @@ class PemenuhanArmadaController extends Controller
         $baseQuery = SpmH::leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
             ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol')
             ->leftJoin('spm_d', 'spm_d.no_spm', '=', 'spm_h.no_spm')
-            ->leftJoin('vendor', 'vendor.vendor_id', '=', 'spm_h.vendor_id');
+            ->leftJoin('vendor', 'vendor.vendor_id', '=', 'spm_h.vendor_id')
+            ->whereNotNull('spm_d.vol');
 
         if($request->kd_pat){
             $baseQuery->where('sptb_h.kd_pat', $request->kd_pat);
