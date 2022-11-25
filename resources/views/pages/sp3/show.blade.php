@@ -283,21 +283,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $sp3d_ = $detailPekerjaan->groupBy('kd_produk')
+                                    @endphp
                                     @foreach($detailPesanan as $pesanan)
                                         @php
-                                            $pesananVolBtg = $pesanan->vol_konfirmasi ?? 0;
-                                            $pesananVolTon = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
-                                            $sp3dVolBtg    = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
-                                            $sp3dVolTon    = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;
-                                            $sisaVolBtg    = $pesananVolBtg - $sp3dVolBtg;
-                                            $sisaVolTon    = $pesananVolTon - $sp3dVolTon;
-                                            $distribusi    = ($sptbd[$pesanan->kd_produk_konfirmasi] ?? null) ? $sptbd[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->vol; }) : 0;
+                                            $volsp3_    = $sp3d_[$pesanan->kd_produk_konfirmasi]->sum('vol_akhir');
+                                            $distribusi = ($sptbd[$pesanan->kd_produk_konfirmasi] ?? null) ? $sptbd[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->vol; }) : 0;
                                         @endphp
                                         
                                         <tr>
                                             <td style="text-align: left">{{ $pesanan->produk->tipe }} / {{$pesanan->kd_produk_konfirmasi}}</td>
                                             
-                                            <td>{{ nominal($sp3dVolBtg) }}</td>
+                                            <td>{{ nominal($volsp3_) }}</td>
                                             <td>{{ nominal($distribusi) }}</td>
                                         </tr>
                                     @endforeach
