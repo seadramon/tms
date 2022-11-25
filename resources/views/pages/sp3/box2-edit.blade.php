@@ -94,7 +94,7 @@
                 <label class="form-label">Tanggal</label>
                 <div class="col-lg-12">
                     <div class="input-group date">
-                        {!! Form::text('tgl_sp3', $data->tgl_sp3 ? date('d-m-Y', strtotime($data->tgl_sp3)), ['class'=>'form-control datepicker', 'id'=>'tgl_sp3']) !!}
+                        {!! Form::text('tgl_sp3', $data->tgl_sp3 ? date('d-m-Y', strtotime($data->tgl_sp3)) : null, ['class'=>'form-control datepicker', 'id'=>'tgl_sp3']) !!}
                         <div class="input-group-append">
                             <span class="input-group-text" style="display: block">
                                 <i class="la la-calendar-check-o"></i>
