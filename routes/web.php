@@ -18,6 +18,7 @@ use App\Http\Controllers\Report\PemenuhanArmadaController;
 use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaController;
 use App\Http\Controllers\LoginVendorController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 use App\Models\User;
@@ -183,6 +184,10 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
         Route::post('/tree-data', 'tree_data')->name('tree.data');
         Route::get('/delete-setting/{id}', 'delete_setting')->name('delete.setting');
     });
+
+	Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function(){
+		Route::get('/', [DashboardController::class, 'index'])->name('index');
+	});
 });
 
 Route::get('logout',	[LoginVendorController::class, 'signOut'])->name('logout');
