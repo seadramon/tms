@@ -116,9 +116,9 @@ class Sp3Controller extends Controller
                 })
                 ->addColumn('custom', function ($model) {
                     if(Auth::check()){
-                        return $model->unitkerja->ket;
+                        return $model->unitkerja->ket ?? '-';
                     }else{
-                        return $model->vendor->nama;
+                        return $model->vendor->nama ?? '-';
                     }
                 })
                 ->addColumn('progress_vol', function ($model) {

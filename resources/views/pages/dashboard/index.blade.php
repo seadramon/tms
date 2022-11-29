@@ -9,20 +9,18 @@
 @section('content')
 <div id="kt_content_container" class="container-xxl">
     <div class="row g-5 g-xl-8">
-        <div class="col-12 mb-md-5 mb-xl-10">
+        <div class="col-4 mb-md-2 mb-xl-2">
             <div class="card shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">Dashboard</h3>
+                    <h3 class="card-title">SP3 / SPK</h3>
                 </div>
             
                 <div class="card-body">
                     <div class="box-ui-loading-box-data row">
-                        <div id="box1-container" class="col-lg-4">
-                            <h4>SP3 / SPK</h4>
-            
+                        <div id="box1-container" class="col-12">
                             <table id="tabel_box1" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                                 <tr>
-                                    <th>Draft</th>
+                                    <th style="font-size: 20px; font-weight: bold">Draft</th>
                                     <th style="font-size: 36px;">3</th>
                                 </tr>
 
@@ -42,13 +40,22 @@
                                 </tr>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 mb-md-2 mb-xl-2">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title">SPP</h3>
+                </div>
             
-                        <div id="box2-container" class="col-lg-4">
-                            <h4>SPP</h4>
-            
-                            <table id="tabel_box1" class="table table-row-bordered gy-5" style="vertical-align: middle;">
+                <div class="card-body">
+                    <div class="box-ui-loading-box-data row">
+                        <div id="box2-container" class="col-12">
+                            <table id="tabel_box2" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                                 <tr>
-                                    <th>Belum Verifikasi</th>
+                                    <th style="font-size: 20px; font-weight: bold">Belum Verifikasi</th>
                                     <th style="font-size: 36px;">7</th>
                                 </tr>
 
@@ -61,15 +68,28 @@
                                     <th>Selesai</th>
                                     <td>29</td>
                                 </tr>
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <td>&nbsp;</td>
+                                </tr>
                             </table>
                         </div>
-
-                        <div id="box3-container" class="col-lg-4">
-                            <h4>SPM</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 mb-md-2 mb-xl-2">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title">SPM</h3>
+                </div>
             
-                            <table id="tabel_box1" class="table table-row-bordered gy-5" style="vertical-align: middle;">
+                <div class="card-body">
+                    <div class="box-ui-loading-box-data row">
+                        <div id="box3-container" class="col-12">
+                            <table id="tabel_box3" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                                 <tr>
-                                    <th>Belum Terkonfirmasi</th>
+                                    <th style="font-size: 20px; font-weight: bold">Belum Terkonfirmasi</th>
                                     <th style="font-size: 36px;">45</th>
                                 </tr>
 
@@ -81,6 +101,60 @@
                                 <tr>
                                     <th>Terbit eSPtB</th>
                                     <td>153</td>
+                                </tr>
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 mb-md-2 mb-xl-2">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title">e-SPTB</h3>
+                </div>
+            
+                <div class="card-body">
+                    <div class="box-ui-loading-box-data row">
+                        <div id="box3-container" class="col-12">
+                            <table id="tabel_box3" class="table table-row-bordered gy-5" style="vertical-align: middle;">
+                                <tr>
+                                    <th style="font-size: 20px; font-weight: bold">Proses Pengiriman</th>
+                                    <th style="font-size: 36px;">45</th>
+                                </tr>
+
+                                <tr>
+                                    <th>Sampai Tujuan</th>
+                                    <td>7</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 mb-md-2 mb-xl-2">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title">Potensi Kebutuhan</h3>
+                </div>
+            
+                <div class="card-body">
+                    <div class="box-ui-loading-box-data row">
+                        <div id="box3-container" class="col-12">
+                            <table id="tabel_box3" class="table table-row-bordered gy-5" style="vertical-align: middle;">
+                                <tr>
+                                    <th style="font-size: 20px; font-weight: bold">Belum diset</th>
+                                    <th style="font-size: 36px;">45</th>
+                                </tr>
+
+                                <tr>
+                                    <th>Aktif</th>
+                                    <td>7</td>
                                 </tr>
                             </table>
                         </div>

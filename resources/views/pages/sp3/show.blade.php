@@ -288,7 +288,7 @@
                                     @endphp
                                     @foreach($detailPesanan as $pesanan)
                                         @php
-                                            $volsp3_    = $sp3d_[$pesanan->kd_produk_konfirmasi]->sum('vol_akhir');
+                                            $volsp3_    = ($sp3d_[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3d_[$pesanan->kd_produk_konfirmasi]->sum('vol_akhir') : 0;
                                             $distribusi = ($sptbd[$pesanan->kd_produk_konfirmasi] ?? null) ? $sptbd[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->vol; }) : 0;
                                         @endphp
                                         

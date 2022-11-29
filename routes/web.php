@@ -38,7 +38,7 @@ use App\Models\User;
 Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::get('/', function () {
     	// dd(session()->all());
-        return view('testing');
+        return redirect()->route('dashboard.index');
     });
 
 	Route::group(['prefix' => '/sp3', 'as' => 'sp3.'], function(){

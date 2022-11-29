@@ -18,6 +18,14 @@ class MenuSeeder extends Seeder
     {
         $menus = [
             [
+                'name' => 'Dashboard',
+                'route_name' => 'dashboard.index',
+                'icon' => 'fas fa-atom fs-3',
+                'level' => '0',
+                'sequence' => '0050',
+                'action' => []
+            ],
+            [
                 'name' => 'SP3',
                 'route_name' => 'sp3.index',
                 'icon' => 'fas fa-atom fs-3',
