@@ -73,10 +73,10 @@
 									<!--begin::Info-->
 									<div class="flex-grow-1 me-2">
 										<!--begin::Username-->
-										<a href="#" class="text-white text-hover-primary fs-6 fw-bold">{{ session('TMP_FULLNAME') ?? 'Auth::user()->fullname' }}</a>
+										<a href="#" class="text-white text-hover-primary fs-6 fw-bold">{{ session('TMP_FULLNAME') ?? Auth::user()->fullname }}</a>
 										<!--end::Username-->
 										<!--begin::Description-->
-										<span class="text-gray-600 fw-semibold d-block fs-8 mb-1" style="width: 100px; word-wrap: break-word;">{{ session('TMP_WILAYAH') ?? 'Auth::user()->username' }}</span>
+										<span class="text-gray-600 fw-semibold d-block fs-8 mb-1" style="width: 100px; word-wrap: break-word;">{{ session('TMP_WILAYAH') ?? Auth::user()->username }}</span>
 										<!--end::Description-->
 										<!--begin::Label-->
 										<div class="d-flex align-items-center text-success fs-9">
