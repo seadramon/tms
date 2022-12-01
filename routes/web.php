@@ -185,9 +185,9 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
         Route::get('/delete-setting/{id}', 'delete_setting')->name('delete.setting');
     });
 
-	Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function(){
-		Route::get('/', [DashboardController::class, 'index'])->name('index');
-	});
+});
+Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function(){
+	Route::get('/', [DashboardController::class, 'index'])->name('index');
 });
 
 Route::get('logout',	[LoginVendorController::class, 'signOut'])->name('logout');
