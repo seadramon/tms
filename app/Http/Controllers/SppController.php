@@ -44,6 +44,11 @@ class SppController extends Controller
     public function data()
     {
         $query = SppbH::with(['spprb', 'detail'])->select('*');
+        if(!Auth::check() && session('TMP_KDWIL') != '0A'){
+			$query->whereHas('npp', function($sql){
+                $sql->where('kd_pat', session('TMP_KDWIL'));
+            });
+		}
 
         return DataTables::eloquent($query)
             ->editColumn('jadwal1', function ($model) {

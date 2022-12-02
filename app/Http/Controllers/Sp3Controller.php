@@ -35,9 +35,13 @@ class Sp3Controller extends Controller
         // return response()->json(json_decode(session('TMS_ACTION_MENU')));
         $labelSemua = ["" => "Semua"];
 
-        $pat = Pat::all()->pluck('ket', 'kd_pat')->toArray();
-        $pat = $labelSemua + $pat;
-
+        if(!Auth::check() && session('TMP_KDWIL') != '0A'){
+            $pat = Pat::where('kd_pat', session('TMP_KDWIL'))->get()->pluck('ket', 'kd_pat')->toArray();
+		}else{
+            $pat = Pat::all()->pluck('ket', 'kd_pat')->toArray();
+            $pat = $labelSemua + $pat;
+        }
+        
         $periode = [];
 
         for($i=0; $i<10; $i++){

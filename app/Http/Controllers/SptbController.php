@@ -31,6 +31,12 @@ class SptbController extends Controller
             $query->whereHas('spmh', function($sql){
                 $sql->whereVendorId(Auth::user()->vendor_id);
             });
+        }else{
+            if(session('TMP_KDWIL') != '0A'){
+                $query->whereHas('npp', function($sql){
+                    $sql->where('kd_pat', session('TMP_KDWIL'));
+                });
+            }
         }
 
         return DataTables::eloquent($query)
