@@ -21,17 +21,17 @@
                             <table id="tabel_box1" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                                 <tr>
                                     <th style="font-size: 20px; font-weight: bold">Draft</th>
-                                    <th style="font-size: 36px;">3</th>
+                                    <th style="font-size: 36px;">{{ $sp3Draft }}</th>
                                 </tr>
 
                                 <tr>
                                     <th>Belum Verifikasi</th>
-                                    <td>10</td>
+                                    <td>{{ $sp3BelumVerif }}</td>
                                 </tr>
 
                                 <tr>
                                     <th>Aktif</th>
-                                    <td>27</td>
+                                    <td>{{ $sp3Aktif }}</td>
                                 </tr>
                                 
                                 <tr>
@@ -61,12 +61,12 @@
 
                                 <tr>
                                     <th>Aktif</th>
-                                    <td>34</td>
+                                    <td>{{ $sppAktif }}</td>
                                 </tr>
                                 
                                 <tr>
                                     <th>Selesai</th>
-                                    <td>29</td>
+                                    <td>{{ $sppSelesai }}</td>
                                 </tr>
                                 <tr>
                                     <th>&nbsp;</th>
@@ -95,12 +95,12 @@
 
                                 <tr>
                                     <th>On Progress</th>
-                                    <td>7</td>
+                                    <td>{{ $spmOnProgress }}</td>
                                 </tr>
                                 
                                 <tr>
                                     <th>Terbit eSPtB</th>
-                                    <td>153</td>
+                                    <td>{{ $sptbOnTerbit }}</td>
                                 </tr>
                                 <tr>
                                     <th>&nbsp;</th>
