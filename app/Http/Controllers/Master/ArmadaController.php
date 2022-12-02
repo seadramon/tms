@@ -283,6 +283,10 @@ class ArmadaController extends Controller
                 'tgl_pajak'         => 'required',
             ])->validate();
 
+            Armada::where('driver_id', $request->driver_id)->get()->each(function($a){
+                $a->driver_id = null;
+                $a->save();
+            });
             $tr = TrMaterial::find($request->kd_armada);
             $armada = Armada::find($id);
             $armada->vendor_id = 'WBP004';

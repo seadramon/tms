@@ -21,22 +21,22 @@
                             <table id="tabel_box1" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                                 <tr>
                                     <th style="font-size: 20px; font-weight: bold">Draft</th>
-                                    <th style="font-size: 36px;">{{ $sp3Draft }}</th>
+                                    <th style="font-size: 36px;">{{ number_format($sp3Draft, 0) }}</th>
                                 </tr>
 
                                 <tr>
                                     <th>Belum Verifikasi</th>
-                                    <td>{{ $sp3BelumVerif }}</td>
+                                    <td>{{ number_format($sp3BelumVerif, 0) }}</td>
                                 </tr>
 
                                 <tr>
                                     <th>Aktif</th>
-                                    <td>{{ $sp3Aktif }}</td>
+                                    <td>{{ number_format($sp3Aktif, 0) }}</td>
                                 </tr>
                                 
                                 <tr>
                                     <th>Selesai</th>
-                                    <td>12</td>
+                                    <td>{{ number_format($sp3Selesai, 0) }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -56,17 +56,17 @@
                             <table id="tabel_box2" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                                 <tr>
                                     <th style="font-size: 20px; font-weight: bold">Belum Verifikasi</th>
-                                    <th style="font-size: 36px;">7</th>
+                                    <th style="font-size: 36px;">{{ number_format($spp1, 0) }}</th>
                                 </tr>
 
                                 <tr>
                                     <th>Aktif</th>
-                                    <td>{{ $sppAktif }}</td>
+                                    <td>{{ number_format($sppAktif, 0) }}</td>
                                 </tr>
                                 
                                 <tr>
                                     <th>Selesai</th>
-                                    <td>{{ $sppSelesai }}</td>
+                                    <td>{{ number_format($sppSelesai, 0) }}</td>
                                 </tr>
                                 <tr>
                                     <th>&nbsp;</th>
@@ -90,17 +90,17 @@
                             <table id="tabel_box3" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                                 <tr>
                                     <th style="font-size: 20px; font-weight: bold">Belum Terkonfirmasi</th>
-                                    <th style="font-size: 36px;">45</th>
+                                    <th style="font-size: 36px;">{{ number_format($spm1, 0) }}</th>
                                 </tr>
 
                                 <tr>
                                     <th>On Progress</th>
-                                    <td>{{ $spmOnProgress }}</td>
+                                    <td>{{ number_format($spmOnProgress, 0) }}</td>
                                 </tr>
                                 
                                 <tr>
                                     <th>Terbit eSPtB</th>
-                                    <td>{{ $sptbOnTerbit }}</td>
+                                    <td>{{ number_format($sptbOnTerbit, 0) }}</td>
                                 </tr>
                                 <tr>
                                     <th>&nbsp;</th>
@@ -124,12 +124,12 @@
                             <table id="tabel_box3" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                                 <tr>
                                     <th style="font-size: 20px; font-weight: bold">Proses Pengiriman</th>
-                                    <th style="font-size: 36px;">45</th>
+                                    <th style="font-size: 36px;">{{number_format($sptb1,0)}}</th>
                                 </tr>
 
                                 <tr>
                                     <th>Sampai Tujuan</th>
-                                    <td>7</td>
+                                    <td>{{number_format($sptb2, 0)}}</td>
                                 </tr>
                             </table>
                         </div>

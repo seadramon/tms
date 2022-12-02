@@ -17,8 +17,10 @@ class RoleController extends Controller
 {
     public function data(){
         $data = Role::with(['menus' => function($sql){
-            $sql->orderBy('seq','ASC');
-        }])->select('*');
+                $sql->orderBy('seq','ASC');
+            }])
+            ->where('grpid', 'like', 'B%')
+            ->select('*');
 
         return DataTables::of($data) 
             ->addColumn('menu_list',function ($item){

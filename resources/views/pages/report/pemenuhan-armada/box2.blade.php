@@ -12,7 +12,11 @@
     <div class="card-body">
         <div class="box-ui-loading-box-data row">
             <div id="box1-container" class="col-lg-4">
-                <h4>Top 5 Vendor Pemenuhan Armada</h4>
+                @if (Auth::check())
+                    <h4>Volume Pemenuhan Armada (btg)</h4>
+                @else
+                    <h4>Top 5 Vendor Pemenuhan Armada</h4>
+                @endif
 
                 <table id="tabel_box1" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                     <thead>

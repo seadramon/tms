@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class PemenuhanArmadaController extends Controller
 {
@@ -31,11 +32,14 @@ class PemenuhanArmadaController extends Controller
 
         $kd_pat = $labelSemua + $kd_pat;
 
-        $vendor_id = Vendor::get()
-            ->pluck('nama', 'vendor_id')
-            ->toArray();
+        if(Auth::check()){
+            $vendor = Vendor::where('vendor_id', Auth::user()->vendor_id)->get()->pluck('nama', 'vendor_id')->toArray();
+            $vendor_id = $vendor;
+        }else{
+            $vendor = Vendor::get()->pluck('nama', 'vendor_id')->toArray();
+            $vendor_id = $labelSemua + $vendor;
+        }
 
-        $vendor_id = $labelSemua + $vendor_id;
 
         $kd_material = TrMaterial::where('kd_jmaterial', 'T')
             ->get()
@@ -77,7 +81,9 @@ class PemenuhanArmadaController extends Controller
             ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 
         if($request->kd_pat){
-            $query->where('sptb_h.kd_pat', $request->kd_pat);
+            $query->whereHas('sppb.npp', function($sql) use($request) {
+                $sql->where('kd_pat', $request->kd_pat);
+            });
         }
 
         if($request->pbb_muat){
@@ -127,7 +133,9 @@ class PemenuhanArmadaController extends Controller
         }
 
         if($request->kd_pat){
-            $baseQuery->where('sptb_h.kd_pat', $request->kd_pat);
+            $baseQuery->whereHas('sppb.npp', function($sql) use($request) {
+                $sql->where('kd_pat', $request->kd_pat);
+            });
         }
 
         if($request->pbb_muat){
@@ -208,7 +216,9 @@ class PemenuhanArmadaController extends Controller
             ->whereNotNull('spm_d.vol');
 
         if($request->kd_pat){
-            $baseQuery->where('sptb_h.kd_pat', $request->kd_pat);
+            $baseQuery->whereHas('sppb.npp', function($sql) use($request) {
+                $sql->where('kd_pat', $request->kd_pat);
+            });
         }
 
         if($request->pbb_muat){

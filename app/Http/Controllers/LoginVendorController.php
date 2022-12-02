@@ -52,21 +52,20 @@ class LoginVendorController extends Controller
 					->table(DB::raw('"m_trader"'))
 					->where('trader_id', $data->trader_id)
 					->first();
-    			$user = User::updateOrCreate(
+    			$user = User::firstOrNew(
     				[
     					'username' => $data->username,
-    					'password' => $data->password
-    				],
-    				[
-    					'user_id' => $data->user_id,
-    					'trader_id' => $data->trader_id,
-    					'vendor_id' => $trader->trader_id ?? null,
-    					'name' => $trader->pimpinan_nama ?? null,
-    					'fullname' => $data->fullname,
-    					'phone' => $data->phone,
-    					'position' => $trader->pimpinan_jabatan ?? null
-    				]
-    			);
+    					// 'password' => $data->password
+    				]);
+				
+				$user->user_id = $data->user_id;
+				$user->trader_id = $data->trader_id;
+				$user->vendor_id = $trader->vendor_id ?? null;
+				$user->name = $trader->pimpinan_nama ?? null;
+				$user->fullname = $data->fullname;
+				$user->phone = $data->phone;
+				$user->position = $trader->pimpinan_jabatan ?? null;
+				$user->save();
 
     			return $user;
     		} else {
