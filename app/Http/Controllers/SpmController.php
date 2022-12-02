@@ -473,7 +473,7 @@ class SpmController extends Controller
 
         $no_spp = $request->no_spp;
 
-        $detail_spp = SppbD::with('produk')->where('no_sppb',$request->no_spp)->get();
+        $detail_spp = SppbD::with('produk','spmd')->where('no_sppb',$request->no_spp)->get();
 
         $collection_table = new Collection();
         foreach($detail_spp as $item){
@@ -512,7 +512,9 @@ class SpmController extends Controller
                 'sppdis_vol_ton' => 0,
                 'segmen' => $data_segmen->jml_segmen,
                 'spm' => $jml,
-                'vol_sppb' => $data_segmen->app2_vol
+                'vol_sppb' => $data_segmen->app2_vol,
+                'vol' => $item->spmd->vol ?? 0,
+                'ket' => $item->spmd->ket ?? null
             ]);
         }
 
@@ -544,8 +546,8 @@ class SpmController extends Controller
             'no_spp' => $no_spp,
             'vendor_angkutan' => $vendor_angkutan,
             'kp'=> $kondisiPenyerahanDipilih,
-            'pelanggan' => $pelanggan->nama_pelanggan,
-            'nama_proyek' => $pelanggan->nama_proyek,
+            'pelanggan' => $pelanggan->nama_pelanggan ?? null,
+            'nama_proyek' => $pelanggan->nama_proyek ?? null,
             'tujuan' => $tujuan,
             'jarak' => $jarak
         ])->render();

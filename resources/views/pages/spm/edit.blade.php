@@ -24,19 +24,19 @@
 
                     <div class="form-group row">
                         <div class="col-lg-6 custom-form">
-                            <label class="form-label col-sm-3 required ">No. SPP</label>
-                            <input type="text" value="{{ $data->no_sppb }}" class="form-control" id="no_spp" name="no_spp" />
+                            <label class="form-label col-sm-3 required ">No. SPPB</label>
+                            <input type="text" value="{{ $data->no_sppb ?? ''}}" class="form-control" id="no_spp" name="no_spp" readonly />
                         </div>
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 custom-label">No. SPM</label>
-                            <input class="form-control" type="text" value="{{ $data->no_spm }}" readonly="readonly" />
+                            <input class="form-control" type="text" value="{{ $data->no_spm ?? ''}}" readonly="readonly" />
                         </div>
                     </div>
 
                     <div class="form-group row mt-2">
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 required ">Tanggal</label>
-                            <input  name="tanggal" value="{{ date('d-m-Y',strtotime($data->tgl_spm)) }}"
+                            <input  name="tanggal" value="{{ date('d-m-Y',strtotime($data->tgl_spm ?? null ))}}"
                              class="form-control flatpickr-input active" placeholder="Pilih Tanggal" id="kt_datepicker_3" type="text" readonly="readonly">
                         </div>
 
@@ -61,7 +61,7 @@
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 required">PBB Muat</label>
                             {{-- <select class="form-control" data-control="select2"  data-placeholder="Pilih PBB Muat" name="pbb_muat" id="pbb_muat"></select> --}}
-                            <input class="form-control" value="{{ $data->pat->kd_pat ?? '' }}|{{ $data->pat->ket ?? '' }}" type="text" readonly="readonly" name="pbb_muat" id="pbb_muat" />
+                            <input class="form-control" data-value="{{ $data->pat->kd_pat ?? '' }}" value="{{ $data->pat->kd_pat ?? '' }}|{{ $data->pat->ket ?? '' }}" type="text" readonly="readonly" name="pbb_muat" id="pbb_muat" />
                         </div>
                     </div>
                 </div>
@@ -99,8 +99,6 @@ $(document).ready(function() {
 
     // Start field tanggal
     $("#kt_datepicker_3").flatpickr({
-        "minDate": result.min,
-        "maxDate": result.max,
         dateFormat: "d-m-Y"
     });
     // end of field tanggal
@@ -112,7 +110,7 @@ $('#buat_draft').on('click', function(){
         '_token': '{{ csrf_token() }}',
         'no_spp': $('#no_spp').val(),
         'tanggal': $('#kt_datepicker_3').val(),
-        'pbb_muat': $('#pbb_muat').val(),
+        'pbb_muat': $('#pbb_muat').attr("data-value"),
         'jenis_spm': $('#jenis_spm').val()
     };
 
@@ -159,3 +157,4 @@ function box2() {
 
 
 </script>
+@endsection

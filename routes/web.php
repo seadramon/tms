@@ -150,6 +150,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('/print/{spm}', [SpmController::class, 'print'])->name('print');
         Route::get('/{spm}/edit', [SpmController::class, 'edit'])->name('edit');
         Route::post('/get-data-edit-box2', [SpmController::class, 'getDataEditBox2'])->name('get-data-edit-box2');
+        Route::post('/store-edit', [SpmController::class, 'store_edit'])->name('store-edit');
 	});
 
 	Route::group(['prefix' => 'kalender-pengirimian', 'as' => 'kalender-pengiriman.'], function() {

@@ -2,7 +2,7 @@
     <div class="card-header">
         <h3 class="card-title">Detail SPP</h3>
     </div>
-    <form method="POST" action="{{ route('spm.store') }}">
+    <form method="POST" action="{{ route('spm.store-edit') }}">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 
@@ -129,7 +129,8 @@
                                     spm="{{ $row->spm }}"
                                     class="form-control volume-show"
                                     step="any"
-                                    onkeyup="validate_vol(this)" />
+                                    onkeyup="validate_vol(this)"
+                                    value="{{ $row->vol ?? 0 }}" />
                         </td>
                         <td class="text-center" width="10%">
                             <label class="text-center">{{ $row->segmen }}</label>
@@ -145,7 +146,7 @@
                         </td>
                         <td  class="text-center">0</td>
                         <td  class="text-center">
-                            <input type="text" name="keterangan_select[]" class="form-control"/>
+                            <input type="text" name="keterangan_select[]" class="form-control" value="{{ $row->ket }}"/>
                         </td>
                         <td style="padding-right: 10px;">
                             <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-danger delete_muat" onClick="return confirm('Are you absolutely sure you want to delete?')"><i class="fa fa-times"></i></a>

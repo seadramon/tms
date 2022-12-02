@@ -19,4 +19,8 @@ class SppbD extends Model
 	{
 		return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
 	}
+
+    public function spmd(){
+        return $this->belongsTo(SpmD::class, 'kd_produk', 'kd_produk');
+    }
 }
