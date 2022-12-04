@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 custom-label">No. SPM</label>
-                            <input class="form-control" type="text" value="{{ $data->no_spm ?? ''}}" readonly="readonly" />
+                            <input class="form-control" type="text" value="{{ $data->no_spm ?? ''}}" readonly="readonly" id="no_spm" />
                         </div>
                     </div>
 
@@ -111,7 +111,8 @@ $('#buat_draft').on('click', function(){
         'no_spp': $('#no_spp').val(),
         'tanggal': $('#kt_datepicker_3').val(),
         'pbb_muat': $('#pbb_muat').attr("data-value"),
-        'jenis_spm': $('#jenis_spm').val()
+        'jenis_spm': $('#jenis_spm').val(),
+        'no_spm' : $('#no_spm').val()
     };
 
     $.ajax({
@@ -149,9 +150,16 @@ function box2() {
     $('#tanggal_select').val($('#kt_datepicker_3').val());
     $('#muat_select').val($('#pbb_muat').val());
     $('#spp_select').val($('#no_spp').val());
+    $('#spm_select').val($('#no_spm').val());
 
     $(document).on('click', '.delete_muat', function(e) {
-        $(this).parent().parent().remove();
+        var result = confirm("Want to delete?");
+        if (result==true) {
+            $(this).parent().parent().remove();
+        } else {
+            return false;
+        }
+
     });
 }
 

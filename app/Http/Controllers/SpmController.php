@@ -472,6 +472,7 @@ class SpmController extends Controller
     public function getDataEditBox2(Request $request){
 
         $no_spp = $request->no_spp;
+        $no_spm = $request->no_spm;
 
         $detail_spp = SppbD::with('produk','spmd')->where('no_sppb',$request->no_spp)->get();
 
@@ -503,6 +504,8 @@ class SpmController extends Controller
                 ->groupBy('SPM_H.NO_SPM','SPM_H.NO_SPPB','SPTB_H.NO_SPM','SPTB_D.NO_SPTB')
                 ->first();
 
+            $spmd = SpmD::where('no_spm', $no_spm)->where('kd_produk',$item->produk->kd_produk)->first();
+
             $collection_table->push((object)[
                 'kode_produk' => $item->produk->kd_produk,
                 'type_produk' => $item->produk->kd_produk.' - '.$item->produk->tipe,
@@ -513,8 +516,8 @@ class SpmController extends Controller
                 'segmen' => $data_segmen->jml_segmen,
                 'spm' => $jml,
                 'vol_sppb' => $data_segmen->app2_vol,
-                'vol' => $item->spmd->vol ?? 0,
-                'ket' => $item->spmd->ket ?? null
+                'vol' => $spmd->vol ?? 0,
+                'ket' => $spmd->ket ?? null
             ]);
         }
 
@@ -525,10 +528,9 @@ class SpmController extends Controller
         $vendor_angkutan = Vendor::where('vendor_id','LIKE','WB%')->where('sync_eproc',1)->get();
         $tujuan = Npp::with('infoPasar.region')->first();
 
-        $jarak = Sp3D::where('no_npp',$no_npp->no_npp)->where('pat_to',$no_spprb->pat->kd_pat)->first();
-        if(empty($jarak)){
-            $jarak = 0;
-        }
+        $data_spm = SpmH::with('vendor')->where('no_spm',$no_spm)->first();
+        $jarak = $data_spm->jarak_km;
+
 
         $kondisiPenyerahan = [
             'L' => 'LOKO',
@@ -549,9 +551,52 @@ class SpmController extends Controller
             'pelanggan' => $pelanggan->nama_pelanggan ?? null,
             'nama_proyek' => $pelanggan->nama_proyek ?? null,
             'tujuan' => $tujuan,
-            'jarak' => $jarak
+            'jarak' => $jarak,
+            'selected_vendor_id' => $data_spm->vendor_id,
+            'selected_vendor_name' => $data_spm->vendor->nama
+
         ])->render();
 
         return response()->json( array('success' => true, 'html'=> $html) );
+    }
+
+    public function store_edit(Request $request, FlasherInterface $flasher){
+        try {
+            Validator::make($request->all(), [
+                'vendor'        => 'required',
+            ])->validate();
+
+            DB::beginTransaction();
+
+            $no_spm = $request->no_spm;
+            $vendor_angkutan = $request->vendor;
+
+            $SpmH = SpmH::where('no_spm',$no_spm)->first();
+            $SpmH->vendor_id = $vendor_angkutan;
+            $SpmH->last_update_by = session('TMP_NIP') ?? '12345';
+            $SpmH->last_update_date = date('Y-m-d H:i:s');
+            $SpmH->save();
+
+            // store to smp_d
+            $i = 0;
+            foreach($request->keterangan_select as $row){
+                $SpmD = SpmD::where('no_spm', $no_spm)->where('kd_produk',$request->tipe_produk_select[$i])->first();
+                if($request->volume_produk_select[$i] > 0){
+                    $SpmD->vol = $request->volume_produk_select[$i];
+                    $SpmD->ket = $request->keterangan_select[$i];
+                    $SpmD->save();
+                }
+                $i++;
+            }
+            DB::commit();
+
+            $flasher->addSuccess('Data has been updated successfully!');
+            return redirect()->route('spm.index');
+        } catch(Exception $e) {
+            DB::rollback();
+            $flasher->addError($e->getMessage());
+            return redirect()->route('spm.create');
+        }
+
     }
 }
