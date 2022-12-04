@@ -155,7 +155,7 @@ function box2() {
     $(document).on('click', '.delete_muat', function(e) {
         var result = confirm("Want to delete?");
         if (result==true) {
-            $(this).parent().parent().remove();
+            $(this).parent().parent().addClass('d-none');
         } else {
             return false;
         }
