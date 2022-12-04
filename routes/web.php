@@ -17,6 +17,8 @@ use App\Http\Controllers\PricelistAngkutanController;
 use App\Http\Controllers\Report\PemenuhanArmadaController;
 use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaController;
 use App\Http\Controllers\LoginVendorController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 use App\Models\User;
@@ -36,7 +38,7 @@ use App\Models\User;
 Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::get('/', function () {
     	// dd(session()->all());
-        return view('testing');
+        return redirect()->route('dashboard.index');
     });
 
 	Route::group(['prefix' => '/sp3', 'as' => 'sp3.'], function(){
@@ -58,7 +60,11 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	Route::group(['prefix' => '/spp', 'as' => 'spp.'], function(){
 	    Route::post('/destroy', [SppController::class, 'destroy'])->name('destroy');
 	    Route::post('/draft', [SppController::class, 'createDraft'])->name('draft');
+
 	    Route::get('/data', [SppController::class, 'data'])->name('data');
+	    Route::get('/data-spprb', [SppController::class, 'dataSpprb'])->name('data-spprb');
+	    Route::get('/data-angkutan', [SppController::class, 'dataAngkutan'])->name('data-angkutan');
+
 	    Route::get('/spp-edit/{spp}', [SppController::class, 'edit'])->name('edit');
 	    Route::get('/spp-amandemen/{spp}', [SppController::class, 'amandemen'])->name('amandemen');
 	    Route::get('/spp-print/{spp}', [SppController::class, 'print'])->name('print');
@@ -85,6 +91,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    ])->parameters(['' => 'sptb']);
 
 		Route::post('/get-spm', [SptbController::class, 'getSpm'])->name('get-spm');
+		Route::post('/set-konfirmasi', [SptbController::class, 'setKonfirmasi'])->name('set-konfirmasi');
 	});
 
 	Route::group(['prefix' => '/pricelist-angkutan', 'as' => 'pricelist-angkutan.'], function(){
@@ -165,13 +172,28 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	Route::group(['prefix' => 'report-pemenuhan-armada', 'as' => 'report-pemenuhan-armada.'], function(){
 		Route::post('/data', [PemenuhanArmadaController::class, 'data'])->name('data');
 		Route::post('/chart', [PemenuhanArmadaController::class, 'chart'])->name('chart');
+		Route::post('/box-data', [PemenuhanArmadaController::class, 'boxData'])->name('box-data');
 
 	    Route::resource('/',  PemenuhanArmadaController::class)->except([
 			'destroy', 'show'
 		])->parameters(['' => 'report-pemenuhan-armada']);
 	});
+
+	Route::controller(RoleController::class)->prefix('setting-akses-menu')->name('setting.akses.menu.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/data', 'data')->name('data');
+        Route::get('/setting/{id}', 'setting')->name('setting');
+        Route::post('/update', 'update_setting')->name('update.setting');
+        Route::post('/tree-data', 'tree_data')->name('tree.data');
+        Route::get('/delete-setting/{id}', 'delete_setting')->name('delete.setting');
+    });
+
+	Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function(){
+		Route::get('/', [DashboardController::class, 'index'])->name('index');
+	});
 });
 
+Route::get('logout',	[LoginVendorController::class, 'signOut'])->name('logout');
 
 // VENDOR
 Route::group(['prefix' => '/vendor', 'as' => 'vendor.'], function(){
@@ -179,13 +201,14 @@ Route::group(['prefix' => '/vendor', 'as' => 'vendor.'], function(){
 	Route::get('/login',	[LoginVendorController::class, 'index'])->name('login');
 	Route::post('/login',	[LoginVendorController::class, 'postLogin'])->name('post-login');
 
+
 	Route::middleware('auth')->group(function () {
 
 		Route::get('/testing', function () {
 			return view('pages.tms-vendor.home');
 		});
 
-		Route::get('/logout',	[LoginVendorController::class, 'signOut'])->name('logout');
+		
 	});
 
 });

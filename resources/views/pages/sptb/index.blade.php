@@ -17,7 +17,9 @@
                 <div class="card-header">
                     <h3 class="card-title">List SPTB</h3>
                     <div class="card-toolbar">
-                        <a href="{{route('sptb.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
+						@if (in_array('create', json_decode(session('TMS_ACTION_MENU'))))
+							<a href="{{route('sptb.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
+						@endif
                     </div>
                 </div>
 
@@ -127,6 +129,45 @@
 	// On document ready
 	KTUtil.onDOMContentLoaded(function () {
 	    KTDatatablesServerSide.init();
+	});
+
+	$('body').on('click', '.set-konfirmasi', function () {
+		var id = $(this).data("id");
+
+		Swal.fire({
+	        html: `Apakah anda yakin melakukan konfirmasi sptb?`,
+	        icon: "info",
+	        buttonsStyling: false,
+	        showCancelButton: true,
+	        confirmButtonText: "Ya",
+	        cancelButtonText: 'Tidak',
+	        customClass: {
+	            confirmButton: "btn btn-primary",
+	            cancelButton: 'btn btn-danger'
+	        }
+	    }).then((result) => {
+			if (result.isConfirmed) {
+				// ajax
+		    	$.ajax({
+		    		type:"post",
+		    		url: "{{ route('sptb.set-konfirmasi') }}",
+		    		data: {id : id, _token: "{{ csrf_token() }}"},
+		    		beforeSend: function(){
+				    	document.body.style.cursor='wait';
+				   	},
+		    		success: function(res){
+		    			if (res.status == 'success') {
+		    				Swal.fire('Data SPTB berhasil dikonfirmasi', '', 'success');
+		    			} else {
+		    				Swal.fire('Data SPTB gagal dikonfirmasi', '', 'error');
+		    			}
+		    		},
+		    		complete: function(){
+				    	document.body.style.cursor='default';
+				   	}
+		    	});
+		  	}
+		});
 	});
 </script>
 @endsection

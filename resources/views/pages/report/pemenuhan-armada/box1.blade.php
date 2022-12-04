@@ -42,6 +42,11 @@
                 <label class="form-label col-sm-3 custom-label">Jenis Armada</label>
                 {!! Form::select('kd_material', $kd_material, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'kd_material']) !!}
             </div>
+
+            <div class="col-lg-6 custom-form">
+                <label class="form-label col-sm-3 custom-label">Tipe</label>
+                {!! Form::select('tipe', $tipe, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'tipe']) !!}
+            </div>
         </div>
     </div>
 

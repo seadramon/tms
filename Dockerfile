@@ -7,6 +7,7 @@ COPY database /var/www/tms/database
 WORKDIR /var/www/tms
 
 # RUN php composer.phar install --no-dev --no-scripts
+# .
     
 COPY . /var/www/tms
 

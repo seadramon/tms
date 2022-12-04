@@ -81,4 +81,9 @@ class Sp3 extends Model
     {
         return $this->belongsTo('App\Models\View\VSpprbRi', 'no_npp', 'no_npp');
     }
+
+    public function unitkerja()
+    {
+    	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
+    }
 }

@@ -13,6 +13,9 @@ use App\Models\SptbD;
 use App\Models\MonOp;
 use App\Models\Sp3D;
 use App\Models\Npp;
+use App\Models\PotensiH;
+use App\Models\Views\VPotensiMuat;
+use App\Models\Views\VSpprbRi as ViewsVSpprbRi;
 use App\Models\VSpprbRi;
 use Exception;
 use Yajra\DataTables\Facades\DataTables;
@@ -21,7 +24,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Log;
+ use Carbon\Carbon;
 
 class SppController extends Controller
 {
@@ -38,6 +44,11 @@ class SppController extends Controller
     public function data()
     {
         $query = SppbH::with(['spprb', 'detail'])->select('*');
+        if(!Auth::check() && session('TMP_KDWIL') != '0A'){
+			$query->whereHas('npp', function($sql){
+                $sql->where('kd_pat', session('TMP_KDWIL'));
+            });
+		}
 
         return DataTables::eloquent($query)
             ->editColumn('jadwal1', function ($model) {
@@ -93,36 +104,37 @@ class SppController extends Controller
             ->addColumn('approval', function ($model) {
                 $teks = '';
                 if($model->app == 1){
-                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">KSDM&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 if($model->app2 == 1){
-                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">Vendor&nbsp;<i class="fas fa-check text-success"></i></span>';
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">PEO&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 if($model->app3 == 1){
-                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MDiv&nbsp;<i class="fas fa-check text-success"></i></span>';
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 return $teks;
             })
             ->addColumn('menu', function ($model) {
                 $noSppb = str_replace("/", "|", $model->no_sppb);
                 $sumVolApp2 = $model->detail->sum('app2_vol');
-                
+                $approval = "";
+                $action = json_decode(session('TMS_ACTION_MENU'));
                 switch (true) {
-                    case ($model->app == 0):
+                    case ($model->app == 0 && in_array('approve1', $action)):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'first',
                             'nosppb' => $noSppb
                         ]);
                         $caption = "Approve First";
                         break;
-                    case ($model->app == 1 && $model->app2 == 0):
+                    case ($model->app == 1 && $model->app2 == 0 && in_array('approve2', $action)):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'second',
                             'nosppb' => $noSppb
                         ]);
                         $caption = "Approve Second";
                         break;
-                    case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0 && $sumVolApp2 == 0):
+                    case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0 && $sumVolApp2 == 0 && in_array('approve3', $action)):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'third',
                             'nosppb' => $noSppb
@@ -136,20 +148,32 @@ class SppController extends Controller
                 }
                 if ($approve!="") {
                     $approval = '<li><a class="dropdown-item" href="'.$approve.'">'. $caption .'</a></li>';
-                } else {
-                    $approval = "";
                 }
+                $list = '';
+                if(Auth::check()){
+                    
+                }else{
+                    if(in_array('view', $action)){
+                        $list .= '<li><a class="dropdown-item" href="'. route('spp.show', ['spp' => $noSppb]) .'">View</a></li>';
+                    }
+                    if(in_array('edit', $action)){
+                        $list .= '<li><a class="dropdown-item" href="'. route('spp.edit', ['spp' => $noSppb]) .'">Edit</a></li>';
+                    }
+                    if(in_array('amandemen', $action)){
+                        $list .= '<li><a class="dropdown-item" href="'. route('spp.amandemen', ['spp' => $noSppb]) .'">Amandemen</a></li>';
+                    }
+                    if(in_array('print', $action)){
+                        $list .= '<li><a class="dropdown-item" href="'. route('spp.print', ['spp' => $noSppb]) .'">Print</a></li>';
+                    }
+                }
+                $list .= $approval;
 
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Action
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="'. route('spp.show', ['spp' => $noSppb]) .'">View</a></li>
-                            <li><a class="dropdown-item" href="'. route('spp.edit', ['spp' => $noSppb]) .'">Edit</a></li>
-                            <li><a class="dropdown-item" href="'. route('spp.amandemen', ['spp' => $noSppb]) .'">Amandemen</a></li>
-                            '.$approval.'
-                            <li><a class="dropdown-item" href="'. route('spp.print', ['spp' => $noSppb]) .'">Print</a></li>
+                            ' . $list . '
                             <li><a class="dropdown-item" href="#">Hapus</a></li>
                         </ul>
                         </div>';
@@ -157,6 +181,87 @@ class SppController extends Controller
                 return $edit;
             })
             ->rawColumns(['menu', 'waktu', 'approval'])
+            ->toJson();
+    }
+
+    public function dataSpprb(Request $request)
+    {
+        $noNpp = !empty($request->no_npp)?$request->no_npp:null;
+        
+        $query = VSpprbRi::with(['produk', 'pat'])
+        ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
+        ->select('v_spprb_ri.pat_to', 'v_spprb_ri.spprblast', 'v_spprb_ri.kd_produk', 'v_spprb_ri.vol_spprb', 'spprb_h.jadwal1',
+            'spprb_h.jadwal2');
+
+        if (!empty($noNpp)) {
+            $query->where('v_spprb_ri.no_npp', $noNpp);
+        }
+
+        return DataTables::eloquent($query)
+            ->editColumn('jadwal1', function ($model) {
+                return Carbon::createFromFormat('Y-m-d H:i:s', $model->jadwal1)->format('d-m-Y');
+            })
+            ->editColumn('jadwal2', function ($model) {
+                return $model->jadwal2 ? Carbon::createFromFormat('Y-m-d H:i:s', $model->jadwal2)->format('d-m-Y') : '-';
+            })
+            ->toJson();
+    }
+
+    public function dataAngkutan(Request $request)
+    {
+        $noSppb = !empty($request->noSppb)?$request->noSppb:null;
+
+        $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
+        $query = SppbH::join('spprb_h', 'spprb_h.no_spprb', '=', 'sppb_h.no_spprb')
+            ->join('sp3_h', 'sp3_h.no_npp', '=', 'spprb_h.no_npp')
+            ->join(DB::raw($joinQuery), function($join) {
+                $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
+            })
+            ->join('vendor', 'vendor.vendor_id', '=', 'sp3_h.vendor_id')
+            ->where('sppb_h.no_sppb', $noSppb)
+            ->select('spprb_h.no_spprb', 'sp3_h.no_sp3', 'sp3_h.app1', 'sp3_h.app2', 'sp3_h.st_wf', 'vendor.nama as vendorname', DB::raw("(SELECT sum(vol_akhir) FROM sp3_d WHERE NO_SP3 = sp3_h.NO_SP3) AS volakhir"), DB::raw("(SELECT sum(VOL_TON_AKHIR) FROM sp3_d WHERE NO_SP3 = sp3_h.NO_SP3) AS voltonakhir"));
+
+        return DataTables::eloquent($query)
+            ->editColumn('volakhir', function ($model) {
+                return number_format($model->volakhir, 2);
+            })
+            ->editColumn('voltonakhir', function ($model) {
+                return number_format($model->voltonakhir, 2);
+            })
+            ->addColumn('status', function ($model) {
+                $teks = '';
+                if($model->app1 == 1){
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
+                }
+                if($model->app2 == 1){
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">MDiv&nbsp;<i class="fas fa-check text-success"></i></span>';
+                }
+                return $teks;
+            })
+            // ->addColumn('status', function ($model) {
+            //     $html = "";
+            //     switch (true) {
+            //         case $model->st_wf == 0:
+            //             $a = '<i class="fa fa-square" style="color:yellow; font-size:20px;"></i>';
+            //             break;
+            //         case $model->st_wf == 1 && $model->app1 == 0:
+            //             $a = '<i class="fa fa-square" style="color:orange; font-size:20px;"></i>';
+            //             break;
+            //         case $model->st_wf == 1 && $model->app1 == 1:
+            //             $a = '<i class="fa fa-square" style="color:green; font-size:20px;"></i>';
+            //             break;
+                    
+            //     }
+
+            //     if ($model->app2 == 1) {
+            //         $b = '<i class="fa fa-square" style="color:green; font-size:20px;"></i>';
+            //     } else {
+            //         $b = '<i class="fa fa-square" style="color:grey; font-size:20px;"></i>';
+            //     }
+
+            //     return $a.'&nbsp;'.$b;
+            // })
+            ->rawColumns(['status'])
             ->toJson();
     }
 
@@ -418,9 +523,24 @@ class SppController extends Controller
                 ];
             }
         }
-// dd($dataPesanan);
+        $npp = Npp::select('npp.nama_proyek',
+                    'npp.nama_pelanggan',
+                    'npp.no_npp',
+                    'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec',
+                    'tb_pat.ket as pat',
+                    'tb_pat.kota',
+                    'npp.kd_pat',
+                    'spnpp.no_konfirmasi',
+                    'tb_pat.singkatan')
+                ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
+                ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
+                ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'npp.kd_pat')
+                ->leftJoin('spnpp', 'spnpp.no_npp', '=', 'npp.no_npp')
+                ->where('npp.no_npp', $noNpp)
+                ->first();
         $pdf = Pdf::loadView('prints.spp', [
             'data' => $data,
+            'npp' => $npp,
             'dataPesanan' => $dataPesanan
         ]);
 
@@ -477,7 +597,71 @@ class SppController extends Controller
                     ->first();
             }
         }
+        
+        //RUTE Data
+        $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
+        $muat = VPotensiMuat::with('pat')->where('no_npp',$arrData['no_npp'])->get();
 
+
+        $collection_table = new Collection();
+        foreach($muat as $row){
+            $spprbRi = ViewsVSpprbRi::
+                        select('kd_produk','pat_to','no_npp','vol_spprb')
+                        ->with(['produk' => function($sql){
+                            $sql->select('kd_produk','tipe', 'vol_m3');
+                        }])
+                        ->with(['ppb_muat' =>function($sql){
+                            $sql->select('kd_pat','lat_gps','lng_gps');
+                        }])
+                        ->where('no_npp',$row->no_npp)
+                        ->where('pat_to',$row->ppb_muat)
+                        ->groupBy('kd_produk','pat_to','no_npp','vol_spprb')
+                        ->get();
+
+            $sqlNpp = Npp::select('npp.nama_proyek',
+                        'npp.nama_pelanggan',
+                        'npp.no_npp',
+                        'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec',
+                        'tb_pat.ket as pat',
+                        'npp.kd_pat',
+                        'tb_pat.singkatan',
+                        'info_pasar_h.lat as info_pasar_lat','info_pasar_h.lang as info_pasar_long',
+                        'tb_region.lat as tb_region_lat','tb_region.lang as tb_region_long')
+                    ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
+                    ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
+                    ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'npp.kd_pat')
+                    ->where('npp.no_npp', $row->no_npp)
+                    ->first();
+
+            $potensiH = PotensiH::where('no_npp',$row->no_npp)
+                    ->where('pat_to', $row->ppb_muat)
+                    ->first();
+
+            $collection_table->push((object)[
+                'no_npp' => $row->no_npp,
+                'ppb_muat' => $row->ppb_muat,
+                'vol_btg' => $row->vol_btg,
+                'tonase' => $row->tonase,
+                'jadwal3' => $row->jadwal3,
+                'jadwal4' => $row->jadwal4,
+                'jml_rit' => $row->jml_rit,
+                'pat' => $row->pat->ket,
+                'jarak_km' => $row->jarak_km,
+                'spprbri' => $spprbRi,
+                'lat_source' => $spprbRi[0]->ppb_muat->lat_gps,
+                'long_source' => $spprbRi[0]->ppb_muat->lng_gps,
+                'lat_dest' => $sqlNpp->info_pasar_lat ?? $sqlNpp->tb_region_lat,
+                'long_dest' => $sqlNpp->info_pasar_long ?? $sqlNpp->tb_region_long,
+                'destination' => $sqlNpp->kab. ',' . $sqlNpp->kec,
+                'potensiH' => $potensiH
+            ]);
+        }
+
+        $arrData['pat'] = $pat;
+        $arrData['muat'] = $collection_table;
+        // return response()->json($collection_table);
+        // return view('pages.potensi-detail-armada.create', ['pat' => $pat, 'muat' => $collection_table, 'trmaterial' => $trmaterial]);
+        // return response()->json($arrData);
         return view('pages.spp.show',  $arrData);
     }
 

@@ -2,6 +2,14 @@
     <div class="separator separator-dashed border-primary my-10"></div>
     <div class="row mb-5">
         <div class="form-group col-lg-6">
+            <input type="hidden" name="index_" id="index_1" value="0">
+        </div>
+        <div class="form-group col-lg-6" style="text-align: right;">
+            <button type="button" class="btn btn-light-danger btn_hapus mt-8" id="btn_hapus_1" data-id="1">
+                <i class="la la-trash"></i>Hapus
+            </button>
+        </div>
+        <div class="form-group col-lg-6">
             <label class="form-label">Jenis Angkutan</label>
             {!! Form::select('kd_material[]', $kd_material, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'disabled']) !!}
         </div>
@@ -15,7 +23,7 @@
             <label class="form-label">Tanggal Mulai Berlaku</label>
             <div class="col-lg-12">
                 <div class="input-group date">
-                    {!! Form::text('tgl_mulai[]', null, ['class'=>'form-control datepicker', 'disabled']) !!}
+                    {!! Form::text('tgl_mulai[]', $awal ?? null, ['class'=>'form-control datepicker', 'disabled']) !!}
                     <div class="input-group-append">
                         <span class="input-group-text" style="display: block">
                             <i class="la la-calendar-check-o"></i>
@@ -29,7 +37,7 @@
             <label class="form-label">Tanggal Selesai Berlaku</label>
             <div class="col-lg-12">
                 <div class="input-group date">
-                    {!! Form::text('tgl_selesai[]', null, ['class'=>'form-control datepicker', 'disabled']) !!}
+                    {!! Form::text('tgl_selesai[]', $akhir ?? null, ['class'=>'form-control datepicker', 'disabled']) !!}
                     <div class="input-group-append">
                         <span class="input-group-text" style="display: block">
                             <i class="la la-calendar-check-o"></i>
@@ -57,10 +65,9 @@
                 Upload Excel
             </button>
         </div>
-        <div class="form-group col-lg-6" style="text-align: right;">
-            <button type="button" class="btn btn-light-danger btn_hapus mt-8" id="btn_hapus_1" data-id="1">
-                <i class="la la-trash"></i>Hapus
-            </button>
+        <div class="form-group col-lg-6">
+            <label class="form-label">Vendor</label>
+            {!! Form::select('vendor_', $vendor, null, ['class'=>'form-control form-select-solid vendor', 'data-control'=>'select2', 'id'=>'vendor_1', 'data-id'=>'1', 'multiple' => true]) !!}
         </div>
     </div>
     <div id="container_harsat" data-id="">

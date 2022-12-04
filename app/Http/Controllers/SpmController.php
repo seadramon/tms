@@ -18,8 +18,6 @@ use App\Models\MsNoDokumen;
 use App\Models\Vendor;
 use App\Models\Npp;
 use App\Models\Sbu;
-use Exception;
-use File;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +25,9 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class SpmController extends Controller
 {
@@ -65,6 +66,14 @@ class SpmController extends Controller
     public function data(Request $request)
     {
         $query = SpmH::with(['sppb', 'vendornya']);
+        if(Auth::check()){
+            $query->whereVendorId(Auth::user()->vendor_id);
+        }
+        if(!Auth::check() && session('TMP_KDWIL') != '0A'){
+			$query->whereHas('sppb.npp', function($sql){
+                $sql->where('kd_pat', session('TMP_KDWIL'));
+            });
+		}
         return DataTables::eloquent($query)
             ->editColumn('tgl_spm', function ($model) {
                 return date('d-m-Y', strtotime($model->tgl_spm));
@@ -75,15 +84,37 @@ class SpmController extends Controller
                 return $status;
             })
             ->addColumn('menu', function ($model) {
+                $list = '';
+                    if(Auth::check()){
+
+                    }else{
+                        $action = json_decode(session('TMS_ACTION_MENU'));
+                        if(in_array('konfirmasi', $action)){
+                            $list .= '<li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-pat="'. $model->pat_to .'" data-id="'. $model->no_spm .'">Konfirmasi</a></li>';
+                        }
+                        if(in_array('konfirmasi_vendor', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>';
+                        }
+                        if(in_array('print', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>';
+                        }
+                        if(in_array('buat_sptb', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sptb.create', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Buat SPTB</a></li>';
+                        }
+                    }
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Action
                         </button>
                         <ul class="dropdown-menu">
+<<<<<<< HEAD
                             <li><a class="dropdown-item" href="' . route('spm.edit', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Edit</a></li>
                             <li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-pat="'. $model->pat_to .'" data-id="'. $model->no_spm .'">Konfirmasi</a></li>
                             <li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>
                             <li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>
+=======
+                            ' . $list . '
+>>>>>>> 2b3a47a1e6397385bf80879e435a77afbef6681a
                             <li><a class="dropdown-item delete" href="#">Hapus</a></li>
                         </ul>
                         </div>';
@@ -454,11 +485,30 @@ class SpmController extends Controller
 
         $logo = File::get(public_path('assets/media/logos/tms.png'));
 
+
+        $spmh = SpmH::with('spmd', 'sppb')->find($no_spm);
+        $sbu = DB::table('tb_sbu')->where('kd_sbu', substr($spmh->spmd->first()->kd_produk, 0, 1))->first();
+        $npp = Npp::select('npp.no_npp',
+                    'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec',
+                    'tb_pat.ket as pat',
+                    'tb_pat.kota',
+                    'npp.kd_pat')
+                ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
+                ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
+                ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'npp.kd_pat')
+                ->leftJoin('spnpp', 'spnpp.no_npp', '=', 'npp.no_npp')
+                ->where('npp.no_npp', $spmh->sppb->no_npp)
+                ->first();
+
+        $logo = File::get(public_path('assets/media/logos/wikabeton.jpg'));
+
         $logo = base64_encode($logo);
 
-        return Pdf::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-            ->loadView('pages.spm.print', ['spmh' => $spmh, 'logo' => $logo])->stream('Surat Permintaan Muat.pdf');
+        // return response()->json($npp);
 
+        return Pdf::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+            // ->loadView('pages.spm.print', ['spmh' => $spmh, 'logo' => $logo])->stream('Surat Permintaan Muat.pdf');
+            ->loadView('pages.spm.print', ['spmh' => $spmh, 'logo' => $logo, 'sbu' => $sbu, 'npp' => $npp])->stream('Surat Permintaan Muat.pdf');
     }
 
     public function edit($spm){
@@ -597,6 +647,5 @@ class SpmController extends Controller
             $flasher->addError($e->getMessage());
             return redirect()->route('spm.create');
         }
-
     }
 }

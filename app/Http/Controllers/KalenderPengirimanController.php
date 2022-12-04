@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\KalenderMg;
 use App\Models\Pat;
 use App\Models\Sp3;
+use App\Models\SpmD;
 use App\Models\SpmH;
 use App\Models\SppbH;
 use App\Services\KalenderService;
@@ -43,14 +44,18 @@ class KalenderPengirimanController extends Controller
 		$periode_minggu = KalenderMg::whereTh('2022')
 			->whereKdPat('1A')
 			->get()
-			->mapWithKeys(function($item){ 
-				return [$item->mg => (int)$item->mg]; 
+			->sortBy(function ($item) {
+				return (int) $item->mg;
 			})
-			->sort()
+			->mapWithKeys(function($item){ 
+				$awal = date('d/m/Y', strtotime($item->tgl_awal));
+				$akhir = date('d/m/Y', strtotime($item->tgl_akhir));
+				return [$item->mg => "Minggu ke-" . $item->mg . " ({$awal}-{$akhir})"]; 
+			})
 			->all();
 
 		$active_week = DB::select("select  WOS.\"FNC_GETMG\" (to_Date('" . date('d/m/Y') . "','dd/mm/yyyy'), '1A') minggu from dual")[0]->minggu;
-        
+
 		return view('pages.kalender-pengiriman.detail-weekly', [
 			'pat'            => $pat,
 			'periode'        => $periode,
@@ -68,14 +73,14 @@ class KalenderPengirimanController extends Controller
 			4 => 'K',
 			5 => 'J',
 			6 => 'S',
-			7 => 'M'
+			0 => 'M'
 		];
-		// $spm = SpmH::with('sppb.npp', 'pat', 'armada.jenis')->whereBetween('tgl_spm', ['2008-06-01 00:00:00', '2008-06-30 23:59:59'])
+		// $spm = SpmH::with('sppb.npp', 'pat', 'armada.jenis', 'spmd.produk')->whereBetween('tgl_spm', ['2008-06-01 00:00:00', '2008-06-30 23:59:59'])
 		// 	->get();
-			// ->groupBy([function($item){ return $item->sppb->no_npp . '_' . $item->sppb->npp->nama_proyek . '_' . ($item->pat->ket ?? 'Unknown'); }, 'tgl_spm']);
-		
+		// $week = KalenderMg::whereTh('2008')->whereMg('24')->whereKdPat('1A')->first();
+
 		$week = KalenderMg::whereTh($request->tahun)->whereMg($request->minggu)->whereKdPat('1A')->first();
-		$spm = SpmH::with('sppb.npp', 'pat', 'armada.jenis')
+		$spm = SpmH::with('sppb.npp', 'pat', 'armada.jenis', 'spmd.produk')
 			->whereBetween('tgl_spm', [$week->tgl_awal, date('Y-m-d 23:59:59', strtotime($week->tgl_akhir))])
 			->get();
 
@@ -87,18 +92,35 @@ class KalenderPengirimanController extends Controller
 			return ($item->sppb->no_npp ?? 'UnknownSppb') . '_' . ($item->sppb->npp->nama_proyek ?? 'UnknownNpp') . '_' . ($item->pat->ket ?? 'Unknown') . '_' . date('Ymd', strtotime($item->tgl_spm));
 		});
 
+		$spmd = SpmD::with('spmh.sppb.npp', 'spmh.pat', 'produk')->whereHas('spmh', function($sql) use ($week){
+				$sql->whereBetween('tgl_spm', [$week->tgl_awal, date('Y-m-d 23:59:59', strtotime($week->tgl_akhir))]);
+			})->get();
+		$detail = $spmd->groupBy([
+				function($item){
+					return ($item->spmh->sppb->no_npp ?? 'UnknownSppb') . '_' . ($item->spmh->sppb->npp->nama_proyek ?? 'UnknownNpp') . '_' . ($item->spmh->pat->ket ?? 'Unknown');
+				},
+				function($item){
+					return $item->produk->tipe;
+				},
+				function($item){
+					return date('Ymd', strtotime($item->spmh->tgl_spm));
+				},
+			]);
+
 		$dates = KalenderService::createDateRangeArray(date('Y-m-d', strtotime($week->tgl_awal)), date('Y-m-d', strtotime($week->tgl_akhir)), 'Ymd');
 		// return response()->json([
 		// 	'data'       => $data,
 		// 	'data_daily' => $data_daily,
 		// 	'dates'      => $dates,
-		// 	'dow'        => $dow
+		// 	'dow'        => $dow,
+		// 	'detail'        => $detail
 		// ]);
 		return view('pages.kalender-pengiriman.detail-weekly-data', [
 			'data'       => $data,
 			'data_daily' => $data_daily,
 			'dates'      => $dates,
-			'dow'        => $dow
+			'dow'        => $dow,
+			'detail'     => $detail
 		]);
 	}
 }

@@ -94,7 +94,7 @@
                 <label class="form-label">Tanggal</label>
                 <div class="col-lg-12">
                     <div class="input-group date">
-                        {!! Form::text('tgl_sp3', $data->tgl_sp3 ? date('d-m-Y', strtotime($data->tgl_sp3)), ['class'=>'form-control datepicker', 'id'=>'tgl_sp3']) !!}
+                        {!! Form::text('tgl_sp3', $data->tgl_sp3 ? date('d-m-Y', strtotime($data->tgl_sp3)) : null, ['class'=>'form-control datepicker', 'id'=>'tgl_sp3']) !!}
                         <div class="input-group-append">
                             <span class="input-group-text" style="display: block">
                                 <i class="la la-calendar-check-o"></i>
@@ -190,6 +190,39 @@
         @php
             $readonly = $sat_harsat != 'volume';
         @endphp
+        @if ($isAmandemen)
+            <div class="separator separator-dashed border-primary my-10"></div>
+            <h3>Volume Distribusi</h3>
+            <div class="hover-scroll-overlay-y h-400px">
+                <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th style="vertical-align: middle; text-align: left">Nama / Tipe Produk</th>
+                            <th>Volume SP3</th>
+                            <th>Volume Distribusi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $sp3d_ = $detailPekerjaan->groupBy('kd_produk')
+                        @endphp
+                        @foreach($detailPesanan as $pesanan)
+                            @php
+                                $volsp3_    = ($sp3d_[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3d_[$pesanan->kd_produk_konfirmasi]->sum('vol_akhir') : 0;
+                                $distribusi = ($sptbd[$pesanan->kd_produk_konfirmasi] ?? null) ? $sptbd[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->vol; }) : 0;
+                            @endphp
+                            
+                            <tr>
+                                <td style="text-align: left">{{ $pesanan->produk->tipe }} / {{$pesanan->kd_produk_konfirmasi}}</td>
+                                
+                                <td>{{ nominal($volsp3_) }}</td>
+                                <td>{{ nominal($distribusi) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
         <div class="separator separator-dashed border-primary my-10"></div>
         <h3>Detail Pekerjaan</h3>
         {{-- <table class="table table-row-bordered text-center">
@@ -429,100 +462,100 @@
                     <tr>
                         <th>Faktur / Invoice / Kwitansi</th>
                         <td>
-                            {!! Form::number('dokumen_asli[]', $data->dokumen[0]->asli, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_asli[]', $data->dokumen[0]->asli ?? null, ['class'=>'form-control']) !!}
                         </td>
                         <td>
-                            {!! Form::number('dokumen_copy[]', $data->dokumen[0]->copy, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_copy[]', $data->dokumen[0]->copy ?? null, ['class'=>'form-control']) !!}
                         </td>
                         
                         <th>&nbsp;</th>
 
                         <th>Packing List</th>
                         <td>
-                            {!! Form::number('dokumen_asli[]', $data->dokumen[1]->asli, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_asli[]', $data->dokumen[1]->asli ?? null, ['class'=>'form-control']) !!}
                         </td>
                         <td>
-                            {!! Form::number('dokumen_copy[]', $data->dokumen[1]->copy, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_copy[]', $data->dokumen[1]->copy ?? null, ['class'=>'form-control']) !!}
                         </td>
                     </tr>
 
                     <tr>
                         <th>Faktur Pajak</th>
                         <td>
-                            {!! Form::number('dokumen_asli[]', $data->dokumen[2]->asli, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_asli[]', $data->dokumen[2]->asli ?? null, ['class'=>'form-control']) !!}
                         </td>
                         <td>
-                            {!! Form::number('dokumen_copy[]', $data->dokumen[2]->copy, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_copy[]', $data->dokumen[2]->copy ?? null, ['class'=>'form-control']) !!}
                         </td>
                         
                         <th>&nbsp;</th>
 
                         <th>BAPB</th>
                         <td>
-                            {!! Form::number('dokumen_asli[]', $data->dokumen[3]->asli, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_asli[]', $data->dokumen[3]->asli ?? null, ['class'=>'form-control']) !!}
                         </td>
                         <td>
-                            {!! Form::number('dokumen_copy[]', $data->dokumen[3]->copy, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_copy[]', $data->dokumen[3]->copy ?? null, ['class'=>'form-control']) !!}
                         </td>
                     </tr>
 
                     <tr>
                         <th>SP3 / SPK</th>
                         <td>
-                            {!! Form::number('dokumen_asli[]', $data->dokumen[4]->asli, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_asli[]', $data->dokumen[4]->asli ?? null, ['class'=>'form-control']) !!}
                         </td>
                         <td>
-                            {!! Form::number('dokumen_copy[]', $data->dokumen[4]->copy, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_copy[]', $data->dokumen[4]->copy ?? null, ['class'=>'form-control']) !!}
                         </td>
                         
                         <th>&nbsp;</th>
 
                         <th>BA Pemeriksaan / Opname</th>
                         <td>
-                            {!! Form::number('dokumen_asli[]', $data->dokumen[5]->asli, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_asli[]', $data->dokumen[5]->asli ?? null, ['class'=>'form-control']) !!}
                         </td>
                         <td>
-                            {!! Form::number('dokumen_copy[]', $data->dokumen[5]->copy, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_copy[]', $data->dokumen[5]->copy ?? null, ['class'=>'form-control']) !!}
                         </td>
                     </tr>
                     
                     <tr>
                         <th>Surat Jalan / SPHB</th>
                         <td>
-                            {!! Form::number('dokumen_asli[]', $data->dokumen[6]->asli, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_asli[]', $data->dokumen[6]->asli ?? null, ['class'=>'form-control']) !!}
                         </td>
                         <td>
-                            {!! Form::number('dokumen_copy[]', $data->dokumen[6]->copy, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_copy[]', $data->dokumen[6]->copy ?? null, ['class'=>'form-control']) !!}
                         </td>
                         
                         <th>&nbsp;</th>
 
                         <th>BA Pembayaran</th>
                         <td>
-                            {!! Form::number('dokumen_asli[]', $data->dokumen[7]->asli, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_asli[]', $data->dokumen[7]->asli ?? null, ['class'=>'form-control']) !!}
                         </td>
                         <td>
-                            {!! Form::number('dokumen_copy[]', $data->dokumen[7]->copy, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_copy[]', $data->dokumen[7]->copy ?? null, ['class'=>'form-control']) !!}
                         </td>
                     </tr>
 
                     <tr>
                         <th>Rekap Surat Jalan / SPHB</th>
                         <td>
-                            {!! Form::number('dokumen_asli[]', $data->dokumen[8]->asli, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_asli[]', $data->dokumen[8]->asli ?? null, ['class'=>'form-control']) !!}
                         </td>
                         <td>
-                            {!! Form::number('dokumen_copy[]', $data->dokumen[8]->copy, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_copy[]', $data->dokumen[8]->copy ?? null, ['class'=>'form-control']) !!}
                         </td>
                         
                         <th>&nbsp;</th>
 
                         <th>Lembar Kendali Pembayaran</th>
                         <td>
-                            {!! Form::number('dokumen_asli[]', $data->dokumen[9]->asli, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_asli[]', $data->dokumen[9]->asli ?? null, ['class'=>'form-control']) !!}
                         </td>
                         <td>
-                            {!! Form::number('dokumen_copy[]', $data->dokumen[9]->copy, ['class'=>'form-control']) !!}
+                            {!! Form::number('dokumen_copy[]', $data->dokumen[9]->copy ?? null, ['class'=>'form-control']) !!}
                         </td>
                     </tr>
                 </tbody>

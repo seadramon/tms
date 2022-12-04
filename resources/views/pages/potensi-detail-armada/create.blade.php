@@ -52,8 +52,8 @@
                                                     {{ $row->no_npp }}
                                                     <input type="text" value="{{ $row->no_npp }}" name="no_npp[]" hidden="" />
                                                 </td>
-                                                <td>{{ $row->vol_btg }}</td>
-                                                <td>Ton</td>
+                                                <td>{{ number_format($row->vol_btg) }}</td>
+                                                <td>{{ number_format($row->tonase) }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal3)) }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal4)) }}</td>
                                                 <td>
@@ -74,7 +74,7 @@
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td>{{ $row->jml_rit ?? '0' }}</td>
+                                                <td>{{ number_format(round($row->jml_rit)) ?? '0' }}</td>
                                                 <td></td>
                                                 <td>{{ $row->pat ?? 'Tidak diketahui' }}</td>
                                                 <td>{{ $row->jarak_km ?? '0' }}</td>
@@ -148,8 +148,8 @@
                                                     </div>
                                                 </div>
                                                 <div id="list_checkpoint_{{ $i }}" style="padding-top: 5px;">
-                                                    @if($item->potensiH != null)
-                                                        @foreach( json_decode($item->potensiH->checkpoints,true) as $row)
+                                                    @if($item->potensiH != null && !in_array($item->potensiH->checkpoints, [null, "null"]))
+                                                        @foreach( json_decode($item->potensiH->checkpoints ?? "[]",true) as $row)
                                                             <div class="row">
                                                                 <div class="col-md-12" style="padding-bottom: 5px;">
                                                                     <div class="row">

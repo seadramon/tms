@@ -45,28 +45,28 @@
                     </div>
 
                     {{-- Repeater --}}
-                    @include('pages.pricelist-angkutan.box-to-clone')
+                    {{-- @include('pages.pricelist-angkutan.box-to-clone') --}}
 
                     <div id="container_pricelist_angkutan">
                         @foreach ($data->pad as $key => $pad)
-                            <div id="box_1" class="box" data-id="{{ $key }}">
+                            <div id="box_1" class="box" data-id="{{ ($key+1) }}">
                                 <div class="separator separator-dashed border-primary my-10"></div>
                                 <div class="row mb-5">
                                     <div class="form-group col-lg-6">
                                         <label class="form-label">Jenis Angkutan</label>
-                                        {!! Form::select('kd_material[]', $kd_material, $pad->kd_material, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_material_' . $key, 'data-id'=>$key, 'disabled']) !!}
+                                        {!! Form::select('kd_material['.($key+1).']', $kd_material, $pad->kd_material, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_material_' . ($key+1), 'data-id'=>($key+1), 'disabled']) !!}
                                     </div>
             
                                     <div class="form-group col-lg-6">
                                         <label class="form-label">Jenis Pemuatan</label>
-                                        {!! Form::select('jenis_muat[]', $jenis_muat, null, ['class'=>'form-control form-select-solid jenis_muat', 'data-control'=>'select2', 'id'=>'jenis_muat_' . $key, 'data-id'=>$key, 'required', 'disabled']) !!}
+                                        {!! Form::select('jenis_muat['.($key+1).']', $jenis_muat, null, ['class'=>'form-control form-select-solid jenis_muat', 'data-control'=>'select2', 'id'=>'jenis_muat_' . ($key+1), 'data-id'=>($key+1), 'required', 'disabled']) !!}
                                     </div>
             
                                     <div class="form-group col-lg-3">
                                         <label class="form-label">Tanggal Mulai Berlaku</label>
                                         <div class="col-lg-12">
                                             <div class="input-group date">
-                                                {!! Form::text('tgl_mulai[]', date('d-m-Y', strtotime($pad->tgl_mulai)), ['class'=>'form-control datepicker', 'id'=>'tgl_mulai_' . $key, 'data-id'=>$key, 'disabled']) !!}
+                                                {!! Form::text('tgl_mulai['.($key+1).']', date('d-m-Y', strtotime($pad->tgl_mulai)), ['class'=>'form-control datepicker', 'id'=>'tgl_mulai_' . ($key+1), 'data-id'=>($key+1), 'disabled']) !!}
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" style="display: block">
                                                         <i class="la la-calendar-check-o"></i>
@@ -80,7 +80,7 @@
                                         <label class="form-label">Tanggal Selesai Berlaku</label>
                                         <div class="col-lg-12">
                                             <div class="input-group date">
-                                                {!! Form::text('tgl_selesai[]', date('d-m-Y', strtotime($pad->tgl_selesai)), ['class'=>'form-control datepicker', 'id'=>'tgl_selesai_' . $key, 'data-id'=>$key, 'disabled']) !!}
+                                                {!! Form::text('tgl_selesai['.($key+1).']', date('d-m-Y', strtotime($pad->tgl_selesai)), ['class'=>'form-control datepicker', 'id'=>'tgl_selesai_' . ($key+1), 'data-id'=>($key+1), 'disabled']) !!}
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" style="display: block">
                                                         <i class="la la-calendar-check-o"></i>
@@ -92,13 +92,17 @@
             
                                     <div class="form-group col-lg-6">
                                         <label class="form-label">Lokasi Pemuatan</label>
-                                        <select class="form-control form-select-solid" data-control="select2" name="kd_muat[]" id="kd_muat_{{ $key }}" data-id="{{ $key }}" disabled>
+                                        <select class="form-control form-select-solid" data-control="select2" name="kd_muat[{{($key+1)}}]" id="kd_muat_{{ ($key+1) }}" data-id="{{ ($key+1) }}" disabled>
                                             <option value="">Pilih Jenis Pemuatan terlebih dahulu!</option>
                                         </select>
                                     </div>
+                                    <div class="form-group col-lg-6">
+                                        <label class="form-label">Vendor</label>
+                                        {!! Form::select('vendor[' . ($key+1) . '][]', $vendor, $pad->vendors ? explode('|', $pad->vendors) : null, ['class'=>'form-control form-select-solid vendor', 'data-control'=>'select2', 'id'=>'vendor_' . ($key+1), 'data-id'=>($key+1), 'multiple' => true, 'disabled']) !!}
+                                    </div>
                                 </div>
 
-                                <div id="container_harsat_{{ $key }}" data-id="{{ $key }}">
+                                <div id="container_harsat_{{ ($key+1) }}" data-id="{{ ($key+1) }}">
                                     <label class="form-label">Harga Satuan</label>
 
                                     <table class="table table-row-bordered text-center">
@@ -112,26 +116,26 @@
                                         </thead>
 
                                         <tbody>
-                                            <input type="hidden" name="count_harsat[]" class="count_harsat" value="{{ count($pad->pad2) }}">
+                                            <input type="hidden" name="count_harsat[{{($key+1)}}]" class="count_harsat" value="{{ count($pad->pad2) }}">
 
                                             @foreach ($pad->pad2 as $key2 => $pad2)
                                                 <tr>
                                                     <td>
-                                                        {{ sprintf('%03s', ((int) $key2+1)) }}
-                                                        <input type="hidden" name="key_harsat[]" value="{{ $key2 }}">
+                                                        {{ ($key2+1) }}
+                                                        <input type="hidden" name="key_harsat[{{($key+1)}}][]" value="{{ $key2 }}">
                                                     </td>
                                                     <td>
                                                         {{ $pad2->range_min }} - {{ $pad2->range_max }}
-                                                        <input type="hidden" name="range_min[]" value="{{ $pad2->range_min }}">
-                                                        <input type="hidden" name="range_max[]" value="{{ $pad2->range_max }}">
+                                                        <input type="hidden" name="range_min[{{($key+1)}}][]" value="{{ $pad2->range_min }}">
+                                                        <input type="hidden" name="range_max[{{($key+1)}}][]" value="{{ $pad2->range_max }}">
                                                     </td>
                                                     <td>
-                                                        {{ $pad2->h_pusat }}
-                                                        <input type="hidden" name="h_pusat[]" value="{{ $pad2->h_pusat }}">
+                                                        {{ number_format($pad2->h_pusat) }}
+                                                        <input type="hidden" name="h_pusat[{{($key+1)}}][]" value="{{ $pad2->h_pusat }}">
                                                     </td>
                                                     <td>
-                                                        {{ $pad2->h_final }}
-                                                        <input type="hidden" name="h_final[]" value="{{ $pad2->h_final }}">
+                                                        {{ number_format($pad2->h_final) }}
+                                                        <input type="hidden" name="h_final[{{($key+1)}}][]" value="{{ $pad2->h_final }}">
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -196,7 +200,7 @@
 
     $(document).ready(function() {
         $.each(pad, function(key, value) {
-            $('#jenis_muat_' + key).val(value.jenis_muat).trigger('change', value.kd_muat);
+            $('#jenis_muat_' + (key+1)).val(value.jenis_muat).trigger('change', value.kd_muat);
         });
     });
 

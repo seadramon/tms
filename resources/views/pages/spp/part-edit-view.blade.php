@@ -118,17 +118,17 @@
 				<table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
 					<thead>
 						<tr class="fw-bolder fs-6 text-gray-800">
-							<th >No</th>
+							<th>No</th>
 							<th>Nama Produk</th>
-							<th >Kode Produk</th>
-							<th >Saat Ini</th>
-							<th >S.d Saat ini</th>
-							<th >Keterangan</th>
-							<th >Segmen</th>
-							<th >Jumlah Segmen</th>
+							<th>Kode Produk</th>
+							<th>Saat Ini</th>
+							<th>S.d Saat ini</th>
+							<th>Keterangan</th>
+							<th>Segmen</th>
+							<th>Jumlah Segmen</th>
+							<th>KSDM Vol</th>
+							<th>PEO Vol</th>
 							<th>MUnit Vol</th>
-							<th>Vendor Vol</th>
-							<th>MDiv Vol</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -194,17 +194,3 @@
 			</div>	
 		</div>
 </div>
-<script type="text/javascript">
-	$("#daterange").daterangepicker({
-		locale: {
-            format: 'DD-MM-YYYY'
-		}
-	});
-	
-	function sdSaatIni(vol, urutan) {
-		let saatIni = $("#id-saatini-" + urutan).val();
-		let hitungan = parseInt(vol) + parseInt(saatIni);
-	
-		$("#id-sdsaatini-" + urutan).val(hitungan);
-	}
-</script>

@@ -20,7 +20,9 @@
                 <div class="card-header">
                     <h3 class="card-title">LIST SPM</h3>
                     <div class="card-toolbar">
-                        <a href="{{ route('spm.create') }}" class="btn btn-success" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah SPM</a>
+                        @if (in_array('create', json_decode(session('TMS_ACTION_MENU'))))
+                            <a href="{{ route('spm.create') }}" class="btn btn-success" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah SPM</a>
+                        @endif
                     </div>
                 </div>
 

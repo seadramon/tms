@@ -32,24 +32,28 @@
                         @endforeach
                     @endif
 
-                    <div style="margin-bottom: 50px">
-                        <div class="form-group row">
-                            <div class="col-lg-6 custom-form">
-                                <label class="form-label col-sm-2 custom-label">No. SPTB</label>
-                                {!! Form::text('no_sptb', 'AUTO', ['class'=>'form-control col-sm-4 custom-width', 'id'=>'no_sptb', 'disabled']) !!}
-                            </div>
-                            
-                            <div class="col-lg-6 custom-form">
-                                <label class="form-label col-sm-2 custom-label">Jenis SPM</label>
-                                {!! Form::text('jenis_spm', 'STOK AKTIF', ['class'=>'form-control col-sm-4 custom-width', 'id'=>'jenis_spm', 'disabled']) !!}
-                            </div>
+                    <div class="form-group row">
+                        {{-- <div class="col-lg-6 custom-form">
+                            <label class="form-label col-sm-2 custom-label">No. SPTB</label>
+                            {!! Form::text('no_sptb', 'AUTO', ['class'=>'form-control col-sm-4 custom-width', 'id'=>'no_sptb', 'disabled']) !!}
+                        </div> --}}
+                        
+                        <div class="col-lg-6 custom-form">
+                            <label class="form-label col-sm-2 custom-label">Jenis SPM</label>
+                            {!! Form::text('jenis_spm', 'STOK AKTIF', ['class'=>'form-control col-sm-4 custom-width', 'id'=>'jenis_spm', 'disabled']) !!}
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-lg-6">
+                            @php
+                                $spm_list = $no_spm;
+                                if($spm){
+                                    $spm_list += [$spm => $spm];
+                                }
+                            @endphp
                             <label class="form-label">No. SPM</label>
-                            {!! Form::select('no_spm', $no_spm, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'no_spm']) !!}
+                            {!! Form::select('no_spm', $spm_list, $spm, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'no_spm']) !!}
                         </div>
 
                         <div class="form-group col-lg-6">
@@ -232,7 +236,9 @@
     });
     
     $(document).ready(function() {
-        
+        if("{{$spm}}" != ""){
+            $('#no_spm').trigger('change');
+        }
     });
     
     $('#no_spm').on('change', function(){
@@ -272,7 +278,7 @@
                     
                     $('#container-produk').append(`
                         <div class="form-group col-lg-6">
-                            <input type="text" class="form-control" value="` + result.spm.spmd[i].kd_produk + ' - ' + result.spm.spmd[i].ket + `" readonly style="background-color: var(--kt-input-disabled-bg);">
+                            <input type="text" class="form-control" value="` + result.spm.spmd[i].kd_produk + ' - ' + result.spm.spmd[i].produk.tipe + `" readonly style="background-color: var(--kt-input-disabled-bg);">
                             <input type="hidden" name="kd_produk[]" class="form-control" value="` + result.spm.spmd[i].kd_produk + `">
                         </div>
                         <div class="form-group col-lg-3">

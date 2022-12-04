@@ -24,17 +24,24 @@ use App\Models\Views\VSpprbRi;
 use Exception;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class Sp3Controller extends Controller
 {
     public function index(){
+        // return response()->json(json_decode(session('TMS_ACTION_MENU')));
         $labelSemua = ["" => "Semua"];
 
-        $pat = Pat::all()->pluck('ket', 'kd_pat')->toArray();
-        $pat = $labelSemua + $pat;
-
+        if(!Auth::check() && session('TMP_KDWIL') != '0A'){
+            $pat = Pat::where('kd_pat', session('TMP_KDWIL'))->get()->pluck('ket', 'kd_pat')->toArray();
+		}else{
+            $pat = Pat::all()->pluck('ket', 'kd_pat')->toArray();
+            $pat = $labelSemua + $pat;
+        }
+        
         $periode = [];
 
         for($i=0; $i<10; $i++){
@@ -79,7 +86,7 @@ class Sp3Controller extends Controller
     public function data(Request $request)
     {
         $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
-        $query = Sp3::with('vendor', 'sp3D')
+        $query = Sp3::with('vendor', 'sp3D', 'unitkerja')
             ->join(DB::raw($joinQuery), function($join) {
                 $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
             })
@@ -92,6 +99,10 @@ class Sp3Controller extends Controller
         if($request->periode){
             $query->whereYear('tgl_sp3', $request->periode);
         }
+        
+        if(Auth::check()){
+            $query->whereVendorId(Auth::user()->vendor_id)->where('app1', 1);
+        }
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_sp3', function ($model) {
@@ -99,13 +110,24 @@ class Sp3Controller extends Controller
                 })
                 ->addColumn('approval', function ($model) {
                     $teks = '';
-                    if($model->app1 == 1){
+                    if($model->app1 == 1 && !Auth::check()){
                         $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
                     }
                     if($model->app2 == 1){
-                        $teks .= '<span class="badge badge-light-success mr-2 mb-2">MDiv&nbsp;<i class="fas fa-check text-success"></i></span>';
+                        if(Auth::check()){
+                            $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved&nbsp;<i class="fas fa-check text-success"></i></span>';
+                        }else{
+                            $teks .= '<span class="badge badge-light-success mr-2 mb-2">Vendor&nbsp;<i class="fas fa-check text-success"></i></span>';
+                        }
                     }
                     return $teks;
+                })
+                ->addColumn('custom', function ($model) {
+                    if(Auth::check()){
+                        return $model->unitkerja->ket ?? '-';
+                    }else{
+                        return $model->vendor->nama ?? '-';
+                    }
                 })
                 ->addColumn('progress_vol', function ($model) {
                     $vol_sptb = SptbD::whereHas('sptbh',function($sql) use ($model) {
@@ -120,7 +142,6 @@ class Sp3Controller extends Controller
                         $vol = 100;
                         $badge = 'success';
                     }elseif($vol >= 75){
-                        $vol = 100;
                         $badge = 'warning';
                     }else{
                         $badge = 'dark';
@@ -128,16 +149,33 @@ class Sp3Controller extends Controller
                     return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
                 })
                 ->addColumn('menu', function ($model) {
+                    $list = '';
+                    if(Auth::check()){
+                        
+                    }else{
+                        $action = json_decode(session('TMS_ACTION_MENU'));
+                        if(in_array('view', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
+                        }
+                        if(in_array('edit', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sp3.edit', str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>';
+                        }
+                        if(in_array('amandemen', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sp3.amandemen', str_replace('/', '|', $model->no_sp3)) . '">Amandemen</a></li>';
+                        }
+                        if(in_array('approve1', $action) && $model->app1 == 0){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['first', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
+                        }
+                        if(in_array('approve2', $action) && $model->app1 == 1){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
+                        }
+                    }
                     $edit = '<div class="btn-group">
                                 <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Action
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>
-                                <li><a class="dropdown-item" href="' . route('sp3.edit', str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>
-                                <li><a class="dropdown-item" href="' . route('sp3.amandemen', str_replace('/', '|', $model->no_sp3)) . '">Amandemen</a></li>
-                                <li><a class="dropdown-item" href="#">Adendum</a></li>
-                                <li><a class="dropdown-item" href="' . route('sp3.get-approve', [!$model->app1 ? 'first' : 'second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>
+                                ' . $list . '
                                 <li><a class="dropdown-item" href="#">Print</a></li>
                                 <li><a class="dropdown-item" href="#">Hapus</a></li>
                             </ul>
@@ -145,7 +183,7 @@ class Sp3Controller extends Controller
 
                     return $edit;
                 })
-                ->rawColumns(['menu', 'approval', 'progress_vol'])
+                ->rawColumns(['menu', 'approval', 'progress_vol', 'custom'])
                 ->toJson();
     }
 
@@ -420,7 +458,7 @@ class Sp3Controller extends Controller
             for($i=0; $i < count($request->dokumen_asli); $i++){
                 $sp3Dokumen = new Sp3Dokumen();
 
-                $sp3Dokumen->no_sp3 = $newNoSp3;
+                $sp3Dokumen->no_sp3 = $noSp3;
                 $sp3Dokumen->dok_id = $i + 1;
                 $sp3Dokumen->asli = $request->dokumen_asli[$i];
                 $sp3Dokumen->copy = $request->dokumen_copy[$i];
@@ -445,7 +483,7 @@ class Sp3Controller extends Controller
     {
         $noSp3 = str_replace('|', '/', $noSp3);
         
-        $data = Sp3::find($noSp3);
+        $data = Sp3::with('sp3D')->find($noSp3);
 
         $detailPesanan = MonOp::with(['produk', 'sp3D' => function($sql) use ($noSp3) {
                 $sql->whereNotIn('no_sp3', [$noSp3]);
@@ -546,6 +584,15 @@ class Sp3Controller extends Controller
 
         $isAmandemen = str_contains(request()->url(), 'amandemen');
 
+        $sptbd = SptbD::whereHas('sptbh', function($sql) use ($data){
+                $sql->whereNoNpp($data->no_npp);
+                $sql->whereHas('spmh', function($sql1) use ($data){
+                    $sql1->whereVendorId($data->vendor_id);
+                });
+            })
+            ->get()
+            ->groupBy('kd_produk');
+
         return view('pages.sp3.show', compact(
             'data',
             'detailPesanan',
@@ -562,6 +609,7 @@ class Sp3Controller extends Controller
             'ppn',
             'pph',
             'sp3D',
+            'sptbd',
             'sat_harsat',
             'listPic',
             'detailPekerjaan',
@@ -680,6 +728,15 @@ class Sp3Controller extends Controller
             ->pluck('name', 'kd_material')
             ->toArray();
 
+        $sptbd = SptbD::whereHas('sptbh', function($sql) use ($data){
+                $sql->whereNoNpp($data->no_npp);
+                $sql->whereHas('spmh', function($sql1) use ($data){
+                    $sql1->whereVendorId($data->vendor_id);
+                });
+            })
+            ->get()
+            ->groupBy('kd_produk');
+
         return view('pages.sp3.edit', compact(
             'data',
             'detailPesanan',
@@ -696,6 +753,7 @@ class Sp3Controller extends Controller
             'ppn',
             'pph',
             'sp3D',
+            'sptbd',
             'sat_harsat',
             'listPic',
             'detailPekerjaan',
@@ -899,9 +957,9 @@ class Sp3Controller extends Controller
             $data->app1_date = date('Y-m-d H:i:s');
         }else{
             $data->app2 = 1;
-            $data->app2_empid = session('TMP_NIP') ?? '12345';
-            $data->app2_jbt = session('TMP_KDJBT') ?? '12345';
+            $data->app2_jbt = Auth::user()->position ?? '';
             $data->app2_date = date('Y-m-d H:i:s');
+            $data->app2_name = Auth::user()->name ?? '';
         }
 
         $data->save();

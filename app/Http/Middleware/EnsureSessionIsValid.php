@@ -2,8 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Menu;
+use App\Models\Role;
+use App\Models\RoleMenu;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -18,16 +22,31 @@ class EnsureSessionIsValid
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->has('sessid')) {
-            if(!session()->exists('TMP_WBSESSID')){
-                return redirect()->away(env('LOGIN_URL'));
-            }
-        }else{
-            if(session('TMP_WBSESSID') != $request->sessid){
-                $this->generateSession($request->sessid);
-            }
+        if($request->has('sessid')){
+            $this->generateSession($request->sessid);
         }
-        return $next($request);
+        if (session()->exists('TMP_WBSESSID') || Auth::check()) {
+            $route = str_replace('.data', '.index', $request->route()->getName());
+            $rm = RoleMenu::whereHas('role', function($sql){
+                    $sql->where('grpid', session('TMP_ROLE'));
+                })
+                ->whereHas('menu', function($sql) use ($route) {
+                    $sql->where('route_name', $route);
+                })
+                ->first();
+            Session::put('TMS_ACTION_MENU', json_encode($rm->action_menu ?? []));
+            return $next($request);
+        }else{
+            return redirect()->route('vendor.login');
+        }
+        // else{
+        //     if(session()->has('TMP_WBSESSID')){
+        //         $this->generateSession($request->sessid);
+        //     }else{
+        //         if(Auth::check())
+        //     }
+        // }
+        
     }
 
     private function generateSession($session_id)

@@ -17,7 +17,9 @@
                 <div class="card-header">
                     <h3 class="card-title">LIST Kontrak / SP3 / SPK</h3>
                     <div class="card-toolbar">
-                        <a href="{{route('sp3.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
+                        @if (in_array('create', json_decode(session('TMS_ACTION_MENU'))))
+                            <a href="{{route('sp3.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
+                        @endif
                     </div>
                 </div>
 
@@ -62,7 +64,11 @@
                                 <th rowspan="2">NO KONTRAK</th>
                                 <th rowspan="2">NPP</th>
                                 <th rowspan="2">TANGGAL</th>
-                                <th rowspan="2">VENDOR</th>
+                                @if (Auth::check())
+                                    <th rowspan="2">UNIT KERJA</th>
+                                @else
+                                    <th rowspan="2">VENDOR</th>
+                                @endif
                                 <th rowspan="2">APPROVE</th>
                                 <th colspan="3" style="text-align: center">PROGRESS</th>
                                 <th rowspan="2">OPTION</th>
@@ -150,7 +156,7 @@
 	                {data: 'no_sp3', name: 'no_sp3', defaultContent: '-'},
 	                {data: 'no_npp', name: 'no_npp', defaultContent: '-'},
 	                {data: 'tgl_sp3', name: 'tgl_sp3', defaultContent: '-'},
-	                {data: 'vendor.nama', name: 'vendor.nama', defaultContent: '-'},
+	                {data: 'custom', name: 'vendor.nama', defaultContent: '-', orderable: false, searchable: false},
 	                {data: 'approval', name: 'app1', defaultContent: '-'},
 	                {data: 'progress_vol', name: 'progress_vol', orderable: false, searchable: false, defaultContent: '-'},
 	                {defaultContent: '-'},

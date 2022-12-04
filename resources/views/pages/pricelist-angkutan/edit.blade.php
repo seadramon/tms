@@ -60,24 +60,32 @@
 
                     <div id="container_pricelist_angkutan">
                         @foreach ($data->pad as $key => $pad)
-                            <div id="box_{{ $key }}" class="box" data-id="{{ $key }}">
+                            <div id="box_{{ ($key+1) }}" class="box" data-id="{{ ($key+1) }}">
                                 <div class="separator separator-dashed border-primary my-10"></div>
                                 <div class="row mb-5">
                                     <div class="form-group col-lg-6">
+                                        <input type="hidden" name="index[{{($key+1)}}]" id="index_{{($key+1)}}" value="{{($key+1)}}">
+                                    </div>
+                                    <div class="form-group col-lg-6" style="text-align: right;">
+                                        <button type="button" class="btn btn-light-danger btn_hapus mt-8" id="btn_hapus_{{($key+1)}}" data-id="{{($key+1)}}">
+                                            <i class="la la-trash"></i>Hapus
+                                        </button>
+                                    </div>
+                                    <div class="form-group col-lg-6">
                                         <label class="form-label">Jenis Angkutan</label>
-                                        {!! Form::select('kd_material[]', $kd_material, $pad->kd_material, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_material_' . $key, 'data-id'=>$key]) !!}
+                                        {!! Form::select('kd_material[' . ($key+1) . ']', $kd_material, $pad->kd_material, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_material_' . ($key+1), 'data-id'=>($key+1)]) !!}
                                     </div>
             
                                     <div class="form-group col-lg-6">
                                         <label class="form-label">Jenis Pemuatan</label>
-                                        {!! Form::select('jenis_muat[]', $jenis_muat, null, ['class'=>'form-control form-select-solid jenis_muat', 'data-control'=>'select2', 'id'=>'jenis_muat_' . $key, 'data-id'=>$key, 'required']) !!}
+                                        {!! Form::select('jenis_muat[' . ($key+1) . ']', $jenis_muat, null, ['class'=>'form-control form-select-solid jenis_muat', 'data-control'=>'select2', 'id'=>'jenis_muat_' . ($key+1), 'data-id'=>($key+1), 'required']) !!}
                                     </div>
             
                                     <div class="form-group col-lg-3">
                                         <label class="form-label">Tanggal Mulai Berlaku</label>
                                         <div class="col-lg-12">
                                             <div class="input-group date">
-                                                {!! Form::text('tgl_mulai[]', date('d-m-Y', strtotime($pad->tgl_mulai)), ['class'=>'form-control datepicker', 'id'=>'tgl_mulai_' . $key, 'data-id'=>$key]) !!}
+                                                {!! Form::text('tgl_mulai[' . ($key+1) . ']', date('d-m-Y', strtotime($pad->tgl_mulai)), ['class'=>'form-control datepicker', 'id'=>'tgl_mulai_' . ($key+1), 'data-id'=>($key+1)]) !!}
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" style="display: block">
                                                         <i class="la la-calendar-check-o"></i>
@@ -91,7 +99,7 @@
                                         <label class="form-label">Tanggal Selesai Berlaku</label>
                                         <div class="col-lg-12">
                                             <div class="input-group date">
-                                                {!! Form::text('tgl_selesai[]', date('d-m-Y', strtotime($pad->tgl_selesai)), ['class'=>'form-control datepicker', 'id'=>'tgl_selesai_' . $key, 'data-id'=>$key]) !!}
+                                                {!! Form::text('tgl_selesai[' . ($key+1) . ']', date('d-m-Y', strtotime($pad->tgl_selesai)), ['class'=>'form-control datepicker', 'id'=>'tgl_selesai_' . ($key+1), 'data-id'=>($key+1)]) !!}
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" style="display: block">
                                                         <i class="la la-calendar-check-o"></i>
@@ -103,30 +111,29 @@
             
                                     <div class="form-group col-lg-6">
                                         <label class="form-label">Lokasi Pemuatan</label>
-                                        <select class="form-control form-select-solid" data-control="select2" name="kd_muat[]" id="kd_muat_{{ $key }}" data-id="{{ $key }}" required>
+                                        <select class="form-control form-select-solid" data-control="select2" name="kd_muat[{{ ($key+1) }}]" id="kd_muat_{{ ($key+1) }}" data-id="{{ ($key+1) }}" required>
                                             <option value="">Pilih Jenis Pemuatan terlebih dahulu!</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-lg-4">
                                         <label class="form-label">Upload File Excel (Harga Satuan)</label>
-                                        {!! Form::file('file_excel[]', ['class'=>'form-control', 'id'=>'file_excel_' . $key, 'data-id'=>$key]) !!}
+                                        {!! Form::file('file_excel[' . ($key+1) . ']', ['class'=>'form-control', 'id'=>'file_excel_' . ($key+1), 'data-id'=>($key+1)]) !!}
                                     </div>
             
                                     <div class="form-group col-lg-2">
                                         <label class="form-label">&nbsp;</label>
-                                        <button type="button" id="upload_excel_{{ $key }}" data-id="{{ $key }}" class="btn btn-success form-control upload_excel">
+                                        <button type="button" id="upload_excel_{{ ($key+1) }}" data-id="{{ ($key+1) }}" class="btn btn-success form-control upload_excel">
                                             Upload Excel
                                         </button>
                                     </div>
-                                    <div class="form-group col-lg-6" style="text-align: right;">
-                                        <button type="button" class="btn btn-light-danger btn_hapus mt-8" id="btn_hapus_1" data-id="1">
-                                            <i class="la la-trash"></i>Hapus
-                                        </button>
+                                    <div class="form-group col-lg-6">
+                                        <label class="form-label">Vendor</label>
+                                        {!! Form::select('vendor[' . ($key+1) . '][]', $vendor, $pad->vendors ? explode('|', $pad->vendors) : null, ['class'=>'form-control form-select-solid vendor', 'data-control'=>'select2', 'id'=>'vendor_' . ($key+1), 'data-id'=>($key+1), 'multiple' => true, 'required']) !!}
                                     </div>
                                 </div>
 
-                                <div id="container_harsat_{{ $key }}" data-id="{{ $key }}">
+                                <div id="container_harsat_{{ ($key+1) }}" data-id="{{ ($key+1) }}">
                                     <label class="form-label">Harga Satuan</label>
 
                                     <table class="table table-row-bordered text-center">
@@ -140,26 +147,26 @@
                                         </thead>
 
                                         <tbody>
-                                            <input type="hidden" name="count_harsat[]" class="count_harsat" value="{{ count($pad->pad2) }}">
+                                            <input type="hidden" name="count_harsat[{{ ($key+1) }}]" class="count_harsat" value="{{ count($pad->pad2) }}">
 
                                             @foreach ($pad->pad2 as $key2 => $pad2)
                                                 <tr>
                                                     <td>
-                                                        {{ sprintf('%03s', ((int) $key2+1)) }}
-                                                        <input type="hidden" name="key_harsat[]" value="{{ $key2 }}">
+                                                        {{ ($key2+1) }}
+                                                        <input type="hidden" name="key_harsat[{{ ($key+1) }}][]" value="{{ $key2 }}">
                                                     </td>
                                                     <td>
                                                         {{ $pad2->range_min }} - {{ $pad2->range_max }}
-                                                        <input type="hidden" name="range_min[]" value="{{ $pad2->range_min }}">
-                                                        <input type="hidden" name="range_max[]" value="{{ $pad2->range_max }}">
+                                                        <input type="hidden" name="range_min[{{ ($key+1) }}][]" value="{{ $pad2->range_min }}">
+                                                        <input type="hidden" name="range_max[{{ ($key+1) }}][]" value="{{ $pad2->range_max }}">
                                                     </td>
                                                     <td>
                                                         {{ number_format($pad2->h_pusat) }}
-                                                        <input type="hidden" name="h_pusat[]" value="{{ $pad2->h_pusat }}">
+                                                        <input type="hidden" name="h_pusat[{{ ($key+1) }}][]" value="{{ $pad2->h_pusat }}">
                                                     </td>
                                                     <td>
                                                         {{ number_format($pad2->h_final) }}
-                                                        <input type="hidden" name="h_final[]" value="{{ $pad2->h_final }}">
+                                                        <input type="hidden" name="h_final[{{ ($key+1) }}][]" value="{{ $pad2->h_final }}">
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -226,7 +233,7 @@
 
     $(document).ready(function() {
         $.each(pad, function(key, value) {
-            $('#jenis_muat_' + key).val(value.jenis_muat).trigger('change', value.kd_muat);
+            $('#jenis_muat_' + (key+1)).val(value.jenis_muat).trigger('change', value.kd_muat);
         });
     });
 
@@ -300,6 +307,7 @@
             
             formData.append('file_excel', fileExcel);
             formData.append('_token', '{{ csrf_token() }}');
+            formData.append('index', dataId);
 
             $.ajax({
                 url: "{{ route('pricelist-angkutan.upload-excel') }}",
@@ -341,18 +349,32 @@
         
         //Set Id
         clone.getElementsByTagName('select')[0].id = 'kd_material_' + newIndex;
+        clone.getElementsByTagName('select')[0].name = 'kd_material[' + newIndex + ']';
         clone.getElementsByTagName('select')[1].id = 'jenis_muat_' + newIndex;
+        clone.getElementsByTagName('select')[1].name = 'jenis_muat[' + newIndex + ']';
         clone.getElementsByTagName('select')[2].id = 'kd_muat_' + newIndex;
-        clone.getElementsByTagName('input')[0].id = 'tgl_mulai_' + newIndex;
-        clone.getElementsByTagName('input')[1].id = 'tgl_selesai_' + newIndex;
-        clone.getElementsByTagName('input')[2].id = 'file_excel_' + newIndex;
+        clone.getElementsByTagName('select')[2].name = 'kd_muat[' + newIndex + ']';
+        clone.getElementsByTagName('select')[3].id = 'vendor_' + newIndex;
+        clone.getElementsByTagName('select')[3].name = 'vendor[' + newIndex + '][]';
+        clone.getElementsByTagName('input')[0].id = 'index_' + newIndex;
+        clone.getElementsByTagName('input')[0].name = 'index[' + newIndex + ']';
+        clone.getElementsByTagName('input')[1].id = 'tgl_mulai_' + newIndex;
+        clone.getElementsByTagName('input')[1].name = 'tgl_mulai[' + newIndex + ']';
+        clone.getElementsByTagName('input')[2].id = 'tgl_selesai_' + newIndex;
+        clone.getElementsByTagName('input')[2].name = 'tgl_selesai[' + newIndex + ']';
+        clone.getElementsByTagName('input')[3].id = 'file_excel_' + newIndex;
+        clone.getElementsByTagName('input')[3].name = 'file_excel[' + newIndex + ']';
         clone.getElementsByTagName('button')[0].id = 'upload_excel_' + newIndex;
         clone.getElementsByTagName('button')[1].id = 'btn_hapus_' + newIndex;
         // clone.getElementsByTagName('button')[2].id = 'btn_tambah_' + newIndex;
-        clone.getElementsByTagName('div')[16].id = 'container_harsat_' + newIndex;
+        clone.getElementsByTagName('div')[18].id = 'container_harsat_' + newIndex;
 
         // add new box to end of div
         $('#container_pricelist_angkutan').append(clone);
+
+
+        //set value on index
+        $('#index_' + newIndex).val(newIndex);
         
         //Set Data Id
         $('#box_' + newIndex).attr('data-id', newIndex);
@@ -370,6 +392,7 @@
         //Set Required
         $('#jenis_muat_' + newIndex).attr('required');
         $('#kd_muat_' + newIndex).attr('required');
+        $('#vendor_' + newIndex).attr('required');
         
         //Remove Disable
         $('#kd_material_' + newIndex).removeAttr('disabled');
@@ -383,12 +406,14 @@
         $('#kd_material_' + newIndex).select2();
         $('#jenis_muat_' + newIndex).select2();
         $('#kd_muat_' + newIndex).select2();
+        $('#vendor_' + newIndex).select2();
         
         //Handle duplicate select2
         if(isFirstAdd){
             $('#box_' + newIndex).find('.select2-container').eq(1).remove();
             $('#box_' + newIndex).find('.select2-container').eq(2).remove();
-            $('#box_' + newIndex).find('.select2-container').last().remove();
+            $('#box_' + newIndex).find('.select2-container').eq(3).remove();
+            // $('#box_' + newIndex).find('.select2-container').last().remove();
 
             isFirstAdd = false;
         }

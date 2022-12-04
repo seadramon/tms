@@ -83,6 +83,12 @@ class PdaController extends Controller
                 ->editColumn('vol_btg', function ($model) {
                     return number_format($model->vol_btg);
                 })
+                ->editColumn('tonase', function ($model) {
+                    return number_format(round($model->tonase));
+                })
+                ->editColumn('jml_rit', function ($model) {
+                    return number_format(round($model->jml_rit));
+                })
                 ->editColumn('jadwal3', function ($model) {
                     return $model->jadwal3 ? date('d-m-y', strtotime($model->jadwal3)) : '-';
                 })
@@ -93,7 +99,7 @@ class PdaController extends Controller
                     if($model->jadwal3 == null || $model->jadwal4 == null){
                         return 0;
                     }
-                    return round($model->jml_rit / (strtotime($model->jadwal4) - strtotime($model->jadwal3)) / (3600*24));
+                    return round($model->jml_rit / ((strtotime($model->jadwal4) - strtotime($model->jadwal3)) / (3600*24)), 1);
                 })
                 ->addColumn('status', function ($model) {
                     $column = '';
@@ -158,6 +164,7 @@ class PdaController extends Controller
                 'no_npp' => $row->no_npp,
                 'ppb_muat' => $row->ppb_muat,
                 'vol_btg' => $row->vol_btg,
+                'tonase' => $row->tonase,
                 'jadwal3' => $row->jadwal3,
                 'jadwal4' => $row->jadwal4,
                 'jml_rit' => $row->jml_rit,
@@ -213,7 +220,7 @@ class PdaController extends Controller
             $jarak_langsir = 'jarak_langsir_'.$i+1;
             $metode = 'metode_'.$i+1;
 
-            $data->checkpoints = json_encode($request->$ck);
+            $data->checkpoints = $request->$ck ? json_encode($request->$ck) : null;
             $data->rute = null;
             $data->jalan = $request->$jalan;
             $data->jalan2 = $request->$jalan2;

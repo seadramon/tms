@@ -60,6 +60,7 @@
                         <div class="form-group mb-3 col-lg-3">
                             <label class="form-label">Driver</label>
                             {!! Form::select('driver_id', $driver, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'driver_id']) !!}
+                            <span class="text-danger">driver yang di pilih akan dilepas dari armada lain</span>
                         </div>
 
                         <div class="form-group mb-3 col-lg-3">
@@ -176,6 +177,34 @@
                         <div class="form-group mb-3 col-lg-3">
                             <label class="form-label">&nbsp;</label>
                             {{-- {!! Form::text('pajak_not_verified', 'NOT VERIFIED YET', ['class'=>'form-control', 'id'=>'pajak_not_verified', 'disabled']) !!} --}}
+                        </div>
+                        <div class="col-6 mb-2">
+                            <div class="d-flex align-items-center">
+                                <div class="symbol symbol-200px me-3 images">
+                                    <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_stnk ?? 'foto_stnk.jpg') }}" class="lazy" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <div class="d-flex align-items-center">
+                                <div class="symbol symbol-200px me-3 images">
+                                    <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_kir_head ?? 'foto_kir_head.jpg') }}" class="lazy" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <div class="d-flex align-items-center">
+                                <div class="symbol symbol-200px me-3 images">
+                                    <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_kir_trailer ?? 'foto_kir_trailer.jpg') }}" class="lazy" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <div class="d-flex align-items-center">
+                                <div class="symbol symbol-200px me-3 images">
+                                    <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_pajak ?? 'foto_pajak.jpg') }}" class="lazy" alt="">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
