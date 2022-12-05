@@ -90,7 +90,7 @@ class Sp3Controller extends Controller
             ->join(DB::raw($joinQuery), function($join) {
                 $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
             })
-            ->select('sp3_h.no_sp3', 'sp3_h.tgl_sp3', 'sp3_h.app1', 'sp3_h.no_npp', 'sp3_h.vendor_id');
+            ->select('sp3_h.no_sp3', 'sp3_h.tgl_sp3', 'sp3_h.app1', 'sp3_h.no_npp', 'sp3_h.vendor_id', 'sp3_h.kd_pat');
 
         if($request->pat){
             $query->where('kd_pat', $request->pat);

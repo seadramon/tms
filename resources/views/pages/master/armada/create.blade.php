@@ -179,6 +179,7 @@
                             {{-- {!! Form::text('pajak_not_verified', 'NOT VERIFIED YET', ['class'=>'form-control', 'id'=>'pajak_not_verified', 'disabled']) !!} --}}
                         </div>
                         <div class="col-6 mb-2">
+                            <label class="form-label">Foto STNK</label>
                             <div class="d-flex align-items-center">
                                 <div class="symbol symbol-200px me-3 images">
                                     <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_stnk ?? 'foto_stnk.jpg') }}" class="lazy" alt="">
@@ -186,6 +187,7 @@
                             </div>
                         </div>
                         <div class="col-6 mb-2">
+                            <label class="form-label">Foto KIR Head</label>
                             <div class="d-flex align-items-center">
                                 <div class="symbol symbol-200px me-3 images">
                                     <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_kir_head ?? 'foto_kir_head.jpg') }}" class="lazy" alt="">
@@ -193,6 +195,7 @@
                             </div>
                         </div>
                         <div class="col-6 mb-2">
+                            <label class="form-label">Foto KIR Trailer</label>
                             <div class="d-flex align-items-center">
                                 <div class="symbol symbol-200px me-3 images">
                                     <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_kir_trailer ?? 'foto_kir_trailer.jpg') }}" class="lazy" alt="">
@@ -200,6 +203,7 @@
                             </div>
                         </div>
                         <div class="col-6 mb-2">
+                            <label class="form-label">Foto Pajak</label>
                             <div class="d-flex align-items-center">
                                 <div class="symbol symbol-200px me-3 images">
                                     <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_pajak ?? 'foto_pajak.jpg') }}" class="lazy" alt="">
