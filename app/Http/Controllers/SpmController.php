@@ -101,21 +101,16 @@ class SpmController extends Controller
                         if(in_array('buat_sptb', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . route('sptb.create', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Buat SPTB</a></li>';
                         }
+                        if(in_array('edit', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('spm.edit', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Edit</a></li>';
+                        }
                     }
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Action
                         </button>
                         <ul class="dropdown-menu">
-<<<<<<< HEAD
-                            <li><a class="dropdown-item" href="' . route('spm.edit', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Edit</a></li>
-                            <li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-pat="'. $model->pat_to .'" data-id="'. $model->no_spm .'">Konfirmasi</a></li>
-                            <li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>
-                            <li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>
-=======
                             ' . $list . '
->>>>>>> 2b3a47a1e6397385bf80879e435a77afbef6681a
-                            <li><a class="dropdown-item delete" href="#">Hapus</a></li>
                         </ul>
                         </div>';
 
