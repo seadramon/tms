@@ -11,7 +11,7 @@
 @section('content')
 {{-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> --}}
 <!--begin::Content container-->
-<form action="{{ route('potensi.detail.armada.store') }}" method="post" >
+<form action="{{ route('potensi.detail.armada.store') }}" method="post" enctype="multipart/form-data">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <div id="kt_content_container" class="container-xxl">
         <!--begin::Col-->
@@ -668,7 +668,10 @@
                                                 <td></td>
                                             </tr>
                                         </table>
-
+                                        <div class="form-group mb-3 col-lg-3">
+                                            <label class="form-label">Dokumen</label>
+                                            {!! Form::file('file_' . $i, ['class'=>'form-control', 'id'=>'file_{{ $i }}', 'accept' => "application/pdf"]) !!}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -16,6 +16,7 @@ use App\Models\Views\VPotensiMuat;
 use App\Models\Views\VSpprbRi;
 use App\Models\PotensiH;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PdaController extends Controller
 {
@@ -231,17 +232,27 @@ class PdaController extends Controller
             if($request->$langsir != 'tidak_ada'){
                 $data->jarak_langsir = $request->$jarak_langsir;
             }
-
             $data->metode = $request->$metode;
+
+            $param_foto = 'file_' . ($i+1);
+            if ($request->hasFile($param_foto)) {
+                $file = $request->file($param_foto);
+                $extension = $file->getClientOriginalExtension();
+                $dir = 'potensi/' . $request->no_npp[$i] . '/' . $request->ppb_muat[$i];
+                if (!Storage::disk('local')->exists($dir)) {
+                    Storage::disk('local')->makeDirectory($dir, 0777, true);
+                }
+                $fileName = strtotime(now()) . '.pdf';
+                $fullPath = $dir .'/'. $fileName;
+                Storage::disk('local')->put($fullPath, File::get($file));
+                $data->file_path = $fullPath;
+            }
             $data->save();
             $i++;
 
         }
-
         //  return response()->json($request);
-
         return redirect()->route('potensi.detail.armada.index');
-        // return redirect()->route('potensi.detail.armada.edit', ['no_npp' => $request->no_npp[0]]);
     }
 
 }

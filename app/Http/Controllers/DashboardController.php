@@ -27,8 +27,8 @@ class DashboardController extends Controller
         $spmOnProgress = SpmH::doesntHave('sptbh')->count();
         $sptbOnTerbit = SpmH::whereHas('sptbh')->count();
 
-        $sptb1 = SptbH::whereNull('app_pelanggan')->orWhere('app_pelanggan', 0)->count();
-        $sptb2 = SptbH::where('app_pelanggan', 1)->count();
+        $sptb1 = SptbH::whereHas('spmh')->whereNull('app_pelanggan')->orWhere('app_pelanggan', 0)->count();
+        $sptb2 = SptbH::whereHas('spmh')->where('app_pelanggan', 1)->count();
         
         return view('pages.dashboard.index', compact(
             'sp3Draft',
