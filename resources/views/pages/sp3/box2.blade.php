@@ -26,7 +26,7 @@
                 <tbody>
                     @foreach($detailPesanan as $key => $pesanan)
                         @php
-                            $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
+                            $pesananVolBtg  = $pesanan->vSpprbRi->vol_spprb ?? 0;
                             $pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
                             $sp3dVolBtg     = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
                             $sp3dVolTon     = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;

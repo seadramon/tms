@@ -5,13 +5,14 @@ namespace App\Models\Views;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Awobaz\Compoships\Compoships;
 
 use App\Models\Produk;
 use App\Models\Pat;
 
 class VSpprbRi extends Model
 {
-    use HasFactory;
+    use HasFactory, Compoships;
 
     protected $table = 'v_spprb_ri';
 

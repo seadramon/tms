@@ -6,10 +6,11 @@ use App\Models\Views\VSpprbRi;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Awobaz\Compoships\Compoships;
 
 class MonOp extends Model
 {
-    use HasFactory;
+    use HasFactory, Compoships;
 
     protected $table = 'mon_op';
 
@@ -30,6 +31,6 @@ class MonOp extends Model
 
     public function vSpprbRi()
     {
-        return $this->belongsTo(VSpprbRi::class, 'no_npp', 'no_npp');
+        return $this->belongsTo(VSpprbRi::class, ['no_npp', 'kd_produk_konfirmasi'], ['no_npp', 'kd_produk']);
     }
 }
