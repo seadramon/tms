@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Pat;
+use App\Models\SptbH;
 
 class VPotensiMuat extends Model
 {
@@ -28,5 +29,10 @@ class VPotensiMuat extends Model
     public function unitkerja()
     {
     	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
+    }
+
+    public function sptbh()
+    {
+        return $this->hasMany(SptbH::class, 'no_npp', 'no_npp');
     }
 }

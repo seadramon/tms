@@ -9,6 +9,7 @@ use Awobaz\Compoships\Compoships;
 
 use App\Models\Produk;
 use App\Models\Pat;
+use App\Models\SptbH;
 
 class VSpprbRi extends Model
 {

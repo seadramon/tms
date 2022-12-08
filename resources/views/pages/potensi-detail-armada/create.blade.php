@@ -16,7 +16,7 @@
     <div id="kt_content_container" class="container-xxl">
         <!--begin::Col-->
         <div class="col-12 mb-md-5 mb-xl-10">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm" id="div-card">
                 <div class="card-header">
                     <h3 class="card-title">List Potensi Kebutuhan Armada</h3>
                 </div>
@@ -57,7 +57,7 @@
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal3)) }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal4)) }}</td>
                                                 <td>
-                                                    <select class="form-select" data-control="select2" data-placeholder="Select Armada.." name="kd_material[]">
+                                                    <select class="form-select" data-control="select2" data-placeholder="Select Armada.." name="kd_material[]" disabled>
                                                         <option></option>
                                                         @foreach($trmaterial as $item)
                                                             @if(!empty($row->potensiH))
@@ -112,6 +112,17 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="form-group row">
+                            <div class="col-lg-6 custom-form">
+                                <label class="form-label col-sm-3 custom-label">Jumlah Armada</label>
+                                <div class="col-lg-6 mr-2">
+                                    <input name="Jumlah" type="text" id="jumlah-armada" class="form-control input-sm mr-2" placeholder="Jumlah Armada" value="">
+                                </div>
+                                <div class="col-lg-3 ml-2">
+                                    <button class="btn btn-primary ml-3" id="simpan-jumlah">Simpan</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 <!-- end of card-body -->
                 </div>
@@ -157,7 +168,9 @@
                                                                             <input name="checkpoint_{{ $i }}[]" type="text" class="form-control input-sm" placeholder="" value="{{ $row }}">
                                                                         </div>
                                                                         <div class="col-md-2" style="text-align:center;">
+                                                                            @if (!Auth::check())
                                                                             <a href="javascript:void(0)" class="btn btn-icon btn-danger delete_rute align-right"><i class="fas fa-times"></i></a>
+                                                                            @endif
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -207,24 +220,27 @@
                                         </div>
                                         <div class="row mt-5">
                                             <div class="col-md-6">
-                                                <a
-                                                    style="width: 100%;"
-                                                    href="javacript:void(0)"
-                                                    class="btn btn-success open-AddBookDialog"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#kt_modal_1"
-                                                    data-map="{{ $i }}">
-                                                    <i class="fas fa-add"></i> Tambah Rute
-                                                </a>
+                                                @if (!Auth::check())
+                                                    <a
+                                                        style="width: 100%;"
+                                                        href="javacript:void(0)"
+                                                        class="btn btn-success open-AddBookDialog"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#kt_modal_1"
+                                                        data-map="{{ $i }}">
+                                                        <i class="fas fa-add"></i> Tambah Rute
+                                                    </a>
+                                                @endif
 
                                             </div>
                                             <div class="col-md-6">
+                                                @if (!Auth::check())
                                                 <a style="width: 100%;"
                                                     class="btn btn-block btn-danger create_rute"
                                                     id="create_rute_{{ $i }}"
                                                     onclick="generate_map({{ $i }}); return false;">Generate Rutes
                                                 </a>
-
+                                                @endif
                                             </div>
                                         </div>
                                         <hr style="border-top: 1px dotted black;">
@@ -668,10 +684,12 @@
                                                 <td></td>
                                             </tr>
                                         </table>
-                                        <div class="form-group mb-3 col-lg-3">
-                                            <label class="form-label">Dokumen</label>
-                                            {!! Form::file('file_' . $i, ['class'=>'form-control', 'id'=>'file_{{ $i }}', 'accept' => "application/pdf"]) !!}
-                                        </div>
+                                        @if (!Auth::check())
+                                            <div class="form-group mb-3 col-lg-3">
+                                                <label class="form-label">Dokumen</label>
+                                                {!! Form::file('file_' . $i, ['class'=>'form-control', 'id'=>'file_{{ $i }}', 'accept' => "application/pdf"]) !!}
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -683,7 +701,9 @@
 
                 <div class="card-footer" style="text-align: right;">
                     <a href="{{ route('potensi.detail.armada.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
-                    <input type="submit" class="btn btn-success" value="Simpan">
+                    @if (!Auth::check())
+                        <input type="submit" class="btn btn-success" value="Simpan">
+                    @endif
                 </div>
 
             </div>
@@ -741,6 +761,15 @@
 @section('css')
 <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css"/>
 <style type="text/css">
+    .custom-form {
+        display: flex;
+    }
+    
+    .custom-label {
+        display: flex; 
+        align-items: center;
+        margin-bottom: 0px;
+    }
     #map {
         height: 100%;
     }
@@ -779,6 +808,9 @@ function langsir_term(i){
 }
 
 $(document).ready(function () {
+    if("{{Auth::check()}}" == "1"){
+        $(".form-check-input").attr('disabled', 'true');
+    }
     for (i = 1; i <= $('.create_rute').length; i++) {
         generate_map(i);
         langsir_term(i);
@@ -791,6 +823,24 @@ $(document).ready(function () {
             $(aa).attr('disabled', 'true');
         }
     }
+    $("#simpan-jumlah").click(function (e) {
+        e.preventDefault();
+        var blockUI = new KTBlockUI(document.querySelector("#div-card"));
+        var jumlah = $("#jumlah-armada").val();
+        $.ajax({
+            type:"post",
+            url: "{{route('potensi.detail.armada.storejumlah')}}",
+            data: {jumlah: jumlah,_token: "{{ csrf_token() }}"},
+            success: function(res) {
+                flasher.success("Suksess!!");
+                blockUI.release();
+            },
+            error: function (err) {
+                flasher.error("GAGAL");
+                blockUI.release();
+            }
+        })
+    });
 });
 
 // show detail list on table
@@ -805,6 +855,8 @@ $(document).on("click", ".open-AddBookDialog", function () {
     $(".modal-body #mapId").val( mapId );
     $('#add_checkpoint').attr('onClick', 'addCheckpoint(' +mapId+ ');');
 });
+
+
 
 // delete checkpoint
 $(document).ready(function(){

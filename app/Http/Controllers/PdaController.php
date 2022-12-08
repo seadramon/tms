@@ -15,6 +15,7 @@ use App\Models\TrMaterial;
 use App\Models\Views\VPotensiMuat;
 use App\Models\Views\VSpprbRi;
 use App\Models\PotensiH;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -79,6 +80,9 @@ class PdaController extends Controller
             }
             $query->whereBetween('jadwal3', [$start, $end]);
         }
+        if(Auth::check()){
+            $query->where('jenis_armada', '<>', 'BELUM DISET');
+        }
 
         return DataTables::eloquent($query)
                 ->editColumn('vol_btg', function ($model) {
@@ -108,8 +112,11 @@ class PdaController extends Controller
                     return $column;
                 })
                 ->addColumn('menu', function ($model) {
-                    $column = '<a href="' . route('potensi.detail.armada.edit', ['no_npp' => $model->no_npp]) . '" class="btn btn-outline btn-sm btn-outline-dashed btn-outline-dark btn-active-light-dark">Edit</a>';
-
+                    if(Auth::check()){
+                        $column = '<a href="' . route('potensi.detail.armada.edit', ['no_npp' => $model->no_npp, 'pat' => $model->ppb_muat]) . '" class="btn btn-outline btn-sm btn-outline-dashed btn-outline-dark btn-active-light-dark">View</a>';
+                    }else{
+                        $column = '<a href="' . route('potensi.detail.armada.edit', ['no_npp' => $model->no_npp]) . '" class="btn btn-outline btn-sm btn-outline-dashed btn-outline-dark btn-active-light-dark">Edit</a>';
+                    }
                     return $column;
                 })
                 ->rawColumns(['menu', 'status'])
@@ -121,10 +128,14 @@ class PdaController extends Controller
         return view('pages.potensi-detail-armada.create', ['pat' => $pat]);
     }
 
-    public function edit($no_npp){
+    public function edit($no_npp, $pat_ = null){
 
         $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
-        $muat = VPotensiMuat::with('pat')->where('no_npp',$no_npp)->get();
+        $potensi = VPotensiMuat::with('pat')->where('no_npp',$no_npp);
+        if($pat_){
+            $potensi->where('ppb_muat', $pat_);
+        }
+        $muat = $potensi->get();
 
 
         $collection_table = new Collection();
@@ -253,6 +264,10 @@ class PdaController extends Controller
         }
         //  return response()->json($request);
         return redirect()->route('potensi.detail.armada.index');
+    }
+
+    public function storeJumlah(Request $request){
+        return response()->json(true);
     }
 
 }

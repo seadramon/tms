@@ -159,6 +159,13 @@ class MenuSeeder extends Seeder
                 'sequence' => '1010'
             ],
             [
+                'name' => 'Monitoring Distribusi',
+                'route_name' => 'report-monitoring-distribusi.index',
+                'icon' => 'bi bi-card-list fs-3',
+                'level' => '2',
+                'sequence' => '1020'
+            ],
+            [
                 'name' => 'Setting',
                 'route_name' => '#',
                 'icon' => 'fas fa-atom fs-3',

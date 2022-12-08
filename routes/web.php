@@ -19,6 +19,7 @@ use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaControll
 use App\Http\Controllers\LoginVendorController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Report\MonitoringDistribusiController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 use App\Models\User;
@@ -135,8 +136,9 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('data',	[PdaController::class, 'data'])->name('data');
 		Route::get('/create',	[PdaController::class, 'create'])->name('create');
 
-        Route::get('/{no_npp}/edit',	[PdaController::class, 'edit'])->name('edit');
+        Route::get('/{no_npp}/edit/{pat?}',	[PdaController::class, 'edit'])->name('edit');
         Route::post('/store',	[PdaController::class, 'store'])->name('store');
+        Route::post('/store-jumlah',	[PdaController::class, 'storeJumlah'])->name('storejumlah');
 	});
 
     Route::group(['prefix' => '/spm', 'as' => 'spm.'], function(){
@@ -177,6 +179,10 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::resource('/',  PemenuhanArmadaController::class)->except([
 			'destroy', 'show'
 		])->parameters(['' => 'report-pemenuhan-armada']);
+	});
+	
+	Route::group(['prefix' => 'report-monitoring-distribusi', 'as' => 'report-monitoring-distribusi.'], function(){
+		Route::get('/', [MonitoringDistribusiController::class, 'index'])->name('index');
 	});
 
 	Route::controller(RoleController::class)->prefix('setting-akses-menu')->name('setting.akses.menu.')->group(function () {

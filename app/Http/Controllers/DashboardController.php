@@ -7,6 +7,7 @@ use App\Models\Sp3;
 use App\Models\SppbH;
 use App\Models\SpmH;
 use App\Models\SptbH;
+use App\Models\Views\VPotensiMuat;
 
 class DashboardController extends Controller
 {
@@ -29,6 +30,9 @@ class DashboardController extends Controller
 
         $sptb1 = SptbH::whereHas('spmh')->whereNull('app_pelanggan')->orWhere('app_pelanggan', 0)->count();
         $sptb2 = SptbH::whereHas('spmh')->where('app_pelanggan', 1)->count();
+
+        $potensi1 = VPotensiMuat::select('no_npp')->where('jenis_armada', 'BELUM DISET')->distinct()->count();
+        $potensi2 = VPotensiMuat::select('no_npp')->where('jenis_armada', '<>', 'BELUM DISET')->doesntHave('sptbh')->distinct()->count();
         
         return view('pages.dashboard.index', compact(
             'sp3Draft',
@@ -43,6 +47,8 @@ class DashboardController extends Controller
             'spp1',
             'sptb1',
             'sptb2',
+            'potensi1',
+            'potensi2',
         ));
     }
 }

@@ -149,12 +149,12 @@
                             <table id="tabel_box3" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                                 <tr>
                                     <th style="font-size: 20px; font-weight: bold">Belum diset</th>
-                                    <th style="font-size: 36px;">45</th>
+                                    <th style="font-size: 36px;">{{number_format($potensi1, 0)}}</th>
                                 </tr>
 
                                 <tr>
                                     <th>Aktif</th>
-                                    <td>7</td>
+                                    <td>{{number_format($potensi2, 0)}}</td>
                                 </tr>
                             </table>
                         </div>
