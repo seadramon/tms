@@ -112,6 +112,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        @if (Auth::check())
                         <div class="form-group row">
                             <div class="col-lg-6 custom-form">
                                 <label class="form-label col-sm-3 custom-label">Jumlah Armada</label>
@@ -123,6 +124,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                     </div>
                 <!-- end of card-body -->
                 </div>
@@ -810,6 +812,7 @@ function langsir_term(i){
 $(document).ready(function () {
     if("{{Auth::check()}}" == "1"){
         $(".form-check-input").attr('disabled', 'true');
+        generate_map(1);
     }
     for (i = 1; i <= $('.create_rute').length; i++) {
         generate_map(i);
