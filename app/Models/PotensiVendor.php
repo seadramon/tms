@@ -10,6 +10,7 @@ class PotensiVendor extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'tms_potensi_vendors';
+    protected $guarded = [];
 
     public function vendor()
     {
