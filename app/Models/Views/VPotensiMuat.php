@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Pat;
+use App\Models\PotensiH;
 use App\Models\SptbH;
+use Awobaz\Compoships\Compoships;
 
 class VPotensiMuat extends Model
 {
-    use HasFactory;
+    use HasFactory, Compoships;
 
     protected $table = 'v_potensi_muat';
 
@@ -34,5 +36,10 @@ class VPotensiMuat extends Model
     public function sptbh()
     {
         return $this->hasMany(SptbH::class, 'no_npp', 'no_npp');
+    }
+
+    public function potensiH()
+    {
+        return $this->belongsTo(PotensiH::class, ['no_npp', 'ppb_muat'], ['no_npp', 'pat_to']);
     }
 }

@@ -47,6 +47,13 @@
                                     @else
                                         @php $i=1; @endphp
                                         @foreach($muat as $row)
+                                            @php
+                                                if($row->jadwal3 == null || $row->jadwal4 == null){
+                                                    $rit_hari = 0;
+                                                }else{
+                                                    $rit_hari = round($row->jml_rit / ((strtotime($row->jadwal4) - strtotime($row->jadwal3)) / (3600*24)), 0);
+                                                }
+                                            @endphp
                                             <tr class="text-lg-center border border-gray-400">
                                                 <td>
                                                     {{ $row->no_npp }}
@@ -75,7 +82,7 @@
                                                     </select>
                                                 </td>
                                                 <td>{{ number_format(round($row->jml_rit)) ?? '0' }}</td>
-                                                <td></td>
+                                                <td>{{ number_format(round($rit_hari)) ?? '0' }}</td>
                                                 <td>{{ $row->pat ?? 'Tidak diketahui' }}</td>
                                                 <td>{{ $row->jarak_km ?? '0' }}</td>
                                                 <td class="text-center">
@@ -104,6 +111,29 @@
                                                             @endforeach
                                                         </tbody>
                                                     </table>
+                                                    @if (!Auth::check())
+                                                        <table class="table table-condensed table-striped" id="childTable">
+                                                            <thead>
+                                                                <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                                                    <th colspan="2">Penawaran Vendor</th>
+                                                                </tr>
+                                                                <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
+                                                                    <th>Nama Vendor</th>
+                                                                    <th>Jumlah Aramada</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if ($row->potensiH)
+                                                                    @foreach($row->potensiH->potensi_vendors as $v)
+                                                                        <tr class="text-lg-center border border-gray-400" >
+                                                                            <td>{{ $v->vendor->nama ?? '-' }}</td>
+                                                                            <td>{{ $v->jumlah }}</td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                @endif
+                                                            </tbody>
+                                                        </table>
+                                                    @endif
                                                 </td>
                                             </tr>
                                             @php $i++; @endphp
@@ -116,6 +146,7 @@
                         <div class="form-group row">
                             <div class="col-lg-6 custom-form">
                                 <label class="form-label col-sm-3 custom-label">Jumlah Armada</label>
+                                <input type="hidden" name="potensi_id" id="potensi_id" value="{{$muat[0]->potensiH->id ?? null}}">
                                 <div class="col-lg-6 mr-2">
                                     <input name="Jumlah" type="text" id="jumlah-armada" class="form-control input-sm mr-2" placeholder="Jumlah Armada" value="">
                                 </div>
@@ -830,16 +861,21 @@ $(document).ready(function () {
         e.preventDefault();
         var blockUI = new KTBlockUI(document.querySelector("#div-card"));
         var jumlah = $("#jumlah-armada").val();
+        var potensi_id = $("#potensi_id").val();
+        if(!$.isNumeric(jumlah)){
+            flasher.error("Jumlah Armada Harus Angka ");
+            return false;
+        }
         $.ajax({
             type:"post",
             url: "{{route('potensi.detail.armada.storejumlah')}}",
-            data: {jumlah: jumlah,_token: "{{ csrf_token() }}"},
+            data: {jumlah: jumlah, potensi_id: potensi_id, _token: "{{ csrf_token() }}"},
             success: function(res) {
                 flasher.success("Suksess!!");
                 blockUI.release();
             },
-            error: function (err) {
-                flasher.error("GAGAL");
+            error: function (request, status, error) {
+                flasher.error("GAGAL " + request.responseJSON.message);
                 blockUI.release();
             }
         })

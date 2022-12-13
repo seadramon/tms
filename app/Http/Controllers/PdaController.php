@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Armada;
 use Illuminate\Support\Collection;
 
 use Carbon\Carbon;
@@ -15,6 +17,7 @@ use App\Models\TrMaterial;
 use App\Models\Views\VPotensiMuat;
 use App\Models\Views\VSpprbRi;
 use App\Models\PotensiH;
+use App\Models\PotensiVendor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -63,7 +66,7 @@ class PdaController extends Controller
 
     public function data(Request $request)
     {
-        $query = VPotensiMuat::with('ppbmuat')->select('*');
+        $query = VPotensiMuat::with('ppbmuat', 'potensiH.potensi_vendors')->select('*');
         if($request->unitkerja != ''){
             $query->whereKdPat($request->unitkerja);
         }
@@ -110,6 +113,9 @@ class PdaController extends Controller
                     $column = '';
 
                     return $column;
+                })
+                ->addColumn('offer', function ($model) {
+                    return $model->potensiH ? $model->potensiH->potensi_vendors->count() : 0;
                 })
                 ->addColumn('menu', function ($model) {
                     if(Auth::check()){
@@ -168,7 +174,7 @@ class PdaController extends Controller
                     ->where('npp.no_npp', $row->no_npp)
                     ->first();
 
-            $potensiH = PotensiH::where('no_npp',$row->no_npp)
+            $potensiH = PotensiH::with('potensi_vendors.vendor')->where('no_npp',$row->no_npp)
                     ->where('pat_to', $row->ppb_muat)
                     ->first();
 
@@ -267,6 +273,17 @@ class PdaController extends Controller
     }
 
     public function storeJumlah(Request $request){
+        $potensi = PotensiH::find($request->potensi_id);
+        $armada = Armada::whereVendorId(Auth::user()->vendor_id)->whereKdArmada($potensi->kd_material)->count();
+        if($armada < $request->jumlah){
+            return response()->json(['message' => "jumlah armada melebihi armada yang terdaftar"], 400);
+        }
+        $vendor = PotensiVendor::firstOrNew([
+            'vendor_id' => Auth::user()->vendor_id,
+            'potensi_id' => $request->potensi_id
+        ]);
+        $vendor->jumlah = $request->jumlah;
+        $vendor->save();
         return response()->json(true);
     }
 

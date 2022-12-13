@@ -22,7 +22,14 @@
                 </div>
 
                 <div class="card-body py-5">
-                    <div id="kalender-pengiriman"></div>
+					<div class="form-group row">
+                        <div class="col-10 custom-form mb-2">
+						</div>
+                        <div class="col-2 custom-form mb-2">
+							<a href="{{route('kalender-pengiriman.detail-weekly')}}" class="btn btn-light-primary" style="width: 100%" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Weekly Data</a>
+						</div>
+                    </div>
+					<div id="kalender-pengiriman"></div>
 					<p class="text-inverse-primary p-3 fw-semibold fw-6 mt-5 col-3" style="background-color: #1a428b; font-weight: bold">SP3</p>
 					<p class="text-inverse-primary p-3 fw-semibold fw-6 mt-2 col-3" style="background-color: #af96e2; font-weight: bold">SPP</p>
                 </div>
