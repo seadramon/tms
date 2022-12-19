@@ -187,7 +187,7 @@ class Sp3Controller extends Controller
                 ->toJson();
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $vendor = Vendor::where('sync_eproc', 1)
             ->where('vendor_id', 'like', 'WB%')
@@ -204,10 +204,15 @@ class Sp3Controller extends Controller
         $jenisPekerjaan = ["" => "Pilih Pekerjaan"] + $jenisPekerjaan;
 
         $sat_harsat = ["volume" => "Volume", "ritase" => "Ritase"];
+        $npp = Npp::find($request->npp);
 
-        return view('pages.sp3.create', compact(
-            'vendor', 'jenisPekerjaan', 'sat_harsat'
-        ));
+        return view('pages.sp3.create', [
+            'vendor' => $vendor,
+            'jenisPekerjaan' => $jenisPekerjaan,
+            'sat_harsat' => $sat_harsat,
+            'npp' => $npp,
+            'vendor_id' => $request->vendor_id ?? null,
+        ]);
     }
 
     public function searchNpp(Request $request)

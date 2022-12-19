@@ -120,6 +120,7 @@
                                                                 <tr class="text-lg-center fw-semibold fs-6 text-gray-800 border border-gray-400">
                                                                     <th>Nama Vendor</th>
                                                                     <th>Jumlah Aramada</th>
+                                                                    <th>##</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -128,6 +129,7 @@
                                                                         <tr class="text-lg-center border border-gray-400" >
                                                                             <td>{{ $v->vendor->nama ?? '-' }}</td>
                                                                             <td>{{ $v->jumlah }}</td>
+                                                                            <td><a href="{{route('sp3.create', ['npp' => $row->no_npp, 'vendor_id' => $v->vendor_id])}}" target="_blank" class="btn btn-icon btn-info">Buat SP3</a></td>
                                                                         </tr>
                                                                     @endforeach
                                                                 @endif

@@ -12,7 +12,11 @@
         <div class="form-group row">
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 custom-label">NPP</label>
-                <select class="form-control search-npp" name="no_npp" id="no_npp"></select>
+                <select class="form-control search-npp" name="no_npp" id="no_npp">
+                    @if ($npp)
+                        <option value="{{$npp->no_npp}}">{{$npp->no_npp}} | {{$npp->nama_proyek}}</option>
+                    @endif
+                </select>
             </div>
             
             <div class="col-lg-6 custom-form">
@@ -24,7 +28,7 @@
         <div class="form-group row">
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 custom-label">Vendor</label>
-                {!! Form::select('vendor_id', $vendor, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'vendor_id']) !!}
+                {!! Form::select('vendor_id', $vendor, $vendor_id, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'vendor_id']) !!}
             </div>
 
             <div class="col-lg-6 custom-form">

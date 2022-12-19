@@ -18,6 +18,7 @@ use App\Models\MsNoDokumen;
 use App\Models\Vendor;
 use App\Models\Npp;
 use App\Models\Sbu;
+use App\Models\SptbH;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
@@ -366,6 +367,15 @@ class SpmController extends Controller
             $data->app1_date = getNow();
             $data->jalur = !empty($request->jalur)?implode("|", $request->jalur):null;
             $data->save();
+
+            SptbH::whereNoPol($data->no_pol)
+                ->whereNull('app_pelanggan')
+                ->whereHas('spmh', function($sql){
+                    $sql->where('app1', 1);
+                })
+                ->update([
+                    'app_pelanggan' => 1
+                ]);
 
             DB::commit();
             return response()->json(['result' => 'success'])->setStatusCode(200, 'OK');

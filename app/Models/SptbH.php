@@ -12,9 +12,10 @@ class SptbH extends Model
     protected $table = 'SPTB_H';
     protected $primaryKey = 'no_sptb';
 	protected $keyType = 'string';
+    protected $guarded = [];
 	public $incrementing = false;
 	public $timestamps = false;
-
+    
     public function sptbd()
     {
     	return $this->hasMany(SptbD::class, 'no_sptb', 'no_sptb');
