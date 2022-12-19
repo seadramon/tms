@@ -25,7 +25,7 @@ class DriverController extends Controller
             $sptb->app_pelanggan = 1;
             $sptb->tgl_sampai = date('Y-m-d H:i:s');
             $sptb->penerima_nama = $request->penerima;
-            if ($request->hasFile('tdd')) {
+            if ($request->hasFile('ttd')) {
                 $file = $request->file('ttd');
                 $extension = $file->getClientOriginalExtension();
 
