@@ -40,10 +40,16 @@
                             {!! Form::select('kd_pat', $kd_pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'kd_pat']) !!}
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-lg-6 custom-form">
+                    <div class="form-group row mt-4">
+                        <div class="dropdown col-lg-6 custom-form">
                             <label class="form-label col-sm-3 custom-label">&nbsp;</label>
-                            <button class="btn btn-primary" id="generate">Generate</button>
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Generate
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item generate" href="#">PDF</a>
+                                <a class="dropdown-item generate" href="#">Excel</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -105,12 +111,21 @@
 <script src="{{ asset('assets/fusion/js/themes/fusioncharts.theme.fusion.js') }}"></script>
 <script src="{{ asset('assets/fusion/js/jquery-fusioncharts.min.js') }}"></script>
 <script type="text/javascript">
-    $(document).on('click', '#generate', function(){
+    $(document).on('click', '.generate', function(){
         tahun = $("#tahun").val();
         minggu1 = $("#minggu1").val();
         minggu2 = $("#minggu2").val();
         kd_pat = $("#kd_pat").val();
-        window.open('http://10.3.1.80/genreport/genreport.asp?RptName=monitoring_distribusi.rpt&fparam='+kd_pat+';'+minggu1+';'+minggu2+'&ftype=5&keyId=OS', '_blank'); 
+        format = $(this).text().toLowerCase();
+
+        exportExcelUrl = "{{ URL::to('report-monitoring-distribusi/export-excel') }}/" + minggu1 + '/' + minggu2 + '/' + kd_pat;
+        
+        if(format == 'pdf'){
+            window.open('http://10.3.1.80/genreport/genreport.asp?RptName=monitoring_distribusi.rpt&fparam='+kd_pat+';'+minggu1+';'+minggu2+'&ftype=5&keyId=OS', '_blank'); 
+        }else{
+            window.open(exportExcelUrl, '_blank');
+        }
+        
     });
 </script>
 @endsection
