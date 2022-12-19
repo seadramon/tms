@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Driver\DriverController;
 use App\Http\Controllers\Api\Pelanggan\PelangganController;
 use App\Http\Controllers\Api\Driver\LoginController;
 use App\Http\Controllers\Api\FileController;
@@ -29,6 +30,7 @@ Route::name('api.')->namespace('Api')->group(function() {
 
     Route::name('driver.')->prefix('driver')->namespace('Driver')->group(function() {
         Route::post('login', [LoginController::class, 'login'])->name('login');
+        Route::post('penerimaan', [DriverController::class, 'penerimaan'])->name('penerimaan');
     });
 
     Route::name('internal.')->prefix('internal')->namespace('Internal')->group(function() {

@@ -12,7 +12,7 @@ class KalenderController extends Controller
     public function daily(Request $request)
     {
         if($request->type == 'spm'){
-            $temp = (new KalenderService($request->start, $request->end))->rekapDailySpm();
+            $temp = (new KalenderService($request->start, $request->end))->rekapDailySpm($request->nopol ?? null);
             $color = null;
         }else{
             $temp = (new KalenderService($request->start, $request->end))->rekapDailySppWithSp3();

@@ -18,10 +18,13 @@ class KalenderService {
         $this->end = $end;
     }
 
-    public function rekapDailySpm()
+    public function rekapDailySpm($nopol = null)
     {
-        $data = SpmH::whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($this->start)), date('Y-m-d 23:59:59', strtotime($this->end))])
-			->get()
+        $query = SpmH::whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($this->start)), date('Y-m-d 23:59:59', strtotime($this->end))]);
+		if($nopol){
+			$query->whereNoPol($nopol);
+		}
+		$data = $query->get()
 			->groupBy(function ($item, $key) {
 				return date('Y-m-d', strtotime($item->tgl_spm));
 			})
