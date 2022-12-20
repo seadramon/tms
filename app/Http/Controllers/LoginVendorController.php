@@ -13,7 +13,7 @@ class LoginVendorController extends Controller
     public function index()
     {
 		// return session()->exists('TMP_WBSESSID');
-        return view('pages.tms-vendor.auth.login');
+        return view('pages.tms-vendor.auth.login1');
     }
 
     public function postLogin(Request $request)

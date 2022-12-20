@@ -52,6 +52,8 @@
 							<!--begin::Description-->
 							<p class="fw-bold fs-2" style="color: #986923;">Discover Amazing Metronic
 							<br />with great build tools</p>
+
+							<img class="theme-light-show mx-auto mw-100 w-150px w-lg-300px mb-10 mb-lg-20" src="{{asset('content/proyek.jpeg')}}" alt="">
 							<!--end::Description-->
 						</div>
 						<!--end::Content-->
@@ -59,6 +61,7 @@
 					<!--end::Wrapper-->
 				</div>
 				<!--end::Aside-->
+				
 				<!--begin::Body-->
 
 				<div class="d-flex flex-column flex-lg-row-fluid py-10">
