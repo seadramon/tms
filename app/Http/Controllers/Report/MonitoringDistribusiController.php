@@ -20,6 +20,8 @@ use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\MonitoringDistribusiExport;
 
 class MonitoringDistribusiController extends Controller
 {
@@ -52,6 +54,10 @@ class MonitoringDistribusiController extends Controller
             'periode_minggu',
             'tahun'
         ));
+    }
+
+    public function exportExcel($minggu1, $minggu2, $kd_pat){
+        return Excel::download(new MonitoringDistribusiExport($minggu1, $minggu2, $kd_pat), 'Monitoring Distribusi.xlsx');
     }
 
 }
