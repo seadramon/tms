@@ -536,7 +536,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Langsir</td>
-                                                <input value="{{ $item->potensiH->langsir }}" id="flag_check_{{ $i }}" hidden />
+                                                <input value="{{ $item->potensiH->langsir ?? '' }}" id="flag_check_{{ $i }}" hidden />
                                                 <td>
                                                     <div class="form-check form-check-custom form-check-solid">
                                                         <input class="form-check-input langsir_{{ $i }}" type="radio" value="tidak_ada" name="langsir_{{ $i }}" onclick="langsir_term({{ $i }});"
