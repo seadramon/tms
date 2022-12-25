@@ -45,6 +45,7 @@ class LoginVendorController extends Controller
     		$data = DB::connection('oracle-eproc')
     			->table(DB::raw('"m_user"'))
     			->where('username', $request->username)
+    			->where('password', md5($request->username . $request->password))
     			->first();
     		
     		if ($data) {
