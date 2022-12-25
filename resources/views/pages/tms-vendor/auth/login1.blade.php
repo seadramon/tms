@@ -94,7 +94,7 @@ License: For each use you must have a valid license purchased only from above li
 						<!--begin::Card body-->
 						<div class="card-body p-10 p-lg-20">
 							<!--begin::Form-->
-							<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" action="{{ route('vendor.post-login') }}" method="POST">
+							<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" action="{{ url('vendor/login') }}" method="POST">
 								@csrf
 								<!--begin::Heading-->
 								<div class="text-center mb-11">
