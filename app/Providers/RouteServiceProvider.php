@@ -29,7 +29,6 @@ class RouteServiceProvider extends ServiceProvider
         $url = $this->app['url'];
         // Force the application URL
         $url->forceRootUrl(config('app.url'));
-}
         $this->configureRateLimiting();
 
         $this->routes(function () {
