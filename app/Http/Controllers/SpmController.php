@@ -87,7 +87,7 @@ class SpmController extends Controller
             ->addColumn('menu', function ($model) {
                 $list = '';
                     if(Auth::check()){
-
+                        $list .= '<li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>';
                     }else{
                         $action = json_decode(session('TMS_ACTION_MENU'));
                         if(in_array('konfirmasi', $action)){
