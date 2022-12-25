@@ -27,6 +27,8 @@ class User extends Authenticatable
         'trader_id',
         'fullname',
         'phone',
+        'vendor_id',
+        'name',
         'position'
     ];
 
