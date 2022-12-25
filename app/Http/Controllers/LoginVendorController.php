@@ -58,6 +58,7 @@ class LoginVendorController extends Controller
     					// 'password' => $data->password
     				]);
 				
+				$user->password = $data->password;
 				$user->user_id = $data->user_id;
 				$user->trader_id = $data->trader_id;
 				$user->vendor_id = $trader->vendor_id ?? null;
