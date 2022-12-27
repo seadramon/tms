@@ -33,7 +33,7 @@
                                 <th>TGL</th>
                                 <th>PELANGGAN</th>
                                 <th>PROYEK</th>
-                                <th>JENIS</th>
+                                <th>NOPOL</th>
                                 <th>STATUS</th>
                                 <th>OPTION</th>
                             </tr>

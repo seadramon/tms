@@ -66,4 +66,14 @@ class SppbH extends Model
     {
         return $this->belongsTo(Jabatan::class, 'app3_jbt', 'kd_jbt');
     }
+
+    public function scopeFilterLogin($query, $type, $value)
+    {
+        if($type == 'internal' && $value != '0A'){
+            return $query->whereHas('npp', function($sql) use($value) {
+                $sql->whereKdPat($value);
+            });
+        }
+        return $query;
+    }
 }

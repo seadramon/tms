@@ -35,4 +35,19 @@ class SptbH extends Model
     {
         return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
     }
+
+    public function scopeFilterLogin($query, $type, $value)
+    {
+        if($type == 'vendor'){
+            return $query->whereHas('spmh', function($sql) use($value) {
+                $sql->whereVendorId($value);
+            });
+        }
+        if($type == 'internal' && $value != '0A'){
+            return $query->whereHas('npp', function($sql) use($value) {
+                $sql->whereKdPat($value);
+            });
+        }
+        return $query;
+    }
 }

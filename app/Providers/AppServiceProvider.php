@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layout.layout2', function($view)
         {
             if(Auth::check()){
-                $codes = ["0300", "0400", "0600", "0610", "0620", "0800", "0100", "1000", "1010"];
+                $codes = ["0050", "0300", "0400", "0600", "0610", "0620", "0800", "0100", "1000", "1010", "1020"];
                 $menus = Menu::with(['childmenus' => function($sql) use ($codes){
                         $sql->whereIn("seq", $codes);
                         $sql->orderBy('seq', 'asc');

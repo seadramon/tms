@@ -413,7 +413,7 @@ class SpmController extends Controller
 
             $collection_table->push((object)[
                 'kode_produk' => $item->produk->kd_produk,
-                'type_produk' => $item->produk->kd_produk.' - '.$item->produk->tipe,
+                'type_produk' => $item->produk->tipe,
                 'spp_vol_btg' => $item->app2_vol,
                 'spp_vol_ton' => 0,
                 'sppdis_vol_btg' => $sppdis_vol_btg->sppdis_vol_btg ?? 0,

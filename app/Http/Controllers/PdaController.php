@@ -66,7 +66,7 @@ class PdaController extends Controller
 
     public function data(Request $request)
     {
-        $query = VPotensiMuat::with('ppbmuat', 'potensiH.potensi_vendors')->select('*');
+        $query = VPotensiMuat::with('ppbmuat', 'potensiH.potensi_vendors', 'npp.infoPasar.region')->select('*');
         if($request->unitkerja != ''){
             $query->whereKdPat($request->unitkerja);
         }
@@ -111,6 +111,9 @@ class PdaController extends Controller
                 })
                 ->addColumn('status', function ($model) {
                     $column = '';
+                    if(Auth::check()){
+                        $column = ($model->npp->infoPasar->region ?? null) ? $model->npp->infoPasar->region->kabupaten_name . ', ' . $model->npp->infoPasar->region->kecamatan_name : 'Unknown';
+                    }
 
                     return $column;
                 })

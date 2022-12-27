@@ -116,9 +116,9 @@
                                 <th class="text-center" width="30%">Tipe Produk</th>
                                 <th class="text-center">Volume</th>
                                 <th class="text-center">Jumlah Segmen</th>
-                                <th class="text-center">Volume SPPB</th>
-                                <th class="text-center">Volume SPM</th>
-                                <th class="text-center">Volume Titipan</th>
+                                {{-- <th class="text-center">Volume SPPB</th> --}}
+                                {{-- <th class="text-center">Volume SPM</th>
+                                <th class="text-center">Volume Titipan</th> --}}
                                 <th class="text-center" width="30%">Keterangan</th>
                             </tr>
                         </thead>
@@ -126,7 +126,7 @@
                             @foreach($detail_spp as $row)
                             <tr class="fw-semibold fs-6 text-gray-800 border border-gray-400">
                                 <td class="text-center" style="padding-left: 10px;">
-                                    <label class="text-center">{{ $row->kode_produk }}</label>
+                                    <label class="text-center">{{ $row->type_produk }}</label>
                                 </td>
                                 <td class="text-center" width="15%">
                                     <label class="text-center">{{ $row->spm }}</label>
@@ -135,13 +135,13 @@
                                     <label class="text-center">{{ $row->segmen }}</label>
                                     
                                 </td>
-                                <td  class="text-center"  width="10%">
+                                {{-- <td  class="text-center"  width="10%">
                                     <label class="text-center">{{ $row->vol_sppb }}</label>
                                 </td>
                                 <td  class="text-center" width="10%">
                                     <label class="text-center">{{ $row->spm }}</label>
                                 </td>
-                                <td  class="text-center">0</td>
+                                <td  class="text-center">0</td> --}}
                                 <td  class="text-center">
                                     <label class="text-center">{{ $row->keterangan }}</label>
                                 </td>

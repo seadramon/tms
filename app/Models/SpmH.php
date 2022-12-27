@@ -65,4 +65,17 @@ class SpmH extends Model
     {
         return $this->belongsTo(Personal::class, 'app1_empid', 'employee_id');
     }
+
+    public function scopeFilterLogin($query, $type, $value)
+    {
+        if($type == 'vendor'){
+            return $query->whereVendorId($value);
+        }
+        if($type == 'internal' && $value != '0A'){
+            return $query->whereHas('sppbh.npp', function($sql) use($value) {
+                $sql->whereKdPat($value);
+            });
+        }
+        return $query;
+    }
 }

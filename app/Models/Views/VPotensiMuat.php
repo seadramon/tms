@@ -2,6 +2,7 @@
 
 namespace App\Models\Views;
 
+use App\Models\Npp;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,5 +42,21 @@ class VPotensiMuat extends Model
     public function potensiH()
     {
         return $this->belongsTo(PotensiH::class, ['no_npp', 'ppb_muat'], ['no_npp', 'pat_to']);
+    }
+
+    public function npp()
+    {
+        return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
+    }
+
+    public function scopeFilterLogin($query, $type, $value)
+    {
+        // if($type == 'vendor'){
+        //     return $query->whereVendorId($value);
+        // }
+        if($type == 'internal' && $value != '0A'){
+            return $query->whereKdPat($value);
+        }
+        return $query;
     }
 }

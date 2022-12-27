@@ -44,40 +44,43 @@
                 </div>
             </div>
         </div>
-        <div class="col-4 mb-md-2 mb-xl-2">
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h3 class="card-title">SPP</h3>
-                </div>
+        @if (!Auth::check())
             
-                <div class="card-body">
-                    <div class="box-ui-loading-box-data row">
-                        <div id="box2-container" class="col-12">
-                            <table id="tabel_box2" class="table table-row-bordered gy-5" style="vertical-align: middle;">
-                                <tr>
-                                    <th style="font-size: 20px; font-weight: bold">Belum Verifikasi</th>
-                                    <th style="font-size: 36px;">{{ number_format($spp1, 0) }}</th>
-                                </tr>
+            <div class="col-4 mb-md-2 mb-xl-2">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h3 class="card-title">SPP</h3>
+                    </div>
+                
+                    <div class="card-body">
+                        <div class="box-ui-loading-box-data row">
+                            <div id="box2-container" class="col-12">
+                                <table id="tabel_box2" class="table table-row-bordered gy-5" style="vertical-align: middle;">
+                                    <tr>
+                                        <th style="font-size: 20px; font-weight: bold">Belum Verifikasi</th>
+                                        <th style="font-size: 36px;">{{ number_format($spp1, 0) }}</th>
+                                    </tr>
 
-                                <tr>
-                                    <th>Aktif</th>
-                                    <td>{{ number_format($sppAktif, 0) }}</td>
-                                </tr>
-                                
-                                <tr>
-                                    <th>Selesai</th>
-                                    <td>{{ number_format($sppSelesai, 0) }}</td>
-                                </tr>
-                                <tr>
-                                    <th>&nbsp;</th>
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </table>
+                                    <tr>
+                                        <th>Aktif</th>
+                                        <td>{{ number_format($sppAktif, 0) }}</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <th>Selesai</th>
+                                        <td>{{ number_format($sppSelesai, 0) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
         <div class="col-4 mb-md-2 mb-xl-2">
             <div class="card shadow-sm">
                 <div class="card-header">

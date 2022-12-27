@@ -32,7 +32,7 @@
                         
                         <div class="col-lg-6 custom-form mb-2">
                             <label class="form-label col-sm-3 custom-label">Lokasi Muat</label>
-                            {!! Form::select('pbbMuat', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pbbMuat']) !!}
+                            {!! Form::select('pbbMuat', $muat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pbbMuat']) !!}
                         </div>
                     </div>
 
@@ -159,8 +159,8 @@
 	                {data: 'custom', name: 'vendor.nama', defaultContent: '-', orderable: false, searchable: false},
 	                {data: 'approval', name: 'app1', defaultContent: '-'},
 	                {data: 'progress_vol', name: 'progress_vol', orderable: false, searchable: false, defaultContent: '-'},
-	                {defaultContent: '-'},
-	                {defaultContent: '-'},
+	                {data: 'progress_rp', name: 'progress_rp', orderable: false, searchable: false, defaultContent: '-'},
+	                {data: 'progress_wkt', name: 'progress_wkt', orderable: false, searchable: false, defaultContent: '-'},
 	                {data: 'menu', orderable: false, searchable: false}
 	            ],
 	        });

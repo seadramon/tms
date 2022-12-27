@@ -41,6 +41,9 @@ class Sp3Controller extends Controller
             $pat = Pat::all()->pluck('ket', 'kd_pat')->toArray();
             $pat = $labelSemua + $pat;
         }
+
+        $muat = Pat::where('kd_pat', 'like', '2%')->get()->pluck('ket', 'kd_pat')->toArray();
+        $muat = $labelSemua + $muat;
         
         $periode = [];
 
@@ -79,7 +82,7 @@ class Sp3Controller extends Controller
         ];
 
         return view('pages.sp3.index', compact(
-            'pat', 'periode', 'status', 'rangeCutOff', 'monthCutOff'
+            'pat', 'periode', 'status', 'rangeCutOff', 'monthCutOff', 'muat'
         ));
     }
 
@@ -148,6 +151,44 @@ class Sp3Controller extends Controller
                     }
                     return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
                 })
+                ->addColumn('progress_rp', function ($model) {
+                    $vol_sptb = SptbD::whereHas('sptbh',function($sql) use ($model) {
+                        $sql->where('no_npp', $model->no_npp);
+                        $sql->whereHas('spmh',function($sql) use ($model) {
+                            $sql->where('vendor_id', $model->vendor_id);
+                        });
+                    })->sum('vol');
+                    $vol_sp3 = $model->sp3D->sum('vol_akhir');
+                    $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100);
+                    if($vol >= 100){
+                        $vol = 100;
+                        $badge = 'success';
+                    }elseif($vol >= 75){
+                        $badge = 'warning';
+                    }else{
+                        $badge = 'dark';
+                    }
+                    return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
+                })
+                ->addColumn('progress_wkt', function ($model) {
+                    $vol_sptb = SptbD::whereHas('sptbh',function($sql) use ($model) {
+                        $sql->where('no_npp', $model->no_npp);
+                        $sql->whereHas('spmh',function($sql) use ($model) {
+                            $sql->where('vendor_id', $model->vendor_id);
+                        });
+                    })->sum('vol');
+                    $vol_sp3 = $model->sp3D->sum('vol_akhir');
+                    $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100);
+                    if($vol >= 100){
+                        $vol = 100;
+                        $badge = 'success';
+                    }elseif($vol >= 75){
+                        $badge = 'warning';
+                    }else{
+                        $badge = 'dark';
+                    }
+                    return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
+                })
                 ->addColumn('menu', function ($model) {
                     $list = '';
                     if(Auth::check()){
@@ -183,7 +224,7 @@ class Sp3Controller extends Controller
 
                     return $edit;
                 })
-                ->rawColumns(['menu', 'approval', 'progress_vol', 'custom'])
+                ->rawColumns(['menu', 'approval', 'progress_vol', 'progress_rp', 'progress_wkt', 'custom'])
                 ->toJson();
     }
 

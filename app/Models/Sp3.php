@@ -86,4 +86,15 @@ class Sp3 extends Model
     {
     	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
     }
+
+    public function scopeFilterLogin($query, $type, $value)
+    {
+        if($type == 'vendor'){
+            return $query->whereVendorId($value);
+        }
+        if($type == 'internal' && $value != '0A'){
+            return $query->whereKdPat($value);
+        }
+        return $query;
+    }
 }

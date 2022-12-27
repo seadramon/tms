@@ -62,7 +62,7 @@
                                 <th>PPB Muat</th>
                                 <th>Jarak</th>
                                 <th class="{{ Auth::check() ? 'hidden' : '' }}">Vendor Offers</th>
-                                <th>Status</th>
+                                <th>{{ Auth::check() ? 'Tujuan' : 'Status' }}</th>
                                 <th>Menu</th>
                             </tr>
                         </thead>
@@ -146,7 +146,7 @@
 	                {data: 'rit_hari', name: 'jml_rit', defaultContent: '-'},
 	                {data: 'ppbmuat.singkatan', name: 'ppbmuat.singkatan', defaultContent: '-', orderable: false, searchable: false},
 	                {data: 'jarak_km', name: 'jarak_km', defaultContent: '-'},
-	                {data: 'offer', orderable: false, searchable: false},
+	                {data: 'offer', class: "{{ Auth::check() ? 'hidden' : '' }}", orderable: false, searchable: false},
 	                {data: 'status', orderable: false, searchable: false},
 	                {data: 'menu', orderable: false, searchable: false}
 	            ],
