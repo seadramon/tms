@@ -152,13 +152,19 @@ class Sp3Controller extends Controller
                     return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
                 })
                 ->addColumn('progress_rp', function ($model) {
+                    $sp3d = $model->sp3D->groupBy(function($item){ return $item->kd_produk . '_' . $item->pat_to; });
                     $vol_sptb = SptbD::whereHas('sptbh',function($sql) use ($model) {
                         $sql->where('no_npp', $model->no_npp);
                         $sql->whereHas('spmh',function($sql) use ($model) {
                             $sql->where('vendor_id', $model->vendor_id);
                         });
-                    })->sum('vol');
-                    $vol_sp3 = $model->sp3D->sum('vol_akhir');
+                    })
+                    ->get()
+                    ->sum(function($item) use($sp3d) {
+                        $key = $item->kd_produk . '_' . $item->kd_pat;
+                        return $item->vol * ($sp3d[$key][0]->harsat_akhir ?? 0);
+                    });
+                    $vol_sp3 = $model->sp3D->sum(function($item) { return intval($item->vol_akhir) * intval($item->harsat_akhir); });
                     $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100);
                     if($vol >= 100){
                         $vol = 100;
@@ -171,23 +177,31 @@ class Sp3Controller extends Controller
                     return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
                 })
                 ->addColumn('progress_wkt', function ($model) {
-                    $vol_sptb = SptbD::whereHas('sptbh',function($sql) use ($model) {
-                        $sql->where('no_npp', $model->no_npp);
-                        $sql->whereHas('spmh',function($sql) use ($model) {
-                            $sql->where('vendor_id', $model->vendor_id);
-                        });
-                    })->sum('vol');
-                    $vol_sp3 = $model->sp3D->sum('vol_akhir');
-                    $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100);
-                    if($vol >= 100){
-                        $vol = 100;
+                    $ret = 0;
+                    if (!empty($model->jadwal1) && !empty($model->jadwal2)) {
+                        $a = $this->diffDate($model->jadwal1, date('Y-m-d'));
+                        $b = $this->diffDate($model->jadwal1, $model->jadwal2);
+
+                        if ($b > 0) {
+                            $ret = round(($a / $b) * 100);
+                        }
+                    }
+                    if($ret > 100){
+                        $ret = 100;
+                    }
+                    if($ret < 0){
+                        $ret = 0;
+                    }
+
+                    if($ret >= 100){
+                        $ret = 100;
                         $badge = 'success';
-                    }elseif($vol >= 75){
+                    }elseif($ret >= 75){
                         $badge = 'warning';
                     }else{
                         $badge = 'dark';
                     }
-                    return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
+                    return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $ret . '%</span>';
                 })
                 ->addColumn('menu', function ($model) {
                     $list = '';
@@ -1011,5 +1025,10 @@ class Sp3Controller extends Controller
         $data->save();
 
         return redirect()->route('sp3.index');
+    }
+
+    private function diffDate($date1, $date2)
+    {
+        return (strtotime($date2)-strtotime($date1)) / 3600 / 24;
     }
 }

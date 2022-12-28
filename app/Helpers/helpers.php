@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('nominal')) {
-    function nominal($nominal){
-        return number_format($nominal, 2);
+    function nominal($nominal, $decimal = 2){
+        return number_format($nominal, $decimal);
     }
 }
 
