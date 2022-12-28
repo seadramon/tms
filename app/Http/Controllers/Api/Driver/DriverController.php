@@ -22,7 +22,7 @@ class DriverController extends Controller
     {
         try {
 			DB::beginTransaction();
-            $sptb = SptbH::firstOrFail($request->sptb);
+            $sptb = SptbH::findOrFail($request->sptb);
             $sptb->app_pelanggan = 1;
             $sptb->tgl_sampai = date('Y-m-d H:i:s');
             $sptb->penerima_nama = $request->penerima;
