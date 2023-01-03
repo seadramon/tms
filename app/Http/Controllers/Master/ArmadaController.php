@@ -26,6 +26,9 @@ class ArmadaController extends Controller
     public function data()
     {
         $query = Armada::with('driver')->select('tms_armadas.*');
+        if(Auth::check()){
+            $query->whereVendorId(Auth::user()->vendor_id);
+        }
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_stnk', function ($model) {
@@ -118,7 +121,7 @@ class ArmadaController extends Controller
 
             $tr = TrMaterial::find($request->kd_armada);
             $armada = new Armada();
-            $armada->vendor_id = 'WBP004';
+            $armada->vendor_id = Auth::user()->vendor_id ?? null;
             $armada->kd_armada = $request->kd_armada;
             $armada->detail = $tr->name;
             $armada->tahun = $request->tahun;

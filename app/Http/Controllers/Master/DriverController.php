@@ -24,6 +24,9 @@ class DriverController extends Controller
     public function data()
     {
         $query = Driver::with('vendor', 'armada')->select('*');
+        if(Auth::check()){
+            $query->whereVendorId(Auth::user()->vendor_id);
+        }
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_lahir', function ($model) {
@@ -87,7 +90,7 @@ class DriverController extends Controller
             ])->validate();
 
             $driver = new Driver();
-            $driver->vendor_id = 'WBP004';
+            $driver->vendor_id = Auth::user()->vendor_id ?? null;
             $driver->nama = $request->nama;
             $driver->tgl_lahir = Carbon::createFromFormat('d-m-Y', $request->tgl_lahir)->format('Y-m-d');
             $driver->no_hp = $request->no_hp;
