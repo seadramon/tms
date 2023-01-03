@@ -253,7 +253,7 @@ class ArmadaController extends Controller
 
         $status = ["" => "Pilih Status"] + $status;
 
-        $driver = Driver::where('vendor_id', 'WBP004')
+        $driver = Driver::where('vendor_id', Auth::user()->vendor_id ?? null)
             ->where(function (Builder $query) use ($data) {
                 $query->doesntHave('armada');
                 $query->orWhere('id', $data->driver_id);
@@ -292,7 +292,7 @@ class ArmadaController extends Controller
             });
             $tr = TrMaterial::find($request->kd_armada);
             $armada = Armada::find($id);
-            $armada->vendor_id = 'WBP004';
+            $armada->vendor_id = Auth::user()->vendor_id ?? null;
             $armada->kd_armada = $request->kd_armada;
             $armada->detail = $tr->name;
             $armada->tahun = $request->tahun;
