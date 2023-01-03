@@ -20,6 +20,7 @@ use App\Models\Sp3Pic;
 use App\Models\SptbD;
 use App\Models\TrMaterial;
 use App\Models\Vendor;
+use App\Models\Sbu;
 use App\Models\Views\VSpprbRi;
 use Exception;
 use Yajra\DataTables\Facades\DataTables;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class Sp3Controller extends Controller
 {
@@ -231,7 +233,7 @@ class Sp3Controller extends Controller
                             </button>
                             <ul class="dropdown-menu">
                                 ' . $list . '
-                                <li><a class="dropdown-item" href="#">Print</a></li>
+                                <li><a class="dropdown-item" href="'.route('sp3.print', str_replace('/', '|', $model->no_sp3)).'">Print</a></li>
                                 <li><a class="dropdown-item" href="#">Hapus</a></li>
                             </ul>
                             </div>';
@@ -1025,6 +1027,46 @@ class Sp3Controller extends Controller
         $data->save();
 
         return redirect()->route('sp3.index');
+    }
+
+    public function print($noSp3)
+    {
+        $noSp3 = str_replace('|', '/', $noSp3);
+
+        $data = Sp3::find($noSp3);
+        $detail = $data->sp3D;
+        $sp3pics = $data->pic;
+        
+        $sbu = null;
+        if ($detail->count() > 0) {
+            $sbu = Sbu::where('kd_sbu',  substr($detail[0]->kd_produk, 1, 1))->first();
+        }
+
+        $VSpprbRi = VSpprbRi::where('no_npp', $data->no_npp)->first();
+
+        $pics = "";
+        if (count($sp3pics) > 0) {
+            $tmp = [];
+            foreach ($sp3pics as $sp3pic) {
+                $tmp[] = $sp3pic->employee->first_name.' '.$sp3pic->employee->last_name;
+            }
+            $pics = implode(", ", $tmp);
+        }
+
+        $pdf = Pdf::loadView('prints.sp3', [
+            'data' => $data,
+            'detail' => $detail,
+            'sbu' => $sbu,
+            'pics' => $pics,
+            'vspprbRi' => $VSpprbRi
+            // 'npp' => $npp,
+            // 'dataPesanan' => $dataPesanan
+        ]);
+
+        $filename = "SP3-Report";
+
+        return $pdf->setPaper('a4', 'portrait')
+            ->stream($filename . '.pdf');
     }
 
     private function diffDate($date1, $date2)

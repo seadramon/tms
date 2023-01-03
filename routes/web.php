@@ -52,6 +52,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::post('/approve', [Sp3Controller::class, 'storeApprove'])->name('store-approve');
 		Route::get('/edit/{no_sp3}', [Sp3Controller::class, 'edit'])->name('edit');
 		Route::get('/amandemen/{no_sp3}', [Sp3Controller::class, 'edit'])->name('amandemen');
+		Route::get('/print/{no_sp3}', [Sp3Controller::class, 'print'])->name('print');
 		Route::put('/update/{no_sp3}', [Sp3Controller::class, 'update'])->name('update');
 	    Route::resource('/',  Sp3Controller::class)->except([
 	        'destroy'

@@ -97,4 +97,9 @@ class Sp3 extends Model
         }
         return $query;
     }
+
+    public function manajer()
+    {
+        return $this->belongsTo(Personal::class, 'app1_empid', 'employee_id');
+    }
 }
