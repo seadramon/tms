@@ -101,4 +101,50 @@ class KalenderService {
 		}
 		return $data;
 	}
+
+	public function rekapDailySptb()
+    {
+        $query = SpmH::whereBetween('tgl_spm', [date('Y-m-d 00:00:00'), date('Y-m-d 23:59:59', strtotime($this->end))]);
+		$spm = $query->get()
+			->groupBy(function ($item, $key) {
+				return date('Y-m-d', strtotime($item->tgl_spm));
+			})
+			->map(function ($item, $key) {
+				return [
+					'title' => $item->count(),
+					'start' => $key,
+                    'textColor' => '#50cd89',
+                    'backgroundColor' => '#a2bdee',
+					'extendedProps' => [
+						'withText' => true
+					]
+				];
+			});
+			// ->values();
+
+		$sptb = SptbH::whereHas('spmh', function($sql){
+				$sql->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($this->end)), date('Y-m-d 00:00:00')])
+			})->get()
+			->groupBy(function ($item, $key) {
+				return date('Y-m-d', strtotime($item->tgl_spm));
+			})
+			->map(function ($item, $key) {
+				return [
+					'title' => $item->count(),
+					'start' => $key,
+					'textColor' => '#50cd89',
+					'backgroundColor' => '#8fbea5',
+					'extendedProps' => [
+						'withText' => true
+					]
+				];
+			});
+
+		if($sptb->count() > 0){
+			$data = $sptb->merge($spm->all())->values();
+		}else{
+			$data = $spm->values();
+		}
+		return $data;
+    }
 }

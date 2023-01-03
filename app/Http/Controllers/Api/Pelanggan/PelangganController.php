@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Pelanggan\PelangganResource;
 use App\Models\Pelanggan;
 use App\Models\PelangganUser;
+use App\Services\KalenderService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -114,6 +115,21 @@ class PelangganController extends Controller
     public function login1(Request $request)
     {
         return response()->json($request->user());
+    }
+
+    public function daily(Request $request)
+    {
+        if($request->type == 'sptb'){
+            $temp = (new KalenderService($request->start, $request->end))->rekapDailySptb();
+            $color = [
+                'sptb' => '#8fbea5',
+                'spm' => '#a2bdee'
+            ];
+        }
+		return response()->json([
+            'data' => $temp,
+            'color' => $color,
+        ]);
     }
 }
 
