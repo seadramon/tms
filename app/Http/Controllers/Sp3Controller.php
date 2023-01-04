@@ -165,7 +165,7 @@ class Sp3Controller extends Controller
                         return $item->vol * ($sp3d[$key][0]->harsat_akhir ?? 0);
                     });
                     $vol_sp3 = $model->sp3D->sum(function($item) { return intval($item->vol_akhir) * intval($item->harsat_akhir); });
-                    $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100);
+                    $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100, 2);
                     if($vol >= 100){
                         $vol = 100;
                         $badge = 'success';
