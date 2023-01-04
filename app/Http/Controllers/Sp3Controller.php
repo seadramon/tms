@@ -208,7 +208,8 @@ class Sp3Controller extends Controller
                 ->addColumn('menu', function ($model) {
                     $list = '';
                     if(Auth::check()){
-                        
+                        $list .= '<li><a class="dropdown-item" href="'.route('sp3.print', str_replace('/', '|', $model->no_sp3)).'">Print</a></li>';
+                        $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
                     }else{
                         $action = json_decode(session('TMS_ACTION_MENU'));
                         if(in_array('view', $action)){
@@ -233,8 +234,6 @@ class Sp3Controller extends Controller
                             </button>
                             <ul class="dropdown-menu">
                                 ' . $list . '
-                                <li><a class="dropdown-item" href="'.route('sp3.print', str_replace('/', '|', $model->no_sp3)).'">Print</a></li>
-                                <li><a class="dropdown-item" href="#">Hapus</a></li>
                             </ul>
                             </div>';
 
