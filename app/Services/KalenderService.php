@@ -123,8 +123,9 @@ class KalenderService {
 			// ->values();
 
 		$sptb = SptbH::whereHas('spmh', function($sql){
-				$sql->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($this->end)), date('Y-m-d 00:00:00')])
-			})->get()
+				$sql->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($this->end)), date('Y-m-d 00:00:00')]);
+			})
+			->get()
 			->groupBy(function ($item, $key) {
 				return date('Y-m-d', strtotime($item->tgl_spm));
 			})

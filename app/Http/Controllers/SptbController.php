@@ -46,7 +46,7 @@ class SptbController extends Controller
             ->addColumn('menu', function ($model) {
                 $list = '';
                 if(Auth::check()){
-                    
+                    $list .= '<li><a class="dropdown-item" href="http://10.3.1.80/genreport/genreport.asp?RptName=sptb2020.rpt&fparam='.$model->no_sptb.'&ftype=5&keyId=OS">Print</a></li>';
                 }else{
                     $action = json_decode(session('TMS_ACTION_MENU'));
                     if(in_array('edit', $action)){
@@ -54,6 +54,9 @@ class SptbController extends Controller
                     }
                     if(in_array('konfirmasi', $action)){
                         $list .= '<li><a class="dropdown-item set-konfirmasi" href="javascript:void(0)" data-id="'. $model->no_sptb .'">Konfirmasi</a></li>';
+                    }
+                    if(in_array('print', $action)){
+                        $list .= '<li><a class="dropdown-item" href="http://10.3.1.80/genreport/genreport.asp?RptName=sptb2020.rpt&fparam='.$model->no_sptb.'&ftype=5&keyId=OS">Print</a></li>';
                     }
                 }
                 $edit = '<div class="btn-group">
