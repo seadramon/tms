@@ -93,7 +93,7 @@ class Sp3Controller extends Controller
             ->join(DB::raw($joinQuery), function($join) {
                 $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
             })
-            ->select('sp3_h.no_sp3', 'sp3_h.tgl_sp3', 'sp3_h.app1', 'sp3_h.no_npp', 'sp3_h.vendor_id', 'sp3_h.kd_pat');
+            ->select('sp3_h.no_sp3', 'sp3_h.tgl_sp3', 'sp3_h.app1', 'sp3_h.no_npp', 'sp3_h.vendor_id', 'sp3_h.kd_pat', 'sp3_h.jadwal1', 'sp3_h.jadwal2');
 
         if($request->pat){
             $query->where('kd_pat', $request->pat);
@@ -178,7 +178,7 @@ class Sp3Controller extends Controller
                 })
                 ->addColumn('progress_wkt', function ($model) {
                     $ret = 0;
-                    if (!empty($model->jadwal1) && !empty($model->jadwal2)) {
+                    if (!is_null($model->jadwal1) && !is_null($model->jadwal2)) {
                         $a = $this->diffDate($model->jadwal1, date('Y-m-d'));
                         $b = $this->diffDate($model->jadwal1, $model->jadwal2);
 
