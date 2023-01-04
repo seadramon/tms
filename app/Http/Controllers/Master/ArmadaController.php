@@ -72,8 +72,8 @@ class ArmadaController extends Controller
         $jenis = ["" => "Pilih Jenis Armada"] + $jenis;
 
         $tahun = [];
-        $rentangTahun = date('Y') - 20;
-        for($i=0; $i<20; $i++){
+        $rentangTahun = date('Y') - 40;
+        for($i=0; $i<40; $i++){
             $tahun[$rentangTahun + $i] = $rentangTahun + $i;
         }
 
@@ -238,9 +238,9 @@ class ArmadaController extends Controller
 
         $tahun = [];
 
-        $rentangTahun = date('Y') - 20;
+        $rentangTahun = date('Y') - 40;
 
-        for($i=0; $i<20; $i++){
+        for($i=0; $i<40; $i++){
             $tahun[$rentangTahun + $i] = $rentangTahun + $i;
         }
 

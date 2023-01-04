@@ -140,7 +140,7 @@ class Sp3Controller extends Controller
                         });
                     })->sum('vol');
                     $vol_sp3 = $model->sp3D->sum('vol_akhir');
-                    $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100);
+                    $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100, 2);
                     if($vol >= 100){
                         $vol = 100;
                         $badge = 'success';
@@ -183,7 +183,7 @@ class Sp3Controller extends Controller
                         $b = $this->diffDate($model->jadwal1, $model->jadwal2);
 
                         if ($b > 0) {
-                            $ret = round(($a / $b) * 100);
+                            $ret = round(($a / $b) * 100, 2);
                         }
                     }
                     if($ret > 100){
@@ -650,8 +650,8 @@ class Sp3Controller extends Controller
                     $sql1->whereVendorId($data->vendor_id);
                 });
             })
-            ->get()
-            ->groupBy('kd_produk');
+            ->get();
+        $sptbd_produk = $sptbd->groupBy('kd_produk');
 
         return view('pages.sp3.show', compact(
             'data',
@@ -670,6 +670,7 @@ class Sp3Controller extends Controller
             'pph',
             'sp3D',
             'sptbd',
+            'sptbd_produk',
             'sat_harsat',
             'listPic',
             'detailPekerjaan',

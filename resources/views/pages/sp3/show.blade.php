@@ -27,8 +27,8 @@
                         <div class="row">
                             @php
                                 $volsp3 = $data->sp3D->sum('vol_akhir');
-                                $volsptb = $sptbd->map(function($i, $k){ return $i->sum('vol'); })->values()->sum();
-                                $progress_vol = $volsp3 == 0 ? 0 : round($volsptb / $volsp3 * 100);
+                                $volsptb = $sptbd_produk->map(function($i, $k){ return $i->sum('vol'); })->values()->sum();
+                                $progress_vol = $volsp3 == 0 ? 0 : round($volsptb / $volsp3 * 100, 2);
                                 $progress_vol = $progress_vol > 100 ? 100 : $progress_vol;
                                 
                                 $sp3d_ = $data->sp3D->groupBy(function($item){ return $item->kd_produk . '_' . $item->pat_to; });
@@ -37,7 +37,7 @@
                                     return $item->vol * ($sp3d_[$key][0]->harsat_akhir ?? 0);
                                 });
                                 $sp3_rp = $data->sp3D->sum(function($item) { return intval($item->vol_akhir) * intval($item->harsat_akhir); });
-                                $progress_rp = $sp3_rp == 0 ? 0 : round($sptb_rp / $sp3_rp * 100);
+                                $progress_rp = $sp3_rp == 0 ? 0 : round($sptb_rp / $sp3_rp * 100, 2);
                                 $progress_rp = $progress_rp > 100 ? 100 : $progress_rp;
 
                                 $tgl1 = 0;
@@ -48,16 +48,17 @@
                                     $tgl2 = $this->diffDate($model->jadwal1, $model->jadwal2);
 
                                     if ($tgl2 > 0) {
-                                        $ret = round(($tgl1 / $tgl2) * 100);
+                                        $ret = round(($tgl1 / $tgl2) * 100, 2);
                                     }
                                 }
                                 $progress_wkt = $progress_wkt > 100 ? 100 : $progress_wkt;
+                                
                             @endphp
                             <div class="col-12">
                                 <!--begin::Progress-->
                                 <div class="d-flex flex-column">
                                     <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
-                                        <span>Progress Pengiriman Barang (Volume)</span>
+                                        <span>Progress Pengiriman Barang (Volume)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_vol}}%</span></span>
                                         <span>{{nominal($volsptb, 0)}} of {{nominal($volsp3, 0)}}</span>
                                     </div>
                                     <div class="h-20px bg-light rounded mb-3">
@@ -71,7 +72,7 @@
                                 <!--begin::Progress-->
                                 <div class="d-flex flex-column">
                                     <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
-                                        <span>Progress Pengiriman Barang (Rupiah)</span>
+                                        <span>Progress Pengiriman Barang (Rupiah)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_rp}}%</span></span>
                                         <span>{{nominal($sptb_rp)}} of {{nominal($sp3_rp)}}</span>
                                     </div>
                                     <div class="h-20px bg-light rounded mb-3">
@@ -85,7 +86,7 @@
                                 <!--begin::Progress-->
                                 <div class="d-flex flex-column">
                                     <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
-                                        <span>Progress Pengiriman Barang (Periode)</span>
+                                        <span>Progress Pengiriman Barang (Periode)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_wkt}}%</span></span>
                                         <span>{{nominal($tgl1)}} of {{nominal($tgl2)}}</span>
                                     </div>
                                     <div class="h-20px bg-light rounded mb-3">
@@ -340,7 +341,7 @@
                                     @foreach($detailPesanan as $pesanan)
                                         @php
                                             $volsp3_    = ($sp3d_[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3d_[$pesanan->kd_produk_konfirmasi]->sum('vol_akhir') : 0;
-                                            $distribusi = ($sptbd[$pesanan->kd_produk_konfirmasi] ?? null) ? $sptbd[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->vol; }) : 0;
+                                            $distribusi = ($sptbd_produk[$pesanan->kd_produk_konfirmasi] ?? null) ? $sptbd_produk[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->vol; }) : 0;
                                         @endphp
                                         
                                         <tr>
