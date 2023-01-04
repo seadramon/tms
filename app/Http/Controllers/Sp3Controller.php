@@ -153,15 +153,15 @@ class Sp3Controller extends Controller
                 })
                 ->addColumn('progress_rp', function ($model) {
                     $sp3d = $model->sp3D->groupBy(function($item){ return $item->kd_produk . '_' . $item->pat_to; });
-                    $vol_sptb = SptbD::whereHas('sptbh',function($sql) use ($model) {
+                    $vol_sptb = SptbD::with('sptbh')->whereHas('sptbh',function($sql) use ($model) {
                         $sql->where('no_npp', $model->no_npp);
-                        $sql->whereHas('spmh',function($sql) use ($model) {
+                        $sql->whereHas('spmh',function($sql) use ($model) {    
                             $sql->where('vendor_id', $model->vendor_id);
                         });
                     })
                     ->get()
                     ->sum(function($item) use($sp3d) {
-                        $key = $item->kd_produk . '_' . $item->kd_pat;
+                        $key = $item->kd_produk . '_' . $item->sptbh->kd_pat;
                         return $item->vol * ($sp3d[$key][0]->harsat_akhir ?? 0);
                     });
                     $vol_sp3 = $model->sp3D->sum(function($item) { return intval($item->vol_akhir) * intval($item->harsat_akhir); });
@@ -644,14 +644,14 @@ class Sp3Controller extends Controller
 
         $isAmandemen = str_contains(request()->url(), 'amandemen');
 
-        $sptbd = SptbD::whereHas('sptbh', function($sql) use ($data){
+        $sptbd_ = SptbD::with('sptbh')->whereHas('sptbh', function($sql) use ($data){
                 $sql->whereNoNpp($data->no_npp);
                 $sql->whereHas('spmh', function($sql1) use ($data){
                     $sql1->whereVendorId($data->vendor_id);
                 });
             })
             ->get();
-        $sptbd_produk = $sptbd->groupBy('kd_produk');
+        $sptbd = $sptbd_->groupBy('kd_produk');
 
         return view('pages.sp3.show', compact(
             'data',
@@ -670,7 +670,7 @@ class Sp3Controller extends Controller
             'pph',
             'sp3D',
             'sptbd',
-            'sptbd_produk',
+            'sptbd_',
             'sat_harsat',
             'listPic',
             'detailPekerjaan',

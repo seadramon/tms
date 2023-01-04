@@ -27,13 +27,13 @@
                         <div class="row">
                             @php
                                 $volsp3 = $data->sp3D->sum('vol_akhir');
-                                $volsptb = $sptbd_produk->map(function($i, $k){ return $i->sum('vol'); })->values()->sum();
+                                $volsptb = $sptbd->map(function($i, $k){ return $i->sum('vol'); })->values()->sum();
                                 $progress_vol = $volsp3 == 0 ? 0 : round($volsptb / $volsp3 * 100, 2);
                                 $progress_vol = $progress_vol > 100 ? 100 : $progress_vol;
                                 
                                 $sp3d_ = $data->sp3D->groupBy(function($item){ return $item->kd_produk . '_' . $item->pat_to; });
-                                $sptb_rp = $sptbd->sum(function($item) use($sp3d_) {
-                                    $key = $item->kd_produk . '_' . $item->kd_pat;
+                                $sptb_rp = $sptbd_->sum(function($item) use($sp3d_) {
+                                    $key = $item->kd_produk . '_' . $item->sptbh->kd_pat;
                                     return $item->vol * ($sp3d_[$key][0]->harsat_akhir ?? 0);
                                 });
                                 $sp3_rp = $data->sp3D->sum(function($item) { return intval($item->vol_akhir) * intval($item->harsat_akhir); });
@@ -341,7 +341,7 @@
                                     @foreach($detailPesanan as $pesanan)
                                         @php
                                             $volsp3_    = ($sp3d_[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3d_[$pesanan->kd_produk_konfirmasi]->sum('vol_akhir') : 0;
-                                            $distribusi = ($sptbd_produk[$pesanan->kd_produk_konfirmasi] ?? null) ? $sptbd_produk[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->vol; }) : 0;
+                                            $distribusi = ($sptbd[$pesanan->kd_produk_konfirmasi] ?? null) ? $sptbd[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->vol; }) : 0;
                                         @endphp
                                         
                                         <tr>
