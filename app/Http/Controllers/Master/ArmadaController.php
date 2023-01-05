@@ -113,7 +113,6 @@ class ArmadaController extends Controller
                 'tahun'             => 'required',
                 'nopol'             => 'required|unique:' . Armada::class . ',nopol',
                 'status'            => 'required',
-                'driver_id'         => 'required',
                 'tgl_stnk'          => 'required',
                 'tgl_kir_head'      => 'required',
                 'tgl_kir_trailer'   => 'required',
@@ -128,7 +127,7 @@ class ArmadaController extends Controller
             $armada->tahun = $request->tahun;
             $armada->nopol = $request->nopol;
             $armada->status = $request->status;
-            $armada->driver_id = $request->driver_id;
+            $armada->driver_id = $request->driver_id ?? null;
             $armada->v_status = 'unverified';
             $armada->tgl_stnk = Carbon::createFromFormat('d-m-Y', $request->tgl_stnk)->format('Y-m-d');
             $armada->tgl_kir_head = Carbon::createFromFormat('d-m-Y', $request->tgl_kir_head)->format('Y-m-d');
@@ -280,7 +279,6 @@ class ArmadaController extends Controller
                 'tahun'             => 'required',
                 'nopol'             => 'required|unique:' . Armada::class . ',nopol,' . $id,
                 'status'            => 'required',
-                'driver_id'         => 'required',
                 'tgl_stnk'          => 'required',
                 'tgl_kir_head'      => 'required',
                 'tgl_kir_trailer'   => 'required',
@@ -299,7 +297,7 @@ class ArmadaController extends Controller
             $armada->tahun = $request->tahun;
             $armada->nopol = $request->nopol;
             $armada->status = $request->status;
-            $armada->driver_id = $request->driver_id;
+            $armada->driver_id = $request->driver_id ?? null;
             $armada->tgl_stnk = Carbon::createFromFormat('d-m-Y', $request->tgl_stnk)->format('Y-m-d 00:00:00');
             $armada->tgl_kir_head = Carbon::createFromFormat('d-m-Y', $request->tgl_kir_head)->format('Y-m-d 00:00:00');
             $armada->tgl_kir_trailer = Carbon::createFromFormat('d-m-Y', $request->tgl_kir_trailer)->format('Y-m-d 00:00:00');
