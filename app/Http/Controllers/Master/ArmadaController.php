@@ -87,7 +87,7 @@ class ArmadaController extends Controller
 
         $status = ["" => "Pilih Status"] + $status;
 
-        $driver = Driver::where('vendor_id', 'WBP004')
+        $driver = Driver::where('vendor_id', Auth::check() ? Auth::user()->vendor_id : 'WBP004')
             ->doesntHave('armada')
             ->get()
             ->pluck('nama', 'id')
