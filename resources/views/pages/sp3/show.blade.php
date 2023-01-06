@@ -43,12 +43,13 @@
                                 $tgl1 = 0;
                                 $tgl2 = 0;
                                 $progress_wkt = 0;
-                                if (!empty($model->jadwal1) && !empty($model->jadwal2)) {
-                                    $tgl1 = $this->diffDate($model->jadwal1, date('Y-m-d'));
-                                    $tgl2 = $this->diffDate($model->jadwal1, $model->jadwal2);
-
+                                $ret = 0;
+                                if (!is_null($data->jadwal1) && !is_null($data->jadwal2)) {
+                                    $tgl1 = (strtotime(date('Y-m-d'))-strtotime($data->jadwal1)) / 3600 / 24;
+                                    $tgl2 = (strtotime($data->jadwal2)-strtotime($data->jadwal1)) / 3600 / 24;
+                                    
                                     if ($tgl2 > 0) {
-                                        $ret = round(($tgl1 / $tgl2) * 100, 2);
+                                        $progress_wkt = round(($tgl1 / $tgl2) * 100, 2);
                                     }
                                 }
                                 $progress_wkt = $progress_wkt > 100 ? 100 : $progress_wkt;
@@ -73,7 +74,7 @@
                                 <div class="d-flex flex-column">
                                     <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
                                         <span>Progress Pengiriman Barang (Rupiah)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_rp}}%</span></span>
-                                        <span>{{nominal($sptb_rp)}} of {{nominal($sp3_rp)}}</span>
+                                        <span>{{nominal($sptb_rp, 0)}} of {{nominal($sp3_rp, 0)}}</span>
                                     </div>
                                     <div class="h-20px bg-light rounded mb-3">
                                         <div class="bg-info rounded h-20px" role="progressbar" style="width: {{$progress_rp}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
@@ -87,7 +88,7 @@
                                 <div class="d-flex flex-column">
                                     <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
                                         <span>Progress Pengiriman Barang (Periode)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_wkt}}%</span></span>
-                                        <span>{{nominal($tgl1)}} of {{nominal($tgl2)}}</span>
+                                        <span>{{nominal($tgl1, 0)}} of {{nominal($tgl2, 0)}}</span>
                                     </div>
                                     <div class="h-20px bg-light rounded mb-3">
                                         <div class="bg-warning rounded h-20px" role="progressbar" style="width: {{$progress_wkt}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
