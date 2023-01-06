@@ -103,9 +103,12 @@ class KalenderService {
 		return $data;
 	}
 
-	public function rekapDailySptb()
+	public function rekapDailySptb($nopol)
     {
         $query = SpmH::whereBetween('tgl_spm', [date('Y-m-d 00:00:00'), date('Y-m-d 23:59:59', strtotime($this->end))]);
+		if($nopol){
+			$query->whereNoPol($nopol);
+		}
 		$spm = $query->get()
 			->groupBy(function ($item, $key) {
 				return date('Y-m-d', strtotime($item->tgl_spm));
