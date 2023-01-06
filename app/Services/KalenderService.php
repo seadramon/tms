@@ -126,8 +126,11 @@ class KalenderService {
 			});
 			// ->values();
 
-		$sptb = SptbH::whereHas('spmh', function($sql){
+		$sptb = SptbH::whereHas('spmh', function($sql) use($nopol){
 				$sql->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($this->end)), date('Y-m-d 00:00:00')]);
+				if($nopol){
+					$sql->whereNoPol($nopol);
+				}
 			})
 			->get()
 			->groupBy(function ($item, $key) {
