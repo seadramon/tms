@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Pelanggan\PelangganResource;
 use App\Models\Pelanggan;
 use App\Models\PelangganUser;
+use App\Models\SptbD2;
 use App\Models\SptbH;
 use App\Services\KalenderService;
 use Exception;
@@ -133,7 +134,8 @@ class PelangganController extends Controller
         ]);
     }
 
-    public function produkDetail(Request $request){
+    public function produkDetail(Request $request)
+    {
         $data = SptbH::with('sptbd2.produk')->whereNoSptb($request->param1)->first();
         // $data = DB::select("select a.no_sptb,to_char(a.tgl_sptb,'dd/mm/yyyy')tgl_sptb, c.tipe, b.stockid, b.status, b.kd_produk,to_char(b.tgl_produksi,'dd/mm/yyyy')tgl_produksi, b.path_produk_rusak, b.keterangan
         // from sptb_h a
@@ -146,5 +148,41 @@ class PelangganController extends Controller
             'data' => $data
         ])->setStatusCode(200, 'OK');
     }
+
+    public function produkKonfirmasi(Request $request)
+    {
+        $code    = 200;
+        $message = "Berhasil update status produk";
+        $data    = null;
+
+        try {
+            $sptbd2 = SptbD2::whereStockid($request->stockid)->first();
+            $sptbd2->status = $request->status;
+            $sptbd2->keterangan = $request->keterangan;
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+
+                $dir = 'produk_rusak/' . $request->stockid;
+                cekDir($dir);
+
+                $filename = strtotime(now()) . '.jpg';
+                $fullpath = $dir .'/'. $filename;
+
+                Storage::disk('local')->put($fullpath, File::get($file));
+                $sptbd2->path_produk_rusak = $fullpath; 
+            }
+            $sptbd2->save();
+        } catch (Exception $e) {
+            $code = 400;
+            $message = $e->getMessage();
+        }
+
+        return response()->json([
+            'success' => $code == 200 ? true : false,
+            'message' => $message,
+            'data' => $data
+        ], $code);
+    }
+
 }
 

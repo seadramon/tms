@@ -50,6 +50,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::post('register', [PelangganController::class, 'register'])->name('register');
         Route::post('login', [PelangganController::class, 'login'])->name('login');
         Route::get('produk-detail', [PelangganController::class, 'produkDetail'])->name('produk-detail');
+        Route::post('produk-konfirmasi', [PelangganController::class, 'produkKonfirmasi'])->name('produk-konfirmasi');
 
         Route::middleware('auth:sanctum')->group(function() {
             Route::post('login1', [PelangganController::class, 'login1'])->name('login1');
