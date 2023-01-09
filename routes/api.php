@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Driver\DriverController;
 use App\Http\Controllers\Api\Pelanggan\PelangganController;
 use App\Http\Controllers\Api\Driver\LoginController;
 use App\Http\Controllers\Api\FileController;
+use App\Http\Controllers\Api\Internal\InternalController;
 use App\Http\Controllers\Api\Internal\KalenderController;
 use App\Http\Controllers\Api\Internal\NppController;
 use App\Http\Controllers\Api\Internal\PelangganController as InternalPelangganController;
@@ -39,6 +40,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::get('npp/{pat}', [InternalPelangganController::class, 'nppList'])->name('npp');
         Route::get('pelanggan-list', [InternalPelangganController::class, 'index'])->name('pelanggan-list');
         Route::post('pelanggan-approve', [InternalPelangganController::class, 'approve'])->name('pelanggan-approve');
+        Route::post('gps-tracker', [InternalController::class, 'gpsTracker'])->name('gps-tracker');
     });
     
     Route::name('pelanggan.')->prefix('pelanggan')->namespace('Pelanggan')->group(function() {
