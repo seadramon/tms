@@ -76,7 +76,7 @@ class DriverController extends Controller
     public function sptbList(Request $request)
     {
         // $data = SptbH::with()
-        $data = DB::select("select distinct a.no_sptb, d.singkatan2 as sbu , to_char(tgl_berangkat,'dd/mm/yyyy')tgl_berangkat, nvl(to_char(tgl_sampai,'dd/mm/yyyy'),' ')tgl_sampai, app_pelanggan, c.nama_proyek from WOS.SPTB_H a inner join spprb_h b on a.no_spprb = b.no_spprb inner join spprb_d c on b.no_spprb = c.no_spprb inner join tb_sbu d on substr(c.kd_produk,1,1) = d.kd_sbu inner join npp e on a.no_npp=e.no_npp  where no_pol ='".$request->nopol."' and app_pelanggan = '".$request->status."' order by app_pelanggan asc, tgl_berangkat desc");
+        $data = DB::select("select distinct a.no_sptb, d.singkatan2 as sbu , to_char(tgl_berangkat,'dd/mm/yyyy')tgl_berangkat, nvl(to_char(tgl_sampai,'dd/mm/yyyy'),' ')tgl_sampai, app_pelanggan, e.nama_proyek from WOS.SPTB_H a inner join spprb_h b on a.no_spprb = b.no_spprb inner join spprb_d c on b.no_spprb = c.no_spprb inner join tb_sbu d on substr(c.kd_produk,1,1) = d.kd_sbu inner join npp e on a.no_npp=e.no_npp  where no_pol ='".$request->nopol."' and app_pelanggan = '".$request->status."' order by app_pelanggan asc, tgl_berangkat desc");
 
         return response()->json([
             'message' => 'success',
