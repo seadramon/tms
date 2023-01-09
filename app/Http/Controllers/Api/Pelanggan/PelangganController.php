@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Pelanggan\PelangganResource;
 use App\Models\Pelanggan;
 use App\Models\PelangganUser;
+use App\Models\SptbH;
 use App\Services\KalenderService;
 use Exception;
 use Illuminate\Http\Request;
@@ -130,6 +131,20 @@ class PelangganController extends Controller
             'data' => $temp,
             'color' => $color,
         ]);
+    }
+
+    public function produkDetail(Request $request){
+        $data = SptbH::with('sptbd2.produk')->whereNoSptb($request->param1)->first();
+        // $data = DB::select("select a.no_sptb,to_char(a.tgl_sptb,'dd/mm/yyyy')tgl_sptb, c.tipe, b.stockid, b.status, b.kd_produk,to_char(b.tgl_produksi,'dd/mm/yyyy')tgl_produksi, b.path_produk_rusak, b.keterangan
+        // from sptb_h a
+        // inner join sptb_d2 b on a.no_sptb=b.no_sptb
+        // inner join tb_produk c on b.kd_produk = c.kd_produk
+        // where a.no_sptb='$request->param1'");
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $data
+        ])->setStatusCode(200, 'OK');
     }
 }
 

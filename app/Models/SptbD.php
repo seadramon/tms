@@ -19,4 +19,9 @@ class SptbD extends Model
 	{
 		return $this->belongsTo(SptbH::class, 'no_sptb', 'no_sptb');
 	}
+
+	public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
+    }
 }

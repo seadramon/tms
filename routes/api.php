@@ -34,6 +34,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::post('penerimaan', [DriverController::class, 'penerimaan'])->name('penerimaan');
         Route::post('gps-log', [DriverController::class, 'gpsLog'])->name('gps-log');
         Route::get('sptb-list', [DriverController::class, 'sptbList'])->name('sptb-list');
+        Route::get('sptb-detail', [DriverController::class, 'sptbDetail'])->name('sptb-detail');
     });
 
     Route::name('internal.')->prefix('internal')->namespace('Internal')->group(function() {
@@ -48,6 +49,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::get('search', [PelangganController::class, 'search'])->name('search');
         Route::post('register', [PelangganController::class, 'register'])->name('register');
         Route::post('login', [PelangganController::class, 'login'])->name('login');
+        Route::get('produk-detail', [PelangganController::class, 'produkDetail'])->name('produk-detail');
 
         Route::middleware('auth:sanctum')->group(function() {
             Route::post('login1', [PelangganController::class, 'login1'])->name('login1');
