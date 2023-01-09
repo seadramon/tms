@@ -76,13 +76,7 @@ class DriverController extends Controller
     public function sptbList(Request $request)
     {
         // $data = SptbH::with()
-        $data = DB::select("select distinct a.no_sptb, d.singkatan2 as sbu , to_char(tgl_berangkat,'dd/mm/yyyy')tgl_berangkat, nvl(to_char(tgl_sampai,'dd/mm/yyyy'),' ')tgl_sampai, app_pelanggan, c.nama_proyek from WOS.SPTB_H a 
-        inner join spprb_h b on a.no_spprb = b.no_spprb
-        inner join spprb_d c on b.no_spprb = c.no_spprb
-        inner join tb_sbu d on substr(c.kd_produk,1,1) = d.kd_sbu
-        inner join npp c on a.no_npp=e.no_npp 
-        where no_pol ='".$request->nopol."' and app_pelanggan = '".$request->status."'
-        order by app_pelanggan asc, tgl_berangkat desc");
+        $data = DB::select("select distinct a.no_sptb, d.singkatan2 as sbu , to_char(tgl_berangkat,'dd/mm/yyyy')tgl_berangkat, nvl(to_char(tgl_sampai,'dd/mm/yyyy'),' ')tgl_sampai, app_pelanggan, c.nama_proyek from WOS.SPTB_H a inner join spprb_h b on a.no_spprb = b.no_spprb inner join spprb_d c on b.no_spprb = c.no_spprb inner join tb_sbu d on substr(c.kd_produk,1,1) = d.kd_sbu inner join npp c on a.no_npp=e.no_npp  where no_pol ='".$request->nopol."' and app_pelanggan = '".$request->status."' order by app_pelanggan asc, tgl_berangkat desc");
 
         return response()->json([
             'message' => 'success',
@@ -92,7 +86,8 @@ class DriverController extends Controller
     
     public function sptbDetail(Request $request)
     {
-        $data = SptbH::with('npp', 'sptbd.produk')->whereNoSptb($request->param1)->first();
+        $data = [];
+        $sptb = SptbH::with('npp', 'sptbd.produk')->whereNoSptb($request->param1)->first();
         // $data = DB::select("select a.no_sptb,to_char(a.tgl_sptb,'dd/mm/yyyy')tgl_sptb,a.no_npp, c.nama_proyek, c.nama_pelanggan,
         // a.angkutan,no_pol,tujuan,e.kd_produk,tipe,e.vol,nvl(d.satuan,'')satuan, a.barcode_img 
         // from sptb_h a
@@ -100,6 +95,26 @@ class DriverController extends Controller
         // inner join sptb_d e on a.no_sptb=e.no_sptb
         // inner join tb_produk d on e.kd_produk=d.kd_produk
         // where a.no_sptb='$request->param1'");
+        $data["header"] = [
+            'no_sptb' => $sptb->no_sptb,
+            'tgl_sptb' => $sptb->tgl_sptb ? date('d/m/Y', strtotime($sptb->tgl_sptb)) : '',
+            'no_npp' => $sptb->no_npp,
+            'nama_proyek' => $sptb->npp->nama_proyek,
+            'nama_pelanggan' => $sptb->npp->nama_pelanggan,
+            'angkutan' => $sptb->angkutan,
+            'no_pol' => $sptb->no_pol,
+            'tujuan' => $sptb->tujuan,
+        ];
+        $body = [];
+        foreach ($sptb->sptbd as $row) {
+            $body[] = [
+                'kd_produk' => $row->kd_produk,
+                'tipe' => $row->produk->tipe,
+                'satuan' => $row->produk->satuan,
+                'vol' => $row->vol,
+            ];
+        }
+        $data["header"] = $body;
 
         return response()->json([
             'message' => 'success',

@@ -136,12 +136,24 @@ class PelangganController extends Controller
 
     public function produkDetail(Request $request)
     {
-        $data = SptbH::with('sptbd2.produk')->whereNoSptb($request->param1)->first();
+        $data = [];
+        $sptb = SptbH::with('sptbd2.produk')->whereNoSptb($request->param1)->first();
         // $data = DB::select("select a.no_sptb,to_char(a.tgl_sptb,'dd/mm/yyyy')tgl_sptb, c.tipe, b.stockid, b.status, b.kd_produk,to_char(b.tgl_produksi,'dd/mm/yyyy')tgl_produksi, b.path_produk_rusak, b.keterangan
         // from sptb_h a
         // inner join sptb_d2 b on a.no_sptb=b.no_sptb
         // inner join tb_produk c on b.kd_produk = c.kd_produk
         // where a.no_sptb='$request->param1'");
+        $items = [];
+        foreach ($sptb->sptbd2 as $row) {
+            $items[] = [
+                "tipe" => $row->produk->tipe,
+                "kd_produk" => $row->kd_produk,
+                "stockid" => $row->stockid,
+                "status" => $row->status,
+                "tgl_produksi" => $row->tgl_produksi ? date('d/m/Y', strtotime($row->tgl_produksi)) : ''
+            ];
+        }
+        $data =$items;
 
         return response()->json([
             'message' => 'success',
