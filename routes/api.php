@@ -33,6 +33,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::post('login', [LoginController::class, 'login'])->name('login');
         Route::post('penerimaan', [DriverController::class, 'penerimaan'])->name('penerimaan');
         Route::post('gps-log', [DriverController::class, 'gpsLog'])->name('gps-log');
+        Route::get('sptb-list', [DriverController::class, 'sptbList'])->name('sptb-list');
     });
 
     Route::name('internal.')->prefix('internal')->namespace('Internal')->group(function() {

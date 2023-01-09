@@ -71,5 +71,21 @@ class DriverController extends Controller
             'data' => null
         ])->setStatusCode(200, 'OK');
     }
+
+    public function sptbList(Request $request)
+    {
+
+        $data = DB::select("select distinct a.no_sptb, d.singkatan2 as sbu , to_char(tgl_berangkat,'dd/mm/yyyy')tgl_berangkat, nvl(to_char(tgl_sampai,'dd/mm/yyyy'),' ')tgl_sampai, app_pelanggan from WOS.SPTB_H a 
+        inner join spprb_h b on a.no_spprb = b.no_spprb
+        inner join spprb_d c on b.no_spprb = c.no_spprb
+        inner join tb_sbu d on substr(c.kd_produk,1,1) = d.kd_sbu
+        where no_pol ='".$request->nopol."' and app_pelanggan = '".$request->status."'
+        order by app_pelanggan asc, tgl_berangkat desc");
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $data
+        ])->setStatusCode(200, 'OK');
+    }
 }
 
