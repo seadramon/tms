@@ -104,6 +104,9 @@ class DriverController extends Controller
             'angkutan' => $sptb->angkutan,
             'no_pol' => $sptb->no_pol,
             'tujuan' => $sptb->tujuan,
+            'nama_penerima' => $sptb->penerima_nama,
+            'tgl_sampai' => $sptb->tgl_sampai ? date('d/m/Y', strtotime($sptb->tgl_sampai)) : '',
+            'ttd_penerima' => full_url_from_path($sptb->penerima_ttd ?? 'penerima_ttd.jpg'),
         ];
         $body = [];
         foreach ($sptb->sptbd as $row) {

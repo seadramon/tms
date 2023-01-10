@@ -38,6 +38,7 @@ class MenuSeeder extends Seeder
                     'amandemen',
                     'approve1',
                     'approve2',
+                    'print',
                 ]
             ],
             [
@@ -79,6 +80,7 @@ class MenuSeeder extends Seeder
                 'sequence' => '0400',
                 'action' => [
                     'create',
+                    'view',
                     'edit',
                     'konfirmasi'
                 ]

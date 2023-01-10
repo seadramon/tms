@@ -221,6 +221,9 @@ class Sp3Controller extends Controller
                         if(in_array('amandemen', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . route('sp3.amandemen', str_replace('/', '|', $model->no_sp3)) . '">Amandemen</a></li>';
                         }
+                        if(in_array('print', $action)){
+                            $list .= '<li><a class="dropdown-item" href="'.route('sp3.print', str_replace('/', '|', $model->no_sp3)).'">Print</a></li>';
+                        }
                         if(in_array('approve1', $action) && $model->app1 == 0){
                             $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['first', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
                         }

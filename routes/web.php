@@ -89,7 +89,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('/data', [SptbController::class, 'data'])->name('data');
 
 	    Route::resource('/',  SptbController::class)->except([
-	        'show', 'destroy'
+	        'destroy'
 	    ])->parameters(['' => 'sptb']);
 
 		Route::post('/get-spm', [SptbController::class, 'getSpm'])->name('get-spm');

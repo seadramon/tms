@@ -46,11 +46,15 @@ class SptbController extends Controller
             ->addColumn('menu', function ($model) {
                 $list = '';
                 if(Auth::check()){
+                    $list .= '<li><a class="dropdown-item" href="' . route('sptb.show', str_replace('/', '|', $model->no_sptb)) . '">View</a></li>';
                     $list .= '<li><a class="dropdown-item" href="http://10.3.1.80/genreport/genreport.asp?RptName=sptb2020.rpt&fparam='.$model->no_sptb.'&ftype=5&keyId=OS">Print</a></li>';
                 }else{
                     $action = json_decode(session('TMS_ACTION_MENU'));
                     if(in_array('edit', $action)){
                         $list .= '<li><a class="dropdown-item" href="' . route('sptb.edit', str_replace('/', '|', $model->no_sptb)) . '">Edit</a></li>';
+                    }
+                    if(in_array('view', $action)){
+                        $list .= '<li><a class="dropdown-item" href="' . route('sptb.show', str_replace('/', '|', $model->no_sptb)) . '">View</a></li>';
                     }
                     if(in_array('konfirmasi', $action)){
                         $list .= '<li><a class="dropdown-item set-konfirmasi" href="javascript:void(0)" data-id="'. $model->no_sptb .'">Konfirmasi</a></li>';
@@ -235,6 +239,28 @@ class SptbController extends Controller
         }
 
         return redirect()->route('sptb.index');
+    }
+
+    public function show($no_sptb)
+    {
+        $data = SptbH::find(str_replace('|', '/', $no_sptb));
+        
+        $no_spm = SpmH::where('app2', 1)
+            ->pluck('no_spm', 'no_spm')
+            ->toArray();
+            
+        $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
+
+        $jns_sptb =  [
+            '2' => 'Stok Titipan', 
+            '0' => 'Stok Aktif'
+        ];
+
+        $jns_sptb = ["" => "Pilih Jenis SPTB"] + $jns_sptb;
+
+        return view('pages.sptb.show', compact(
+            'data', 'no_spm', 'jns_sptb'
+        ));
     }
 
     public function edit($no_sptb)
