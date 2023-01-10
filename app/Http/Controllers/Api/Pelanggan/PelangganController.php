@@ -94,7 +94,7 @@ class PelangganController extends Controller
                 'no_hp'    => 'required|starts_with:08|min:8|max:12',
                 'password' => 'required'
             ])->validate();
-            $user = PelangganUser::where('no_hp', $request->no_hp)->first();
+            $user = PelangganUser::with('pelanggan')->where('no_hp', $request->no_hp)->first();
             if (! $user || ! Hash::check($request->password, $user->password)) {
                 throw ValidationException::withMessages([
                     'no_hp' => ['The provided credentials are incorrect.'],
