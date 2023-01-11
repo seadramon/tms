@@ -150,6 +150,8 @@ class PelangganController extends Controller
                 "kd_produk" => $row->kd_produk,
                 "stockid" => $row->stockid,
                 "status" => $row->status,
+                "keterangan" => $row->keterangan,
+                "foto_kerusakan" => str_contains($row->path_produk_rusak, 'https://api.wika-beton.co.id/web-service/wton-mobile/shared/foto_produk_Rusak') ? $row->path_produk_rusak : full_url_from_path($row->path_produk_rusak ?? 'penerima_ttd.jpg'),
                 "tgl_produksi" => $row->tgl_produksi ? date('d/m/Y', strtotime($row->tgl_produksi)) : ''
             ];
         }
