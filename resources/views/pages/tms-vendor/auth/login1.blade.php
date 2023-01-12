@@ -77,7 +77,7 @@ License: For each use you must have a valid license purchased only from above li
 					<div class="d-flex flex-center flex-lg-start flex-column">
 						<!--begin::Logo-->
 						<a href="../../demo2/dist/index.html" class="mb-7">
-							<img alt="Logo" src="{{asset('content/logo-wton.jpg')}}" style="width: 150px;" />
+							<img alt="Logo" src="{{asset('content/TMS - full version - white.png')}}" style="width: 350px;" />
 						</a>
 						<!--end::Logo-->
 						<!--begin::Title-->
@@ -119,7 +119,7 @@ License: For each use you must have a valid license purchased only from above li
 									<!--end::Alert-->
 									<!--begin::Separator-->
 									<div class="separator separator-content my-14">
-										<span class="w-125px text-gray-500 fw-semibold fs-7">Or with email</span>
+										<span class="w-125px text-gray-500 fw-semibold fs-7"> please login </span>
 									</div>
 									<!--end::Separator-->
 				                @endif

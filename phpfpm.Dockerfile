@@ -30,7 +30,8 @@ RUN apt-get update && apt-get install -y \
     ln -s /usr/local/instantclient_12_2 /usr/local/instantclient && \
     ln -s /usr/local/instantclient/libclntsh.so.* /usr/local/instantclient/libclntsh.so && \
     ln -s /usr/local/instantclient/lib* /usr/lib && \
-    ln -s /usr/local/instantclient/sqlplus /usr/bin/sqlplus
+    ln -s /usr/local/instantclient/sqlplus /usr/bin/sqlplus \
+    libgd-dev
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # install redis
@@ -43,7 +44,7 @@ RUN echo 'instantclient,/usr/local/instantclient/' | pecl install oci8 \
 RUN docker-php-ext-configure pcntl --enable-pcntl
 RUN docker-php-ext-configure zip
 RUN docker-php-ext-install pdo_mysql zip exif pcntl
-RUN docker-php-ext-configure gd
+RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pdo pdo_pgsql bcmath

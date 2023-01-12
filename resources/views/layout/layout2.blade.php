@@ -10,10 +10,10 @@
 		<meta property="og:locale" content="en_US" />
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="Transport Management System" />
-		<meta property="og:url" content="https://keenthemes.com/metronic" />
+		<meta property="og:url" content="http://tms.wika-beton.co.id" />
 		<meta property="og:site_name" content="Keenthemes | Metronic" />
-		<link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
-		<link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
+		<link rel="canonical" href="http://tms.wika-beton.co.id" />
+		<link rel="shortcut icon" href="{{ asset('content/TMS - icon version - white.png') }}" />
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 		<!--end::Fonts-->
@@ -42,7 +42,7 @@
 		
 		<!--begin::loader-->
 		<div class="page-loader flex-column">
-			<img alt="Logo" class="max-h-75px" src="{{ asset('assets/media/logos/tms.png') }}" />
+			<img alt="Logo" class="h-100px" src="{{ asset('content/TMS - full version.png') }}" />
 			<div class="d-flex align-items-center mt-5">
 				<span class="spinner-border text-primary" role="status"></span>
 				<span class="text-muted fs-6 fw-semibold ms-5">Loading...</span>
@@ -63,7 +63,10 @@
 						<div class="aside-user d-flex align-items-sm-center justify-content-center py-5">
 							<!--begin::Symbol-->
 							<div class="symbol symbol-50px">
-								<img src="{{asset('assets/media/avatars/300-1.jpg')}}" alt="" />
+								@php
+									$fullname = trim(session('TMP_FULLNAME') ?? Auth::user()->fullname);
+								@endphp
+								<img src="{{ Avatar::create($fullname)->setBackground("#10aded")->toBase64() }}" alt="" />
 							</div>
 							<!--end::Symbol-->
 							<!--begin::Wrapper-->
@@ -73,7 +76,7 @@
 									<!--begin::Info-->
 									<div class="flex-grow-1 me-2">
 										<!--begin::Username-->
-										<a href="#" class="text-white text-hover-primary fs-6 fw-bold">{{ session('TMP_FULLNAME') ?? Auth::user()->fullname }}</a>
+										<a href="#" class="text-white text-hover-primary fs-7 fw-bold">{{ $fullname }}</a>
 										<!--end::Username-->
 										<!--begin::Description-->
 										<span class="text-gray-600 fw-semibold d-block fs-8 mb-1" style="width: 100px; word-wrap: break-word;">{{ session('TMP_WILAYAH') ?? Auth::user()->username }}</span>
@@ -146,8 +149,8 @@
 						<!--begin::Brand-->
 						<div class="header-brand">
 							<!--begin::Logo-->
-							<a href="../../demo8/dist/index.html">
-								<img alt="Logo" src="{{ asset('assets/media/logos/tms1.png') }}" class="h-45px h-lg-45px" />
+							<a href="#">
+								<img alt="Logo" src="{{ asset('content/TMS - full version - white.png') }}" class="h-30px h-lg-45px" />
 							</a>
 							<!--end::Logo-->
 							<!--begin::Aside minimize-->
