@@ -21,10 +21,10 @@ License: For each use you must have a valid license purchased only from above li
 		<meta property="og:locale" content="en_US" />
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="Transport Management System" />
-		<meta property="og:url" content="https://keenthemes.com/metronic" />
+		<meta property="og:url" content="http://tms.wika-beton.co.id" />
 		<meta property="og:site_name" content="Keenthemes | Metronic" />
-		<link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
-		<link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
+		<link rel="canonical" href="http://tms.wika-beton.co.id" />
+		<link rel="shortcut icon" href="{{ asset('content/TMS - icon version - white.png') }}" />
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 		<!--end::Fonts-->
@@ -77,7 +77,7 @@ License: For each use you must have a valid license purchased only from above li
 					<div class="d-flex flex-center flex-lg-start flex-column">
 						<!--begin::Logo-->
 						<a href="../../demo2/dist/index.html" class="mb-7">
-							<img alt="Logo" src="{{asset('content/TMS - full version - white.png')}}" style="width: 350px;" />
+							<img alt="Logo" src="{{asset('content/TMS - full version.jpg')}}" style="width: 350px;" />
 						</a>
 						<!--end::Logo-->
 						<!--begin::Title-->
