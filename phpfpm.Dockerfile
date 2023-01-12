@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     libzip-dev \
     libpq-dev \
+    libgd-dev \
     xvfb \
     iproute2 \
     libfontconfig \
@@ -30,8 +31,7 @@ RUN apt-get update && apt-get install -y \
     ln -s /usr/local/instantclient_12_2 /usr/local/instantclient && \
     ln -s /usr/local/instantclient/libclntsh.so.* /usr/local/instantclient/libclntsh.so && \
     ln -s /usr/local/instantclient/lib* /usr/lib && \
-    ln -s /usr/local/instantclient/sqlplus /usr/bin/sqlplus \
-    libgd-dev
+    ln -s /usr/local/instantclient/sqlplus /usr/bin/sqlplus
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # install redis
