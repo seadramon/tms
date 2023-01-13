@@ -57,7 +57,7 @@ class EnsureSessionIsValid
         }
         $detail = DB::table('usradm.usr_log_d1')->where('wbsesid', $session_id)->get()->mapWithKeys(function($item){ return [$item->wbvarname => $item->wbvarvalue]; })->all();
         Session::put($detail);
-        $role = DB::table('usradm.usr_role')->where('usrid', session('TMP_USER'))->first();
+        $role = DB::table('usradm.usr_role')->where('usrid', session('TMP_USER'))->where('roleid', 'like', 'B%')->first();
         Session::put('TMP_ROLE', $role->roleid ?? '');
     }
 }
