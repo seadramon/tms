@@ -10,7 +10,7 @@ class SptbD2 extends Model
     use HasFactory;
 
     protected $table = 'SPTB_D2';
-    protected $primaryKey = 'no_sptb';
+    protected $primaryKey = 'stockid';
 	protected $keyType = 'string';
 	public $incrementing = false;
     public $timestamps = false;
