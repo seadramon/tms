@@ -19,7 +19,11 @@ class RoleController extends Controller
         $data = Role::with(['menus' => function($sql){
                 $sql->orderBy('seq','ASC');
             }])
-            ->where('grpid', 'like', 'B%')
+            // ->where('grpid', 'like', 'B%')
+            ->where(function($sql){
+                $sql->where('roleid', 'like', 'B%');
+                $sql->orWhere('roleid', '#1');
+            })
             ->select('*');
 
         return DataTables::of($data) 
