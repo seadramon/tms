@@ -82,6 +82,7 @@ class MenuSeeder extends Seeder
                     'create',
                     'view',
                     'edit',
+                    'print',
                     'konfirmasi'
                 ]
             ],
