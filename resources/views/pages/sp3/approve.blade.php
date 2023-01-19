@@ -126,7 +126,7 @@
 
                             <div class="form-group col-lg-3">
                                 <label class="form-label">Tanggal</label>
-                                {!! Form::text('tgl_sp3', $data->tgl_sp3 ? date('d-m-Y', strtotime($data->tgl_sp3)), ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('tgl_sp3', $data->tgl_sp3 ? date('d-m-Y', strtotime($data->tgl_sp3)) : null, ['class'=>'form-control', 'disabled']) !!}
                             </div>
                 
                             <div class="form-group col-lg-6">
@@ -161,12 +161,12 @@
                 
                             <div class="form-group col-lg-3">
                                 <label class="form-label">Tanggal Penyerahan</label>
-                                {!! Form::text('jadwal1', $data->jadwal1 ? date('d-m-Y', strtotime($data->jadwal1)), ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('jadwal1', $data->jadwal1 ? date('d-m-Y', strtotime($data->jadwal1)) : null, ['class'=>'form-control', 'disabled']) !!}
                             </div>
                 
                             <div class="form-group col-lg-3">
                                 <label class="form-label">&nbsp;</label>
-                                {!! Form::text('jadwal2', $data->jadwal2 ? date('d-m-Y', strtotime($data->jadwal2)), ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('jadwal2', $data->jadwal2 ? date('d-m-Y', strtotime($data->jadwal2)) : null, ['class'=>'form-control', 'disabled']) !!}
                             </div>
                 
                             <div class="form-group col-lg-6">

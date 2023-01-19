@@ -44,8 +44,8 @@
                         
                         <div class="col-lg-6 custom-form mb-2">
                             <label class="form-label col-sm-3 custom-label">Cut Off</label>
-                            {!! Form::select('rangeCutOff', $rangeCutOff, null, ['class'=>'form-control form-select-solid col-sm-1', 'data-control'=>'select2', 'id'=>'rangeCutOff']) !!}
-                            {!! Form::select('monthCutOff', $monthCutOff, null, ['class'=>'form-control form-select-solid col-sm-2', 'data-control'=>'select2', 'id'=>'monthCutOff']) !!}
+                            {!! Form::select('rangeCutOff', $rangeCutOff, null, ['class'=>'form-control form-select-solid col-sm-1', 'data-control'=>'select2', 'id'=>'rangeCutOff', "disabled" => true]) !!}
+                            {!! Form::select('monthCutOff', $monthCutOff, null, ['class'=>'form-control form-select-solid col-sm-2', 'data-control'=>'select2', 'id'=>'monthCutOff', "disabled" => true]) !!}
                         </div>
                     </div>
 
@@ -54,10 +54,20 @@
                             <label class="form-label col-sm-3 custom-label">Status SP3/SPK</label>
                             {!! Form::select('status', $status, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'status']) !!}
                         </div>
+                        <div class="col-lg-6 custom-form mb-2">
+                            <label class="form-label col-sm-3 custom-label">Pekerjaan</label>
+                            {!! Form::select('pekerjaan', $jenisPekerjaan, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pekerjaan']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-6 custom-form mb-2">
+                            <label class="form-label col-sm-3 custom-label">&nbsp;</label>
+                            <button class="btn btn-light-info" id="filter">Filter</a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card-body py-5">
+                <div class="card-body py-0">
                     <table id="tabel_sp3" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                         <thead>
                             <tr class="fw-semibold fs-6 text-muted">
@@ -150,6 +160,10 @@
                         d._token = '{{ csrf_token() }}';
                         d.pat = $("#pat").val();
                         d.periode = $("#periode").val();
+                        d.range = $("#rangeCutOff").val();
+                        d.month = $("#monthCutOff").val();
+                        d.status = $("#status").val();
+                        d.pekerjaan = $("#pekerjaan").val();
                     }
                 },
 	            columns: [
@@ -201,8 +215,17 @@
 		}
 	});
 
-    $(document).on('change', '#pat, #periode', function(){
+    $(document).on('click', '#filter', function(){
         $('#tabel_sp3').DataTable().ajax.reload()
+    });
+    $(document).on('change', '#periode', function(){
+        if($('#periode').val() == ''){
+            var disabled = true; 
+        }else{
+            var disabled = false; 
+        }
+        $("#rangeCutOff").attr("disabled", disabled);
+        $("#monthCutOff").attr("disabled", disabled);
     });
 </script>
 @endsection

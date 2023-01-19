@@ -21,8 +21,8 @@ class RoleController extends Controller
             }])
             // ->where('grpid', 'like', 'B%')
             ->where(function($sql){
-                $sql->where('roleid', 'like', 'B%');
-                $sql->orWhere('roleid', '#1');
+                $sql->where('grpid', 'like', 'B%');
+                $sql->orWhere('grpid', '#1');
             })
             ->select('*');
 

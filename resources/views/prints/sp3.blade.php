@@ -27,6 +27,8 @@
             .content table, .content th, .content td {
                 border: 1px solid;
             }
+            @page { margin: 160px 25px 60px 25px; }
+            header { position: fixed; top: -150px; left: 0px; right: 0px; height: 50px; }
 
             table td, table td * {
                 vertical-align: top;

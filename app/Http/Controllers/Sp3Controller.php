@@ -57,7 +57,7 @@ class Sp3Controller extends Controller
         $periode = $labelSemua + $periode;
 
         $status = [
-            'draft'             => 'Draft',
+            ''                  => 'Semua',
             'belum_verifikasi'  => 'Belum Verifikasi',
             'aktif'             => 'Aktif',
             'selesai'           => 'Selesai'
@@ -83,8 +83,14 @@ class Sp3Controller extends Controller
             'desember'  => 'Desember'
         ];
 
+        $jenisPekerjaan = JenisPekerjaan::get()
+            ->pluck('ket', 'kd_jpekerjaan')
+            ->toArray();
+            
+        $jenisPekerjaan = ["" => "Semua"] + $jenisPekerjaan;
+
         return view('pages.sp3.index', compact(
-            'pat', 'periode', 'status', 'rangeCutOff', 'monthCutOff', 'muat'
+            'pat', 'periode', 'status', 'rangeCutOff', 'monthCutOff', 'muat', 'jenisPekerjaan'
         ));
     }
 
@@ -103,6 +109,9 @@ class Sp3Controller extends Controller
 
         if($request->periode){
             $query->whereYear('tgl_sp3', $request->periode);
+        }
+        if($request->pekerjaan){
+            $query->where('kd_jpekerjaan', $request->pekerjaan);
         }
         
         if(Auth::check()){
@@ -215,10 +224,10 @@ class Sp3Controller extends Controller
                         if(in_array('view', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
                         }
-                        if(in_array('edit', $action)){
+                        if(in_array('edit', $action) && $model->app1 != 1){
                             $list .= '<li><a class="dropdown-item" href="' . route('sp3.edit', str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>';
                         }
-                        if(in_array('amandemen', $action)){
+                        if(in_array('amandemen', $action) && $model->app1 == 1){
                             $list .= '<li><a class="dropdown-item" href="' . route('sp3.amandemen', str_replace('/', '|', $model->no_sp3)) . '">Amandemen</a></li>';
                         }
                         if(in_array('print', $action)){
@@ -622,6 +631,7 @@ class Sp3Controller extends Controller
 
         $ppn = [
             "0" => "0%",
+            "10" => "10%",
             "11" => "11%",
         ];
 

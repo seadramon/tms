@@ -27,7 +27,7 @@ class Personal extends Model
 
     public function getSignatureBase64Attribute()
     {
-        $logo = base64_encode($this->signature);
+        $logo = base64_encode($this->signature ?? asset('content/no_ttd.jpg'));
         return $logo;
     }
 

@@ -125,21 +125,21 @@ class SppController extends Controller
                             'urutan' => 'first',
                             'nosppb' => $noSppb
                         ]);
-                        $caption = "Approve First";
+                        $caption = "Approve KSDM";
                         break;
                     case ($model->app == 1 && $model->app2 == 0 && in_array('approve2', $action)):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'second',
                             'nosppb' => $noSppb
                         ]);
-                        $caption = "Approve Second";
+                        $caption = "Approve PEO";
                         break;
                     case ($model->app == 1 && $model->app2 == 1 && $model->app3 == 0 && $sumVolApp2 == 0 && in_array('approve3', $action)):
                         $approve = route('spp-approve.approval', [
                             'urutan' => 'third',
                             'nosppb' => $noSppb
                         ]);
-                        $caption = "Approve Third";
+                        $caption = "Approve MUnit";
                         break;
                     default:
                         $approve = "";
@@ -452,7 +452,7 @@ class SppController extends Controller
         ];
 
         $noSppb = str_replace("|", "/", $spp);
-        $data = SppbH::find($noSppb);
+        $data = SppbH::with('spprb')->find($noSppb);
         $npp = !empty($data->npp)?$data->npp:null;
         $noNpp = $data->no_npp;
 
@@ -490,7 +490,7 @@ class SppController extends Controller
         ];
     }
 
-    public function print($spp)
+public function print($spp)
     {
         $noSppb = str_replace("|", "/", $spp);
         $data = SppbH::find($noSppb);

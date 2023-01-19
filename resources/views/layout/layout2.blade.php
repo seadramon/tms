@@ -295,9 +295,9 @@
 		
 				return text;
 			}
-			function reFormat(val){
+			function reFormat(val, decimal = true){
 				val = val.toString();
-				if(val.split('.').length > 1){
+				if(val.split('.').length > 1 && decimal){
 					return format(val, '.', val.split('.')[1].length); 
 				}else{
 					return format(val, '.', 0); 

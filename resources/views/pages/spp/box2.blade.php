@@ -74,7 +74,7 @@
 		</div>	
 	</div>
 
-	<div class="col-lg-6 hide">
+	<div class="col-lg-6 hidden">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Lokasi Muat</label>
 			{!! Form::text('pat', $npp->pat, ['class'=>'form-control', 'id'=>'pat']) !!}

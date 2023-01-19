@@ -140,7 +140,7 @@
             }
         }
 
-        $('#subtotal').val(reFormat(subTotal));
+        $('#subtotal').val(reFormat(subTotal, false));
 
         calculateTotal();
     }
@@ -151,7 +151,7 @@
         let pph = parseFloat($('#subtotal').val().replaceAll(",", "")) * parseFloat(pph_[1] / 100);
         let total = parseFloat($('#subtotal').val().replaceAll(",", "")) + parseFloat(ppn) + parseFloat(pph);
 
-        $('#total').val(reFormat(total));
+        $('#total').val(reFormat(total, false));
     }
 
     $(document).on('click', '.delete_pekerjaan', function(){
