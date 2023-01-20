@@ -64,7 +64,7 @@
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal3)) }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal4)) }}</td>
                                                 <td>
-                                                    <select class="form-select" data-control="select2" data-placeholder="Select Armada.." name="kd_material[]" disabled>
+                                                    <select class="form-select" data-control="select2" data-placeholder="Select Armada.." name="kd_material[]">
                                                         <option></option>
                                                         @foreach($trmaterial as $item)
                                                             @if(!empty($row->potensiH))
