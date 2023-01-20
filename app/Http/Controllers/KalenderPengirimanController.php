@@ -80,9 +80,17 @@ class KalenderPengirimanController extends Controller
 		// $week = KalenderMg::whereTh('2008')->whereMg('24')->whereKdPat('1A')->first();
 
 		$week = KalenderMg::whereTh($request->tahun)->whereMg($request->minggu)->whereKdPat('1A')->first();
-		$spm = SpmH::with('sppb.npp', 'pat', 'armada.jenis', 'spmd.produk')
-			->whereBetween('tgl_spm', [$week->tgl_awal, date('Y-m-d 23:59:59', strtotime($week->tgl_akhir))])
-			->get();
+		$query = SpmH::with('sppb.npp', 'pat', 'armada.jenis', 'spmd.produk')
+			->whereBetween('tgl_spm', [$week->tgl_awal, date('Y-m-d 23:59:59', strtotime($week->tgl_akhir))]);
+		if($request->ppbmuat != ''){
+			$query->wherePatTo($request->ppbmuat);
+		}
+		if($request->unitkerja != ''){
+			$query->whereHas('sppb.npp', function($sql) use($request) {
+				$sql->whereKdPat($request->unitkerja);
+			});
+		}
+		$spm = $query->get();
 
 		$data = $spm->groupBy(function($item){
 			return ($item->sppb->no_npp ?? 'UnknownSppb') . '_' . ($item->sppb->npp->nama_proyek ?? 'UnknownNpp') . '_' . ($item->pat->ket ?? 'Unknown');
@@ -92,9 +100,18 @@ class KalenderPengirimanController extends Controller
 			return ($item->sppb->no_npp ?? 'UnknownSppb') . '_' . ($item->sppb->npp->nama_proyek ?? 'UnknownNpp') . '_' . ($item->pat->ket ?? 'Unknown') . '_' . date('Ymd', strtotime($item->tgl_spm));
 		});
 
-		$spmd = SpmD::with('spmh.sppb.npp', 'spmh.pat', 'produk')->whereHas('spmh', function($sql) use ($week){
+		$query = SpmD::with('spmh.sppb.npp', 'spmh.pat', 'produk')->whereHas('spmh', function($sql) use ($week, $request){
 				$sql->whereBetween('tgl_spm', [$week->tgl_awal, date('Y-m-d 23:59:59', strtotime($week->tgl_akhir))]);
-			})->get();
+				if($request->ppbmuat != ''){
+					$sql->wherePatTo($request->ppbmuat);
+				}
+			});
+		if($request->unitkerja != ''){
+			$query->whereHas('spmh.sppb.npp', function($sql) use($request) {
+				$sql->whereKdPat($request->unitkerja);
+			});
+		}
+		$spmd = $query->get();
 		$detail = $spmd->groupBy([
 				function($item){
 					return ($item->spmh->sppb->no_npp ?? 'UnknownSppb') . '_' . ($item->spmh->sppb->npp->nama_proyek ?? 'UnknownNpp') . '_' . ($item->spmh->pat->ket ?? 'Unknown');

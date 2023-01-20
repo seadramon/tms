@@ -41,16 +41,17 @@ class PdaController extends Controller
         ];
         $labelSemua = ["" => "Semua"];
 
+        $pat = Pat::where('kd_pat', session('TMP_KDWIL'))->get()->pluck('ket', 'kd_pat')->toArray();
         $kd_pat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['1', '4', '5'])
             ->get()
-            ->pluck('singkatan', 'kd_pat')
+            ->pluck('ket', 'kd_pat')
             ->toArray();
 
         $kd_pat = $labelSemua + $kd_pat;
 
         $ppb_muat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['2', '4', '5'])
             ->get()
-            ->pluck('singkatan', 'kd_pat')
+            ->pluck('ket', 'kd_pat')
             ->toArray();
 
         $ppb_muat = $labelSemua + $ppb_muat;
