@@ -57,7 +57,7 @@
                     </td>
                 @endforeach
                 <td class="text-center" width="15%">{{ $row->first()->armada->jenis->name ?? '-' }}</td>
-                <td class="text-center" width="15%">{{($row->first()->pat->ket ?? $row->first()->no_spm )}}</td>
+                <td class="text-center" width="15%" data-spm="{{$row->first()->no_spm}}">{{($row->first()->pat->ket ?? 'Unknown' )}}</td>
                 <td class="text-center" width="13%">
                     <a href="javascript:void(0)" class="expandChildTable"><i class="fa fa-eye"></i></a>
                 </td>

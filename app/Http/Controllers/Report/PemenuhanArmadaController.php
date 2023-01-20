@@ -71,12 +71,11 @@ class PemenuhanArmadaController extends Controller
 
     public function data(Request $request)
     {
-        $query = SpmH::select('spm_h.*', 'sptb_h.no_npp as no_npp', 'tb_pat.ket as ket', 'sptb_h.no_sptb as no_sptb',
+        $query = SpmH::select('spm_h.no_pol', 'spm_h.vendor_id', 'spm_h.no_spm', 'spm_h.no_sppb', 'spm_h.tgl_spm', 'sptb_h.no_npp as no_npp', 'tb_pat.ket as ket', 'sptb_h.no_sptb as no_sptb',
             'sptb_h.tgl_sptb as tgl_sptb', 'vendor.nama as nama_vendor', 'tms_armadas.detail as jenis_armada')
             ->leftJoin('sppb_h', 'sppb_h.no_sppb', '=', 'spm_h.no_sppb')
             ->leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
             ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'sptb_h.kd_pat')
-            ->leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
             ->leftJoin('vendor', 'vendor.vendor_id', '=', 'spm_h.vendor_id')
             ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
 
