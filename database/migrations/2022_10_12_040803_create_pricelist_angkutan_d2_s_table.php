@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignId('pad_id')->nullable()->constrained('tms_pricelist_angkutan_d');
             $table->integer('range_min')->nullable();
             $table->integer('range_max')->nullable();
-            $table->decimal('h_pusat')->nullable();
-            $table->decimal('h_final')->nullable();
+            $table->decimal('h_pusat', 12, 2)->nullable();
+            $table->decimal('h_final', 12, 2)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
