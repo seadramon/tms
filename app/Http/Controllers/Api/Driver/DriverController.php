@@ -66,10 +66,11 @@ class DriverController extends Controller
         $gps->latitude  = $request->latitude;
         $gps->longitude = $request->longitude;
         $gps->save();
+        $sptb = SptbH::whereNoSptb($request->no_sptb)->first();
 
         return response()->json([
             'message' => 'success',
-            'data' => null
+            'data' => ['sendGps' => ($sptb->app_pelanggan ?? null) != 1]
         ])->setStatusCode(200, 'OK');
     }
 

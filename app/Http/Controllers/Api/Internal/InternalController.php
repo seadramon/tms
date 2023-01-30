@@ -9,6 +9,7 @@ use App\Models\GpsLog;
 use App\Models\Npp;
 use App\Models\PelangganNpp;
 use App\Models\PelangganUser;
+use App\Models\SptbH;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,10 +21,14 @@ class InternalController extends Controller
         $code = 200;
         $message = "Success";
         $gps = GpsLog::whereNoSptb($request->no_sptb)->orderByDesc('created_at')->first();
+        $sptb = SptbH::whereNoSptb($request->no_sptb)->first();
         return response()->json([
             'success' => $code,
             'message' => $message,
-            'data' => $gps
+            'data' => [
+                'gps' => $gps,
+                'ppb_muat' => $sptb->ppb_muat ?? null
+            ]
         ], $code);
     }
 }

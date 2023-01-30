@@ -36,6 +36,11 @@ class SptbH extends Model
         return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
     }
 
+    public function ppb_muat()
+    {
+    	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
+    }
+
     public function scopeFilterLogin($query, $type, $value)
     {
         if($type == 'vendor'){
