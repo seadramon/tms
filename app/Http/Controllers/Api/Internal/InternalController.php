@@ -36,7 +36,7 @@ class InternalController extends Controller
 
     public function spmList(Request $request)
     {
-        $spm = SpmH::with('sppb.npp', 'vendor', 'pat')
+        $spm = SpmH::with('sppb.npp', 'vendor', 'pat', 'spmd.sbu')
             ->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($request->tgl)), date('Y-m-d 23:59:59', strtotime($request->tgl))])
             ->get();
 

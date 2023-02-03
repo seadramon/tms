@@ -20,7 +20,7 @@ class SpmListResource extends JsonResource
             "nama_proyek" => $this->sppb->npp->nama_proyek,
             "nopol"       => $this->no_pol,
             "vendor"      => $this->vendor->nama,
-            "sbu"         => $this->pat->ket,
+            "sbu"         => $this->spmd->first()->sbu->singkatan,
             "ppb_muat"    => $this->pat->ket
         ];
     }
