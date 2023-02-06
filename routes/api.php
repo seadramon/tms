@@ -43,6 +43,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::get('pelanggan-list', [InternalPelangganController::class, 'index'])->name('pelanggan-list');
         Route::post('pelanggan-approve', [InternalPelangganController::class, 'approve'])->name('pelanggan-approve');
         Route::post('gps-tracker', [InternalController::class, 'gpsTracker'])->name('gps-tracker');
+        Route::get('spm', [InternalController::class, 'spmList'])->name('spm-list');
     });
     
     Route::name('pelanggan.')->prefix('pelanggan')->namespace('Pelanggan')->group(function() {
