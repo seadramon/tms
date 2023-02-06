@@ -112,6 +112,10 @@ class KalenderPengirimanController extends Controller
 			});
 		}
 		$spmd = $query->get();
+		
+		// $spmd = SpmD::with('spmh.sppb.npp', 'spmh.pat', 'produk')->whereHas('spmh', function($sql) use ($week, $request){
+		// 	$sql->whereBetween('tgl_spm', ['2008-06-01 00:00:00', '2008-06-30 23:59:59']);
+		// })->get();
 		$detail = $spmd->groupBy([
 				function($item){
 					return ($item->spmh->sppb->no_npp ?? 'UnknownSppb') . '_' . ($item->spmh->sppb->npp->nama_proyek ?? 'UnknownNpp') . '_' . ($item->spmh->pat->ket ?? 'Unknown');
@@ -124,6 +128,7 @@ class KalenderPengirimanController extends Controller
 				},
 			]);
 
+		// $dates = KalenderService::createDateRangeArray('2008-06-01 00:00:00', '2008-06-30 23:59:59', 'Ymd');
 		$dates = KalenderService::createDateRangeArray(date('Y-m-d', strtotime($week->tgl_awal)), date('Y-m-d', strtotime($week->tgl_akhir)), 'Ymd');
 		// return response()->json([
 		// 	'data'       => $data,

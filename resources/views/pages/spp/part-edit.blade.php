@@ -180,13 +180,13 @@
 		<div class="col-lg-6">
 			<div class="form-group">
 				<label class="fs-6 fw-bold mt-2 mb-3">Rencana Pengiriman</label>
-				{!! Form::text('jadwal', $start.' - '.$end, ['class'=>'form-control', 'id'=>'daterange']) !!}
+				{!! Form::text('jadwal', date('d-m-Y', strtotime($start)) . ' - ' . date('d-m-Y', strtotime($end)), ['class'=>'form-control', 'id'=>'daterange']) !!}
 			</div>	
 		</div>
 
 		<div class="col-lg-12">
 			<div class="form-group">
-				<label class="fs-6 fw-bold mt-2 mb-3">Keterangan</label>
+				<label class="fs-6 fw-bold mt-2 mb-3">Keterangan Pelaksana</label>
 				{!! Form::textarea('catatan', null, ['class'=>'form-control', 'id'=>'daterange', 'rows' => '5']) !!}
 			</div>	
 		</div>

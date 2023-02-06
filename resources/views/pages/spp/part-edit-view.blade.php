@@ -112,85 +112,141 @@
 	</div>
 <?php //dd($dtlRencana); ?>
 		<!-- Detail Pekerjaan -->
-		<div class="col-lg-12 mt-10">
-			<h3 class="card-title">Detail Rencana Produk</h3>
-			<div class="hover-scroll-overlay-y h-400px">
-				<table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
-					<thead>
-						<tr class="fw-bolder fs-6 text-gray-800">
-							<th>No</th>
-							<th>Nama Produk</th>
-							<th>Kode Produk</th>
-							<th>Saat Ini</th>
-							<th>S.d Saat ini</th>
-							<th>Keterangan</th>
-							<th>Segmen</th>
-							<th>Jumlah Segmen</th>
-							<th>KSDM Vol</th>
-							<th>PEO Vol</th>
-							<th>MUnit Vol</th>
-						</tr>
-					</thead>
-					<tbody>
-						@if (count($data->detail) > 0 && count($tblPesanan) > 0)
-							<?php $i = 1; ?>
-							@foreach($data->detail as $pesanan)
-								<tr>
-									<td>{{ $i }}</td>							
-									<td>{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk}}</td>
-									<td>
-										{{$pesanan->kd_produk}}
-									</td>							
-									<td>
-										{{ $pesanan->vol }}
-									</td>				
-									<td>
-										{{ isset($dtlRencana[$pesanan->kd_produk])?$dtlRencana[$pesanan->kd_produk]['sppVolBtg']:0 + $pesanan->vol }}
-									</td>	
-									<td>
-										{{ $pesanan->ket }}
-									</td>							
-									<td>
-										<input class="form-check-input" name="rencana[{{$i}}][segmental]" type="checkbox" value="{{ !empty($pesanan->segmental)?1:0 }}" {{!empty($pesanan->segmental)?"checked":""}} id="flexCheckDefault"  disabled />
-									</td>							
-									<td>
-										{{ $pesanan->jml_segmen }}
-									</td>
-									<td>
-										{{ $pesanan->app1_vol }}
-									</td>
-									<td>
-										{{ $pesanan->app2_vol }}
-									</td>
-									<td>
-										{{ $pesanan->app3_vol }}
-									</td>							
-								</tr>
-
-								<?php $i++; ?>
-							@endforeach
-						@else
+	<div class="col-lg-12 mt-10">
+		<h3 class="card-title">Detail Rencana Produk</h3>
+		<div class="hover-scroll-overlay-y h-400px">
+			<table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
+				<thead>
+					<tr class="fw-bolder fs-6 text-gray-800">
+						<th>No</th>
+						<th>Nama Produk</th>
+						<th>Kode Produk</th>
+						<th>Saat Ini</th>
+						<th>S.d Saat ini</th>
+						<th>Keterangan</th>
+						<th>Segmen</th>
+						<th>Jumlah Segmen</th>
+						<th>KSDM Vol</th>
+						<th>PEO Vol</th>
+						<th>MUnit Vol</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (count($data->detail) > 0 && count($tblPesanan) > 0)
+						<?php $i = 1; ?>
+						@foreach($data->detail as $pesanan)
 							<tr>
-								<td colspan="8">Data Kosong</td>
+								<td>{{ $i }}</td>							
+								<td>{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk}}</td>
+								<td>
+									{{$pesanan->kd_produk}}
+								</td>							
+								<td>
+									{{ $pesanan->vol }}
+								</td>				
+								<td>
+									{{ isset($dtlRencana[$pesanan->kd_produk])?$dtlRencana[$pesanan->kd_produk]['sppVolBtg']:0 + $pesanan->vol }}
+								</td>	
+								<td>
+									{{ $pesanan->ket }}
+								</td>							
+								<td>
+									<input class="form-check-input" name="rencana[{{$i}}][segmental]" type="checkbox" value="{{ !empty($pesanan->segmental)?1:0 }}" {{!empty($pesanan->segmental)?"checked":""}} id="flexCheckDefault"  disabled />
+								</td>							
+								<td>
+									{{ $pesanan->jml_segmen }}
+								</td>
+								<td>
+									{{ $pesanan->app1_vol }}
+								</td>
+								<td>
+									{{ $pesanan->app2_vol }}
+								</td>
+								<td>
+									{{ $pesanan->app3_vol }}
+								</td>							
 							</tr>
-						@endif
-					</tbody>
-				</table>
+
+							<?php $i++; ?>
+						@endforeach
+					@else
+						<tr>
+							<td colspan="8">Data Kosong</td>
+						</tr>
+					@endif
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- end:Detail Pekerjaan -->
+	<div class="col-lg-12 mb-3">
+		<h3 class="card-title">Catatan Pembayaran</h3>
+	</div>
+	<div class="col-lg-12 mb-3">
+		<div class="row">
+			<div class="col-lg-2 mb-2">
+				1. Uang Muka	
+			</div>
+			<div class="col-lg-2 mb-2">
+				@if ($data->chk_tanpa_dp > 0)
+					{{ 'Tanpa Uang Muka' }}
+				@elseif($data->chk_kontrak > 0)
+					{{ 'Sudah dibayar' }}
+				@else
+					{{ 'Belum dibayar' }}
+				@endif
 			</div>
 		</div>
-		<!-- end:Detail Pekerjaan -->
-
-		<div class="col-lg-6">
-			<div class="form-group">
-				<label class="fs-6 fw-bold mt-2 mb-3">Rencana Pengiriman</label>
-				{!! Form::text('jadwal', $start.' - '.$end, ['class'=>'form-control form-control-solid', 'id'=>'daterange', 'disabled']) !!}
-			</div>	
+		<div class="row">
+			<div class="col-lg-2 mb-2">
+				2. Progress Produksi
+			</div>
+			<div class="col-lg-2 mb-2">
+				{{ ($data->chk_produksi > 0)?"Sudah dibayar":"Belum dibayar"}}
+			</div>
 		</div>
-
-		<div class="col-lg-12">
-			<div class="form-group">
-				<label class="fs-6 fw-bold mt-2 mb-3">Keterangan</label>
-				{!! Form::textarea('catatan', null, ['class'=>'form-control form-control-solid', 'id'=>'daterange', 'rows' => '5', 'readonly']) !!}
-			</div>	
+		<div class="row">
+			<div class="col-lg-2 mb-2">
+				3. Progress Distribusi		
+			</div>
+			<div class="col-lg-2 mb-2">
+				{{ ($data->chk_distribusi > 0)?"Sudah dibayar":"Belum dibayar"}}
+			</div>
 		</div>
+		<div class="row">
+			<div class="col-lg-2 mb-2">
+				3. Progress Distribusi		
+			</div>
+			<div class="col-lg-2 mb-2">
+				{{ ($data->chk_distribusi > 0)?"Sudah dibayar":"Belum dibayar"}}
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="col-lg-6">
+		<div class="form-group">
+			<label class="fs-6 fw-bold mt-2 mb-3">Rencana Pengiriman</label>
+			{!! Form::text('jadwal', date('d-m-Y', strtotime($start)) . ' - ' . date('d-m-Y', strtotime($end)), ['class'=>'form-control form-control-solid', 'id'=>'daterange', 'disabled']) !!}
+		</div>	
+	</div>
+
+	<div class="col-lg-12">
+		<div class="form-group">
+			<label class="fs-6 fw-bold mt-2 mb-3">Catatan Pelaksana</label>
+			{!! Form::textarea('catatan', null, ['class'=>'form-control form-control-solid', 'id'=>'daterange', 'rows' => '5', 'readonly']) !!}
+		</div>	
+	</div>
+	<div class="col-lg-12">
+		<div class="form-group">
+			<label class="fs-6 fw-bold mt-2 mb-3">Catatan KSDM</label>
+			{!! Form::textarea('catatan_app1', null, ['class'=>'form-control form-control-solid', 'id'=>'catatan', 'rows' => '5', 'readonly']) !!}
+		</div>	
+	</div>
+	<div class="col-lg-12">
+		<div class="form-group">
+			<label class="fs-6 fw-bold mt-2 mb-3">Catatan PEO</label>
+			{!! Form::textarea('catatan_app2', null, ['class'=>'form-control form-control-solid', 'id'=>'catatan', 'rows' => '5', 'readonly']) !!}
+		</div>	
+	</div>
 </div>

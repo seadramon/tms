@@ -156,7 +156,7 @@ class SppController extends Controller
                     if(in_array('view', $action)){
                         $list .= '<li><a class="dropdown-item" href="'. route('spp.show', ['spp' => $noSppb]) .'">View</a></li>';
                     }
-                    if(in_array('edit', $action)){
+                    if($model->app == 0 && in_array('edit', $action)){
                         $list .= '<li><a class="dropdown-item" href="'. route('spp.edit', ['spp' => $noSppb]) .'">Edit</a></li>';
                     }
                     if(in_array('amandemen', $action)){
@@ -490,7 +490,7 @@ class SppController extends Controller
         ];
     }
 
-public function print($spp)
+    public function print($spp)
     {
         $noSppb = str_replace("|", "/", $spp);
         $data = SppbH::find($noSppb);
