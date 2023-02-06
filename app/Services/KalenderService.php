@@ -11,12 +11,13 @@ use DateTime;
 
 class KalenderService {
 
-    protected $start, $end;
+    protected $start, $end, $kd_pat;
 
-    public function __construct($start, $end)
+    public function __construct($start, $end, $kd_pat)
     {
-        $this->start = $start;
-        $this->end = $end;
+        $this->start  = $start;
+        $this->end    = $end;
+        $this->kd_pat = $kd_pat;
     }
 
     public function rekapDailySpm($nopol = null)
@@ -47,8 +48,13 @@ class KalenderService {
 
     public function rekapDailySppWithSp3()
     {
-        $spp = SppbH::whereBetween('tgl_sppb', [date('Y-m-d 00:00:00', strtotime($this->start)), date('Y-m-d 23:59:59', strtotime($this->end))])
-			->get()
+        $query = SppbH::whereBetween('tgl_sppb', [date('Y-m-d 00:00:00', strtotime($this->start)), date('Y-m-d 23:59:59', strtotime($this->end))]);
+		if($this->kd_pat && $this->kd_pat != '0A'){
+			$query->whereHas('npp', function($sql){
+				$sql->where('kd_pat', $this->kd_pat);
+			});
+		}
+		$spp = $query->get()
 			->groupBy(function ($item, $key) {
 				return date('Y-m-d', strtotime($item->tgl_sppb));
 			})
@@ -64,8 +70,11 @@ class KalenderService {
 			});
 			// ->values();
 
-		$sp3 = Sp3::whereBetween('tgl_sp3', [date('Y-m-d 00:00:00', strtotime($this->start)), date('Y-m-d 23:59:59', strtotime($this->end))])
-			->get()
+		$query = Sp3::whereBetween('tgl_sp3', [date('Y-m-d 00:00:00', strtotime($this->start)), date('Y-m-d 23:59:59', strtotime($this->end))]);
+		if($this->kd_pat && $this->kd_pat != '0A'){
+			$query->where('kd_pat', $this->kd_pat);
+		}
+		$sp3 = $query->get()
 			->groupBy(function ($item, $key) {
 				return date('Y-m-d', strtotime($item->tgl_sp3));
 			})
@@ -109,6 +118,11 @@ class KalenderService {
 		if($nopol){
 			$query->whereNoPol($nopol);
 		}
+		if($this->kd_pat && $this->kd_pat != '0A'){
+			$query->whereHas('sppb.npp', function($sql){
+                $sql->where('kd_pat', $this->kd_pat);
+            });
+		}
 		$spm = $query->get()
 			->groupBy(function ($item, $key) {
 				return date('Y-m-d', strtotime($item->tgl_spm));
@@ -125,11 +139,15 @@ class KalenderService {
 				];
 			});
 			// ->values();
-
 		$sptb = SptbH::whereHas('spmh', function($sql) use($nopol){
 				$sql->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($this->end)), date('Y-m-d 00:00:00')]);
 				if($nopol){
 					$sql->whereNoPol($nopol);
+				}
+				if($this->kd_pat && $this->kd_pat != '0A'){
+					$sql->whereHas('sppb.npp', function($sql1){
+						$sql1->where('kd_pat', $this->kd_pat);
+					});
 				}
 			})
 			->get()
