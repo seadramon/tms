@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Views\VMasterProduk;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,5 +23,9 @@ class SppbD extends Model
 
     public function spmd(){
         return $this->belongsTo(SpmD::class, 'kd_produk', 'kd_produk');
+    }
+    
+	public function master_produk(){
+        return $this->belongsTo(VMasterProduk::class, 'kd_produk', 'kd_produk');
     }
 }

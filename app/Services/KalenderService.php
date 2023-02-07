@@ -13,7 +13,7 @@ class KalenderService {
 
     protected $start, $end, $kd_pat;
 
-    public function __construct($start, $end, $kd_pat)
+    public function __construct($start, $end, $kd_pat = null)
     {
         $this->start  = $start;
         $this->end    = $end;
@@ -112,7 +112,7 @@ class KalenderService {
 		return $data;
 	}
 
-	public function rekapDailySptb($nopol)
+	public function rekapDailySptb($nopol = null)
     {
         $query = SpmH::whereBetween('tgl_spm', [date('Y-m-d 00:00:00'), date('Y-m-d 23:59:59', strtotime($this->end))]);
 		if($nopol){
