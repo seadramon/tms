@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Driver\DriverController;
 use App\Http\Controllers\Api\Pelanggan\PelangganController;
 use App\Http\Controllers\Api\Driver\LoginController;
 use App\Http\Controllers\Api\FileController;
+use App\Http\Controllers\Api\General\ProyekController;
 use App\Http\Controllers\Api\Internal\InternalController;
 use App\Http\Controllers\Api\Internal\KalenderController;
 use App\Http\Controllers\Api\Internal\NppController;
@@ -29,12 +30,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::name('api.')->namespace('Api')->group(function() {
     Route::get('viewer/{path}', [FileController::class, 'viewer'])->name('file.viewer');
 
+    Route::name('general.')->prefix('general')->namespace('General')->group(function() {
+        Route::get('proyek-list/{kd_pat}', [ProyekController::class, 'proyekList'])->name('proyek-list');
+        Route::get('proyek-progress/{no_npp}', [ProyekController::class, 'proyekProgress'])->name('proyek-progress');
+        Route::get('proyek-progress-tipe/{no_npp}', [ProyekController::class, 'proyekProgressTipe'])->name('proyek-progress-tipe');
+    });
+
     Route::name('driver.')->prefix('driver')->namespace('Driver')->group(function() {
         Route::post('login', [LoginController::class, 'login'])->name('login');
         Route::post('penerimaan', [DriverController::class, 'penerimaan'])->name('penerimaan');
         Route::post('gps-log', [DriverController::class, 'gpsLog'])->name('gps-log');
-        Route::get('sptb-list', [DriverController::class, 'sptbList'])->name('sptb-list');
         Route::get('sptb-detail', [DriverController::class, 'sptbDetail'])->name('sptb-detail');
+        Route::get('sptb-list', [DriverController::class, 'sptbList'])->name('sptb-list');
     });
 
     Route::name('internal.')->prefix('internal')->namespace('Internal')->group(function() {

@@ -44,7 +44,7 @@
             @endforeach
             <th width="10%" style="vertical-align: middle;">JENIS ARMADA</th>
             <th width="10%" style="vertical-align: middle;">PPB MUAT</th>
-            <th width="10%" style="vertical-align: middle;">PPB MUAT</th>
+            {{-- <th width="10%" style="vertical-align: middle;">PPB MUAT</th> --}}
         </tr>
     </thead>
     <tbody>
@@ -67,9 +67,9 @@
                 @endforeach
                 <td class="text-center" width="15%">{{ $row->first()->armada->jenis->name ?? '-' }}</td>
                 <td class="text-center" width="15%" data-spm="{{$row->first()->no_spm}}">{{($row->first()->pat->ket ?? 'Unknown' )}}</td>
-                <td class="text-center" width="13%">
+                {{-- <td class="text-center" width="13%">
                     <a href="javascript:void(0)" class="expandChildTable"><i class="fa fa-eye"></i></a>
-                </td>
+                </td> --}}
             </tr>
             <tr class="childTableRow" style="display: none;">
                 <td colspan="15" style="padding-top:0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px;">
