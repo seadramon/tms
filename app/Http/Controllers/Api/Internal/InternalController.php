@@ -36,7 +36,7 @@ class InternalController extends Controller
 
     public function spmList(Request $request)
     {
-        $query = SpmH::with('sppb.npp', 'vendor', 'pat', 'spmd.sbu')->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($request->tgl)), date('Y-m-d 23:59:59', strtotime($request->tgl))]);
+        $query = SpmH::with('sppb.npp', 'vendor', 'pat', 'spmd.sbu', 'sptbh')->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($request->tgl)), date('Y-m-d 23:59:59', strtotime($request->tgl))]);
         if($request->kd_pat && $request->kd_pat != '0A'){
             $query->whereHas('sppb.npp', function($sql1) use($request) {
                 $sql1->where('kd_pat', $request->kd_pat);

@@ -14,6 +14,13 @@ class SpmListResource extends JsonResource
      */
     public function toArray($request)
     {
+        if($this->sptbh && $this->waktu_datang){
+            $status = 'terbit_sptb';
+        }elseif($this->waktu_datang){
+            $status = 'pemuatan';
+        }else{
+            $status = 'belum_tiba';
+        }
         return [
             "no_spm"      => $this->no_spm,
             "no_npp"      => $this->sppb->no_npp,
@@ -21,7 +28,8 @@ class SpmListResource extends JsonResource
             "nopol"       => $this->no_pol,
             "vendor"      => $this->vendor->nama,
             "sbu"         => $this->spmd->first()->sbu->singkatan,
-            "ppb_muat"    => $this->pat->ket
+            "ppb_muat"    => $this->pat->ket,
+            "status"      => $status
         ];
     }
 }
