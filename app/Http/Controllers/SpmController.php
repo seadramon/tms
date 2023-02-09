@@ -80,18 +80,25 @@ class SpmController extends Controller
                 return date('d-m-Y', strtotime($model->tgl_spm));
             })
             ->addColumn('status', function($model) {
-                $status = "";
-
-                return $status;
+                $teks = '';
+                if($model->app1 == 1 || $model->jalur != null){
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">Jalur&nbsp;<i class="fas fa-check text-success"></i></span>';
+                }
+                if($model->app2 == 1 || $model->no_pol != null){
+                    $teks .= '<span class="badge badge-light-success mr-2 mb-2">Nopol&nbsp;<i class="fas fa-check text-success"></i></span>';
+                }
+                return $teks;
             })
             ->addColumn('menu', function ($model) {
                 $list = '';
                     if(Auth::check()){
                         $list .= '<li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>';
+                        $list .= '<li><a class="dropdown-item" href="' . route('spm.show', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">View</a></li>';
                     }else{
                         $action = json_decode(session('TMS_ACTION_MENU'));
-                        if(in_array('konfirmasi', $action)){
-                            $list .= '<li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-pat="'. $model->pat_to .'" data-id="'. $model->no_spm .'">Konfirmasi</a></li>';
+                        if($model->app1 != 1 && in_array('konfirmasi', $action)){
+                            // $list .= '<li><a class="dropdown-item konfirmasi" href="#" data-bs-toggle="modal" data-bs-target="#modal_konfirmasi" data-pat="'. $model->pat_to .'" data-id="'. $model->no_spm .'">Konfirmasi</a></li>';
+                            $list .= '<li><a class="dropdown-item" href="' . route('spm.konfirmasi-link', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi</a></li>';
                         }
                         if(in_array('konfirmasi_vendor', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . route('spm.create-konfirmasi-vendor', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Konfirmasi Vendor</a></li>';
@@ -104,6 +111,9 @@ class SpmController extends Controller
                         }
                         if(in_array('edit', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . route('spm.edit', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Edit</a></li>';
+                        }
+                        if(in_array('view', $action)){
+                            $list .= '<li><a class="dropdown-item" href="' . route('spm.show', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">View</a></li>';
                         }
                     }
                 $edit = '<div class="btn-group">
@@ -148,7 +158,7 @@ class SpmController extends Controller
     public function getDataBox2(Request $request){
 
         $no_spp = $request->no_spp;
-
+        
         $detail_spp = SppbD::with('produk')->where('no_sppb',$request->no_spp)->get();
 
         $collection_table = new Collection();
@@ -355,6 +365,14 @@ class SpmController extends Controller
 
     }
 
+    public function konfirmasiLink($spm){
+        $nospm = str_replace("|", "/", $spm);
+        $data = SpmH::with('pat')->where('no_spm',$nospm)->first();
+    
+        return view('pages.spm.konfirmasi', [
+            'data' => $data
+        ]);
+    }
     public function konfirmasi(Request $request)
     {
         try {
@@ -378,10 +396,10 @@ class SpmController extends Controller
                 ]);
 
             DB::commit();
-            return response()->json(['result' => 'success'])->setStatusCode(200, 'OK');
+            return redirect()->route('spm.index');
         } catch(Exception $e) {
             DB::rollback();
-            return response()->json(['result' => $e->getMessage()])->setStatusCode(500, 'ERROR');
+            return redirect()->route('spm.konfirmasi-link', ['spm' => str_replace('/', '|', $request->no_spm)]);
         }
     }
 
@@ -480,7 +498,7 @@ class SpmController extends Controller
 
         $flasher->addSuccess('Data has been update successfully!');
 
-        return redirect()->route('spm.create');
+        return redirect()->route('spm.index');
     }
 
     public function print($no_spm){
@@ -514,6 +532,14 @@ class SpmController extends Controller
         return Pdf::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
             // ->loadView('pages.spm.print', ['spmh' => $spmh, 'logo' => $logo])->stream('Surat Permintaan Muat.pdf');
             ->loadView('pages.spm.print', ['spmh' => $spmh, 'logo' => $logo, 'sbu' => $sbu, 'npp' => $npp])->stream('Surat Permintaan Muat.pdf');
+    }
+
+    public function show($spm){
+        $nospm = str_replace("|", "/", $spm);
+        $data = SpmH::with('pat')->where('no_spm',$nospm)->first();
+        return view('pages.spm.show', [
+            'data' => $data
+        ]);
     }
 
     public function edit($spm){
@@ -585,6 +611,13 @@ class SpmController extends Controller
 
         $data_spm = SpmH::with('vendor')->where('no_spm',$no_spm)->first();
         $jarak = $data_spm->jarak_km;
+        $jalur = DB::table('oee_ref_jalur_h')
+            ->where('kode_pat', $data_spm->pat_to)
+            ->get()
+            ->mapWithKeys(function($item){
+                return [$item->jalur => $item->jalur .'. '.$item->fungsi_jalur];
+            })
+            ->toArray();
 
 
         $kondisiPenyerahan = [
@@ -607,9 +640,10 @@ class SpmController extends Controller
             'nama_proyek' => $pelanggan->nama_proyek ?? null,
             'tujuan' => $tujuan,
             'jarak' => $jarak,
+            'jalur' => $jalur,
             'selected_vendor_id' => $data_spm->vendor_id,
-            'selected_vendor_name' => $data_spm->vendor->nama
-
+            'selected_vendor_name' => $data_spm->vendor->nama,
+            'source' => $request->source,
         ])->render();
 
         return response()->json( array('success' => true, 'html'=> $html) );

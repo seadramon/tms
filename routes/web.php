@@ -66,13 +66,17 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::get('/data', [SppController::class, 'data'])->name('data');
 	    Route::get('/data-spprb', [SppController::class, 'dataSpprb'])->name('data-spprb');
 	    Route::get('/data-angkutan', [SppController::class, 'dataAngkutan'])->name('data-angkutan');
-
+		
+		Route::get('monitor-approval', [SppController::class, 'monitorApproval'])->name('monitor-approval');
+		Route::get('monitor-approval-data', [SppController::class, 'monitorApprovalData'])->name('monitor-approval-data');
+		
 	    Route::get('/spp-edit/{spp}', [SppController::class, 'edit'])->name('edit');
 	    Route::get('/spp-amandemen/{spp}', [SppController::class, 'amandemen'])->name('amandemen');
 	    Route::get('/spp-print/{spp}', [SppController::class, 'print'])->name('print');
 	    Route::resource('/',  SppController::class)->except([
 	        'destroy', 'edit'
 	    ])->parameters(['' => 'spp']);
+
 	});
 
 	Route::group(['prefix' => '/spp-approve', 'as' => 'spp-approve.'], function(){
@@ -145,11 +149,12 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::group(['prefix' => '/spm', 'as' => 'spm.'], function(){
 	    Route::post('/destroy', [SpmController::class, 'destroy'])->name('destroy');
 	    Route::post('/draft', [SpmController::class, 'createDraft'])->name('draft');
+	    Route::get('/konfirmasi/{spm}', [SpmController::class, 'konfirmasiLink'])->name('konfirmasi-link');
 	    Route::post('/konfirmasi', [SpmController::class, 'konfirmasi'])->name('konfirmasi');
 		Route::get('/select-pat', [SpmController::class, 'selectPat'])->name('select-pat');
 	    Route::get('/data', [SpmController::class, 'data'])->name('data');
 	    Route::resource('/',  SpmController::class)->except([
-	        'destroy', 'show'
+	        'destroy'
 	    ])->parameters(['' => 'spm']);
 
 		Route::post('/search-pbbmuat', [SpmController::class, 'getPbbMuat'])->name('getPbbMuat');

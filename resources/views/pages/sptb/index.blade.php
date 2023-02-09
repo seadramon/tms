@@ -110,7 +110,7 @@
 	                {data: 'npp.nama_pelanggan', name: 'npp.nama_pelanggan', defaultContent: '-'},
 	                {data: 'npp.nama_proyek', name: 'npp.nama_proyek', defaultContent: '-'},
 	                {data: 'no_pol', name: 'no_pol', defaultContent: '-'},
-	                {defaultContent: '-'},
+	                {data: 'status', orderable: false, searchable: false},
 	                {data: 'menu', orderable: false, searchable: false}
 	            ],
 	        });

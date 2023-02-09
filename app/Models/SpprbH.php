@@ -23,4 +23,9 @@ class SpprbH extends Model
     {
         return $this->belongsTo(Pat::class, 'pat_to', 'kd_pat');
     }
+
+	public function npp()
+    {
+        return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
+    }
 }

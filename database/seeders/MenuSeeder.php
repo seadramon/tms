@@ -70,6 +70,7 @@ class MenuSeeder extends Seeder
                     'konfirmasi_vendor',
                     'print',
                     'edit',
+                    'view',
                     'buat_sptb'
                 ]
             ],

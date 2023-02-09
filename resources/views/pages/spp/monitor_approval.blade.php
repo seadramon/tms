@@ -2,7 +2,7 @@
 @section('page-title')
 <!--begin::Page title-->
 <div class="page-title d-flex justify-content-center flex-column me-5">
-    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">SPP</h1>
+    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">SPP - Monitor Approval</h1>
 </div>
 <!--end::Page title-->
 @endsection
@@ -15,9 +15,9 @@
         <div class="col-12 mb-md-5 mb-xl-10">
             <div class="card shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">LIST SPP</h3>
+                    <h3 class="card-title">SPP - Monitor Approval</h3>
                     <div class="card-toolbar">
-                        <a href="{{route('spp.monitor-approval')}}" class="btn btn-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Monitor Approval</a>&nbsp;
+                        <a href="{{route('spp.index')}}" class="btn btn-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">List SPP</a>&nbsp;
                         @if (in_array('create', json_decode(session('TMS_ACTION_MENU'))))
                             <a href="{{ route('spp.create') }}" class="btn btn-success" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah SPP</a>
                         @endif
@@ -27,23 +27,15 @@
                 <div class="card-body py-5">
                     <table id="tabel_spp" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                         <thead>
-                            <tr class="fw-semibold fs-6 text-muted">
-                                <th rowspan="2" class="hidden">NO SPP</th>
-                                <th rowspan="2">NO SPP</th>
-                                <th rowspan="2">NPP</th>
-                                <th rowspan="2">NO SPPRB</th>
-                                <th rowspan="2">NO SP3</th>
-                                <th rowspan="2">TUJUAN</th>
-                                <th rowspan="2">JADWAL AWAL</th>
-                                <th rowspan="2">JADWAL AKHIR</th>
-                                <th colspan="2" style="text-align: center">PROGRESS</th>
-                                <th rowspan="2">APP</th>
-                                <th rowspan="2">Option</th>
-                            </tr>
-
-                            <tr class="fw-semibold fs-6 text-muted">
-                                <th>VOL</th>
-                                <th>WAKTU</th>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Tanggal</th>
+                                <th>NPP</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Nama Proyek</th>
+                                <th>KSDM</th>
+                                <th>PEO</th>
+                                <th>MUnit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -109,20 +101,16 @@
                 serverSide: true,
                 order: [[0, 'desc']],
                 stateSave: true,
-                ajax: "{{ route('spp.data') }}",
+                ajax: "{{ route('spp.monitor-approval-data') }}",
                 columns: [
                     {data: 'created_date', name: 'created_date', defaultContent: '-', class: "hidden"},
-                    {data: 'no_sppb', name: 'no_sppb', defaultContent: '-'},
-                    {data: 'spprb.no_npp', name: 'spprb.no_npp', defaultContent: '-',orderable: false, searchable: false},
-                    {data: 'no_spprb', name: 'no_spprb', defaultContent: '-'},
-                    {data: 'no_sp3', name: 'no_sp3', defaultContent: '-',orderable: false, searchable: false},
-                    {data: 'tujuan', name: 'tujuan', defaultContent: '-'},
-                    {data: 'jadwal1', name: 'jadwal1', defaultContent: '-',orderable: false, searchable: false},
-                    {data: 'jadwal2', name: 'jadwal2', defaultContent: '-',orderable: false, searchable: false},
-                    {data: 'vol', name: 'vol', defaultContent: '-',orderable: false, searchable: false},
-                    {data: 'waktu', name: 'waktu', defaultContent: '-',orderable: false, searchable: false},
-                    {data: 'approval', name: 'approval', defaultContent: '-', orderable: false, searchable: false},
-                    {data: 'menu', orderable: false, searchable: false}
+                    {data: 'tgl_sppb', name: 'tgl_sppb', defaultContent: '-'},
+                    {data: 'spprb.no_npp', name: 'spprb.no_npp', defaultContent: '-'},
+                    {data: 'spprb.npp.nama_pelanggan', name: 'spprb.nama_pelanggan', defaultContent: '-'},
+                    {data: 'spprb.npp.nama_proyek', name: 'spprb.nama_proyek', defaultContent: '-'},
+                    {data: 'ksdm', name: 'no_sp3', defaultContent: '-',orderable: false, searchable: false},
+                    {data: 'peo', name: 'tujuan', defaultContent: '-',orderable: false, searchable: false},
+                    {data: 'munit', name: 'tujuan', defaultContent: '-',orderable: false, searchable: false}
                 ],
             });
 

@@ -761,4 +761,47 @@ class SppController extends Controller
 
         return $noSppb;
     }
+
+    public function monitorApproval()
+    {
+        return view('pages.spp.monitor_approval');
+    }
+
+    public function monitorApprovalData()
+    {
+        $query = SppbH::with(['spprb.npp'])->select('*');
+        // if(!Auth::check() && session('TMP_KDWIL') != '0A'){
+		// 	$query->whereHas('npp', function($sql){
+        //         $sql->where('kd_pat', session('TMP_KDWIL'));
+        //     });
+		// }
+
+        return DataTables::eloquent($query)
+            ->editColumn('tgl_sppb', function ($model) {
+                return date('d-m-Y', strtotime($model->tgl_sppb));
+            })
+            ->addColumn('ksdm', function ($model) {
+                $teks = '';
+                // if($model->app == 1){
+                    $teks .= '<i class="fas fa-2x fa-check text-success"></i>';
+                // }
+                return $teks;
+            })
+            ->addColumn('peo', function ($model) {
+                $teks = '';
+                if($model->app2 == 1){
+                    $teks .= '<i class="fas fa-2x fa-check text-success"></i>';
+                }
+                return $teks;
+            })
+            ->addColumn('munit', function ($model) {
+                $teks = '';
+                if($model->app3 == 1){
+                    $teks .= '<i class="fas fa-2x fa-check text-success"></i>';
+                }
+                return $teks;
+            })
+            ->rawColumns(['ksdm', 'peo', 'munit'])
+            ->toJson();
+    }
 }

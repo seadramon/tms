@@ -2,7 +2,7 @@
     <div class="card-header">
         <h3 class="card-title">Detail SPP</h3>
     </div>
-    <form method="POST" action="{{ route('spm.store-edit') }}">
+    <form method="POST" action="{{ $source == 'edit' ? route('spm.store-edit') : route('spm.konfirmasi')  }}">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
         <input class="d-none" name="no_spm" id="spm_select"/>
@@ -75,7 +75,7 @@
         <div class="form-group row">
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-8 required ">Perusahaan / Pemilik Angkutan</label>
-                <select class="form-control form-select-solid" data-control="select2" data-placeholder="Pilih Perusahaan / Pemilik Angkutan" name="vendor" id="vendor">
+                <select class="form-control form-select-solid" @if(in_array($source, ['show', 'konfirmasi'])) disabled @endif data-control="select2" data-placeholder="Pilih Perusahaan / Pemilik Angkutan" name="vendor" id="vendor">
                     <option value="{{ $selected_vendor_id }}" selected>{{ $selected_vendor_name }}</option>
                     @foreach ($vendor_angkutan as $row)
                         <option value="{{ $row->vendor_id }}">{{ $row->nama }}</option>
@@ -100,6 +100,17 @@
                 <input class="form-control" type="text" readonly value="{{ $kp }}" />
             </div>
         </div>
+        <div class="form-group row">
+            <div class="col-lg-6 custom-form">
+                <label class="form-label col-sm-3 required ">Jalur</label>
+                {!! Form::select('jalur[]', $jalur, null, ['class'=>'form-control form-select-solid col-sm-3', "multiple" => true, 'data-control'=>'select2', 'id'=>'jalur']) !!}
+            </div>
+
+            <div class="col-lg-6 custom-form">
+                <label class="form-label col-sm-3 custom-label">Kondisi Penyerahan</label>
+                <input class="form-control" type="text" readonly value="{{ $kp }}" />
+            </div>
+        </div>
         <div class="separator separator-dashed border-primary my-10"></div>
         <div class="form-group row mt-5">
             <div class="mb-5 align-right">
@@ -116,7 +127,9 @@
                         <th class="text-center">Volume SPM</th>
                         <th class="text-center">Volume Titipan</th>
                         <th class="text-center" width="30%">Keterangan</th>
-                        <th class="text-center" >opsi</th>
+                        @if($source=='edit')
+                            <th class="text-center" >opsi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody style="border-bottom: 1px solid grey;">
@@ -134,6 +147,7 @@
                                     spm="{{ $row->spm }}"
                                     class="form-control volume-show"
                                     step="any"
+                                    @if(in_array($source, ['show', 'konfirmasi'])) readonly @endif
                                     onkeyup="validate_vol(this)"
                                     value="{{ $row->vol ?? 0 }}" />
                         </td>
@@ -151,11 +165,13 @@
                         </td>
                         <td  class="text-center">0</td>
                         <td  class="text-center">
-                            <input type="text" name="keterangan_select[]" class="form-control" value="{{ $row->ket }}"/>
+                            <input type="text" name="keterangan_select[]" @if(in_array($source, ['show', 'konfirmasi'])) readonly @endif class="form-control" value="{{ $row->ket }}"/>
                         </td>
-                        <td style="padding-right: 10px;">
-                            <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-danger delete_muat"><i class="fa fa-times"></i></a>
-                        </td>
+                        @if($source=='edit')
+                            <td style="padding-right: 10px;">
+                                <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-danger delete_muat"><i class="fa fa-times"></i></a>
+                            </td>
+                        @endif
                     </tr>
                     @php $i++; @endphp
                     @endforeach
@@ -167,7 +183,9 @@
     </div>
 
     <div class="card-footer" style="text-align: right;">
-        <button type="submit" class="btn btn-success"> Submit </button>
+        @if(in_array($source, ['edit', 'konfirmasi']))
+            <button type="submit" class="btn btn-success"> Submit </button>
+        @endif
     </div>
 
 </div>

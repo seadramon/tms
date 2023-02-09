@@ -3,7 +3,7 @@
 @section('page-title')
 <!--begin::Page title-->
 <div class="page-title d-flex justify-content-center flex-column me-5">
-    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Edit SPM</h1>
+    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Detail SPM</h1>
 </div>
 <!--end::Page title-->
 @endsection
@@ -17,7 +17,7 @@
         <div class="col-12 mb-3" id="box1">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Edit SPM</h3>
+                    <h3 class="card-title">Detail SPM</h3>
                 </div>
 
                 <div class="card-body">
@@ -114,7 +114,7 @@ $('#buat_draft').on('click', function(){
         'pbb_muat': $('#pbb_muat').attr("data-value"),
         'jenis_spm': $('#jenis_spm').val(),
         'no_spm' : $('#no_spm').val(),
-        'source' : 'edit'
+        'source' : 'show'
     };
 
     $.ajax({
