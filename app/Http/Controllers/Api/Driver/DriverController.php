@@ -86,7 +86,10 @@ class DriverController extends Controller
             left join info_pasar_h f on e.no_info=f.no_info
             left join tb_region g on f.kd_region=g.kd_region
             where no_pol ='".$request->nopol."' and app_pelanggan = '".$request->status."' order by app_pelanggan asc, tgl_berangkat desc");
-        $data = collect($data)->groupBy(function($item){ return $item->no_npp . '|' . $item->tgl_berangkat; });
+        
+        if($request->status == 0){
+            $data = collect($data)->groupBy(function($item){ return $item->no_npp . '|' . $item->tgl_berangkat; });
+        }
         return response()->json([
             'message' => 'success',
             'data' => $data

@@ -116,6 +116,88 @@
     </div>
     <!--end::Modal dialog-->
 </div>
+<!--begin::Modal - Create Api Key-->
+<div class="modal fade" id="modal_armada" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header" id="modal_armada_header">
+                <!--begin::Modal title-->
+                <h2>Form Penilaian</h2>
+                <!--end::Modal title-->
+                <!--begin::Close-->
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                    <span class="svg-icon svg-icon-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </div>
+                <!--end::Close-->
+            </div>
+            <!--end::Modal header-->
+            <!--begin::Form-->
+            <form method="post" id="modal_armada_form" class="form" action="{{ route('spm.armada-tiba') }}">
+                <input type="hidden" name="no_spm" id="armada_no_spm">
+                <input type="hidden" name="type" value="with-form">
+                <!--begin::Modal body-->
+                <div class="modal-body px-lg-10">
+                    <!--begin::Scroll-->
+                    <div class="scroll-y me-n7 pe-7" id="modal_armada_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_armada_header" data-kt-scroll-wrappers="#modal_armada_scroll" data-kt-scroll-offset="300px">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">No</th>
+                                    <th style="width: 35%;">Kriteria</th>
+                                    <th style="width: 35%;">Deskripsi</th>
+                                    <th style="width: 10%;">Ya
+                                    </th>
+                                    <th style="width: 10%;">Tidak
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($criterias as $index => $criteria)
+                                    <tr>
+                                        <td style="width: 10%;">{{$index+1}}.</td>
+                                        <td style="width: 35%;">{{$criteria->criteria}}</td>
+                                        <td style="width: 35%;">{{$criteria->description}}</td>
+                                        <td style="width: 10%;">
+                                            <input class="form-check-input criteria-radio" name="{{$criteria->code}}" type="radio" value="{{$criteria->bobot}}" id="flexRadioDefault"/>
+                                        </td>
+                                        <td style="width: 10%;">
+                                            <input class="form-check-input criteria-radio" name="{{$criteria->code}}" type="radio" value="0" id="flexRadioDefault"/>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--end::Scroll-->
+                </div>
+                <!--end::Modal body-->
+
+                <!--begin::Modal footer-->
+                <div class="modal-footer flex-right">
+                    <button type="submit" id="modal_armada_submit" class="btn btn-primary">
+                        <span class="indicator-label">Konfirmasi Armada Tiba</span>
+                        <span class="indicator-progress">Please wait...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                    </button>
+                </div>
+                <!--end::Modal footer-->
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
 <!--end::Modal - Create Api Key-->
 @endsection
 @section('css')
@@ -133,6 +215,7 @@
 @endsection
 @section('js')
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
     "use strict";
 
@@ -215,6 +298,95 @@
                 })     
             }
         });
+    });
+    
+    $(document).on("click", ".armada-tiba", function () {
+        var spm = $(this).data('spm');
+        $.ajax({
+            type:"get",
+            url: "{{ route('spm.armada-tiba-validation') }}?no_spm=" + spm,
+            success: function(res) {
+                // alert(res.filled)  
+                if(res.filled){
+                    swal({
+                        title: "Apakah Armada Sudah Tiba?",
+                        text: "Konfirmasi Armada Tiba",
+                        icon: "success",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('spm.armada-tiba') }}",
+                                headers: {
+                                    'X-CSRF-TOKEN': "{{csrf_token()}}"
+                                },
+                                data: {
+                                        type: 'without-form',
+                                        no_spm : spm,
+                                    },
+                                success: function(result) {
+                                    // swal("Menu Successfully Update");
+                                    if(result.success){
+                                        flasher.success("Konfirmasi Armada Tiba berhasil!");
+                                        $('#tabel_spm').DataTable().ajax.url("{{ route('spm.data') }}").load();
+                                    }else{
+                                        flasher.error(result.message);
+                                    }
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                                }
+                            });
+                        } else {
+                            swal("Batal", {
+                                icon: "success",
+                            }); 
+                        }
+                    });
+                }else{
+                    $(".criteria-radio").prop('checked', false);
+                    $("#armada_no_spm").val(spm);
+                    $('#modal_armada').modal('toggle');
+                }
+            }
+        });
+    });
+
+    $("#modal_armada_form").submit(function(event) {
+        event.preventDefault();
+
+        $("#modal_armada_submit").attr("data-kt-indicator", "on");
+
+        let data = $(this).serialize();
+        let url = $(this).attr('action');
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type:"post",
+            url: url,
+            data: data,
+            success: function(result) {
+                if(result.success){
+                    $("#modal_armada_submit").removeAttr("data-kt-indicator");
+                    $('#modal_armada').modal('toggle');
+                    flasher.success("Konfirmasi Armada Tiba berhasil!");
+                    $('#tabel_spm').DataTable().ajax.url("{{ route('spm.data') }}").load();
+                }else{
+                    flasher.error(result.message);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#modal_armada_submit").removeAttr("data-kt-indicator");
+
+                $('#modal_armada').modal('toggle');
+                flasher.error("Konfirmasi gagal!");
+            }
+        })
     });
 
     $("#modal_konfirmasi_form").submit(function(event) {

@@ -10,6 +10,9 @@ use App\Models\SppbH;
 use App\Models\SppbD;
 use App\Models\SpprbH;
 use App\Models\Armada;
+use App\Models\ArmadaCriteria;
+use App\Models\ArmadaRating;
+use App\Models\ArmadaRatingDetail;
 use App\Models\Sp3D;
 use App\Models\SpmH;
 use App\Models\SpmD;
@@ -35,9 +38,10 @@ class SpmController extends Controller
     public function index()
     {
         $vendor = [];
-
+        $criterias = ArmadaCriteria::all();
         return view('pages.spm.index', [
-            'vendor' => $vendor
+            'vendor' => $vendor,
+            'criterias' => $criterias,
         ]);
     }
 
@@ -115,6 +119,7 @@ class SpmController extends Controller
                         if(in_array('view', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . route('spm.show', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">View</a></li>';
                         }
+                        $list .= '<li><a class="dropdown-item armada-tiba" href="javascript:void(0)" data-spm="' . $model->no_spm . '">Armada Tiba</a></li>';
                     }
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -607,7 +612,7 @@ class SpmController extends Controller
         $no_spprb = SpprbH::with('pat')->where('no_npp',$no_npp->no_npp)->first();
         $pelanggan = Npp::select('nama_pelanggan','nama_proyek')->where('no_npp',$no_npp->no_npp)->first();
         $vendor_angkutan = Vendor::where('vendor_id','LIKE','WB%')->where('sync_eproc',1)->get();
-        $tujuan = Npp::with('infoPasar.region')->where('no_npp',$no_npp->no_npp)->first();
+        $tujuan = Npp::with('infoPasar.region')->first();
 
         $data_spm = SpmH::with('vendor')->where('no_spm',$no_spm)->first();
         $jarak = $data_spm->jarak_km;
@@ -685,6 +690,58 @@ class SpmController extends Controller
             DB::rollback();
             $flasher->addError($e->getMessage());
             return redirect()->route('spm.create');
+        }
+    }
+
+    public function armadaTibaValidation(Request $request){
+        $now = date('d/m/Y');
+        // $now = '15/11/2022';
+        $active_week = DB::select("select  WOS.\"FNC_GETMG\" (to_Date('" . $now . "','dd/mm/yyyy'), '1A') minggu from dual")[0]->minggu;
+        $year = date('Y');
+        $spm = SpmH::find($request->no_spm);
+        $rating = ArmadaRating::whereTahun($year)->whereMinggu($active_week)->whereNopol($spm->no_pol)->first();
+        return response()->json(['filled' => $rating ? true : false]);
+    }
+    
+    public function armadaTiba(Request $request){
+        // $now = '15/11/2022';
+        $now = date('d/m/Y');
+        $year = date('Y');
+        try {
+            DB::beginTransaction();
+            if($request->type == 'without-form'){
+                $spm = SpmH::find($request->no_spm);
+                // $spm->waktu_datang = DB::raw("TO_DATE('" . . "', 'YYYY-MM-DD HH24:MI:SS')")
+                $spm->waktu_datang = date('Y-m-d H:i:s');
+                $spm->save();
+            }else{
+                $active_week = DB::select("select  WOS.\"FNC_GETMG\" (to_Date('" . $now . "','dd/mm/yyyy'), '1A') minggu from dual")[0]->minggu;
+                $spm = SpmH::find($request->no_spm);
+                $spm->waktu_datang = date('Y-m-d H:i:s');
+                $spm->save();
+                
+                $rating = new ArmadaRating;
+                $rating->tahun = $year;
+                $rating->minggu = $active_week;
+                $rating->nopol = $spm->no_pol;
+                $rating->driver_name = $spm->app2_name;
+                $rating->driver_hp = $spm->app2_hp;
+                $rating->save();
+                
+                $criterias = ArmadaCriteria::all();
+                foreach ($criterias as $criteria) {
+                    $var = $criteria->code;
+                    $rating_ = new ArmadaRatingDetail;
+                    $rating_->ar_id = $rating->id;
+                    $rating_->criteria = implode('|', [$criteria->criteria, $criteria->description]);
+                    $rating_->bobot = $request->$var ?? '0';
+                    $rating_->save();
+                }
+            }
+            return response()->json(['success' => true]);
+        } catch(Exception $e) {
+            DB::rollback();
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 }
