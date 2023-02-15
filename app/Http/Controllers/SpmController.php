@@ -85,7 +85,7 @@ class SpmController extends Controller
             })
             ->addColumn('status', function($model) {
                 $teks = '';
-                if($model->jalur != null){
+                if(!in_array($model->jalur, ['', null])){
                     $teks .= '<span class="badge badge-light-success mr-2 mb-2">Jalur&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 if($model->no_pol != null){
