@@ -612,9 +612,10 @@ class SpmController extends Controller
         $no_spprb = SpprbH::with('pat')->where('no_npp',$no_npp->no_npp)->first();
         $pelanggan = Npp::select('nama_pelanggan','nama_proyek')->where('no_npp',$no_npp->no_npp)->first();
         $vendor_angkutan = Vendor::where('vendor_id','LIKE','WB%')->where('sync_eproc',1)->get();
-        $tujuan = Npp::with('infoPasar.region')->first();
+        
+        $data_spm = SpmH::with('vendor', 'sppb')->where('no_spm',$no_spm)->first();
+        $tujuan = Npp::with('infoPasar.region')->where('no_npp', $data_spm->sppb->no_npp)->first();
 
-        $data_spm = SpmH::with('vendor')->where('no_spm',$no_spm)->first();
         $jarak = $data_spm->jarak_km;
         $jalur = DB::table('oee_ref_jalur_h')
             ->where('kode_pat', $data_spm->pat_to)
