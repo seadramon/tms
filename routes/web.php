@@ -96,6 +96,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	        'destroy'
 	    ])->parameters(['' => 'sptb']);
 
+	    Route::get('/print/{no_sptb}', [SptbController::class, 'print'])->name('print');
 		Route::post('/get-spm', [SptbController::class, 'getSpm'])->name('get-spm');
 		Route::post('/set-konfirmasi', [SptbController::class, 'setKonfirmasi'])->name('set-konfirmasi');
 	});
