@@ -149,29 +149,29 @@
                 <div class="modal-body px-lg-10">
                     <!--begin::Scroll-->
                     <div class="scroll-y me-n7 pe-7" id="modal_armada_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_armada_header" data-kt-scroll-wrappers="#modal_armada_scroll" data-kt-scroll-offset="300px">
-                        <table style="width: 100%;">
+                        <table style="width: 100%;" class="table table-bordered">
                             <thead>
-                                <tr>
-                                    <th style="width: 10%;">No</th>
-                                    <th style="width: 35%;">Kriteria</th>
-                                    <th style="width: 35%;">Deskripsi</th>
-                                    <th style="width: 10%;">Ya
+                                <tr style="font-weight: bold">
+                                    <th style="width: 10%; border: solid 1px black; text-align: center;">No</th>
+                                    <th style="width: 35%; border: solid 1px black;">Kriteria</th>
+                                    <th style="width: 35%; border: solid 1px black;">Deskripsi</th>
+                                    <th style="width: 10%; border: solid 1px black; text-align: center;">Ya
                                     </th>
-                                    <th style="width: 10%;">Tidak
+                                    <th style="width: 10%; border: solid 1px black; text-align: center;">Tidak
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($criterias as $index => $criteria)
                                     <tr>
-                                        <td style="width: 10%;">{{$index+1}}.</td>
-                                        <td style="width: 35%;">{{$criteria->criteria}}</td>
-                                        <td style="width: 35%;">{{$criteria->description}}</td>
-                                        <td style="width: 10%;">
-                                            <input class="form-check-input criteria-radio" name="{{$criteria->code}}" type="radio" value="{{$criteria->bobot}}" id="flexRadioDefault"/>
+                                        <td style="width: 10%; border: solid 1px black; text-align: center;">{{$index+1}}.</td>
+                                        <td style="width: 35%; border: solid 1px black;">{{$criteria->criteria}}</td>
+                                        <td style="width: 35%; border: solid 1px black;">{{$criteria->description}}</td>
+                                        <td style="width: 10%; border: solid 1px black; text-align: center;">
+                                            <input class="form-check-input criteria-radio" name="{{$criteria->code}}" type="radio" data-type="yes" value="{{$criteria->bobot}}" id="flexRadioDefault"/>
                                         </td>
-                                        <td style="width: 10%;">
-                                            <input class="form-check-input criteria-radio" name="{{$criteria->code}}" type="radio" value="0" id="flexRadioDefault"/>
+                                        <td style="width: 10%; border: solid 1px black; text-align: center;">
+                                            <input class="form-check-input criteria-radio" name="{{$criteria->code}}" type="radio" data-type="no" value="0" id="flexRadioDefault"/>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -347,7 +347,7 @@
                         }
                     });
                 }else{
-                    $(".criteria-radio").prop('checked', false);
+                    $(".criteria-radio[data-type=yes]").prop('checked', true);
                     $("#armada_no_spm").val(spm);
                     $('#modal_armada').modal('toggle');
                 }
