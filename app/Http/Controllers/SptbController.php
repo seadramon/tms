@@ -63,7 +63,7 @@ class SptbController extends Controller
                         $list .= '<li><a class="dropdown-item set-konfirmasi" href="javascript:void(0)" data-id="'. $model->no_sptb .'">Konfirmasi</a></li>';
                     }
                     if(in_array('print', $action)){
-                        $list .= '<li><a class="dropdown-item" href="http://10.3.1.80/genreport/genreport.asp?RptName=sptb2020.rpt&fparam='.$model->no_sptb.'&ftype=5&keyId=OS">Print Test</a></li>';
+                        /*$list .= '<li><a class="dropdown-item" href="http://10.3.1.80/genreport/genreport.asp?RptName=sptb2020.rpt&fparam='.$model->no_sptb.'&ftype=5&keyId=OS">Print Test</a></li>';*/
                         $list .= '<li><a class="dropdown-item" href="' . route('sptb.print', str_replace('/', '|', $model->no_sptb)) . '">Print</a></li>';
                     }
                 }
@@ -376,13 +376,11 @@ class SptbController extends Controller
 
     public function print($noSptb)
     {
-        // phpinfo();
-        // dd('a');
         $noSptb = str_replace('|', '/', $noSptb);
         $ppb = null;
 
         $data = sptbH::find($noSptb);
-// dd($data->npp->nama_pelanggan);
+
         // get ppb
         $trxid = !empty($data->trxid)?$data->trxid:null;
         if ($trxid) {
@@ -391,9 +389,20 @@ class SptbController extends Controller
             $ppb = $pat_ppb->ket;
         }
 
+        $sptbd2 = SptbD2::where('no_sptb', $noSptb)->get();
+        $detail2 = [];
+        if (count($sptbd2) > 0) {
+            foreach ($sptbd2 as $row) {
+                $detail2[$row->kd_produk] = [
+                    'stockid' => $row->stockid
+                ];
+            }
+        }
+
         $pdf = Pdf::loadView('prints.sptb', [
             'data' => $data,
-            'ppb' => $ppb
+            'ppb' => $ppb,
+            'detail2' => $detail2,
         ]);
 
         $filename = "SPTB-Report";

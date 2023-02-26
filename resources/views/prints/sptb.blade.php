@@ -130,7 +130,7 @@
                         Kontrak / <i>Contract No</i>
                     </td>
                     <td>:</td>
-                    <td>{{ '-' }}</td>
+                    <td>{{ !empty($data->monOp)?$data->monOp->no_konfirmasi:"" }}</td>
 
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -163,7 +163,7 @@
                         No. Polisi Kendaraan<br><i>Police Vehicle No.</i>
                     </td>
                     <td valign="top">:</td>
-                    <td valign="top">{{ $data->nopol }}</td>
+                    <td valign="top">{{ $data->no_pol }}</td>
 
                     <td colspan="3">
                         &nbsp;
@@ -179,12 +179,12 @@
                         <th rowspan="2">Nama Produk<br><i>Tipe</i></th>
                         <th rowspan="2">Sat<br><i>Unit</i></th>
                         <th rowspan="2">Vol</th>
-                        <th colspan="3">Produk/<br><i>Product *)</i></th>
+                        <th colspan="2">Produk/<br><i>Product *)</i></th>
                         <th colspan="2">Kondisi/<br><i>Condition *)</i></th>
                     </tr>
                     <tr>
                         <th>Tgl / <i>Date</i></th>
-                        <th colspan="2">Nomor / <i>Number</i></th>
+                        <th>Nomor / <i>Number</i></th>
                         <th>Baik / <br><i>Good</i></th>
                         <th>Cacat / <br><i>Defect</i></th>
                     </tr>
@@ -204,8 +204,7 @@
                                 <td>{{ $detail->produk->satuan }}</td>
                                 <td>{{ $detail->vol }}</td>
                                 <td>{{ date('d-m-Y', strtotime($detail->produk->created_date)) }}</td>
-                                <td>-</td>
-                                <td>-</td>
+                                <td>{{ !empty($detail2[$detail->kd_produk])?$detail2[$detail->kd_produk]['stockid']:"" }}</td>
                                 <td>{{ '-' }}</td>
                                 <td>{{ '-' }}</td>
                             </tr>
@@ -217,7 +216,6 @@
                         <tr>
                             <td colspan="3">Total</td>
                             <td>{{ $totalVol }}</td>
-                            <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>Total</td>
                             <td>{{ $totalGood }}</td>
@@ -244,13 +242,14 @@
                         Diperiksa oleh / <br>
                         <i>Check by</i><br><br><br><br>
 
+                        &nbsp;
                         <hr class="new1">
                         QC Stock Yard
                     </td>
                     <td>
                         Dibuat oleh / <br>
                         <i>Made by</i><br><br><br><br>
-
+                        {{ !empty($data->admProduksi)?$data->admProduksi->full_name:"-" }}
                         <hr class="new1">
                         Adm Produksi
                     </td>
@@ -282,9 +281,9 @@
                         Dikirim oleh / <br>
                         <i>Deliver by</i><br><br><br><br>
 
-                        {{ !empty($data->penerima_nama)?$data->penerima_nama:"-" }}
+                        {{ !empty($data->spmh->admDistribusi)?$data->spmh->admDistribusi->full_name:"-" }}
                         <hr class="new1">
-                        Adm Produksi
+                        Adm Distribusi
                     </td>
                 </tr>
             </table>
