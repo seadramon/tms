@@ -153,6 +153,8 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::get('/konfirmasi/{spm}', [SpmController::class, 'konfirmasiLink'])->name('konfirmasi-link');
 	    Route::post('/konfirmasi', [SpmController::class, 'konfirmasi'])->name('konfirmasi');
 		Route::get('/select-pat', [SpmController::class, 'selectPat'])->name('select-pat');
+		Route::get('/armada-tiba-validation', [SpmController::class, 'armadaTibaValidation'])->name('armada-tiba-validation');
+		Route::post('/armada-tiba', [SpmController::class, 'armadaTiba'])->name('armada-tiba');
 	    Route::get('/data', [SpmController::class, 'data'])->name('data');
 	    Route::resource('/',  SpmController::class)->except([
 	        'destroy'

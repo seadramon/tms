@@ -77,7 +77,7 @@ class DriverController extends Controller
     public function sptbList(Request $request)
     {
         // $data = SptbH::with()
-        $data = DB::select("select distinct a.no_sptb, d.singkatan2 as sbu , to_char(tgl_berangkat,'dd/mm/yyyy')tgl_berangkat, nvl(to_char(tgl_sampai,'dd/mm/yyyy'),' ')tgl_sampai, app_pelanggan, e.nama_proyek, g.kabupaten_name, g.kecamatan_name 
+        $data = DB::select("select distinct a.no_sptb, d.singkatan2 as sbu , to_char(tgl_berangkat,'dd/mm/yyyy')tgl_berangkat, nvl(to_char(tgl_sampai,'dd/mm/yyyy'),' ')tgl_sampai, app_pelanggan, e.nama_proyek, g.kabupaten_name, g.kecamatan_name, a.no_npp 
             from WOS.SPTB_H a 
             inner join spprb_h b on a.no_spprb = b.no_spprb
             inner join spprb_d c on b.no_spprb = c.no_spprb
@@ -86,6 +86,10 @@ class DriverController extends Controller
             left join info_pasar_h f on e.no_info=f.no_info
             left join tb_region g on f.kd_region=g.kd_region
             where no_pol ='".$request->nopol."' and app_pelanggan = '".$request->status."' order by app_pelanggan asc, tgl_berangkat desc");
+        
+        if($request->status == 0){
+            $data = collect($data)->groupBy(function($item){ return $item->no_npp . '|' . $item->tgl_berangkat; });
+        }
         return response()->json([
             'message' => 'success',
             'data' => $data
