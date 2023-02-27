@@ -376,13 +376,11 @@ class SptbController extends Controller
 
     public function print($noSptb)
     {
-        // phpinfo();
-        // dd('a');
         $noSptb = str_replace('|', '/', $noSptb);
         $ppb = null;
 
         $data = sptbH::find($noSptb);
-// dd($data->npp->nama_pelanggan);
+
         // get ppb
         $trxid = !empty($data->trxid)?$data->trxid:null;
         if ($trxid) {
@@ -391,9 +389,20 @@ class SptbController extends Controller
             $ppb = $pat_ppb->ket;
         }
 
+        $sptbd2 = SptbD2::where('no_sptb', $noSptb)->get();
+        $detail2 = [];
+        if (count($sptbd2) > 0) {
+            foreach ($sptbd2 as $row) {
+                $detail2[$row->kd_produk] = [
+                    'stockid' => $row->stockid
+                ];
+            }
+        }
+
         $pdf = Pdf::loadView('prints.sptb', [
             'data' => $data,
-            'ppb' => $ppb
+            'ppb' => $ppb,
+            'detail2' => $detail2,
         ]);
 
         $filename = "SPTB-Report";

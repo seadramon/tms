@@ -36,9 +36,19 @@ class SptbH extends Model
         return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
     }
 
+    public function monOp()
+    {
+        return $this->belongsTo(MonOp::class, 'no_npp', 'no_npp');
+    }
+
     public function ppb_muat()
     {
     	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
+    }
+
+    public function admProduksi()
+    {
+        return $this->belongsTo(Personal::class, 'created_by', 'employee_id');
     }
 
     public function scopeFilterLogin($query, $type, $value)

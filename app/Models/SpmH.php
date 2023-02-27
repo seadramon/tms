@@ -66,6 +66,11 @@ class SpmH extends Model
         return $this->belongsTo(Personal::class, 'app1_empid', 'employee_id');
     }
 
+    public function admDistribusi()
+    {
+        return $this->belongsTo(Personal::class, 'created_by', 'employee_id');
+    }
+
     public function scopeFilterLogin($query, $type, $value)
     {
         if($type == 'vendor'){
