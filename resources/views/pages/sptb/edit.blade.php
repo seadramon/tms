@@ -184,7 +184,7 @@
                                     </div>
                                     <div class="form-group col-lg-6">
                                         <input type="text" name="child_kd_produk[]" class="form-control" 
-                                            value="{{ !blank($data->sptbd2) ? $data->sptbd2[$i]->stockid : 'test' }}">
+                                            value="{{ !blank($data->sptbd2) ? $data->sptbd2[$i]->stockid : '' }}">
                                     </div>
                                 @endfor
                             @endif

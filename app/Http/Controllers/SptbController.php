@@ -66,6 +66,12 @@ class SptbController extends Controller
                         // $list .= '<li><a class="dropdown-item" href="http://10.3.1.80/genreport/genreport.asp?RptName=sptb2020.rpt&fparam='.$model->no_sptb.'&ftype=5&keyId=OS">Print Test</a></li>';
                         $list .= '<li><a class="dropdown-item" href="' . route('sptb.print', str_replace('/', '|', $model->no_sptb)) . '">Print</a></li>';
                     }
+                    if($model->app_pelanggan = 1 && in_array('penilaian_mutu', $action)){
+                        $list .= '<li><a class="dropdown-item" href="' . route('sptb.penilaian-mutu', str_replace('/', '|', $model->no_sptb)) . '">Penilaian Mutu</a></li>';
+                    }
+                    if($model->app_pelanggan = 1 && in_array('penilaian_pelayanan', $action)){
+                        $list .= '<li><a class="dropdown-item penilaian-pelayanan" href="javascript:void(0)" data-sptb="' . $model->no_sptb . '">Penilaian Pelayanan</a></li>';
+                    }
                 }
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -281,7 +287,7 @@ class SptbController extends Controller
 
     public function edit($no_sptb)
     {
-        $data = SptbH::find(str_replace('|', '/', $no_sptb));
+        $data = SptbH::with('sptbd2')->find(str_replace('|', '/', $no_sptb));
         
         $no_spm = SpmH::where('app2', 1)
             ->pluck('no_spm', 'no_spm')
@@ -300,6 +306,85 @@ class SptbController extends Controller
             'data', 'no_spm', 'jns_sptb'
         ));
     }
+    
+    public function penilaianMutu($no_sptb)
+    {
+        $data = SptbH::find(str_replace('|', '/', $no_sptb));
+        
+        $no_spm = SpmH::where('app2', 1)
+            ->pluck('no_spm', 'no_spm')
+            ->toArray();
+            
+        $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
+
+        $jns_sptb =  [
+            '2' => 'Stok Titipan', 
+            '0' => 'Stok Aktif'
+        ];
+
+        $jns_sptb = ["" => "Pilih Jenis SPTB"] + $jns_sptb;
+
+        return view('pages.sptb.konfirmasi_produk', compact(
+            'data', 'no_spm', 'jns_sptb'
+        ));
+    }
+
+    public function penilaianMutuSimpan(Request $request, FlasherInterface $flasher)
+    {
+        try {
+            DB::beginTransaction();
+                        
+            Validator::make($request->all(), [
+                'no_sptb'        => 'required'
+            ])->validate();
+
+            $kdPat = session("TMP_KDWIL") ?? '1A';
+
+            $j = 0;
+            
+            $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
+                ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
+                ->first();
+            $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
+
+            for($i=0; $i < count($request->kd_produk); $i++){
+                foreach ($request->child_trxid_tpd2[$request->kd_produk[$i]] as $j => $item) {
+                    $sptbD2 = SptbD2::where('trxid_tpd2', $item)->where('no_sptb', $request->no_sptb)->whereKdProduk($request->kd_produk[$i])->first();
+                    $sptbD2->kondisi_produk = $request->child_kondisi_produk[$request->kd_produk[$i]][$j];
+                    $sptbD2->save();
+                }
+            }
+
+            DB::commit();
+
+            $flasher->addSuccess('Data has been saved successfully!');
+        } catch(Exception $e) {
+            DB::rollback();
+
+            $flasher->addError('TES' + $e->getMessage());
+
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
+
+        return redirect()->route('sptb.index');
+    }
+    
+    public function penilaianPelayananSimpan(Request $request, FlasherInterface $flasher)
+    {
+        try {
+            DB::beginTransaction();
+            $sptb = SptbH::find($request->no_sptb);
+            $sptb->nilai_pelayanan = $request->layanan;
+            $sptb->save();
+
+            DB::commit();
+
+            return response()->json(['success' => true]);
+        } catch(Exception $e) {
+            DB::rollback();
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
 
     public function update(Request $request, FlasherInterface $flasher, $no_sptb)
     {
@@ -314,19 +399,19 @@ class SptbController extends Controller
 
             $kdPat = session("TMP_KDWIL") ?? '1A';
 
-            SptbD::where('no_sptb', $no_sptb)->delete();
             SptbD2::where('no_sptb', $no_sptb)->delete();
 
             $j = 0;
             
+            $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
+                ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
+                ->first();
+            $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
+
             for($i=0; $i < count($request->kd_produk); $i++){
                 for($j; $j < $request->vol[$i]; $j++){
-                    $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
-                        ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
-                        ->first();
-
-                    $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
-                    $n2 = str_pad($lasttrxidnum + 1, 6, 0, STR_PAD_LEFT);
+                    $lasttrxidnum = $lasttrxidnum + 1;
+                    $n2 = str_pad($lasttrxidnum, 6, 0, STR_PAD_LEFT);
 
                     $sptbD2 = new SptbD2();
                     $sptbD2->no_sptb = $no_sptb;

@@ -99,6 +99,9 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::get('/print/{no_sptb}', [SptbController::class, 'print'])->name('print');
 		Route::post('/get-spm', [SptbController::class, 'getSpm'])->name('get-spm');
 		Route::post('/set-konfirmasi', [SptbController::class, 'setKonfirmasi'])->name('set-konfirmasi');
+	    Route::get('/penilaian-mutu/{no_sptb}', [SptbController::class, 'penilaianMutu'])->name('penilaian-mutu');
+		Route::post('/penilaian-mutu-simpan', [SptbController::class, 'penilaianMutuSimpan'])->name('penilaian-mutu-simpan');
+		Route::post('/penilaian-pelayanan-simpan', [SptbController::class, 'penilaianPelayananSimpan'])->name('penilaian-pelayanan-simpan');
 	});
 
 	Route::group(['prefix' => '/pricelist-angkutan', 'as' => 'pricelist-angkutan.'], function(){

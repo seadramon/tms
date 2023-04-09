@@ -125,7 +125,7 @@
             <!--begin::Modal header-->
             <div class="modal-header" id="modal_armada_header">
                 <!--begin::Modal title-->
-                <h2>Form Penilaian</h2>
+                <h2>Form Penilaian VSMS</h2>
                 <!--end::Modal title-->
                 <!--begin::Close-->
                 <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">

@@ -51,6 +51,103 @@
     </div>
     <!--end::Row-->
 </div>
+<div class="modal fade" id="modal_armada" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal modal-dialog-centered">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header" id="modal_armada_header">
+                <!--begin::Modal title-->
+                <h2>Form Penilaian Pelayanan</h2>
+                <!--end::Modal title-->
+                <!--begin::Close-->
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                    <span class="svg-icon svg-icon-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </div>
+                <!--end::Close-->
+            </div>
+            <!--end::Modal header-->
+            <!--begin::Form-->
+            <form method="post" id="modal_armada_form" class="form" action="{{ route('sptb.penilaian-pelayanan-simpan') }}">
+                <input type="hidden" name="no_sptb" id="no_sptb">
+                <!--begin::Modal body-->
+                <div class="modal-body px-lg-10">
+                    <!--begin::Scroll-->
+                    <div class="scroll-y me-n7 pe-7" id="modal_armada_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_armada_header" data-kt-scroll-wrappers="#modal_armada_scroll" data-kt-scroll-offset="300px">
+                        <table style="width: 100%;" class="table table-bordered">
+                            <thead>
+                                <tr style="font-weight: bold">
+                                    <th style="width: 20%; border: solid 1px black; text-align: center;">No</th>
+                                    <th style="width: 50%; border: solid 1px black;">Kriteria</th>
+                                    <th style="width: 30%; border: solid 1px black; text-align: center;">Opsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+								<tr>
+									<td style="width: 10%; border: solid 1px black; text-align: center;">1.</td>
+									<td style="width: 35%; border: solid 1px black;">
+										Tidak ada keluhan ada ada keluhan ditanggapi dengan cepat dan benar
+									</td>
+									<td style="width: 10%; border: solid 1px black; text-align: center;">
+										<input class="form-check-input criteria-radio" name="layanan" type="radio" data-type="yes" value="90" id="flexRadioDefault"/>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 10%; border: solid 1px black; text-align: center;">2.</td>
+									<td style="width: 35%; border: solid 1px black;">
+										Ada keluhan ditanggapi dan ditindaklanjuti vendor secara tepat tapi lambat
+									</td>
+									<td style="width: 10%; border: solid 1px black; text-align: center;">
+										<input class="form-check-input criteria-radio" name="layanan" type="radio" data-type="yes" value="70" id="flexRadioDefault"/>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 10%; border: solid 1px black; text-align: center;">3.</td>
+									<td style="width: 35%; border: solid 1px black;">
+										Ada keluhan tapi tidak ditanggapi vendor
+									</td>
+									<td style="width: 10%; border: solid 1px black; text-align: center;">
+										<input class="form-check-input criteria-radio" name="layanan" type="radio" data-type="yes" value="50" id="flexRadioDefault"/>
+									</td>
+								</tr>
+								<tr>
+									<td style="width: 10%; border: solid 1px black; text-align: center;"></td>
+									<td style="width: 35%; border: solid 1px black;">
+									</td>
+									<td style="width: 10%; border: solid 1px black; text-align: center;">
+									</td>
+								</tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--end::Scroll-->
+                </div>
+                <!--end::Modal body-->
+
+                <!--begin::Modal footer-->
+                <div class="modal-footer flex-right">
+                    <button type="submit" id="modal_armada_submit" class="btn btn-primary">
+                        <span class="indicator-label">Penilaian Pelayanan</span>
+                        <span class="indicator-progress">Please wait...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                    </button>
+                </div>
+                <!--end::Modal footer-->
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
 <!--end::Content container-->
 @endsection
 @section('css')
@@ -169,5 +266,44 @@
 		  	}
 		});
 	});
+	$(document).on("click", ".penilaian-pelayanan", function () {
+        var sptb = $(this).data('sptb');
+		$("#no_sptb").val(sptb);
+		$('#modal_armada').modal('toggle');
+    });
+
+    $("#modal_armada_form").submit(function(event) {
+        event.preventDefault();
+
+        $("#modal_armada_submit").attr("data-kt-indicator", "on");
+
+        let data = $(this).serialize();
+        let url = $(this).attr('action');
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': "{{csrf_token()}}"
+            },
+            type:"post",
+            url: url,
+            data: data,
+            success: function(result) {
+                if(result.success){
+                    $("#modal_armada_submit").removeAttr("data-kt-indicator");
+                    $('#modal_armada').modal('toggle');
+                    flasher.success("Penilaian Pelayanan berhasil!");
+                    $('#tabel_sptb').DataTable().ajax.url("{{ route('sptb.data') }}").load();
+                }else{
+                    flasher.error(result.message);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                $("#modal_armada_submit").removeAttr("data-kt-indicator");
+
+                $('#modal_armada').modal('toggle');
+                flasher.error("Konfirmasi gagal!");
+            }
+        })
+    });
 </script>
 @endsection

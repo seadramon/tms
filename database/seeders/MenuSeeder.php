@@ -71,7 +71,8 @@ class MenuSeeder extends Seeder
                     'print',
                     'edit',
                     'view',
-                    'buat_sptb'
+                    'buat_sptb',
+                    'armada_tiba'
                 ]
             ],
             [
@@ -85,7 +86,9 @@ class MenuSeeder extends Seeder
                     'view',
                     'edit',
                     'print',
-                    'konfirmasi'
+                    'konfirmasi',
+                    'penilaian_mutu',
+                    'penilaian_pelayanan',
                 ]
             ],
             [

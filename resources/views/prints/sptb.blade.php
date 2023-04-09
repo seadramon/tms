@@ -205,8 +205,8 @@
                                 <td>{{ $detail->vol }}</td>
                                 <td>{{ date('d-m-Y', strtotime($detail->produk->created_date)) }}</td>
                                 <td>{{ !empty($detail2[$detail->kd_produk])?$detail2[$detail->kd_produk]['stockid']:"" }}</td>
-                                <td>{{ '-' }}</td>
-                                <td>{{ '-' }}</td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <?php 
                             $i++; 
@@ -248,7 +248,8 @@
                     </td>
                     <td>
                         Dibuat oleh / <br>
-                        <i>Made by</i><br><br><br><br>
+                        <i>Made by</i> <br>
+                        <img alt="Logo" src="data:image/png;base64, {{ $data->admProduksi->signature_base_64 }}" class="logo" height="50px;"/><br>
                         {{ !empty($data->admProduksi)?$data->admProduksi->full_name:"-" }}
                         <hr class="new1">
                         Adm Produksi
@@ -263,8 +264,9 @@
                     </td>
                     <td>
                         Diterima oleh / <i>Accept by</i><br>
-                        Tgl / <i>Date</i>: {{ !empty($data->tgl_sampai)?date('d-m-Y', strtotime($data->tgl_sampai)):"" }}<br><br><br><br>
+                        Tgl / <i>Date</i>: {{ !empty($data->tgl_sampai)?date('d-m-Y', strtotime($data->tgl_sampai)):"" }}<br>
 
+                        <img alt="Logo" src="{{ full_url_from_path($data->penerima_ttd ?? 'penerima_ttd.jpg') }}" class="logo" height="50px;"/><br>
                         {{ !empty($data->penerima_nama)?$data->penerima_nama:"-" }}
                         <hr class="new1">
                         Jabatan / <i>Position</i>
@@ -279,8 +281,8 @@
                     </td>
                     <td>
                         Dikirim oleh / <br>
-                        <i>Deliver by</i><br><br><br><br>
-
+                        <i>Deliver by</i><br>
+                        <img alt="Logo" src="data:image/png;base64, {{ $data->admDistribusi->signature_base_64 }}" class="logo" height="50px;"/><br>
                         {{ !empty($data->spmh->admDistribusi)?$data->spmh->admDistribusi->full_name:"-" }}
                         <hr class="new1">
                         Adm Distribusi
