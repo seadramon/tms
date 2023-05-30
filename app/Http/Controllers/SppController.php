@@ -368,11 +368,13 @@ class SppController extends Controller
                 if (!empty($request->jadwal)) {
                     $jadwal = explode(" - ", $request->jadwal);
                 }
+       
+                $vspprbri = VSpprbRi::where('v_spprb_ri.no_npp', $request->no_npp)->first();
 
                 $data = new SppbH;
                 $data->no_sppb = $noSppb;
                 $data->no_npp = $request->no_npp;
-                // $data->no_spprb = "140/PI/XI/WP/WP.VI/06P00"; // NO SPPRB STILL HARDCODE
+                $data->no_spprb = $vspprbri->spprblast;
                 $data->tujuan = $request->tujuan;
                 $data->rit = $request->rit;
                 $data->jarak_km = $request->jarak_km;
