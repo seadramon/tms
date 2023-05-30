@@ -23,6 +23,7 @@
                         <thead>
                             <tr class="fw-semibold fs-6 text-muted">
                                 <th>Jenis</th>
+                                <th>Vendor</th>
                                 <th>Tahun</th>
                                 <th>Nopol</th>
                                 <th>Driver</th>
@@ -97,6 +98,7 @@
 	            ajax: "{{ route('verifikasi-armada.data') }}",
 	            columns: [
                     {data: 'detail', name: 'detail', defaultContent: '-'},
+                    {data: 'vendor.nama', name: 'vendor.nama', defaultContent: '-'},
                     {data: 'tahun', name: 'tahun', defaultContent: '-'},
 	                {data: 'nopol', name: 'nopol', defaultContent: '-'},
 	                {data: 'driver.nama', name: 'driver.nama', defaultContent: '-'},

@@ -25,7 +25,7 @@ class ArmadaController extends Controller
 
     public function data()
     {
-        $query = Armada::with('driver')->whereVStatus('unverified')->select('tms_armadas.*');
+        $query = Armada::with('driver', 'vendor')->whereVStatus('unverified')->select('tms_armadas.*');
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_stnk', function ($model) {

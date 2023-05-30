@@ -121,7 +121,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Jabatan</label>
-                {!! Form::text('jabatan', 'TBC', ['class'=>'form-control', 'id'=>'jabatan', 'readonly']) !!}
+                {!! Form::text('jabatan', $trader->pimpinan_jabatan ?? "", ['class'=>'form-control', 'id'=>'jabatan', 'readonly']) !!}
             </div>
 
             <div class="form-group col-lg-6">
@@ -133,9 +133,12 @@
                 </select>
             </div>
 
-            <div class="form-group col-lg-6">
+            {{-- <div class="form-group col-lg-6">
                 <label class="form-label">Spesifikasi</label>
                 {!! Form::select('kd_material', $kd_material, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'kd_material']) !!}
+            </div> --}}
+            <div class="form-group col-lg-6">
+                <label class="form-label">&nbsp;</label>
             </div>
 
             <div class="form-group col-lg-3">

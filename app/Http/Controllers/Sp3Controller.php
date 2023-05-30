@@ -297,7 +297,8 @@ class Sp3Controller extends Controller
     public function searchPic(Request $request)
     {
         $personal = Personal::select('employee_id', 'first_name', 'last_name')
-            ->where('ST', 1)
+            ->where('st', 1)
+            ->whereIn('kd_jbt', ['JBTP0001', 'JBTP0002'])
             ->where(DB::raw('LOWER(employee_id)'), 'LIKE', '%' . $request->q . '%')
             ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', '%' . $request->q . '%')
             ->orWhere(DB::raw('LOWER(last_name)'), 'LIKE', '%' . $request->q . '%');
@@ -342,6 +343,10 @@ class Sp3Controller extends Controller
         $kontrak = ["" => "---Pilih---"] + $kontrak;
 
         $vendor = Vendor::where('vendor_id', $parameters['vendor_id'])->first();
+        $trader = DB::connection('oracle-eproc')
+					->table(DB::raw('"m_trader"'))
+					->where('vendor_id', $parameters['vendor_id'])
+					->first();
 
         $kondisiPenyerahan = [
             'L' => 'LOKO', 
@@ -404,6 +409,7 @@ class Sp3Controller extends Controller
             'ban' => $ban,
             'kontrak' => $kontrak,
             'vendor' => $vendor,
+            'trader' => $trader,
             'kondisiPenyerahan' => $kondisiPenyerahan,
             'kondisiPenyerahanDipilih' => $kondisiPenyerahanDipilih,
             'VSpprbRi' => $VSpprbRi,
@@ -594,7 +600,10 @@ class Sp3Controller extends Controller
             ->pluck('no_kontrak', 'no_kontrak');
 
         $vendor = Vendor::where('vendor_id', $data->vendor_id)->first();
-
+        $trader = DB::connection('oracle-eproc')
+					->table(DB::raw('"m_trader"'))
+					->where('vendor_id', $data->vendor_id)
+					->first();
         $kondisiPenyerahan = [
             'L' => 'LOKO', 
             'F' => 'FRANKO', 
@@ -674,6 +683,7 @@ class Sp3Controller extends Controller
             'ban',
             'kontrak',
             'vendor',
+            'trader',
             'kondisiPenyerahan',
             'kondisiPenyerahanDipilih',
             'VSpprbRi',
@@ -735,6 +745,10 @@ class Sp3Controller extends Controller
             ->pluck('no_kontrak', 'no_kontrak');
 
         $vendor = Vendor::where('vendor_id', $data->vendor_id)->first();
+        $trader = DB::connection('oracle-eproc')
+					->table(DB::raw('"m_trader"'))
+					->where('vendor_id', $data->vendor_id)
+					->first();
 
         $kondisiPenyerahan = [
             'L' => 'LOKO', 
@@ -819,6 +833,7 @@ class Sp3Controller extends Controller
             'ban',
             'kontrak',
             'vendor',
+            'trader',
             'kondisiPenyerahan',
             'kondisiPenyerahanDipilih',
             'VSpprbRi',

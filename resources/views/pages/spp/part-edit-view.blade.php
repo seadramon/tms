@@ -79,7 +79,7 @@
 	<div class="col-lg-6 hide">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Lokasi Muat</label>
-			{!! Form::text('pat', !empty($data->npp->pat)?$data->npp->pat->ket:"", ['class'=>'form-control form-control-solid', 'id'=>'pat', 'readonly']) !!}
+			{!! Form::text('pat', implode('|', $lokasi_muat ?? []), ['class'=>'form-control form-control-solid', 'id'=>'pat', 'readonly']) !!}
 		</div>	
 	</div>
 

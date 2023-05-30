@@ -40,7 +40,7 @@
                     <td class="text-center">0</td>
                     <td class="text-center">{{ ($row->spp_vol_btg - $row->sppdis_vol_btg) }}</td>
                     <td class="text-center">0</td>
-                    <td class="text-center">{{ ((($row->spp_vol_btg - $row->sppdis_vol_btg) / $row->spp_vol_btg) * 100) }}%</td>
+                    <td class="text-center">{{ $row->spp_vol_btg == 0 ? 0 : ((($row->spp_vol_btg - $row->sppdis_vol_btg) / $row->spp_vol_btg) * 100) }}%</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -104,11 +104,6 @@
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 required ">Jalur</label>
                 {!! Form::select('jalur[]', $jalur, null, ['class'=>'form-control form-select-solid col-sm-3', "multiple" => true, 'data-control'=>'select2', 'id'=>'jalur']) !!}
-            </div>
-
-            <div class="col-lg-6 custom-form">
-                <label class="form-label col-sm-3 custom-label">Kondisi Penyerahan</label>
-                <input class="form-control" type="text" readonly value="{{ $kp }}" />
             </div>
         </div>
         <div class="separator separator-dashed border-primary my-10"></div>

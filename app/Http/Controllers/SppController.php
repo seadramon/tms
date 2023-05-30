@@ -309,7 +309,6 @@ class SppController extends Controller
 
             $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
                 ->where('no_npp', $noNpp)
-                ->take(2)
                 ->get();
 
             $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
@@ -373,7 +372,7 @@ class SppController extends Controller
                 $data = new SppbH;
                 $data->no_sppb = $noSppb;
                 $data->no_npp = $request->no_npp;
-                $data->no_spprb = "140/PI/XI/WP/WP.VI/06P00"; // NO SPPRB STILL HARDCODE
+                // $data->no_spprb = "140/PI/XI/WP/WP.VI/06P00"; // NO SPPRB STILL HARDCODE
                 $data->tujuan = $request->tujuan;
                 $data->rit = $request->rit;
                 $data->jarak_km = $request->jarak_km;
@@ -458,7 +457,6 @@ class SppController extends Controller
 
         $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
             ->where('no_npp', $noNpp)
-            ->take(2)
             ->get();
 
         $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
@@ -553,6 +551,14 @@ class SppController extends Controller
     public function edit($spp)
     {
         $arrData = $this->editData($spp, 'edit');
+        $arrData['lokasi_muat'] = VSpprbRi::with(['produk', 'pat'])
+            ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
+            ->select('v_spprb_ri.pat_to')
+            ->where('v_spprb_ri.no_npp', $arrData['no_npp'])
+            ->get()
+            ->map(function($item){
+                return $item->pat->ket;
+            });
 
         return view('pages.spp.edit',  $arrData);
     }
@@ -601,6 +607,15 @@ class SppController extends Controller
         //RUTE Data
         $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
         $muat = VPotensiMuat::with('pat')->where('no_npp',$arrData['no_npp'])->get();
+        
+        $arrData['lokasi_muat'] = VSpprbRi::with(['produk', 'pat'])
+            ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
+            ->select('v_spprb_ri.pat_to')
+            ->where('v_spprb_ri.no_npp', $arrData['no_npp'])
+            ->get()
+            ->map(function($item){
+                return $item->pat->ket;
+            });
 
 
         $collection_table = new Collection();

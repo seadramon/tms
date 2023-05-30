@@ -100,7 +100,7 @@
                         <select class="form-control form-select-solid" data-control="select2" data-placeholder="Pilih Perusahaan / Pemilik Angkutan" name="armada" id="armada" required>
                             <option></option>
                             @foreach ($armada as $row)
-                                <option value="{{ $row->nopol }}|{{ $row->driver->nama }}|{{ $row->driver->no_hp }}">{{ $row->nopol }} - {{ $row->driver->nama }}</option>
+                                <option value="{{ $row->nopol }}|{{ $row->driver->nama ?? '' }}|{{ $row->driver->no_hp ?? '' }}">{{ $row->nopol }} - {{ $row->driver->nama ?? '' }}</option>
                             @endforeach
                         </select>
                     </div>
