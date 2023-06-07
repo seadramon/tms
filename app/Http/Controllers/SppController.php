@@ -560,7 +560,8 @@ class SppController extends Controller
             ->get()
             ->map(function($item){
                 return $item->pat->ket;
-            });
+            })
+            ->all();
 
         return view('pages.spp.edit',  $arrData);
     }
