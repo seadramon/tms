@@ -617,7 +617,8 @@ class SppController extends Controller
             ->get()
             ->map(function($item){
                 return $item->pat->ket;
-            });
+            })
+            ->all();
 
 
         $collection_table = new Collection();

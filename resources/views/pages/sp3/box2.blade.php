@@ -97,7 +97,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Nama Pihak Kedua / Vendor</label>
-                {!! Form::text('vendor', $vendor->nama, ['class'=>'form-control', 'id'=>'vendor', 'readonly']) !!}
+                {!! Form::text('vendor', $trader->pimpinan_nama ?? "", ['class'=>'form-control', 'id'=>'vendor', 'readonly']) !!}
             </div>
 
             <div class="form-group col-lg-6">
