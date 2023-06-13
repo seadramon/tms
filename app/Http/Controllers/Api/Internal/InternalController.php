@@ -44,7 +44,7 @@ class InternalController extends Controller
                             $sql->select('kd_pat','lat_gps','lng_gps');
                         }])
                         ->where('no_npp',$sptb->no_npp)
-                        ->where('pat_to',$sptb->ppb_muat)
+                        ->where('pat_to',$sptb->kd_pat)
                         ->groupBy('kd_produk','pat_to','no_npp','vol_spprb')
                         ->get();
 
