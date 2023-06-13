@@ -60,7 +60,7 @@
                                 <div class="d-flex flex-column">
                                     <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
                                         <span>Progress Pengiriman Barang (Volume)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_vol}}%</span></span>
-                                        <span>{{nominal($volsptb, 0)}} of {{nominal($volsp3, 0)}}</span>
+                                        <span>{{nominal($volsptb > $volsp3 ? $volsp3 : $volsptb, 0)}} of {{nominal($volsp3, 0)}}</span>
                                     </div>
                                     <div class="h-20px bg-light rounded mb-3">
                                         <div class="bg-success rounded h-20px" role="progressbar" style="width: {{$progress_vol}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
@@ -74,7 +74,7 @@
                                 <div class="d-flex flex-column">
                                     <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
                                         <span>Progress Pengiriman Barang (Rupiah)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_rp}}%</span></span>
-                                        <span>{{nominal($sptb_rp, 0)}} of {{nominal($sp3_rp, 0)}}</span>
+                                        <span>{{nominal($sptb_rp > $sp3_rp ? $sp3_rp : $sptb_rp, 0)}} of {{nominal($sp3_rp, 0)}}</span>
                                     </div>
                                     <div class="h-20px bg-light rounded mb-3">
                                         <div class="bg-info rounded h-20px" role="progressbar" style="width: {{$progress_rp}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
@@ -88,7 +88,7 @@
                                 <div class="d-flex flex-column">
                                     <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
                                         <span>Progress Pengiriman Barang (Periode)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_wkt}}%</span></span>
-                                        <span>{{nominal($tgl1, 0)}} of {{nominal($tgl2, 0)}}</span>
+                                        <span>{{nominal($tgl1 > $tgl2 ? $tgl2 : $tgl1, 0)}} of {{nominal($tgl2, 0)}}</span>
                                     </div>
                                     <div class="h-20px bg-light rounded mb-3">
                                         <div class="bg-warning rounded h-20px" role="progressbar" style="width: {{$progress_wkt}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>

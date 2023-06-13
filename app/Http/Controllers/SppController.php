@@ -561,6 +561,7 @@ class SppController extends Controller
             ->map(function($item){
                 return $item->pat->ket;
             })
+            ->unique()
             ->all();
 
         return view('pages.spp.edit',  $arrData);
@@ -619,6 +620,7 @@ class SppController extends Controller
             ->map(function($item){
                 return $item->pat->ket;
             })
+            ->unique()
             ->all();
 
 

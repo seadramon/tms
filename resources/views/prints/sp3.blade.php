@@ -368,11 +368,11 @@
                 </tr>
                 <tr>
                     <td style="padding-left: 35px;" class="tebal">
-                        {{ $data->app2_name }}<br>
+                        {{ !empty($data->unitkerja)?'Manajer '.$data->unitkerja->ket:''}}<br>
                         {{ !empty($data->app2_jbt)?$data->app2_jbt:'' }}
                     </td>
                     <td>
-                        {{ !empty($data->unitkerja)?'Manajer '.$data->unitkerja->ket:''}}
+                        {{ $data->app2_name }}
                     </td>
                 </tr>
             </table>

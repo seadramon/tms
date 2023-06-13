@@ -40,7 +40,7 @@
                     <td class="text-center">0</td>
                     <td class="text-center">{{ ($row->spp_vol_btg - $row->sppdis_vol_btg) }}</td>
                     <td class="text-center">0</td>
-                    <td class="text-center">{{ ((($row->spp_vol_btg - $row->sppdis_vol_btg) / $row->spp_vol_btg) * 100) }}%</td>
+                    <td class="text-center">{{ round((($row->spp_vol_btg - $row->sppdis_vol_btg) / $row->spp_vol_btg) * 100, 2) }}%</td>
                 </tr>
                 @endforeach
             </tbody>
