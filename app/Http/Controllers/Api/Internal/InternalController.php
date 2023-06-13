@@ -26,7 +26,7 @@ class InternalController extends Controller
         $message = "Success";
         $gps = GpsLog::whereNoSptb($request->no_sptb)->orderByDesc('created_at')->first();
         $sptb = SptbH::whereNoSptb($request->no_sptb)->first();
-        $potensi = PotensiH::where('no_npp', $sptb->no_npp)->where('pat_to', $sptb->ppb_muat)->first();
+        $potensi = PotensiH::where('no_npp', $sptb->no_npp)->where('pat_to', $sptb->kd_pat)->first();
         if($potensi){
             $rute = [
                 'source_lat'  => $potensi->source_lat,
