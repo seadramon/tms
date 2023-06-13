@@ -208,6 +208,7 @@ class SptbController extends Controller
             $sptbH->tgl_sptb = date('Y-m-d');
             $sptbH->no_spprb = $spmH->sppbh?->no_spprb;
             $sptbH->no_npp = $spmH->no_npp;
+            $sptbH->ppb_muat = $spmH->pat_to;
             $sptbH->app_driver = 0;
             $sptbH->barcode_img = decbin(ord($noSptb));
             $sptbH->kd_pat = $kdPat;
