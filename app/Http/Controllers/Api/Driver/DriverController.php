@@ -41,6 +41,20 @@ class DriverController extends Controller
 
                 $sptb->penerima_ttd = $fullpath;
             }
+            if ($request->hasFile('suratjalan')) {
+                $file = $request->file('suratjalan');
+                $extension = $file->getClientOriginalExtension();
+
+                $dir = 'sptb/' . date('Ym', strtotime($sptb->tgl_sptb)) . '/' . Str::of($sptb->no_sptb)->slug('-');
+                cekDir($dir);
+
+                $filename = 'suratjalan.jpg';
+                $fullpath = $dir .'/'. $filename;
+
+                Storage::disk('local')->put($fullpath, File::get($file));
+
+                $sptb->suratjalan_path = $fullpath;
+            }
             $sptb->save();
             DB::commit();
 
