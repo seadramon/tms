@@ -24,7 +24,13 @@ class PelangganController extends Controller
 
     public function nppList($pat)
     {
-        $npp = Npp::whereKdPat($pat)->get();
+        $start = date('Y-m-d 00:00:00', strtotime("-5 years"));
+        $end = date('Y-12-31 23:59:59', strtotime("+1 years"));
+        if($pat != "0A"){
+            $npp = Npp::whereKdPat($pat)->whereBetween('tgl_npp', [$start, $end])->get();
+        }else{
+            $npp = Npp::whereBetween('tgl_npp', [$start, $end])->get();
+        }
         
         return NppResource::collection($npp);
     }
