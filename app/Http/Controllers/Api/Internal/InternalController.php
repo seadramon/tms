@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Internal\NppResource;
 use App\Http\Resources\Internal\PelangganUserResource;
 use App\Http\Resources\Internal\SpmListResource;
+use App\Http\Resources\Internal\SptbListResource;
 use App\Models\GpsLog;
 use App\Models\Npp;
 use App\Models\PelangganNpp;
@@ -94,6 +95,21 @@ class InternalController extends Controller
 
 
         return SpmListResource::collection($spm);
+    }
+    
+    public function sptbList(Request $request)
+    {
+        $query = SptbH::with('npp', 'spmh', 'ppb_muat');
+        if($request->no_npp){
+            $query->whereNoNpp($request->no_npp);
+        }
+        if($request->tgl_awal && $request->tgl_akhir){
+            $query->whereBetween('tgl_sptb', [date('Y-m-d 00:00:00', strtotime($request->tgl_awal)), date('Y-m-d 23:59:59', strtotime($request->tgl_akhir))]);
+        }
+        $sptb = $query->get();
+
+
+        return SptbListResource::collection($sptb);
     }
 }
 
