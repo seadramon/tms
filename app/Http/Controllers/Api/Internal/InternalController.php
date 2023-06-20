@@ -106,7 +106,7 @@ class InternalController extends Controller
         if($request->tgl_awal && $request->tgl_akhir){
             $query->whereBetween('tgl_sptb', [date('Y-m-d 00:00:00', strtotime($request->tgl_awal)), date('Y-m-d 23:59:59', strtotime($request->tgl_akhir))]);
         }
-        $sptb = $query->get();
+        $sptb = $query->orderByRaw('app_pelanggan ASC NULLS FIRST')->orderBy('tgl_sptb', 'asc')->get();
 
 
         return SptbListResource::collection($sptb);
