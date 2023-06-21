@@ -271,7 +271,7 @@ class Sp3Controller extends Controller
             
         $jenisPekerjaan = ["" => "Pilih Pekerjaan"] + $jenisPekerjaan;
 
-        $sat_harsat = ["volume" => "Volume", "ritase" => "Ritase"];
+        $sat_harsat = ["tonase" => "Tonase", "ritase" => "Ritase"];
         $npp = Npp::find($request->npp);
 
         return view('pages.sp3.create', [

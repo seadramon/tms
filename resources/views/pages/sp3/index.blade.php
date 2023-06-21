@@ -170,7 +170,7 @@
 	                {data: 'no_sp3', name: 'no_sp3', defaultContent: '-'},
 	                {data: 'no_npp', name: 'no_npp', defaultContent: '-'},
 	                {data: 'tgl_sp3', name: 'tgl_sp3', defaultContent: '-'},
-	                {data: 'custom', name: 'vendor.nama', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'custom', name: 'vendor.nama', defaultContent: '-'},
 	                {data: 'approval', name: 'app1', defaultContent: '-'},
 	                {data: 'progress_vol', name: 'progress_vol', orderable: false, searchable: false, defaultContent: '-'},
 	                {data: 'progress_rp', name: 'progress_rp', orderable: false, searchable: false, defaultContent: '-'},

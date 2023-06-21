@@ -306,7 +306,7 @@
                             </div>
                 
                             <div class="form-group col-lg-6">
-                                <label class="form-label">Estimasi Total Ritasi</label>
+                                <label class="form-label">Estimasi Total Ritase</label>
                                 {!! Form::text('rit', 0, ['class'=>'form-control decimal', 'id' => $sat_harsat != 'volume' ? 'est-rit' : 'rit', 'required', 'readonly']) !!}
                             </div>
                 
@@ -601,7 +601,7 @@
                                     </tr>
                                     
                                     <tr>
-                                        <th>Surat Jalan / SPHB</th>
+                                        <th>Surat Jalan / SPtB</th>
                                         <td>
                                             {!! Form::number('surat_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
@@ -621,7 +621,7 @@
                                     </tr>
                 
                                     <tr>
-                                        <th>Rekap Surat Jalan / SPHB</th>
+                                        <th>Rekap Surat Jalan / SPtB</th>
                                         <td>
                                             {!! Form::number('rekap_asli', null, ['class'=>'form-control', 'readonly']) !!}
                                         </td>
