@@ -102,7 +102,11 @@ class SptbController extends Controller
     
     public function create(Request $request)
     {
-        $no_spm = SpmH::pluck('no_spm', 'no_spm')->toArray();
+        if(session('TMP_KDWIL') != '0A'){
+            $no_spm = SpmH::where('pat_to', session('TMP_KDWIL'))->pluck('no_spm', 'no_spm')->toArray();
+        }else{
+            $no_spm = SpmH::pluck('no_spm', 'no_spm')->toArray();
+        }
             
         $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
 
