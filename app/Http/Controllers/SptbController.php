@@ -103,9 +103,9 @@ class SptbController extends Controller
     public function create(Request $request)
     {
         if(session('TMP_KDWIL') != '0A'){
-            $no_spm = SpmH::where('pat_to', session('TMP_KDWIL'))->pluck('no_spm', 'no_spm')->toArray();
+            $no_spm = SpmH::where('tgl_spm', '>=', date('Y-m-d 00:00:00', strtotime('-1 years')))->where('pat_to', session('TMP_KDWIL'))->pluck('no_spm', 'no_spm')->toArray();
         }else{
-            $no_spm = SpmH::pluck('no_spm', 'no_spm')->toArray();
+            $no_spm = SpmH::where('tgl_spm', '>=', date('Y-m-d 00:00:00', strtotime('-1 years')))->pluck('no_spm', 'no_spm')->toArray();
         }
             
         $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
@@ -233,11 +233,11 @@ class SptbController extends Controller
                 $sptbD->save();
 
                 for($j; $j < $request->vol[$i]; $j++){
-                    // $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
-                    //     ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
-                    //     ->first();
+                    $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
+                        ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
+                        ->first();
 
-                    // $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
+                    $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
                     // $n2 = str_pad($lasttrxidnum + 1, 6, 0, STR_PAD_LEFT);
 
                     $sptbD2 = new SptbD2();
@@ -247,6 +247,7 @@ class SptbController extends Controller
                     $sptbD2->stockid = $request->child_kd_produk[$j];
                     $sptbD2->vol = 1;
                     $sptbD2->kd_pat = $kdPat;
+                    $sptbD2->trxid_tpd2 = $lasttrxidnum;
                     // $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . ($n2);
                     // $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . ($n2);
                     $sptbD2->save();

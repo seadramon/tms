@@ -145,7 +145,17 @@ class SpmController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(){
-        $no_spp = SppbH::where('app2',1)->orWhere('app3',1)->get();
+        if(session('TMP_KDWIL') != '0A'){
+            $no_spp = SppbH::whereHas('spprb', function($sql){
+                    $sql->where('kd_pat', session('TMP_KDWIL'));
+                })
+                ->where(function($sql){
+                    $sql->where('app2',1)->orWhere('app3',1);
+                })
+                ->get();
+        }else{
+            $no_spp = SppbH::where('app2',1)->orWhere('app3',1)->get();
+        }
         return view('pages.spm.create', [
             'no_spp' => $no_spp
         ]);
