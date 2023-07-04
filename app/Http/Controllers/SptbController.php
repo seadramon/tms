@@ -243,13 +243,13 @@ class SptbController extends Controller
                     $sptbD2 = new SptbD2();
                     $sptbD2->no_sptb = $noSptb;
                     $sptbD2->kd_produk = $request->kd_produk[$i];
-                    $sptbD2->tgl_produksi = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->child_tgl_produksi[$j]))."'), 'YYYY-MM-DD')");
+                    $sptbD2->tgl_produksi = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->child_tgl_produksi[$j]))."', 'YYYY-MM-DD')");
                     $sptbD2->stockid = $request->child_kd_produk[$j];
                     $sptbD2->vol = 1;
                     $sptbD2->kd_pat = $kdPat;
                     // $sptbD2->trxid_tpd2 = intval($lasttrxidnum) + 1;
                     $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . ($n2);
-                    // $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . ($n2);
+                    $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . ($n2);
                     $sptbD2->save();
                 }
             }
