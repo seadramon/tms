@@ -248,8 +248,8 @@ class SptbController extends Controller
                     $sptbD2->vol = 1;
                     $sptbD2->kd_pat = $kdPat;
                     // $sptbD2->trxid_tpd2 = intval($lasttrxidnum) + 1;
-                    $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . ($n2);
-                    $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . ($n2);
+                    $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . $n2;
+                    $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . $n2;
                     $sptbD2->save();
                 }
             }
