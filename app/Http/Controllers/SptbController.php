@@ -163,7 +163,7 @@ class SptbController extends Controller
                 'no_spm'        => 'required'
             ])->validate();
 
-            $spmH = SpmH::find($request->no_spm);
+            $spmH = SpmH::with('sppbh')->find($request->no_spm);
 
             $noDokumen = 'SPtB/2E/05';
 
@@ -200,7 +200,8 @@ class SptbController extends Controller
             $sptbH = new SptbH();
             $sptbH->no_spm = $request->no_spm;
             $sptbH->jns_sptb = $request->jns_sptb;
-            $sptbH->tgl_berangkat = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_berangkat))."'), 'YYYY-MM-DD')");
+            $sptbH->tgl_berangkat = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_berangkat))."'), 'YYYY-MM-DD')"); //jam_berangkat
+            $sptbH->jam_berangkat = $request->jam_berangkat;
             $sptbH->ket = $request->ket;
             $sptbH->tujuan = $request->tujuan;
             $sptbH->angkutan = $request->angkutan;
@@ -210,9 +211,10 @@ class SptbController extends Controller
             $sptbH->jarak_km = $request->jarak_km;
             $sptbH->no_sptb = $noSptb;
             $sptbH->tgl_sptb = date('Y-m-d');
-            $sptbH->no_spprb = $spmH->sppbh?->no_spprb;
-            $sptbH->no_npp = $spmH->no_npp;
+            $sptbH->no_spprb = $spmH->sppbh->no_spprb ?? null;
+            $sptbH->no_npp = $spmH->sppbh->no_npp ?? null;
             $sptbH->app_driver = 0;
+            $sptbH->app_pelanggan = 0;
             $sptbH->barcode_img = decbin(ord($noSptb));
             $sptbH->kd_pat = $kdPat;
             $sptbH->created_by = session('TMP_NIP') ?? '12345';
@@ -225,7 +227,7 @@ class SptbController extends Controller
                             ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
                             ->first();
             $lasttrxidnum = $maxTrxid->max_trxid ?? 0;
-
+            $counter = 0;
             for($i=0; $i < count($request->kd_produk); $i++){
                 $sppbD = SppbD::where('no_sppb', $spmH->no_sppb)
                     ->where('kd_produk', $request->kd_produk[$i])
@@ -247,8 +249,8 @@ class SptbController extends Controller
                     $sptbD2 = new SptbD2();
                     $sptbD2->no_sptb = $noSptb;
                     $sptbD2->kd_produk = $request->kd_produk[$i];
-                    $sptbD2->tgl_produksi = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->child_tgl_produksi[$j]))."', 'YYYY-MM-DD')");
-                    $sptbD2->stockid = $request->child_kd_produk[$j];
+                    $sptbD2->tgl_produksi = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->child_tgl_produksi[$counter]))."', 'YYYY-MM-DD')");
+                    $sptbD2->stockid = $request->child_kd_produk[$counter];
                     $sptbD2->vol = 1;
                     $sptbD2->kd_pat = $kdPat;
                     // $sptbD2->trxid_tpd2 = intval($lasttrxidnum) + 1;
@@ -256,6 +258,7 @@ class SptbController extends Controller
                     $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . $n2;
                     $sptbD2->save();
                     $lasttrxidnum++;
+                    $counter++;
                 }
             }
 
