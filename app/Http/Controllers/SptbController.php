@@ -35,9 +35,7 @@ class SptbController extends Controller
             });
         }else{
             if(session('TMP_KDWIL') != '0A'){
-                $query->whereHas('npp', function($sql){
-                    $sql->where('kd_pat', session('TMP_KDWIL'));
-                });
+                $query->where('kd_pat', session('TMP_KDWIL'));
             }
         }
 
