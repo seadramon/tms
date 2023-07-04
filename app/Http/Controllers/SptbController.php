@@ -154,6 +154,7 @@ class SptbController extends Controller
 
     public function store(Request $request, FlasherInterface $flasher)
     {
+        $kdPat = session("TMP_KDWIL") ?? '1A';
         try {
             DB::beginTransaction();
                         
@@ -162,8 +163,8 @@ class SptbController extends Controller
             ])->validate();
 
             $spmH = SpmH::with('sppbh')->find($request->no_spm);
-
-            $noDokumen = 'SPtB/2E/05';
+            $active_bl = DB::select("select  WOS.\"FNC_GETBL\" (to_Date('" . date('d/m/Y') . "','dd/mm/yyyy'), '1A') bulan from dual")[0]->bulan;
+            $noDokumen = 'SPtB/'.$kdPat.'/'. substr($active_bl, 0, 2);
 
             $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
             
@@ -193,7 +194,6 @@ class SptbController extends Controller
 
             $noSptb = $newSequence . '/SPtB/' . ($spmH->pat_to ?? '2E') . '/' . substr($month[0]->month, 0, 2) . '/' . date('Y');
 
-            $kdPat = session("TMP_KDWIL") ?? '1A';
 
             $sptbH = new SptbH();
             $sptbH->no_spm = $request->no_spm;
