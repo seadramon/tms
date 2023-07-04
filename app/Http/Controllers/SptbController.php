@@ -238,7 +238,7 @@ class SptbController extends Controller
                         ->first();
 
                     $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
-                    // $n2 = str_pad($lasttrxidnum + 1, 6, 0, STR_PAD_LEFT);
+                    $n2 = str_pad($lasttrxidnum + 1, 6, 0, STR_PAD_LEFT);
 
                     $sptbD2 = new SptbD2();
                     $sptbD2->no_sptb = $noSptb;
@@ -247,8 +247,8 @@ class SptbController extends Controller
                     $sptbD2->stockid = $request->child_kd_produk[$j];
                     $sptbD2->vol = 1;
                     $sptbD2->kd_pat = $kdPat;
-                    $sptbD2->trxid_tpd2 = intval($lasttrxidnum) + 1;
-                    // $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . ($n2);
+                    // $sptbD2->trxid_tpd2 = intval($lasttrxidnum) + 1;
+                    $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . ($n2);
                     // $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . ($n2);
                     $sptbD2->save();
                 }
