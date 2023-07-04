@@ -221,6 +221,11 @@ class SptbController extends Controller
 
             $j = 0;
 
+            $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
+                            ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
+                            ->first();
+            $lasttrxidnum = $maxTrxid->max_trxid ?? 0;
+
             for($i=0; $i < count($request->kd_produk); $i++){
                 $sppbD = SppbD::where('no_sppb', $spmH->no_sppb)
                     ->where('kd_produk', $request->kd_produk[$i])
@@ -233,11 +238,10 @@ class SptbController extends Controller
                 $sptbD->save();
 
                 for($j; $j < $request->vol[$i]; $j++){
-                    $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
-                        ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
-                        ->first();
-
-                    $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
+                    // $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
+                    //         ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
+                    //         ->first();
+                    // $lasttrxidnum = $maxTrxid->max_trxid ?? 0;
                     $n2 = str_pad($lasttrxidnum + 1, 6, 0, STR_PAD_LEFT);
 
                     $sptbD2 = new SptbD2();
@@ -251,6 +255,7 @@ class SptbController extends Controller
                     $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . $n2;
                     $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . $n2;
                     $sptbD2->save();
+                    $lasttrxidnum++;
                 }
             }
 
