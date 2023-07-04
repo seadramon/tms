@@ -84,7 +84,7 @@ class SptbController extends Controller
             })
             ->addColumn('status', function($model) {
                 $teks = '';
-                if($model->app_pelanggan = 1){
+                if($model->app_pelanggan == 1){
                     $teks = '<span class="badge badge-light-success mr-2 mb-2">Received</i></span>';
                 }else{
                     $teks = '<span class="badge badge-light-warning mr-2 mb-2">onProgress</i></span>';
@@ -237,7 +237,8 @@ class SptbController extends Controller
                 $sptbD->vol = $sppbD->segmental == 1 ? ($request->vol[$i] / $sppbD->jml_segmen) : $request->vol[$i];
                 $sptbD->save();
 
-                for($j; $j < $request->vol[$i]; $j++){
+                for($j=0; $j < $request->vol[$i]; $j++){
+                // for($j; $j < $request->vol[$i]; $j++){
                     // $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
                     //         ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
                     //         ->first();
