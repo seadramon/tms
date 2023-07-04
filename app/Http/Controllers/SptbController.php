@@ -163,7 +163,7 @@ class SptbController extends Controller
             ])->validate();
 
             $spmH = SpmH::with('sppbh')->find($request->no_spm);
-            $active_bl = DB::select("select  WOS.\"FNC_GETBL\" (to_Date('" . date('d/m/Y') . "','dd/mm/yyyy'), '1A') bulan from dual")[0]->bulan;
+            $active_bl = DB::select("select  WOS.\"FNC_GETBL\" (to_Date('" . date('d/m/Y') . "','dd/mm/yyyy')) bulan from dual")[0]->bulan;
             $noDokumen = 'SPtB/'.$kdPat.'/'. substr($active_bl, 0, 2);
 
             $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
