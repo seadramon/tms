@@ -132,7 +132,7 @@
                     @foreach($detail_spp as $row)
                     <tr class="fw-semibold fs-6 text-gray-800 border border-gray-400 aa_aa d-none" value="{{ $row->vol ?? 0 }}" id="row_{{ $i }}">
                         <td class="text-center" style="padding-left: 10px;">
-                            <input class="form-control" name="tipe_produk_select[]" readonly value="{{ $row->kode_produk }}" />
+                            <input class="form-control" name="tipe_produk_select[]" readonly value="{{ $row->type_produk }}" />
                         </td>
                         <td class="text-center" width="15%">
                             <input type="number"

@@ -374,9 +374,10 @@ class SpmController extends Controller
             // store to smp_d
             $i = 0;
             foreach($request->keterangan_select as $row){
+                $produk = explode(' - ', $request->tipe_produk_select[$i]);
                 $SpmD = new SpmD();
                 $SpmD->no_spm = $no_spm;
-                $SpmD->kd_produk = $request->tipe_produk_select[$i];
+                $SpmD->kd_produk = $produk[0];
                 $SpmD->vol = $request->volume_produk_select[$i];
                 $SpmD->ket = $request->keterangan_select[$i];
                 $SpmD->save();
@@ -699,7 +700,8 @@ class SpmController extends Controller
             // store to smp_d
             $i = 0;
             foreach($request->keterangan_select as $row){
-                $SpmD = SpmD::where('no_spm', $no_spm)->where('kd_produk',$request->tipe_produk_select[$i])->first();
+                $produk = explode(' - ', $request->tipe_produk_select[$i]);
+                $SpmD = SpmD::where('no_spm', $no_spm)->where('kd_produk', $produk[0])->first();
                 if($request->volume_produk_select[$i] > 0){
                     $SpmD->vol = $request->volume_produk_select[$i];
                     $SpmD->ket = $request->keterangan_select[$i];
