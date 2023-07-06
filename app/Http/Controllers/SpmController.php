@@ -71,7 +71,7 @@ class SpmController extends Controller
 
     public function data(Request $request)
     {
-        $query = SpmH::with(['sppb', 'vendornya']);
+        $query = SpmH::with(['sppb', 'vendornya', 'sptbh']);
         if(Auth::check()){
             $query->whereVendorId(Auth::user()->vendor_id);
         }
@@ -111,7 +111,7 @@ class SpmController extends Controller
                         if(in_array('print', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>';
                         }
-                        if(in_array('buat_sptb', $action)){
+                        if(in_array('buat_sptb', $action) && $model->sptbh == null){
                             $list .= '<li><a class="dropdown-item" href="' . route('sptb.create', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Buat SPTB</a></li>';
                         }
                         if(in_array('edit', $action)){

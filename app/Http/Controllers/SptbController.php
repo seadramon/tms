@@ -101,9 +101,9 @@ class SptbController extends Controller
     public function create(Request $request)
     {
         if(session('TMP_KDWIL') != '0A'){
-            $no_spm = SpmH::where('tgl_spm', '>=', date('Y-m-d 00:00:00', strtotime('-1 years')))->where('pat_to', session('TMP_KDWIL'))->pluck('no_spm', 'no_spm')->toArray();
+            $no_spm = SpmH::doesntHave('sptbh')->where('tgl_spm', '>=', date('Y-m-d 00:00:00', strtotime('-1 years')))->where('pat_to', session('TMP_KDWIL'))->pluck('no_spm', 'no_spm')->toArray();
         }else{
-            $no_spm = SpmH::where('tgl_spm', '>=', date('Y-m-d 00:00:00', strtotime('-1 years')))->pluck('no_spm', 'no_spm')->toArray();
+            $no_spm = SpmH::doesntHave('sptbh')->where('tgl_spm', '>=', date('Y-m-d 00:00:00', strtotime('-1 years')))->pluck('no_spm', 'no_spm')->toArray();
         }
             
         $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
