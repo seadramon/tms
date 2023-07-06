@@ -319,7 +319,7 @@ class SpmController extends Controller
             // ---------
             $no_npp = SppbH::select('no_npp')->where('no_sppb',$no_sppb)->first();
             $no_spprb = SpprbH::with('pat')->where('no_npp',$no_npp->no_npp)->first();
-            $pat_to = $no_spprb->pat->kd_pat;
+            $pat_to = $no_spprb->kd_pat;
             // -----------
 
             $vendor_angkutan = $request->vendor;
