@@ -164,7 +164,8 @@ class SptbController extends Controller
 
             $spmH = SpmH::with('sppbh')->find($request->no_spm);
             $active_bl = DB::select("select  WOS.\"FNC_GETBL\" (to_Date('" . date('d/m/Y') . "','dd/mm/yyyy')) bulan from dual")[0]->bulan;
-            $noDokumen = 'SPtB/'.$kdPat.'/'. substr($active_bl, 0, 2);
+            $month = DB::select("select fnc_getbl(to_date(sysdate)) as month from dual");
+            $noDokumen = 'SPtB/'.$kdPat.'/'. substr($month[0]->month, 0, 2);
 
             $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
             
@@ -192,7 +193,7 @@ class SptbController extends Controller
 
             $month = DB::select("select fnc_getbl(to_date(sysdate)) as month from dual");
 
-            $noSptb = $newSequence . '/SPtB/' . ($spmH->pat_to ?? '2E') . '/' . substr($month[0]->month, 0, 2) . '/' . date('Y');
+            $noSptb = $newSequence . '/' . $noDokumen . '/' . date('Y');
 
 
             $sptbH = new SptbH();
