@@ -78,7 +78,8 @@ class SpmController extends Controller
         if(!Auth::check() && session('TMP_KDWIL') != '0A'){
 			$query->whereHas('sppb.npp', function($sql){
                 $sql->where('kd_pat', session('TMP_KDWIL'));
-            });
+            })
+            ->orWhere('pat_to', session('TMP_KDWIL'));
 		}
         return DataTables::eloquent($query)
             ->editColumn('tgl_spm', function ($model) {
