@@ -75,10 +75,10 @@ class ProyekController extends Controller
         foreach($results as $row){
             $data[] = [
                 //"KD_PRODUK"=>$rst->fields["KD_PRODUK_KONFIRMASI"],      
-               "pesanan"=>$row->vol_ok,
-               "delivery"=>$row->vol_sptb,
-               "tot_prod"=>$row->stock_prod,
-               "distribusi"=>$row->vol_esptb_diterima,
+               "pesanan"=> $row->vol_ok,
+               "delivery"=> $row->vol_sptb > $row->vol_ok ? $row->vol_ok : $row->vol_sptb,
+               "tot_prod"=> $row->stock_prod > $row->vol_ok ? $row->vol_ok : $row->stock_prod,
+               "distribusi"=> $row->vol_esptb_diterima > $row->vol_ok ? $row->vol_ok : $row->vol_esptb_diterima,
             ];
         }
         return response()->json([
@@ -89,7 +89,7 @@ class ProyekController extends Controller
 
     public function proyekProgressTipe($no_npp)
     {
-        $sql = " select NO_NPP,kd_produk_konfirmasi,tipe,max(VOL_OK)VOL_OK,max(VOL_OP)VOL_OP,sum(VOL_SPTB_DITERIMA)VOL_ESPTB_DITERIMA,
+        $sql = "select NO_NPP,kd_produk_konfirmasi,tipe,max(VOL_OK)VOL_OK,max(VOL_OP)VOL_OP,sum(VOL_SPTB_DITERIMA)VOL_ESPTB_DITERIMA,
 			 max(VOL_SPTB)VOL_SPTB,max(STOCK_PPB)STOCK_PPB ,max(STOCK_PROD)STOCK_PROD   from (
 			   SELECT S1.NO_NPP,S1.kd_produk_konfirmasi ,s4.tipe,S1.VOL_KONFIRMASI VOL_OK, 
 			   S2.VOL_OP,
@@ -121,9 +121,9 @@ class ProyekController extends Controller
                "kd_produk"=>$row->kd_produk_konfirmasi,
                "tipe"=>$row->tipe,
                "tot_pesanan"=>$row->vol_ok,
-               "delivery"=>$row->vol_sptb,
-               "tot_prod"=>$row->stock_prod,
-               "distribusi"=>$row->vol_esptb_diterima
+               "delivery"=>$row->vol_sptb > $row->vol_ok ? $row->vol_ok : $row->vol_sptb,
+               "tot_prod"=>$row->stock_prod > $row->vol_ok ? $row->vol_ok : $row->stock_prod,
+               "distribusi"=>$row->vol_esptb_diterima > $row->vol_ok ? $row->vol_ok : $row->vol_esptb_diterima
             ];
         }
         return response()->json([
