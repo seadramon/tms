@@ -71,14 +71,15 @@ class SpmController extends Controller
 
     public function data(Request $request)
     {
-        $query = SpmH::with(['sppb', 'vendornya']);
+        $query = SpmH::with(['sppb', 'vendornya', 'sptbh']);
         if(Auth::check()){
             $query->whereVendorId(Auth::user()->vendor_id);
         }
         if(!Auth::check() && session('TMP_KDWIL') != '0A'){
 			$query->whereHas('sppb.npp', function($sql){
                 $sql->where('kd_pat', session('TMP_KDWIL'));
-            });
+            })
+            ->orWhere('pat_to', session('TMP_KDWIL'));
 		}
         return DataTables::eloquent($query)
             ->editColumn('tgl_spm', function ($model) {
@@ -111,7 +112,7 @@ class SpmController extends Controller
                         if(in_array('print', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>';
                         }
-                        if(in_array('buat_sptb', $action)){
+                        if(in_array('buat_sptb', $action) && $model->sptbh == null){
                             $list .= '<li><a class="dropdown-item" href="' . route('sptb.create', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Buat SPTB</a></li>';
                         }
                         if(in_array('edit', $action)){
