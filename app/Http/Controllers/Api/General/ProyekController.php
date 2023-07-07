@@ -49,8 +49,8 @@ class ProyekController extends Controller
             max(VOL_SPTB)VOL_SPTB,max(STOCK_PPB)STOCK_PPB ,max(STOCK_PROD)STOCK_PROD   from (
               SELECT S1.NO_NPP,S1.kd_produk_konfirmasi ,s4.tipe,S1.VOL_KONFIRMASI VOL_OK, 
               S2.VOL_OP,
-              case app_pelanggan when '1' then S3.VOL_SPTB  else 0 end as VOL_SPTB_DITERIMA, 
-               case app_pelanggan when '0' then S3.VOL_SPTB  else 0 end as VOL_SPTB,
+              case app_pelanggan when 1 then S3.VOL_SPTB  else 0 end as VOL_SPTB_DITERIMA, 
+               case app_pelanggan when 0 then S3.VOL_SPTB  else 0 end as VOL_SPTB,
                pkg_snop.getStockByNPP_PROD(S1.NO_NPP,S1.kd_produk_konfirmasi, to_char(sysdate,'dd/mm/yyyy'),1)STOCK_PPB ,
                 pkg_snop.getStockByNPP_PROD(S1.NO_NPP,S1.kd_produk_konfirmasi, to_char(sysdate,'dd/mm/yyyy'),3) 
                 + pkg_snop.getStockByNPP_PROD(S1.NO_NPP,S1.kd_produk_konfirmasi, to_char(sysdate,'dd/mm/yyyy'),4) STOCK_PROD
