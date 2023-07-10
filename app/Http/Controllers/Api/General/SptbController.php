@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Driver\LoginResource;
 use App\Models\Driver;
 use App\Models\GpsLog;
+use App\Models\Pat;
 use App\Models\Personal;
 use App\Models\SpprbH;
+use App\Models\SptbD2;
 use App\Models\SptbH;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,30 +19,43 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class ProyekController extends Controller
+class SptbController extends Controller
 {
-    public function proyekList($kd_pat)
+    public function sptbPrint($sptb)
     {
-        if($kd_pat == '0A'){
-            $data = DB::select("select distinct a.no_npp, a.nama_proyek, d.alamat_proyek, to_char(d.renc_pelaksanaan_1,'dd-mm-yyyy')||' s/d '||to_char(d.renc_pelaksanaan_2,'dd-mm-yyyy') as RENCANA_PELAKSANAAN 
-                from wos.npp a 
-                inner join wos.spnpp b on a.no_npp = b.no_npp
-                inner join wos.k_pesanan_d c on b.no_konfirmasi = c.no_konfirmasi
-                inner join wos.info_pasar_h d on A.NO_INFO = d.no_info  
-                where a.kd_sbu not in('R','Q','J') and substr(a.no_npp,1,2)>'16'");
-        }else{
-            $data = DB::select("select distinct a.no_npp, a.nama_proyek, d.alamat_proyek, to_char(d.renc_pelaksanaan_1,'dd-mm-yyyy')||' s/d '||to_char(d.renc_pelaksanaan_2,'dd-mm-yyyy') as rencana_pelaksanaan 
-                from wos.npp a 
-                inner join wos.spnpp b on a.no_npp = b.no_npp
-                inner join wos.k_pesanan_d c on b.no_konfirmasi = c.no_konfirmasi
-                inner join wos.info_pasar_h d on A.NO_INFO = d.no_info 
-                inner join hrms.tb_pat e on a.kd_pat = e.kd_pat 
-                where (a.kd_pat = '".$kd_pat."' or e.parent_kd_pat = '".$kd_pat."') and a.kd_sbu not in('R','Q','J') and substr(a.no_npp,1,2)>'16'");
+        $noSptb = str_replace('|', '/', $sptb);
+        $ppb = null;
+
+        $data = SptbH::find($noSptb);
+
+        // get ppb
+        $trxid = !empty($data->trxid)?$data->trxid:null;
+        if ($trxid) {
+            $arr = explode("-", $trxid);
+            $pat_ppb = Pat::where('kd_pat', $arr[1])->first();
+            $ppb = $pat_ppb->ket;
         }
-        return response()->json([
-            'message' => 'success',
-            'data' => $data
-        ])->setStatusCode(200, 'OK');
+
+        $sptbd2 = SptbD2::where('no_sptb', $noSptb)->get();
+        $detail2 = [];
+        if (count($sptbd2) > 0) {
+            foreach ($sptbd2 as $row) {
+                $detail2[$row->kd_produk] = [
+                    'stockid' => $row->stockid
+                ];
+            }
+        }
+
+        $pdf = Pdf::loadView('prints.sptb', [
+            'data' => $data,
+            'ppb' => $ppb,
+            'detail2' => $detail2,
+        ]);
+
+        $filename = "SPTB-SuratJalan";
+
+        return $pdf->setPaper('a4', 'portrait')
+            ->stream($filename . '.pdf');
     }
 
     public function proyekProgress($no_npp)

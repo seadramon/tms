@@ -259,9 +259,10 @@
                 $('#jns_sptb').val(result.spm.jns_spm).trigger('change');
                 $('#nama_pelanggan').val(result.spm.sppbh?.npp?.nama_pelanggan);
 
-                if(typeof result.spm.sppbh?.npp?.infoPasar?.region?.kabupaten_name !== typeof undefined){
-                    $('#tujuan').val(result.spm.sppbh?.npp?.infoPasar?.region?.kabupaten_name + ', ' + result.spm.sppbh?.npp?.infoPasar?.region?.kecamatan_name);
-                }
+                // if(typeof result.spm.sppbh?.npp?.infoPasar?.region?.kabupaten_name !== typeof undefined){
+                //     $('#tujuan').val(result.spm.sppbh?.npp?.infoPasar?.region?.kabupaten_name + ', ' + result.spm.sppbh?.npp?.infoPasar?.region?.kecamatan_name);
+                // }
+                $('#tujuan').val(result.spm.sppbh.tujuan);
                 
                 $('#nama_proyek').val(result.spm.sppbh?.npp?.nama_proyek);
                 $('#angkutan').val(result.spm.vendor?.nama);

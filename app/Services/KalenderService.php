@@ -24,7 +24,8 @@ class KalenderService {
     {
         $query = SpmH::whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($this->start)), date('Y-m-d 23:59:59', strtotime($this->end))]);
 		if($nopol){
-			$query->whereNoPol($nopol);
+			// $query->whereNoPol($nopol);
+			$query->whereRaw("replace(no_pol, ' ','') ='".$nopol."'");
 		}
 		$data = $query->get()
 			->groupBy(function ($item, $key) {

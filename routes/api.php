@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Pelanggan\PelangganController;
 use App\Http\Controllers\Api\Driver\LoginController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\General\ProyekController;
+use App\Http\Controllers\Api\General\SptbController;
 use App\Http\Controllers\Api\Internal\InternalController;
 use App\Http\Controllers\Api\Internal\KalenderController;
 use App\Http\Controllers\Api\Internal\NppController;
@@ -34,6 +35,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::get('proyek-list/{kd_pat}', [ProyekController::class, 'proyekList'])->name('proyek-list');
         Route::get('proyek-progress/{no_npp}', [ProyekController::class, 'proyekProgress'])->name('proyek-progress');
         Route::get('proyek-progress-tipe/{no_npp}', [ProyekController::class, 'proyekProgressTipe'])->name('proyek-progress-tipe');
+        Route::get('sptb-print/{sptb}', [SptbController::class, 'sptbPrint'])->name('general-sptb-print');
     });
 
     Route::name('driver.')->prefix('driver')->namespace('Driver')->group(function() {

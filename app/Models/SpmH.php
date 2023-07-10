@@ -53,7 +53,7 @@ class SpmH extends Model
 
     public function sptbh()
     {
-        return $this->belongsTo(SptbH::class, 'no_spm', 'no_spm');
+        return $this->hasOne(SptbH::class, 'no_spm', 'no_spm');
     }
 
     public function armada()

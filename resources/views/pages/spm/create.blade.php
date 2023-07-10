@@ -128,15 +128,18 @@ $('#no_spp').on("change", function(e) {
             $('#pbb_muat').empty();
             if(result){
                 var temp = '';
-                for(i = 0; i < result.data_1.length; i++){
-                    if(temp == result.data_1[i].pat.kd_pat){
-                        return false;
-                    }else{
-                        $('#pbb_muat').append('<option value="'+ result.data_1[i].pat.kd_pat +'">'+ result.data_1[i].pat.kd_pat +' | '+ result.data_1[i].pat.ket +'</option>');
-                        var temp = result.data_1[i].pat.kd_pat;
-                    }
+                $.each(result.lokasi_muat, function(key, value){
+                    $('#pbb_muat').append('<option value="'+ key +'">'+ key +' | '+ value +'</option>');
+                });
+                // for(i = 0; i < result.data_1.length; i++){
+                //     if(temp == result.data_1[i].pat.kd_pat){
+                //         return false;
+                //     }else{
+                //         $('#pbb_muat').append('<option value="'+ result.data_1[i].pat.kd_pat +'">'+ result.data_1[i].pat.kd_pat +' | '+ result.data_1[i].pat.ket +'</option>');
+                //         var temp = result.data_1[i].pat.kd_pat;
+                //     }
 
-                }
+                // }
             }
 
         }

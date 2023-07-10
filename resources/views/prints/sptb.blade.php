@@ -283,7 +283,7 @@
                         Dikirim oleh / <br>
                         <i>Deliver by</i><br>
                         @if (!empty($data->spmh->admDistribusi))
-                            <img alt="Logo" src="data:image/png;base64, {{ $data->admDistribusi->signature_base_64 }}" class="logo" height="50px;"/><br>
+                            <img alt="Logo" src="data:image/png;base64, {{ $data->spmh->admDistribusi->signature_base_64 }}" class="logo" height="50px;"/><br>
                         @endif
                         {{ !empty($data->spmh->admDistribusi)?$data->spmh->admDistribusi->full_name:"-" }}
                         <hr class="new1">

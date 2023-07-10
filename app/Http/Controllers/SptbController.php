@@ -35,9 +35,7 @@ class SptbController extends Controller
             });
         }else{
             if(session('TMP_KDWIL') != '0A'){
-                $query->whereHas('npp', function($sql){
-                    $sql->where('kd_pat', session('TMP_KDWIL'));
-                });
+                $query->where('kd_pat', session('TMP_KDWIL'));
             }
         }
 
@@ -86,7 +84,7 @@ class SptbController extends Controller
             })
             ->addColumn('status', function($model) {
                 $teks = '';
-                if($model->app_pelanggan = 1){
+                if($model->app_pelanggan == 1){
                     $teks = '<span class="badge badge-light-success mr-2 mb-2">Received</i></span>';
                 }else{
                     $teks = '<span class="badge badge-light-warning mr-2 mb-2">onProgress</i></span>';
@@ -102,7 +100,11 @@ class SptbController extends Controller
     
     public function create(Request $request)
     {
-        $no_spm = SpmH::pluck('no_spm', 'no_spm')->toArray();
+        if(session('TMP_KDWIL') != '0A'){
+            $no_spm = SpmH::doesntHave('sptbh')->where('tgl_spm', '>=', date('Y-m-d 00:00:00', strtotime('-1 years')))->where('pat_to', session('TMP_KDWIL'))->pluck('no_spm', 'no_spm')->toArray();
+        }else{
+            $no_spm = SpmH::doesntHave('sptbh')->where('tgl_spm', '>=', date('Y-m-d 00:00:00', strtotime('-1 years')))->pluck('no_spm', 'no_spm')->toArray();
+        }
             
         $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
 
@@ -121,7 +123,7 @@ class SptbController extends Controller
 
     public function getSpm(Request $request)
     {
-        $spmH = SpmH::with(['sppbh', 'vendor', 'pat', 'spmd.produk'])
+        $spmH = SpmH::with(['sppbh.npp.infoPasar.region', 'vendor', 'pat', 'spmd.produk'])
             ->where('no_spm', $request->no_spm)
             ->first();
 
@@ -152,6 +154,7 @@ class SptbController extends Controller
 
     public function store(Request $request, FlasherInterface $flasher)
     {
+        $kdPat = session("TMP_KDWIL") ?? '1A';
         try {
             DB::beginTransaction();
                         
@@ -159,9 +162,10 @@ class SptbController extends Controller
                 'no_spm'        => 'required'
             ])->validate();
 
-            $spmH = SpmH::find($request->no_spm);
-
-            $noDokumen = 'SPtB/2E/05';
+            $spmH = SpmH::with('sppbh')->find($request->no_spm);
+            $active_bl = DB::select("select  WOS.\"FNC_GETBL\" (to_Date('" . date('d/m/Y') . "','dd/mm/yyyy')) bulan from dual")[0]->bulan;
+            $month = DB::select("select fnc_getbl(to_date(sysdate)) as month from dual");
+            $noDokumen = 'SPtB/'.$kdPat.'/'. substr($month[0]->month, 0, 2);
 
             $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
             
@@ -189,14 +193,14 @@ class SptbController extends Controller
 
             $month = DB::select("select fnc_getbl(to_date(sysdate)) as month from dual");
 
-            $noSptb = $newSequence . '/SPtB/' . ($spmH->pat_to ?? '2E') . '/' . substr($month[0]->month, 0, 2) . '/' . date('Y');
+            $noSptb = $newSequence . '/' . $noDokumen . '/' . date('Y');
 
-            $kdPat = session("TMP_KDWIL") ?? '1A';
 
             $sptbH = new SptbH();
             $sptbH->no_spm = $request->no_spm;
             $sptbH->jns_sptb = $request->jns_sptb;
-            $sptbH->tgl_berangkat = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_berangkat))."'), 'YYYY-MM-DD')");
+            $sptbH->tgl_berangkat = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->tgl_berangkat))."'), 'YYYY-MM-DD')"); //jam_berangkat
+            $sptbH->jam_berangkat = $request->jam_berangkat;
             $sptbH->ket = $request->ket;
             $sptbH->tujuan = $request->tujuan;
             $sptbH->angkutan = $request->angkutan;
@@ -206,9 +210,10 @@ class SptbController extends Controller
             $sptbH->jarak_km = $request->jarak_km;
             $sptbH->no_sptb = $noSptb;
             $sptbH->tgl_sptb = date('Y-m-d');
-            $sptbH->no_spprb = $spmH->sppbh?->no_spprb;
-            $sptbH->no_npp = $spmH->no_npp;
+            $sptbH->no_spprb = $spmH->sppbh->no_spprb ?? null;
+            $sptbH->no_npp = $spmH->sppbh->no_npp ?? null;
             $sptbH->app_driver = 0;
+            $sptbH->app_pelanggan = 0;
             $sptbH->barcode_img = decbin(ord($noSptb));
             $sptbH->kd_pat = $kdPat;
             $sptbH->created_by = session('TMP_NIP') ?? '12345';
@@ -217,6 +222,11 @@ class SptbController extends Controller
 
             $j = 0;
 
+            $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
+                            ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
+                            ->first();
+            $lasttrxidnum = $maxTrxid->max_trxid ?? 0;
+            $counter = 0;
             for($i=0; $i < count($request->kd_produk); $i++){
                 $sppbD = SppbD::where('no_sppb', $spmH->no_sppb)
                     ->where('kd_produk', $request->kd_produk[$i])
@@ -228,24 +238,27 @@ class SptbController extends Controller
                 $sptbD->vol = $sppbD->segmental == 1 ? ($request->vol[$i] / $sppbD->jml_segmen) : $request->vol[$i];
                 $sptbD->save();
 
-                for($j; $j < $request->vol[$i]; $j++){
-                    $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
-                        ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
-                        ->first();
-
-                    $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
+                for($j=0; $j < $request->vol[$i]; $j++){
+                // for($j; $j < $request->vol[$i]; $j++){
+                    // $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
+                    //         ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
+                    //         ->first();
+                    // $lasttrxidnum = $maxTrxid->max_trxid ?? 0;
                     $n2 = str_pad($lasttrxidnum + 1, 6, 0, STR_PAD_LEFT);
 
                     $sptbD2 = new SptbD2();
                     $sptbD2->no_sptb = $noSptb;
                     $sptbD2->kd_produk = $request->kd_produk[$i];
-                    $sptbD2->tgl_produksi = DB::raw("TO_DATE(('".date('Y-m-d', strtotime($request->child_tgl_produksi[$j]))."'), 'YYYY-MM-DD')");
-                    $sptbD2->stockid = $request->child_kd_produk[$j];
+                    $sptbD2->tgl_produksi = DB::raw("TO_DATE('".date('Y-m-d', strtotime($request->child_tgl_produksi[$counter]))."', 'YYYY-MM-DD')");
+                    $sptbD2->stockid = $request->child_kd_produk[$counter];
                     $sptbD2->vol = 1;
                     $sptbD2->kd_pat = $kdPat;
-                    $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . ($n2);
-                    $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . ($n2);
+                    // $sptbD2->trxid_tpd2 = intval($lasttrxidnum) + 1;
+                    $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . $n2;
+                    $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . $n2;
                     $sptbD2->save();
+                    $lasttrxidnum++;
+                    $counter++;
                 }
             }
 
@@ -399,19 +412,19 @@ class SptbController extends Controller
 
             $kdPat = session("TMP_KDWIL") ?? '1A';
 
-            SptbD2::where('no_sptb', $no_sptb)->delete();
+            // SptbD2::where('no_sptb', $no_sptb)->delete();
 
             $j = 0;
             
-            $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
-                ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
-                ->first();
-            $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
+            // $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
+            //     ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
+            //     ->first();
+            // $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
 
             for($i=0; $i < count($request->kd_produk); $i++){
                 for($j; $j < $request->vol[$i]; $j++){
-                    $lasttrxidnum = $lasttrxidnum + 1;
-                    $n2 = str_pad($lasttrxidnum, 6, 0, STR_PAD_LEFT);
+                    // $lasttrxidnum = $lasttrxidnum + 1;
+                    // $n2 = str_pad($lasttrxidnum, 6, 0, STR_PAD_LEFT);
 
                     $sptbD2 = new SptbD2();
                     $sptbD2->no_sptb = $no_sptb;
@@ -420,8 +433,8 @@ class SptbController extends Controller
                     $sptbD2->stockid = $request->child_kd_produk[$j];
                     $sptbD2->vol = 1;
                     $sptbD2->kd_pat = $kdPat;
-                    $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . ($n2);
-                    $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . ($n2);
+                    // $sptbD2->trxid_tpd2 = 'TRX.' . $kdPat . '.00.' . date('Y') . '.' . date('m') . '.' . ($n2);
+                    // $sptbD2->trxid = 'TRX.' . $kdPat . '.SPTBD2.' . date('Y') . '.' . date('m') . '.' . ($n2);
                     $sptbD2->save();
                 }
             }

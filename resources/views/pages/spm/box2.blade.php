@@ -40,7 +40,7 @@
                     <td class="text-center">0</td>
                     <td class="text-center">{{ ($row->spp_vol_btg - $row->sppdis_vol_btg) }}</td>
                     <td class="text-center">0</td>
-                    <td class="text-center">{{ round((($row->spp_vol_btg - $row->sppdis_vol_btg) / $row->spp_vol_btg) * 100, 2) }}%</td>
+                    <td class="text-center">{{ $row->spp_vol_btg > 0 ? round((($row->spp_vol_btg - $row->sppdis_vol_btg) / $row->spp_vol_btg) * 100, 2) : 0 }}%</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -119,7 +119,7 @@
                     @foreach($detail_spp as $row)
                     <tr class="fw-semibold fs-6 text-gray-800 border border-gray-400">
                         <td class="text-center" style="padding-left: 10px;">
-                            <input class="form-control" name="tipe_produk_select[]" readonly value="{{ $row->kode_produk }}" />
+                            <input class="form-control" name="tipe_produk_select[]" readonly value="{{ $row->type_produk }}" />
                         </td>
                         <td class="text-center" width="15%">
                             <input type="number"

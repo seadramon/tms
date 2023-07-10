@@ -22,6 +22,7 @@ use App\Models\Vendor;
 use App\Models\Npp;
 use App\Models\Sbu;
 use App\Models\SptbH;
+use App\Models\Views\VSpprbRi;
 use Yajra\DataTables\Facades\DataTables;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\DB;
@@ -70,14 +71,15 @@ class SpmController extends Controller
 
     public function data(Request $request)
     {
-        $query = SpmH::with(['sppb', 'vendornya']);
+        $query = SpmH::with(['sppb', 'vendornya', 'sptbh']);
         if(Auth::check()){
             $query->whereVendorId(Auth::user()->vendor_id);
         }
         if(!Auth::check() && session('TMP_KDWIL') != '0A'){
 			$query->whereHas('sppb.npp', function($sql){
                 $sql->where('kd_pat', session('TMP_KDWIL'));
-            });
+            })
+            ->orWhere('pat_to', session('TMP_KDWIL'));
 		}
         return DataTables::eloquent($query)
             ->editColumn('tgl_spm', function ($model) {
@@ -110,7 +112,7 @@ class SpmController extends Controller
                         if(in_array('print', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . route('spm.print', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Print</a></li>';
                         }
-                        if(in_array('buat_sptb', $action)){
+                        if(in_array('buat_sptb', $action) && $model->sptbh == null){
                             $list .= '<li><a class="dropdown-item" href="' . route('sptb.create', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">Buat SPTB</a></li>';
                         }
                         if(in_array('edit', $action)){
@@ -144,7 +146,17 @@ class SpmController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(){
-        $no_spp = SppbH::where('app2',1)->orWhere('app3',1)->get();
+        if(session('TMP_KDWIL') != '0A'){
+            $no_spp = SppbH::whereHas('spprb', function($sql){
+                    $sql->where('kd_pat', session('TMP_KDWIL'));
+                })
+                ->where(function($sql){
+                    $sql->where('app2',1)->orWhere('app3',1);
+                })
+                ->get();
+        }else{
+            $no_spp = SppbH::where('app2',1)->orWhere('app3',1)->get();
+        }
         return view('pages.spm.create', [
             'no_spp' => $no_spp
         ]);
@@ -154,11 +166,22 @@ class SpmController extends Controller
 
         $data = SppbH::select('no_npp','jadwal1','jadwal2')->where('no_sppb',$request->no_spp)->first();
         $data_1 = SpprbH::with('pat')->where('no_npp',$data->no_npp)->whereNotNull('pat_to')->get();
+        $lokasi_muat = VSpprbRi::with(['produk', 'ppb_muat'])
+            ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
+            ->select('v_spprb_ri.pat_to')
+            ->where('v_spprb_ri.no_npp', $data->no_npp)
+            ->get()
+            ->mapWithKeys(function($item){
+                return [$item->pat_to => $item->ppb_muat->ket];
+            })
+            ->unique()
+            ->all();
         return response()->json([
             'data_1' => $data_1,
             'min' => date("Y-m-d", strtotime($data->jadwal1)),
-            'max' => date("Y-m-d", strtotime($data->jadwal2))]
-        );
+            'max' => date("Y-m-d", strtotime($data->jadwal2)),
+            'lokasi_muat' => $lokasi_muat,
+        ]);
 
     }
 
@@ -297,7 +320,7 @@ class SpmController extends Controller
             // ---------
             $no_npp = SppbH::select('no_npp')->where('no_sppb',$no_sppb)->first();
             $no_spprb = SpprbH::with('pat')->where('no_npp',$no_npp->no_npp)->first();
-            $pat_to = $no_spprb->pat->kd_pat;
+            $pat_to = $no_spprb->kd_pat;
             // -----------
 
             $vendor_angkutan = $request->vendor;
@@ -352,9 +375,10 @@ class SpmController extends Controller
             // store to smp_d
             $i = 0;
             foreach($request->keterangan_select as $row){
+                $produk = explode(' - ', $request->tipe_produk_select[$i]);
                 $SpmD = new SpmD();
                 $SpmD->no_spm = $no_spm;
-                $SpmD->kd_produk = $request->tipe_produk_select[$i];
+                $SpmD->kd_produk = $produk[0];
                 $SpmD->vol = $request->volume_produk_select[$i];
                 $SpmD->ket = $request->keterangan_select[$i];
                 $SpmD->save();
@@ -677,7 +701,8 @@ class SpmController extends Controller
             // store to smp_d
             $i = 0;
             foreach($request->keterangan_select as $row){
-                $SpmD = SpmD::where('no_spm', $no_spm)->where('kd_produk',$request->tipe_produk_select[$i])->first();
+                $produk = explode(' - ', $request->tipe_produk_select[$i]);
+                $SpmD = SpmD::where('no_spm', $no_spm)->where('kd_produk', $produk[0])->first();
                 if($request->volume_produk_select[$i] > 0){
                     $SpmD->vol = $request->volume_produk_select[$i];
                     $SpmD->ket = $request->keterangan_select[$i];
