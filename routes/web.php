@@ -19,6 +19,7 @@ use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaControll
 use App\Http\Controllers\LoginVendorController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Report\EvaluasiVendorController;
 use App\Http\Controllers\Report\MonitoringDistribusiController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
@@ -191,6 +192,15 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::resource('/',  PemenuhanArmadaController::class)->except([
 			'destroy', 'show'
 		])->parameters(['' => 'report-pemenuhan-armada']);
+	});
+	Route::group(['prefix' => 'report-evaluasi-vendor', 'as' => 'report-evaluasi-vendor.'], function(){
+		Route::post('/data', [EvaluasiVendorController::class, 'data'])->name('data');
+		// Route::post('/chart', [EvaluasiVendorController::class, 'chart'])->name('chart');
+		// Route::post('/box-data', [EvaluasiVendorController::class, 'boxData'])->name('box-data');
+
+	    Route::resource('/',  EvaluasiVendorController::class)->except([
+			'destroy', 'show'
+		])->parameters(['' => 'report-evaluasi-vendor']);
 	});
 	
 	Route::group(['prefix' => 'report-monitoring-distribusi', 'as' => 'report-monitoring-distribusi.'], function(){
