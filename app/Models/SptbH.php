@@ -59,9 +59,9 @@ class SptbH extends Model
             });
         }
         if($type == 'internal' && $value != '0A'){
-            return $query->whereHas('npp', function($sql) use($value) {
-                $sql->whereKdPat($value);
-            });
+            $query->whereKdPat($value);
+            // return $query->whereHas('npp', function($sql) use($value) {
+            // });
         }
         return $query;
     }
