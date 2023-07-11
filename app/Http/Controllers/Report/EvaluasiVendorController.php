@@ -38,7 +38,7 @@ class EvaluasiVendorController extends Controller
             $vendor_id = $vendor;
         }else{
             $vendor = Vendor::get()->pluck('nama', 'vendor_id')->toArray();
-            $vendor_id = $labelSemua + $vendor;
+            $vendor_id = $vendor;
         }
 
         $tipe = [
@@ -59,18 +59,24 @@ class EvaluasiVendorController extends Controller
 
     public function data(Request $request)
     {
-        $query = Sp3::with('vendor', 'npp');
-        // $query = SpmH::select('spm_h.no_pol', 'spm_h.vendor_id', 'spm_h.no_spm', 'spm_h.no_sppb', 'spm_h.tgl_spm', 'sptb_h.no_npp as no_npp', 'tb_pat.ket as ket', 'sptb_h.no_sptb as no_sptb',
-        //     'sptb_h.tgl_sptb as tgl_sptb', 'vendor.nama as nama_vendor', 'tms_armadas.detail as jenis_armada')
-        //     ->leftJoin('sppb_h', 'sppb_h.no_sppb', '=', 'spm_h.no_sppb')
-        //     ->leftJoin('sptb_h', 'sptb_h.no_spm', '=', 'spm_h.no_spm')
-        //     ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'sptb_h.kd_pat')
-        //     ->leftJoin('vendor', 'vendor.vendor_id', '=', 'spm_h.vendor_id')
-        //     ->leftJoin('tms_armadas', 'tms_armadas.nopol', '=', 'spm_h.no_pol');
+        $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
+        $query = Sp3::with('vendor', 'sp3D', 'npp', 'sptbh_by_npp')
+            ->with([
+                'sptbh'=> function($sql) use($request) {
+                    $sql->whereHas('spmh', function($sql1) use($request) {
+                        $sql1->where('vendor_id', $request->vendor_id);
+                    });
+                    $sql->with('sptbd', 'sptbd2', 'spmh');
+                }
+            ])
+            ->withSum('sp3D', 'vol_akhir')
+            ->join(DB::raw($joinQuery), function($join) {
+                $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
+            })->select('sp3_h.*');
 
-        // if($request->kd_pat){
-        //     $query->where('sp3_h.kd_pat', $request->kd_pat);
-        // }
+        if($request->kd_pat){
+            $query->where('sp3_h.kd_pat', $request->kd_pat);
+        }
 
         if($request->vendor_id){
             $query->where('sp3_h.vendor_id', $request->vendor_id);
@@ -89,11 +95,51 @@ class EvaluasiVendorController extends Controller
             ->addColumn('bulan', function ($model) {
                 return date('M', strtotime($model->tgl_sp3));
             })
+            ->addColumn('volume', function ($model) {
+                return $model->sp3D->sum('vol_akhir');
+            })
+            ->addColumn('volume_diterima', function ($model) {
+                $v = $model->sp3D->sum('vol_akhir');
+                $vr = $model->sptbh->sum(function($item){
+                    return $item->sptbd2->filter(function($item1){ return $item1->kondisi_produk == 'rusak'; })->sum('vol');
+                });
+                return $v - $vr;
+            })
+            ->addColumn('volume_rusak', function ($model) {
+                return $model->sptbh->sum(function($item){
+                    return $item->sptbd2->filter(function($item1){ return $item1->kondisi_produk == 'rusak'; })->sum('vol');
+                });
+            })
+            ->addColumn('nilai_mutu', function ($model) {
+                $v = $model->sp3D->sum('vol_akhir');
+                $vr = $model->sptbh->sum(function($item){
+                    return $item->sptbd2->filter(function($item1){ return $item1->kondisi_produk == 'rusak'; })->sum('vol');
+                });
+                return round(($v - $vr) / $v * 100, 2);
+            })
+            ->addColumn('terlambat', function ($model) {
+                $v = $model->sp3D->sum('vol_akhir');
+                $late = $model->sptbh->filter(function($item1){ 
+                    return strtotime($item1->tgl_sptb) > strtotime($item1->spmh->tgl_spm); 
+                })->sum(function($item){
+                    return $item->sptbd2->sum('vol');
+                });
+                return round($late / $v * 100, 2) . '%';
+            })
+            ->addColumn('tepat_waktu', function ($model) {
+                $v = $model->sp3D->sum('vol_akhir');
+                $late = $model->sptbh->filter(function($item1){ 
+                    return strtotime($item1->tgl_sptb) > strtotime($item1->spmh->tgl_spm); 
+                })->sum(function($item){
+                    return $item->sptbd2->sum('vol');
+                });
+                return round(($v - $late) / $v * 100, 2) . '%';
+            })
             ->editColumn('tgl_sp3', function ($model) {
                 return date('Ymd', strtotime($model->tgl_sp3));
             })
             ->editColumn('no_sp3', function ($model) {
-                return $model->no_sp3 . '<br>' . $model->no_npp . ' - ' . $model->npp->nama_proyek ?? '';
+                return $model->no_sp3 . '<br>' . $model->no_npp . ' - ' . ($model->npp->nama_proyek ?? '');
             })
             // ->editColumn('tgl_sptb', function ($model) {
             //     return $model->tgl_sptb ? Carbon::createFromFormat('Y-m-d H:i:s', $model->tgl_sptb)->format('d-m-Y') : '-';

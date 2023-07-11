@@ -117,12 +117,12 @@
                     //     className: 'btn-sm btn-success',
                     //     action: exportDatatables
                     // },
-                    {
-                        extend: 'pdf',
-                        text: 'Export PDF',
-                        className: 'btn-sm btn-danger',
-                        action: exportDatatables
-                    }
+                    // {
+                    //     extend: 'pdf',
+                    //     text: 'Export PDF',
+                    //     className: 'btn-sm btn-danger',
+                    //     action: exportDatatables
+                    // }
                 ],
 	            ajax: {
                     url: "{{ route('report-evaluasi-vendor.data') }}",
@@ -140,14 +140,18 @@
 	                // {data: 'tgl_sp3', name: 'tgl_sp3', defaultContent: '-', class: "hide hidden"},
 	                {data: 'bulan', defaultContent: '-', orderable: false, searchable: false},
 	                {data: 'no_sp3', defaultContent: '-'},
-	                // {data: 'ket', defaultContent: '-'},
-	                // {data: 'no_spm', defaultContent: '-'},
-	                // {data: 'tgl_spm', defaultContent: '-'},
-	                // {data: 'no_sptb', defaultContent: '-'},
-	                // {data: 'tgl_sptb', defaultContent: '-'},
-	                // {data: 'nama_vendor', defaultContent: '-'},
-	                // {data: 'no_pol', defaultContent: '-'},
-	                // {data: 'jenis_armada', defaultContent: '-'}
+	                {data: 'volume', defaultContent: '-'},
+	                {data: 'ket', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'volume', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'volume_diterima', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'volume_rusak', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'nilai_mutu', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'tepat_waktu', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'terlambat', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'ket', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'ket', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'ket', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'ket', defaultContent: '-', orderable: false, searchable: false},
 	            ],
 	        });
 

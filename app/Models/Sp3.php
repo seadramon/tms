@@ -51,6 +51,11 @@ class Sp3 extends Model
                         $sql1->where('vendor_id', $this->vendor_id);
                     });
     }
+    
+    public function sptbh()
+    {
+        return $this->hasMany(SptbH::class, 'no_npp', 'no_npp');
+    }
 
     public function sp3D2()
     {
