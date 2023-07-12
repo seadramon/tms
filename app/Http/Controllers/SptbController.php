@@ -89,9 +89,6 @@ class SptbController extends Controller
                 }else{
                     $teks = '<span class="badge badge-light-warning mr-2 mb-2">onProgress</i></span>';
                 }
-                // if($model->app2 == 1 || $model->no_pol != null){
-                //     $teks .= '<span class="badge badge-light-success mr-2 mb-2">Nopol&nbsp;<i class="fas fa-check text-success"></i></span>';
-                // }
                 return $teks;
             })
             ->rawColumns(['menu', 'status'])

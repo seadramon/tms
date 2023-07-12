@@ -267,10 +267,10 @@
                                 </select>
                             </div>
                 
-                            <div class="form-group col-lg-6">
+                            {{-- <div class="form-group col-lg-6">
                                 <label class="form-label">Spesifikasi</label>
                                 {!! Form::text('spesifikasi', 'TBC', ['class'=>'form-control', 'id'=>'spesifikasi', 'readonly']) !!}
-                            </div>
+                            </div> --}}
                 
                             <div class="form-group col-lg-3">
                                 <label class="form-label">Tanggal Penyerahan</label>

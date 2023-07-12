@@ -31,7 +31,7 @@ class MonitoringDistribusiController extends Controller
             $year = date('Y', strtotime('-' . $i . ' years'));
             $tahun[$year] = $year;
         }
-        $periode_minggu = KalenderMg::whereTh('2022')
+        $periode_minggu = KalenderMg::whereTh(date('Y'))
 			->whereKdPat('1A')
 			->get()
 			->sortBy(function ($item) {
