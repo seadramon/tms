@@ -26,6 +26,7 @@ class DriverController extends Controller
             $sptb = SptbH::findOrFail($request->sptb);
             $sptb->app_pelanggan = 1;
             $sptb->tgl_sampai = date('Y-m-d H:i:s');
+            $sptb->jam_sampai = date('H:i');
             $sptb->penerima_nama = $request->penerima;
             if ($request->hasFile('ttd')) {
                 $file = $request->file('ttd');
@@ -129,6 +130,7 @@ class DriverController extends Controller
             'nama_pelanggan' => $sptb->npp->nama_pelanggan,
             'angkutan' => $sptb->angkutan,
             'no_pol' => $sptb->no_pol,
+            'app_pelanggan' => $sptb->app_pelanggan,
             'tujuan' => $sptb->tujuan,
             'nama_penerima' => $sptb->penerima_nama,
             'tgl_sampai' => $sptb->tgl_sampai ? date('d/m/Y', strtotime($sptb->tgl_sampai)) : '',

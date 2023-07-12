@@ -198,5 +198,61 @@ class PelangganController extends Controller
         ], $code);
     }
 
+    public function progressProyek($no_hp)
+    {
+        $sql = "select distinct a.no_npp, e.nama_proyek, d.alamat_proyek, to_char(d.renc_pelaksanaan_1,'dd-mm-yyyy')||'/'||to_char(d.renc_pelaksanaan_2,'dd-mm-yyyy') as rencana_pelaksanaan 
+            from usradm.usr_pelanggan_d a 
+            inner join wos.spnpp b on a.no_npp = b.no_npp
+            inner join wos.k_pesanan_d c on b.no_konfirmasi = c.no_konfirmasi
+            inner join wos.npp e on a.no_npp = e.no_npp
+            inner join wos.info_pasar_h d on e.NO_INFO = d.no_info  
+            where a.no_hp = '".$no_hp."'";
+
+        $results = DB::select("select distinct a.no_npp, e.nama_proyek, d.alamat_proyek, to_char(d.renc_pelaksanaan_1,'dd-mm-yyyy')||'/'||to_char(d.renc_pelaksanaan_2,'dd-mm-yyyy') as rencana_pelaksanaan 
+            from usradm.usr_pelanggan_d a 
+            inner join wos.spnpp b on a.no_npp = b.no_npp
+            inner join wos.k_pesanan_d c on b.no_konfirmasi = c.no_konfirmasi
+            inner join wos.npp e on a.no_npp = e.no_npp
+            inner join wos.info_pasar_h d on e.NO_INFO = d.no_info  
+            where a.no_hp = '" . $no_hp . "'");
+        
+        $data = [];
+        foreach($results as $row){
+            $data[] = [     
+                "no_npp" => $row->no_npp,
+                "nama_proyek" => $row->nama_proyek,
+                "alamat_proyek" => $row->alamat_proyek,
+                "rencana_pelaksanaan" => $row->rencana_pelaksanaan
+            ];
+        }
+        return response()->json([
+            'message' => 'success',
+            'data' => $data
+        ])->setStatusCode(200, 'OK');
+    }
+    
+    public function totalPengiriman(Request $request)
+    {
+        $sql = "select count(no_sptb)jumlah_sptb
+        from sptb_h a
+        inner join usradm.usr_pelanggan_d e on a.no_npp = e.no_npp                                        
+        where trunc(a.tgl_berangkat) = to_date('".$request->curr_date."','dd/mm/yyyy') and app_pelanggan = 0 and e.no_hp ='".$request->no_hp."'";
+
+        $start = date('d/m/Y', strtotime("-7 days " . $request->curr_date));
+        $end = date('d/m/Y', strtotime($request->curr_date));
+        $results = DB::select("select count(no_sptb) as jumlah_sptb
+            from sptb_h a
+            inner join usradm.usr_pelanggan_d e on a.no_npp = e.no_npp                                        
+            where trunc(a.tgl_berangkat) between to_date('".$start."','dd/mm/yyyy') and to_date('".$end."','dd/mm/yyyy') and app_pelanggan = 0 and e.no_hp ='".$request->no_hp."'");
+        
+        $data = [
+            'jumlah_sptb' => $results[0]->jumlah_sptb
+        ];
+        return response()->json([
+            'message' => 'success',
+            'data' => $data
+        ])->setStatusCode(200, 'OK');
+    }
+
 }
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Internal\InternalController;
 use App\Http\Controllers\Api\Internal\KalenderController;
 use App\Http\Controllers\Api\Internal\NppController;
 use App\Http\Controllers\Api\Internal\PelangganController as InternalPelangganController;
+use App\Http\Controllers\Api\Pelanggan\HistoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,11 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::post('login', [PelangganController::class, 'login'])->name('login');
         Route::get('produk-detail', [PelangganController::class, 'produkDetail'])->name('produk-detail');
         Route::post('produk-konfirmasi', [PelangganController::class, 'produkKonfirmasi'])->name('produk-konfirmasi');
+        Route::get('progress-proyek/{no_hp}', [PelangganController::class, 'progressProyek'])->name('progress-proyek');
+        Route::get('total-pengiriman', [PelangganController::class, 'totalPengiriman'])->name('total-pengiriman');
+
+        Route::post('npp-list/{no_hp}', [HistoryController::class, 'nppList'])->name('history-npp-list');
+        Route::post('sptb-list-by-npp/{no_npp}', [HistoryController::class, 'sptbListByNpp'])->name('history-sptb-list-by-npp');
 
         Route::middleware('auth:sanctum')->group(function() {
             Route::post('login1', [PelangganController::class, 'login1'])->name('login1');
