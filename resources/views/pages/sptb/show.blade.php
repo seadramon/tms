@@ -112,7 +112,7 @@
 
                         <div class="form-group col-lg-6">
                             <label class="form-label">Dari Pabrik</label>
-                            {!! Form::text('dari_pabrik', null, ['class'=>'form-control', 'id'=>'dari_pabrik', 'readonly']) !!}
+                            {!! Form::text('dari_pabrik', $data->ppb_muat->ket ?? null, ['class'=>'form-control', 'id'=>'dari_pabrik', 'readonly']) !!}
                         </div>
 
                         <div class="form-group col-lg-6">

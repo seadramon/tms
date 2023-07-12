@@ -51,7 +51,7 @@ class SptbController extends Controller
                     $list .= '<li><a class="dropdown-item" href="' . route('sptb.print', str_replace('/', '|', $model->no_sptb)) . '">Print</a></li>';
                 }else{
                     $action = json_decode(session('TMS_ACTION_MENU'));
-                    if(in_array('edit', $action)){
+                    if(in_array('edit', $action) && $model->app_pelanggan != '1' && in_array($model->no_pol, [null, ""])){
                         $list .= '<li><a class="dropdown-item" href="' . route('sptb.edit', str_replace('/', '|', $model->no_sptb)) . '">Edit</a></li>';
                     }
                     if(in_array('view', $action)){
@@ -64,10 +64,10 @@ class SptbController extends Controller
                         // $list .= '<li><a class="dropdown-item" href="http://10.3.1.80/genreport/genreport.asp?RptName=sptb2020.rpt&fparam='.$model->no_sptb.'&ftype=5&keyId=OS">Print Test</a></li>';
                         $list .= '<li><a class="dropdown-item" href="' . route('sptb.print', str_replace('/', '|', $model->no_sptb)) . '">Print</a></li>';
                     }
-                    if($model->app_pelanggan = 1 && in_array('penilaian_mutu', $action)){
+                    if($model->app_pelanggan == '1' && in_array('penilaian_mutu', $action)){
                         $list .= '<li><a class="dropdown-item" href="' . route('sptb.penilaian-mutu', str_replace('/', '|', $model->no_sptb)) . '">Penilaian Mutu</a></li>';
                     }
-                    if($model->app_pelanggan = 1 && in_array('penilaian_pelayanan', $action)){
+                    if($model->app_pelanggan == '1' && in_array('penilaian_pelayanan', $action)){
                         $list .= '<li><a class="dropdown-item penilaian-pelayanan" href="javascript:void(0)" data-sptb="' . $model->no_sptb . '">Penilaian Pelayanan</a></li>';
                     }
                 }
@@ -275,7 +275,7 @@ class SptbController extends Controller
 
     public function show($no_sptb)
     {
-        $data = SptbH::find(str_replace('|', '/', $no_sptb));
+        $data = SptbH::with('ppb_muat')->find(str_replace('|', '/', $no_sptb));
         
         $no_spm = SpmH::where('app2', 1)
             ->pluck('no_spm', 'no_spm')
