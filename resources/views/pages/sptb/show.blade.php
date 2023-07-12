@@ -59,7 +59,7 @@
 
                         <div class="form-group col-lg-3">
                             <label class="form-label">Nama Pelanggan</label>
-                            {!! Form::text('nama_pelanggan', null, ['class'=>'form-control', 'id'=>'nama_pelanggan', 'readonly']) !!}
+                            {!! Form::text('nama_pelanggan', $data->npp->nama_pelanggan ?? null, ['class'=>'form-control', 'id'=>'nama_pelanggan', 'readonly']) !!}
                         </div>
 
                         <div class="form-group col-lg-3">
@@ -69,7 +69,7 @@
 
                         <div class="form-group col-lg-6">
                             <label class="form-label">Nama Proyek</label>
-                            {!! Form::text('nama_proyek', null, ['class'=>'form-control', 'id'=>'nama_proyek', 'readonly']) !!}
+                            {!! Form::text('nama_proyek', $data->npp->nama_proyek ?? null, ['class'=>'form-control', 'id'=>'nama_proyek', 'readonly']) !!}
                         </div>
                         
                         <div class="form-group col-lg-6">
@@ -95,7 +95,7 @@
                             <label class="form-label">Jam</label>
                             <div class="col-lg-12">
                                 <div class="input-group date">
-                                    {!! Form::text('jam_berangkat', date('H:i', strtotime($data->tgl_berangkat)), ['class'=>'form-control', 'id'=>'jam_berangkat', 'readonly']) !!}
+                                    {!! Form::text('jam_berangkat', $data->jam_berangkat ?? null, ['class'=>'form-control', 'id'=>'jam_berangkat', 'readonly']) !!}
                                     <div class="input-group-append">
                                         <span class="input-group-text" style="display: block">
                                             <i class="la la-calendar-check-o"></i>

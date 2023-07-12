@@ -84,7 +84,7 @@ class SptbController extends Controller
             })
             ->addColumn('status', function($model) {
                 $teks = '';
-                if($model->app_pelanggan == 1){
+                if($model->app_pelanggan == "1"){
                     $teks = '<span class="badge badge-light-success mr-2 mb-2">Received</i></span>';
                 }else{
                     $teks = '<span class="badge badge-light-warning mr-2 mb-2">onProgress</i></span>';
