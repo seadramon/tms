@@ -489,7 +489,8 @@ class SptbController extends Controller
         if (count($sptbd2) > 0) {
             foreach ($sptbd2 as $row) {
                 $detail2[$row->kd_produk] = [
-                    'stockid' => $row->stockid
+                    'stockid' => $row->stockid,
+                    'tgl' => $row->tgl_produksi
                 ];
             }
         }

@@ -203,8 +203,8 @@
                                 <td>{{ $detail->produk->tipe }}</td>
                                 <td>{{ $detail->produk->satuan }}</td>
                                 <td>{{ $detail->vol }}</td>
-                                <td>{{ date('d-m-Y', strtotime($detail->produk->created_date)) }}</td>
-                                <td>{{ !empty($detail2[$detail->kd_produk])?$detail2[$detail->kd_produk]['stockid']:"" }}</td>
+                                <td>{{ !empty($detail2[$detail->kd_produk]) ? date('d-m-Y', strtotime($detail2[$detail->kd_produk]['tgl'])) : "-" }}</td>
+                                <td>{{ !empty($detail2[$detail->kd_produk]) ? $detail2[$detail->kd_produk]['stockid'] : "" }}</td>
                                 <td></td>
                                 <td></td>
                             </tr>
