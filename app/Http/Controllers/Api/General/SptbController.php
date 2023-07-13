@@ -57,5 +57,57 @@ class SptbController extends Controller
         return $pdf->setPaper('a4', 'portrait')
             ->stream($filename . '.pdf');
     }
+
+    public function deliveryByDate(Request $request)
+    {
+        $tgl = date('d/m/Y', strtotime($request->curr_date));
+        $last_week = date('d/m/Y', strtotime("-7 days " . $request->curr_date));
+        if($request->type == "pelanggan"){
+            $sql = "select distinct a.no_sptb, TO_CHAR(tgl_berangkat,'DD/MM/YYYY')tgl_berangkat, TO_CHAR(tgl_sampai,'DD/MM/YYYY')tgl_sampai, C.SINGKATAN2 jenis_produk, app_pelanggan
+                from sptb_h a
+                inner join sptb_d b on a.no_sptb = b.no_sptb
+                inner join sptb_d2 d on a.no_sptb = d.no_sptb
+                inner join tb_sbu c on substr(b.kd_produk,1,1) = c.kd_sbu
+                inner join usradm.usr_pelanggan_d e on a.no_npp = e.no_npp                                        
+                where trunc(a.tgl_berangkat) = to_date('" . $tgl . "','dd/mm/yyyy') and app_pelanggan = 0 and e.no_hp = '" . $request->no_hp . "'
+                group by a.no_sptb, tgl_berangkat, jam_berangkat, tgl_sampai, jam_sampai, C.SINGKATAN2, app_pelanggan";
+        }else{
+            $filter = "";
+            if($request->kd_pat != "0A"){
+                $filter = " and a.no_npp like '20".$request->kd_pat."%'";
+				$filter .=  " or a.no_npp like '19".$request->kd_pat."%'";
+            }
+            $sql = "select distinct a.no_sptb, nvl(TO_CHAR(tgl_berangkat,'DD/MM/YYYY'),'-')tgl_berangkat, nvl(TO_CHAR(tgl_sampai,'DD/MM/YYYY'),'-')tgl_sampai, C.SINGKATAN2 jenis_produk, app_pelanggan, a.kd_pat, e.ket as pat 
+                from sptb_h a
+                inner join sptb_d b on a.no_sptb = b.no_sptb
+                inner join sptb_d2 d on a.no_sptb = d.no_sptb
+                inner join tb_sbu c on substr(b.kd_produk,1,1) = c.kd_sbu
+                inner join hrms.tb_pat e on a.kd_pat = e.kd_pat                                        
+                where a.tgl_berangkat between to_date('" . $last_week . "','dd/mm/yyyy') and to_date('" . $tgl . "','dd/mm/yyyy')" . $filter . "
+                group by a.no_sptb, tgl_berangkat, jam_berangkat, tgl_sampai, jam_sampai, C.SINGKATAN2, app_pelanggan, a.kd_pat, e.ket
+                order by a.kd_pat asc, app_pelanggan asc";
+        }
+
+        $results = DB::select($sql);
+        
+        $data = [];
+        foreach($results as $row){
+            $temp = [     
+                "no_sptb" => $row->no_sptb,
+                "tgl_berangkat" => $row->tgl_berangkat,
+                "tgl_sampai" => $row->tgl_sampai,
+                "jenis_produk" => $row->jenis_produk,
+                "app_pelanggan" => $row->app_pelanggan,
+            ];
+            if($request->type != "pelanggan"){
+                $temp['pat'] = $row->pat;
+            }
+            $data[] = $temp;
+        }
+        return response()->json([
+            'message' => 'success',
+            'data' => $data
+        ])->setStatusCode(200, 'OK');
+    }
 }
 

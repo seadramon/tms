@@ -37,6 +37,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::get('proyek-progress/{no_npp}', [ProyekController::class, 'proyekProgress'])->name('proyek-progress');
         Route::get('proyek-progress-tipe/{no_npp}', [ProyekController::class, 'proyekProgressTipe'])->name('proyek-progress-tipe');
         Route::get('sptb-print/{sptb}', [SptbController::class, 'sptbPrint'])->name('general-sptb-print');
+        Route::get('delivery-by-date', [SptbController::class, 'deliveryByDate'])->name('general-delivery-by-date');
     });
 
     Route::name('driver.')->prefix('driver')->namespace('Driver')->group(function() {
