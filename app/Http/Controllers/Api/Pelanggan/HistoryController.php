@@ -32,10 +32,11 @@ class HistoryController extends Controller
 					where a.no_hp = '".$no_hp."'";
 
         $results = DB::select("select b.no_npp, b.nama_proyek, b.kd_sbu, c.ket as sbu
-            from usradm.usr_pelanggan_d a
+            from tms_pelanggan_npps a
+            inner join tms_pelanggan_users f on a.pelanggan_user_id = f.id                                                                             
             inner join npp b on a.no_npp = b.no_npp
             inner join tb_sbu c on b.kd_sbu = c.kd_sbu
-            where a.no_hp = '" . $no_hp . "'");
+            where f.no_hp = '" . $no_hp . "'");
         
         $data = [];
         foreach($results as $row){

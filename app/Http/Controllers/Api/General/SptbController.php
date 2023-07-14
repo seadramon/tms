@@ -69,9 +69,10 @@ class SptbController extends Controller
                 inner join sptb_d b on a.no_sptb = b.no_sptb
                 inner join sptb_d2 d on a.no_sptb = d.no_sptb
                 inner join tb_sbu c on substr(b.kd_produk,1,1) = c.kd_sbu
-                inner join usradm.usr_pelanggan_d e on a.no_npp = e.no_npp                                        
-                where trunc(a.tgl_berangkat) = to_date('" . $tgl . "','dd/mm/yyyy') and app_pelanggan = 0 and e.no_hp = '" . $request->no_hp . "'
-                group by a.no_sptb, tgl_berangkat, jam_berangkat, tgl_sampai, jam_sampai, C.SINGKATAN2, app_pelanggan";
+                inner join tms_pelanggan_npps e on a.no_npp = e.no_npp   
+                inner join tms_pelanggan_users f on e.pelanggan_user_id = f.id                                                                             
+                where trunc(a.tgl_berangkat) = to_date('" . $tgl . "','dd/mm/yyyy') and app_pelanggan = 0 and f.no_hp = '" . $request->no_hp . "'
+                group by a.no_sptb, tgl_berangkat, jam_berangkat, tgl_sampai, jam_sampai, C.SINGKATAN2, app_pelanggan;";
         }else{
             $filter = "";
             if($request->kd_pat != "0A"){
