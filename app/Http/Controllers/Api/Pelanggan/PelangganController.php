@@ -202,7 +202,7 @@ class PelangganController extends Controller
     {
         $sql = "select distinct a.no_npp, e.nama_proyek, d.alamat_proyek, to_char(d.renc_pelaksanaan_1,'dd-mm-yyyy')||'/'||to_char(d.renc_pelaksanaan_2,'dd-mm-yyyy') as rencana_pelaksanaan 
             from tms_pelanggan_npps a
-            inner join tms_pelanggan_users f on e.pelanggan_user_id = f.id
+            inner join tms_pelanggan_users f on a.pelanggan_user_id = f.id
             inner join wos.spnpp b on a.no_npp = b.no_npp
             inner join wos.k_pesanan_d c on b.no_konfirmasi = c.no_konfirmasi
             inner join wos.npp e on a.no_npp = e.no_npp
@@ -211,7 +211,7 @@ class PelangganController extends Controller
 
         $results = DB::select("select distinct a.no_npp, e.nama_proyek, d.alamat_proyek, to_char(d.renc_pelaksanaan_1,'dd-mm-yyyy')||'/'||to_char(d.renc_pelaksanaan_2,'dd-mm-yyyy') as rencana_pelaksanaan 
             from tms_pelanggan_npps a
-            inner join tms_pelanggan_users f on e.pelanggan_user_id = f.id
+            inner join tms_pelanggan_users f on a.pelanggan_user_id = f.id
             inner join wos.spnpp b on a.no_npp = b.no_npp
             inner join wos.k_pesanan_d c on b.no_konfirmasi = c.no_konfirmasi
             inner join wos.npp e on a.no_npp = e.no_npp
