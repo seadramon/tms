@@ -71,7 +71,7 @@ class SptbController extends Controller
                 inner join tb_sbu c on substr(b.kd_produk,1,1) = c.kd_sbu
                 inner join tms_pelanggan_npps e on a.no_npp = e.no_npp   
                 inner join tms_pelanggan_users f on e.pelanggan_user_id = f.id                                                                             
-                where trunc(a.tgl_berangkat) between to_date('" . $last_week . "','dd/mm/yyyy') and to_date('" . $tgl . "','dd/mm/yyyy') and app_pelanggan = 0 and f.no_hp = '" . $request->no_hp . "'
+                where trunc(a.tgl_berangkat) between to_date('" . $last_week . "','dd/mm/yyyy') and to_date('" . $tgl . "','dd/mm/yyyy') and app_pelanggan = '0' and f.no_hp = '" . $request->no_hp . "'
                 group by a.no_sptb, tgl_berangkat, jam_berangkat, tgl_sampai, jam_sampai, C.SINGKATAN2, app_pelanggan;";
         }else{
             $filter = "";
