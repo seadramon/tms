@@ -140,20 +140,29 @@ class KalenderService {
 				];
 			});
 			// ->values();
-		$sptb = SptbH::whereHas('spmh', function($sql) use($nopol){
-				$sql->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($this->end)), date('Y-m-d 00:00:00')]);
-				if($nopol){
-					$sql->whereNoPol($nopol);
-				}
-				if($this->kd_pat && $this->kd_pat != '0A'){
-					$sql->whereHas('sppb.npp', function($sql1){
-						$sql1->where('kd_pat', $this->kd_pat);
-					});
-				}
-			})
-			->get()
+		// $sptb = SptbH::whereHas('spmh', function($sql) use($nopol){
+		// 		$sql->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($this->end)), date('Y-m-d 00:00:00')]);
+		// 		if($nopol){
+		// 			$sql->whereNoPol($nopol);
+		// 		}
+		// 		if($this->kd_pat && $this->kd_pat != '0A'){
+		// 			$sql->whereHas('sppb.npp', function($sql1){
+		// 				$sql1->where('kd_pat', $this->kd_pat);
+		// 			});
+		// 		}
+		// 	})
+		$sptb = SptbH::whereBetween('tgl_berangkat', [date('Y-m-d 00:00:00', strtotime($this->end)), date('Y-m-d 00:00:00')]);
+		if($nopol){
+			$sptb->whereHas('spmh', function($sql) use($nopol){
+				$sql->whereNoPol($nopol);
+			});
+		}
+		if($this->kd_pat && $this->kd_pat != '0A'){
+			$sptb->where('kd_pat', $this->kd_pat);
+		}
+		$sptb = $sptb->get()
 			->groupBy(function ($item, $key) {
-				return date('Y-m-d', strtotime($item->tgl_spm));
+				return date('Y-m-d', strtotime($item->tgl_berangkat));
 			})
 			->map(function ($item, $key) {
 				return [

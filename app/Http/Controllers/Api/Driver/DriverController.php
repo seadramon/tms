@@ -124,7 +124,8 @@ class DriverController extends Controller
         // where a.no_sptb='$request->param1'");
         $data["header"] = [
             'no_sptb' => $sptb->no_sptb,
-            'tgl_sptb' => $sptb->tgl_sptb ? date('d/m/Y', strtotime($sptb->tgl_sptb)) : '',
+            // 'tgl_sptb' => $sptb->tgl_sptb ? date('d/m/Y', strtotime($sptb->tgl_sptb)) : '',
+            'tgl_sptb' => $sptb->tgl_berangkat ? date('d/m/Y', strtotime($sptb->tgl_berangkat)) : '',
             'no_npp' => $sptb->no_npp,
             'nama_proyek' => $sptb->npp->nama_proyek,
             'nama_pelanggan' => $sptb->npp->nama_pelanggan,

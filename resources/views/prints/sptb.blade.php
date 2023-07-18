@@ -123,7 +123,7 @@
                         Tgl / <i>Date</i>
                     </td>
                     <td>:</td>
-                    <td>{{ date('d F Y', strtotime($data->tgl_sptb)) }}</td>
+                    <td>{{ date('d F Y', strtotime($data->tgl_berangkat)) }}</td>
                 </tr>
                 <tr>
                     <td>
