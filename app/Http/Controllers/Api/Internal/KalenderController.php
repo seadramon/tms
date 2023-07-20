@@ -24,7 +24,8 @@ class KalenderController extends Controller
             $temp = (new KalenderService($request->start, $request->end, $request->kd_pat))->rekapDailySppWithSp3();
             $color = [
                 'spp' => '#af96e2',
-                'sp3' => '#b6f5f7'
+                'sp3' => '#b6f5f7',
+                'sptb' => '#8fbea5'
             ];
         }
 		return response()->json([
