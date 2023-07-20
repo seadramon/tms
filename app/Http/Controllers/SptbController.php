@@ -43,6 +43,9 @@ class SptbController extends Controller
             ->editColumn('tgl_sptb', function ($model) {
                 return Carbon::createFromFormat('Y-m-d H:i:s', $model->tgl_sptb)->format('d-m-Y');
             })
+            ->editColumn('tgl_berangkat', function ($model) {
+                return date('d-m-Y', strtotime($model->tgl_berangkat));
+            })
             ->addColumn('menu', function ($model) {
                 $list = '';
                 if(Auth::check()){
