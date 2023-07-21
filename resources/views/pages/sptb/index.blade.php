@@ -203,7 +203,7 @@
 	                {data: 'no_sptb', name: 'no_sptb', defaultContent: '-'},
 	                {data: 'no_spm', name: 'no_spm', defaultContent: '-'},
 	                {data: 'no_spprb', name: 'no_spprb', defaultContent: '-'},
-	                {data: 'tgl_sptb', name: 'tgl_sptb', defaultContent: '-'},
+	                {data: 'tgl_berangkat', name: 'tgl_berangkat', defaultContent: '-'},
 	                {data: 'npp.nama_pelanggan', name: 'npp.nama_pelanggan', defaultContent: '-'},
 	                {data: 'npp.nama_proyek', name: 'npp.nama_proyek', defaultContent: '-'},
 	                {data: 'no_pol', name: 'no_pol', defaultContent: '-'},
