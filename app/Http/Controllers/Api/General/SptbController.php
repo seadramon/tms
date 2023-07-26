@@ -100,6 +100,7 @@ class SptbController extends Controller
                 "tgl_sampai" => $row->tgl_sampai,
                 "jenis_produk" => $row->jenis_produk,
                 "app_pelanggan" => $row->app_pelanggan,
+                "procedure_path" => "http://tms.wika-beton.co.id/document/procedure/" . $row->jenis_produk . ".pdf",
             ];
             if($request->type != "pelanggan"){
                 $temp['pat'] = $row->pat;
