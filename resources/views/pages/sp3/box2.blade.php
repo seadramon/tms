@@ -152,7 +152,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Estimasi Total Ritase</label>
-                {!! Form::text('rit', 0, ['class'=>'form-control decimal', 'id' => $sat_harsat != 'volume' ? 'est-rit' : 'rit', 'required']) !!}
+                {!! Form::text('rit', 0, ['class'=>'form-control decimal', 'id' => $sat_harsat != 'tonase' ? 'est-rit' : 'rit', 'required']) !!}
             </div>
 
             <div class="form-group col-lg-6">
@@ -167,7 +167,7 @@
             @endif
         </div>
         @php
-            $readonly = $sat_harsat != 'volume';
+            $readonly = $sat_harsat != 'tonase';
         @endphp
         <div class="separator separator-dashed border-primary my-10"></div>
         <h3>Detail Pekerjaan</h3>
@@ -188,7 +188,7 @@
                         @if ($sat_harsat != 'ritase')
                             <th style="width: 10%;">Satuan</th>
                         @endif
-                        <th style="width: 15%;">Harsat {{ $sat_harsat == 'volume' ? '[Btg/Ton]' : 'Rit' }}</th>
+                        <th style="width: 15%;">Harsat {{ $sat_harsat == 'tonase' ? '[Btg/Ton]' : 'Rit' }}</th>
                         <th style="width: 10%;">Jumlah</th>
                         <th style="width: 3%;"></th>
                     </tr>
@@ -215,11 +215,11 @@
                                 {!! Form::text('jarak_pekerjaan[]', $jarak, ['class'=>'form-control jarak_pekerjaan decimal', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key]) !!}
                             </td>
                             <td style="width: 13%;">
-                                {!! Form::text('vol_btg[]', $sat_harsat != 'volume' ? 1 : null, ['class'=>'form-control vol_btg decimal', 'readonly' => $readonly, 'id'=>'vol_btg_' . $key, 'max'=>(float)$pesanan->vol_konfirmasi ?? 0, 'row-id'=>$key]) !!}
+                                {!! Form::text('vol_btg[]', $sat_harsat != 'tonase' ? 1 : null, ['class'=>'form-control vol_btg decimal', 'readonly' => $readonly, 'id'=>'vol_btg_' . $key, 'max'=>(float)$pesanan->vol_konfirmasi ?? 0, 'row-id'=>$key]) !!}
                                 <input type="hidden" id="vol_btg_max_{{ $key }}" value="{{ (float)$pesanan->vol_konfirmasi ?? 0 }}">
                             </td>
                             <td style="width: 13%;">
-                                {!! Form::text('vol_ton[]', $sat_harsat != 'volume' ? 1 : null, ['class'=>'form-control vol_ton decimal', 'readonly' => $readonly, 'id'=>'vol_ton_' . $key, 'row-id'=>$key]) !!}
+                                {!! Form::text('vol_ton[]', $sat_harsat != 'tonase' ? 1 : null, ['class'=>'form-control vol_ton decimal', 'readonly' => $readonly, 'id'=>'vol_ton_' . $key, 'row-id'=>$key]) !!}
                             </td>
                             @if ($sat_harsat != 'ritase')
                                 <td style="width: 10%;">

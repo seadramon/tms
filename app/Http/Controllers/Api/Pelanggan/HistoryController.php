@@ -43,7 +43,8 @@ class HistoryController extends Controller
             $data[] = [     
                 "no_npp" => $row->no_npp,
                 "nama_proyek" => $row->nama_proyek,
-                "sbu" => $row->sbu
+                "sbu" => $row->sbu,
+                "procedure_path" => "http://tms.wika-beton.co.id/document/procedure/" . $row->sbu . ".pdf",
             ];
         }
         return response()->json([

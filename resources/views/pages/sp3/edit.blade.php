@@ -223,7 +223,7 @@
         clone.getElementsByTagName('input')[2].id = 'vol_btg_' + newIndex;
         clone.getElementsByTagName('input')[3].id = 'vol_btg_max_' + newIndex;
         clone.getElementsByTagName('input')[4].id = 'vol_ton_' + newIndex;
-        if(sat_harsat == 'volume'){
+        if(sat_harsat == 'tonase'){
             clone.getElementsByTagName('select')[2].id = 'satuan_' + newIndex;
         }
         clone.getElementsByTagName('input')[5].id = 'harsat_' + newIndex;
@@ -243,7 +243,7 @@
         $('#vol_btg_' + newIndex).attr('row-id', newIndex);
         $('#vol_btg_max_' + newIndex).attr('row-id', newIndex);
         $('#vol_ton_' + newIndex).attr('row-id', newIndex);
-        if(sat_harsat == 'volume'){
+        if(sat_harsat == 'tonase'){
             $('#satuan_' + newIndex).attr('row-id', newIndex);
         }
         $('#harsat_' + newIndex).attr('row-id', newIndex);
@@ -257,7 +257,7 @@
         $('#vol_btg_' + newIndex).removeAttr('disabled');
         $('#vol_btg_max_' + newIndex).removeAttr('disabled');
         $('#vol_ton_' + newIndex).removeAttr('disabled');
-        if(sat_harsat == 'volume'){
+        if(sat_harsat == 'tonase'){
             $('#satuan_' + newIndex).removeAttr('disabled');
         }
         $('#harsat_' + newIndex).removeAttr('disabled');
@@ -268,7 +268,7 @@
         $('#unit_' + newIndex).select2();
         $('#tipe_' + newIndex).select2();
 
-        if(sat_harsat == 'volume'){
+        if(sat_harsat == 'tonase'){
             $('#satuan_' + newIndex).select2();
         }
 

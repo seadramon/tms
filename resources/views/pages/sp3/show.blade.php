@@ -307,7 +307,7 @@
                 
                             <div class="form-group col-lg-6">
                                 <label class="form-label">Estimasi Total Ritase</label>
-                                {!! Form::text('rit', 0, ['class'=>'form-control decimal', 'id' => $sat_harsat != 'volume' ? 'est-rit' : 'rit', 'required', 'readonly']) !!}
+                                {!! Form::text('rit', 0, ['class'=>'form-control decimal', 'id' => $sat_harsat != 'tonase' ? 'est-rit' : 'rit', 'required', 'readonly']) !!}
                             </div>
                 
                             <div class="form-group col-lg-6">
@@ -322,7 +322,7 @@
                             @endif
                         </div>
                         @php
-                            $readonly = $sat_harsat != 'volume';
+                            $readonly = $sat_harsat != 'tonase';
                         @endphp
                         <div class="separator separator-dashed border-primary my-10"></div>
                         <h3>Volume Distribusi</h3>
@@ -368,7 +368,7 @@
                                     @if ($sat_harsat != 'ritase')
                                         <th style="width: 10%;">Satuan</th>
                                     @endif
-                                    <th style="width: 15%;">Harsat {{ $sat_harsat == 'volume' ? '[Btg/Ton]' : 'Rit' }}</th>
+                                    <th style="width: 15%;">Harsat {{ $sat_harsat == 'tonase' ? '[Btg/Ton]' : 'Rit' }}</th>
                                     <th style="width: 10%;">Jumlah</th>
                                     <th style="width: 3%;"></th>
                                 </tr>
@@ -386,7 +386,7 @@
                                         @if ($sat_harsat != 'ritase')
                                             <th style="width: 10%;">Satuan</th>
                                         @endif
-                                        <th style="width: 15%;">Harsat {{ $sat_harsat == 'volume' ? '[Btg/Ton]' : 'Rit' }}</th>
+                                        <th style="width: 15%;">Harsat {{ $sat_harsat == 'tonase' ? '[Btg/Ton]' : 'Rit' }}</th>
                                         <th style="width: 10%;">Jumlah</th>
                                         <th style="width: 3%;"></th>
                                     </tr>

@@ -513,7 +513,7 @@ class Sp3Controller extends Controller
                 $sp3D->vol_ton_awal = str_replace(',', '', $request->vol_ton[$i]);
                 $sp3D->vol_ton_akhir = str_replace(',', '', $request->vol_ton[$i]);
 
-                if(strtolower($request->sat_harsat) == 'volume'){
+                if(strtolower($request->sat_harsat) == 'tonase'){
                     $sp3D->sat_harsat = $request->satuan[$i];
                 }
                 
@@ -926,7 +926,7 @@ class Sp3Controller extends Controller
                 $sp3D->vol_ton_awal = str_replace(',', '', $request->vol_ton[$i]);
                 $sp3D->vol_ton_akhir = str_replace(',', '', $request->vol_ton[$i]);
 
-                if(strtolower($request->sat_harsat) == 'volume'){
+                if(strtolower($request->sat_harsat) == 'tonase'){
                     $sp3D->sat_harsat = $request->satuan[$i];
                 }
                 
