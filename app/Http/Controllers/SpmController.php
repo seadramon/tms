@@ -494,8 +494,7 @@ class SpmController extends Controller
         ];
 
         $kondisiPenyerahanDipilih = $kondisiPenyerahan[strtoupper(substr($no_spprb->no_npp, -1))];
-
-        $armada = Armada::with('driver')->get();
+        $armada = Armada::with('driver')->whereVendorId(Auth::user()->vendor_id)->get();
 
         return view('pages.spm.konfirmasi-vendor', [
             'data' => $data,

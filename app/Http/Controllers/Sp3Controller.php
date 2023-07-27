@@ -124,14 +124,13 @@ class Sp3Controller extends Controller
                 })
                 ->addColumn('approval', function ($model) {
                     $teks = '';
-                    if($model->app1 == 1 && !Auth::check()){
-                        $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
-                    }
-                    if($model->app2 == 1){
-                        if(Auth::check()){
+                    if(Auth::check()){
+                        if($model->app2 == 1){
                             $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved&nbsp;<i class="fas fa-check text-success"></i></span>';
-                        }else{
-                            $teks .= '<span class="badge badge-light-success mr-2 mb-2">Vendor&nbsp;<i class="fas fa-check text-success"></i></span>';
+                        }
+                    }else{
+                        if($model->app1 == 1){
+                            $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
                         }
                     }
                     return $teks;
@@ -219,6 +218,9 @@ class Sp3Controller extends Controller
                     if(Auth::check()){
                         $list .= '<li><a class="dropdown-item" href="'.route('sp3.print', str_replace('/', '|', $model->no_sp3)).'">Print</a></li>';
                         $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
+                        if($model->app1 == 1 && in_array($model->app1, [null, 0])){
+                            $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
+                        }
                     }else{
                         $action = json_decode(session('TMS_ACTION_MENU'));
                         if(in_array('view', $action)){

@@ -37,7 +37,7 @@ class MenuSeeder extends Seeder
                     'edit',
                     'amandemen',
                     'approve1',
-                    'approve2',
+                    // 'approve2',
                     'print',
                 ]
             ],

@@ -24,16 +24,29 @@ class DashboardController extends Controller
         $sp3Aktif = Sp3::FilterLogin($type, $value)->where('st_wf', 1)->where('app1', 1)->count();
         $sp3Selesai = Sp3::FilterLogin($type, $value)->where('jadwal2', '<', $today)->count();
 
-        $spp1 = SppbH::FilterLogin($type, $value)->whereNull('app')->orWhere('app', 0)->count();
+        $spp1 = SppbH::FilterLogin($type, $value)
+            ->where(function($sql){
+                $sql->whereNull('app')->orWhere('app', 0);
+            })
+            ->count();
         $sppAktif = SppbH::FilterLogin($type, $value)->where('jadwal2', '>=', $today)->count();
         $sppSelesai = SppbH::FilterLogin($type, $value)->where('jadwal2', '<', $today)->count();
 
-        $spm1 = SpmH::FilterLogin($type, $value)->whereNull('app2')->orWhere('app2', 0)->count();
+        $spm1 = SpmH::FilterLogin($type, $value)
+            ->where(function($sql){
+                $sql->whereNull('app2')->orWhere('app2', 0);
+            })
+            ->count();
         $spmOnProgress = SpmH::FilterLogin($type, $value)->doesntHave('sptbh')->count();
-        $sptbOnTerbit = SpmH::FilterLogin($type, $value)->whereHas('sptbh')->count();
+        $sptbOnTerbit = SpmH::FilterLogin($type, $value)->has('sptbh')->count();
 
-        $sptb1 = SptbH::FilterLogin($type, $value)->whereHas('spmh')->whereNull('app_pelanggan')->orWhere('app_pelanggan', 0)->count();
-        $sptb2 = SptbH::FilterLogin($type, $value)->whereHas('spmh')->where('app_pelanggan', 1)->count();
+        $sptb1 = SptbH::FilterLogin($type, $value)
+            ->has('spmh')
+            ->where(function($sql){
+                $sql->whereNull('app_pelanggan')->orWhere('app_pelanggan', 0);
+            })
+            ->count();
+        $sptb2 = SptbH::FilterLogin($type, $value)->has('spmh')->where('app_pelanggan', 1)->count();
 
         $potensi1 = VPotensiMuat::FilterLogin($type, $value)->select('no_npp')->where('jenis_armada', 'BELUM DISET')->distinct()->count();
         $potensi2 = VPotensiMuat::FilterLogin($type, $value)->select('no_npp')->where('jenis_armada', '<>', 'BELUM DISET')->doesntHave('sptbh')->distinct()->count();
