@@ -182,6 +182,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 		Route::get('detail-weekly', [KalenderPengirimanController::class, 'detailWeekly'])->name('detail-weekly');
 		Route::post('detail-weekly-data', [KalenderPengirimanController::class, 'detailWeeklyData'])->name('detail-weekly-data');
+		Route::get('periode-minggu', [KalenderPengirimanController::class, 'periodeMinggu'])->name('periode-minggu');
 	});
 
 	Route::group(['prefix' => 'report-pemenuhan-armada', 'as' => 'report-pemenuhan-armada.'], function(){

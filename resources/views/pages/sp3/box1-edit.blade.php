@@ -11,16 +11,72 @@
                     $volsptb = $sptbd->map(function($i, $k){ return $i->sum('vol'); })->values()->sum();
                     $progress = $volsp3 == 0 ? 0 : round($volsptb / $volsp3 * 100);
                     $progress = $progress > 100 ? 100 : $progress;
+
+                    $volsp3 = $data->sp3D->sum('vol_akhir');
+                    $volsptb = $sptbd->map(function($i, $k){ return $i->sum('vol'); })->values()->sum();
+                    $progress_vol = $volsp3 == 0 ? 0 : round($volsptb / $volsp3 * 100, 2);
+                    $progress_vol = $progress_vol > 100 ? 100 : $progress_vol;
+                    
+                    $sp3d_ = $data->sp3D->groupBy(function($item){ return $item->kd_produk . '_' . $item->pat_to; });
+                    $sptb_rp = $sptbd_->sum(function($item) use($sp3d_) {
+                        $key = $item->kd_produk . '_' . $item->sptbh->kd_pat;
+                        return $item->vol * ($sp3d_[$key][0]->harsat_akhir ?? 0);
+                    });
+                    $sp3_rp = $data->sp3D->sum(function($item) { return intval($item->vol_akhir) * intval($item->harsat_akhir); });
+                    $progress_rp = $sp3_rp == 0 ? 0 : round($sptb_rp / $sp3_rp * 100, 2);
+                    $progress_rp = $progress_rp > 100 ? 100 : $progress_rp;
+
+                    $tgl1 = 0;
+                    $tgl2 = 0;
+                    $progress_wkt = 0;
+                    $ret = 0;
+                    if (!is_null($data->jadwal1) && !is_null($data->jadwal2)) {
+                        $tgl1 = (strtotime(date('Y-m-d'))-strtotime($data->jadwal1)) / 3600 / 24;
+                        $tgl2 = (strtotime($data->jadwal2)-strtotime($data->jadwal1)) / 3600 / 24;
+                        
+                        if ($tgl2 > 0) {
+                            $progress_wkt = round(($tgl1 / $tgl2) * 100, 2);
+                        }
+                    }
+                    $progress_wkt = $progress_wkt > 100 ? 100 : $progress_wkt;
                 @endphp
                 <div class="col-12">
                     <!--begin::Progress-->
                     <div class="d-flex flex-column">
                         <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
-                            <span>Progress Pengiriman Barang</span>
-                            <span>{{nominal($volsptb)}} of {{nominal($volsp3)}}</span>
+                            <span>Progress Pengiriman Barang (Volume)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_vol}}%</span></span>
+                            <span>{{nominal($volsptb > $volsp3 ? $volsp3 : $volsptb, 0)}} of {{nominal($volsp3, 0)}}</span>
                         </div>
                         <div class="h-20px bg-light rounded mb-3">
-                            <div class="bg-success rounded h-20px" role="progressbar" style="width: {{$progress}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="bg-success rounded h-20px" role="progressbar" style="width: {{$progress_vol}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        {{-- <div class="fw-semibold text-gray-600">14 Targets are remaining</div> --}}
+                    </div>
+                    <!--end::Progress-->
+                </div>
+                <div class="col-12">
+                    <!--begin::Progress-->
+                    <div class="d-flex flex-column">
+                        <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
+                            <span>Progress Pengiriman Barang (Rupiah)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_rp}}%</span></span>
+                            <span>{{nominal($sptb_rp > $sp3_rp ? $sp3_rp : $sptb_rp, 0)}} of {{nominal($sp3_rp, 0)}}</span>
+                        </div>
+                        <div class="h-20px bg-light rounded mb-3">
+                            <div class="bg-info rounded h-20px" role="progressbar" style="width: {{$progress_rp}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        {{-- <div class="fw-semibold text-gray-600">14 Targets are remaining</div> --}}
+                    </div>
+                    <!--end::Progress-->
+                </div>
+                <div class="col-12">
+                    <!--begin::Progress-->
+                    <div class="d-flex flex-column">
+                        <div class="d-flex justify-content-between w-100 fs-4 fw-bold mb-3">
+                            <span>Progress Pengiriman Barang (Periode)&nbsp;<span class="badge badge-square badge-dark badge-outline">{{$progress_wkt}}%</span></span>
+                            <span>{{nominal($tgl1 > $tgl2 ? $tgl2 : $tgl1, 0)}} of {{nominal($tgl2, 0)}}</span>
+                        </div>
+                        <div class="h-20px bg-light rounded mb-3">
+                            <div class="bg-warning rounded h-20px" role="progressbar" style="width: {{$progress_wkt}}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         {{-- <div class="fw-semibold text-gray-600">14 Targets are remaining</div> --}}
                     </div>

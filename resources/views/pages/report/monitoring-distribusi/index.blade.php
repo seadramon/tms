@@ -17,13 +17,13 @@
             
                 <div class="card-body">
                     <div class="form-group row">
-                        <div class="col-lg-6 custom-form">
+                        <div class="col-lg-9 custom-form">
                             <label class="form-label col-sm-3 custom-label">Tahun</label>
                             {!! Form::select('tahun', $tahun, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'tahun']) !!}
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-lg-6 custom-form">
+                        <div class="col-lg-9 custom-form">
                             <label class="form-label col-sm-3 custom-label">Minggu ke-</label>
                             <div class="col-lg-4">
                                 {!! Form::select('minggu1', $periode_minggu, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'minggu1']) !!}
@@ -35,13 +35,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-lg-6 custom-form">
+                        <div class="col-lg-9 custom-form">
                             <label class="form-label col-sm-3 custom-label">PAT/PPB</label>
                             {!! Form::select('kd_pat', $kd_pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'kd_pat']) !!}
                         </div>
                     </div>
                     <div class="form-group row mt-4">
-                        <div class="dropdown col-lg-6 custom-form">
+                        <div class="dropdown col-lg-9 custom-form">
                             <label class="form-label col-sm-3 custom-label">&nbsp;</label>
                             <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Generate
@@ -111,6 +111,17 @@
 <script src="{{ asset('assets/fusion/js/themes/fusioncharts.theme.fusion.js') }}"></script>
 <script src="{{ asset('assets/fusion/js/jquery-fusioncharts.min.js') }}"></script>
 <script type="text/javascript">
+    $(document).ready(function() {
+        $("#minggu").select2();
+        loadPeriodeMinggu();
+        // loadData();
+        $("#filter").click(function(){
+            loadData();
+        });
+        $("#tahun").change(function(){
+            loadPeriodeMinggu();
+        });
+    });
     $(document).on('click', '.generate', function(){
         tahun = $("#tahun").val();
         minggu1 = $("#minggu1").val();
@@ -127,5 +138,23 @@
         }
         
     });
+
+    function loadPeriodeMinggu(){
+        $("#minggu1").empty();
+        $("#minggu2").empty();
+        $.ajax({
+            type:"get",
+            url: "{{ route('kalender-pengiriman.periode-minggu') }}?tahun=" + $("#tahun").val(),
+            data: {_token: "{{ csrf_token() }}"},
+            success: function(result){
+                $.each(result.periode_minggu, function(k, v){
+                    $("#minggu1").append('<option value="' + k + '">' + v + '</option>')
+                    $("#minggu2").append('<option value="' + k + '">' + v + '</option>')
+                })
+                $("#minggu1").select2("destroy").select2();
+                $("#minggu2").select2("destroy").select2();
+            }
+        });
+    }
 </script>
 @endsection

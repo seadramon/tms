@@ -145,4 +145,26 @@ class KalenderPengirimanController extends Controller
 			'detail'     => $detail
 		]);
 	}
+
+	public function periodeMinggu(Request $request){
+		$periode_minggu = KalenderMg::whereTh($request->tahun)
+			->whereKdPat('1A')
+			->get()
+			->sortBy(function ($item) {
+				return (int) $item->mg;
+			})
+			->mapWithKeys(function($item){ 
+				$awal = date('d/m/Y', strtotime($item->tgl_awal));
+				$akhir = date('d/m/Y', strtotime($item->tgl_akhir));
+				return [$item->mg => "Minggu ke-" . $item->mg . " ({$awal}-{$akhir})"]; 
+			})
+			->all();
+
+		$active_week = DB::select("select  WOS.\"FNC_GETMG\" (to_Date('" . date('d/m/Y') . "','dd/mm/yyyy'), '1A') minggu from dual")[0]->minggu;
+
+		return response()->json([
+			'periode_minggu' => $periode_minggu,
+			'active_week' => $active_week,
+		]);
+	}
 }

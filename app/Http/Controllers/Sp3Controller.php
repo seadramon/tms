@@ -301,9 +301,12 @@ class Sp3Controller extends Controller
         $personal = Personal::select('employee_id', 'first_name', 'last_name')
             ->where('st', 1)
             ->whereIn('kd_jbt', ['JBTP0001', 'JBTP0002'])
-            ->where(DB::raw('LOWER(employee_id)'), 'LIKE', '%' . $request->q . '%')
-            ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', '%' . $request->q . '%')
-            ->orWhere(DB::raw('LOWER(last_name)'), 'LIKE', '%' . $request->q . '%');
+            ->where(function($sql) use ($request) {
+                $sql->where(DB::raw('LOWER(employee_id)'), 'LIKE', '%' . $request->q . '%')
+                ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', '%' . $request->q . '%')
+                ->orWhere(DB::raw('LOWER(last_name)'), 'LIKE', '%' . $request->q . '%');
+
+            });
         if(session('TMP_KDWIL') != '0A'){
             $personal->where('kd_pat', session('TMP_KDWIL') ?? '0A');
         }

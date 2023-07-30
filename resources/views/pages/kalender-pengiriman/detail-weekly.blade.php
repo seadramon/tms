@@ -38,9 +38,10 @@
                             <label class="form-label col-sm-3 custom-label">Periode Pengiriman</label>
                             {!! Form::select('tahun', $periode, date('Y'), ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'tahun']) !!}
                         </div>
-                        <div class="col-lg-6 custom-form">
+                        <div class="col-lg-6 custom-form" id="periode-minggu">
                             <label class="form-label col-sm-3 custom-label">Periode Minggu</label>
-                            {!! Form::select('minggu', $periode_minggu, $active_week, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'minggu']) !!}
+                            <select class="form-control form-select-solid col-sm-3" name="minggu" id="minggu">
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row mb-2">
@@ -85,11 +86,35 @@
     var blockUI = new KTBlockUI(document.querySelector("#div-card"));
 
     $(document).ready(function() {
-        loadData();
+        $("#minggu").select2();
+        loadPeriodeMinggu();
+        // loadData();
         $("#filter").click(function(){
             loadData();
         });
+        $("#tahun").change(function(){
+            loadPeriodeMinggu();
+        });
     });
+
+    function loadPeriodeMinggu(){
+        $("#minggu").empty();
+        $.ajax({
+            type:"get",
+            url: "{{ route('kalender-pengiriman.periode-minggu') }}?" + getParam(),
+            data: {_token: "{{ csrf_token() }}"},
+            success: function(result){
+                $.each(result.periode_minggu, function(k, v){
+                    var selected = '';
+                    if(k == result.active_week){
+                        selected = 'selected';
+                    }
+                    $("#minggu").append('<option ' + selected + ' value="' + k + '">' + v + '</option>')
+                })
+                $("#minggu").select2("destroy").select2();
+            }
+        });
+    }
 
     function loadData(){
         blockUI.block();
