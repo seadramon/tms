@@ -822,14 +822,14 @@ class Sp3Controller extends Controller
             ->pluck('name', 'kd_material')
             ->toArray();
 
-        $sptbd = SptbD::whereHas('sptbh', function($sql) use ($data){
-                $sql->whereNoNpp($data->no_npp);
-                $sql->whereHas('spmh', function($sql1) use ($data){
-                    $sql1->whereVendorId($data->vendor_id);
-                });
-            })
-            ->get()
-            ->groupBy('kd_produk');
+        $sptbd_ = SptbD::with('sptbh')->whereHas('sptbh', function($sql) use ($data){
+            $sql->whereNoNpp($data->no_npp);
+            $sql->whereHas('spmh', function($sql1) use ($data){
+                $sql1->whereVendorId($data->vendor_id);
+            });
+        })
+        ->get();
+        $sptbd = $sptbd_->groupBy('kd_produk');
 
         return view('pages.sp3.edit', compact(
             'data',
@@ -849,6 +849,7 @@ class Sp3Controller extends Controller
             'pph',
             'sp3D',
             'sptbd',
+            'sptbd_',
             'sat_harsat',
             'listPic',
             'detailPekerjaan',
