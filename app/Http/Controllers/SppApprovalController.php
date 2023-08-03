@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Npp;
+use App\Models\Pat;
 use App\Models\PotensiH;
 use Illuminate\Http\Request;
 
 use App\Models\SppbH;
 use App\Models\SppbD;
+use App\Models\Views\VPotensiMuat;
 use App\Models\Views\VSpprbRi;
+use Exception;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class SppApprovalController extends Controller
 {
