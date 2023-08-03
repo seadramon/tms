@@ -451,7 +451,7 @@ var KTDatatablesServerSide = function () {
                     action: exportDatatables
                 }
             ],
-            ajax: "{{ route('spp.data-spprb') }}" + '?no_npp=' + "{{ $no_npp }}",
+            ajax: "{{ route('spp.data-spprb') }}" + '?no_npp=' + "{{ $data->no_npp }}",
             columns: [
                 {data: 'spprblast', defaultContent: '-'},
                 {data: 'pat.ket', defaultContent: '-'},
@@ -493,7 +493,7 @@ var KTDatatablesServerSide = function () {
                     action: exportDatatables
                 }
             ],
-            ajax: "{{ route('spp.data-angkutan') }}" + '?noSppb=' + "{{ $noSppb }}",
+            ajax: "{{ route('spp.data-angkutan') }}" + '?noSppb=' + "{{ $data->no_sppb }}",
             columns: [
                 {data: 'no_sp3', defaultContent: '-'},
                 {data: 'vendorname', defaultContent: '-'},

@@ -25,4 +25,9 @@ class VSpprbRi extends Model
     {
     	return $this->belongsTo(Pat::class, 'pat_to', 'kd_pat');
     }
+
+	public function pat()
+	{
+		return $this->belongsTo(Pat::class, 'pat_to', 'kd_pat');
+	}
 }

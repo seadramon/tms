@@ -61,7 +61,7 @@ class SppApprovalController extends Controller
         }
 
         //RUTE Data
-        $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
+        $pat_ = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
         $muat = VPotensiMuat::with('pat')->where('no_npp', $data->no_npp)->get();
         
         $arrData['lokasi_muat'] = VSpprbRi::with(['produk', 'pat'])
@@ -129,7 +129,7 @@ class SppApprovalController extends Controller
                 'potensiH' => $potensiH
             ]);
         }
-        $arrData['pat'] = $pat;
+        $arrData['pat_'] = $pat_;
         $arrData['muat'] = $collection_table;
 
     	return view('pages.spp.approve', [
