@@ -62,12 +62,12 @@ class SppApprovalController extends Controller
 
         //RUTE Data
         $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
-        $muat = VPotensiMuat::with('pat')->where('no_npp',$arrData['no_npp'])->get();
+        $muat = VPotensiMuat::with('pat')->where('no_npp', $data->no_npp)->get();
         
         $arrData['lokasi_muat'] = VSpprbRi::with(['produk', 'pat'])
             ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
             ->select('v_spprb_ri.pat_to')
-            ->where('v_spprb_ri.no_npp', $arrData['no_npp'])
+            ->where('v_spprb_ri.no_npp', $data->no_npp)
             ->get()
             ->map(function($item){
                 return $item->pat->ket;
