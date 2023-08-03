@@ -2,22 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Npp;
+use App\Models\PotensiH;
 use Illuminate\Http\Request;
 
-use App\Models\Pat;
-use App\Models\Produk;
 use App\Models\SppbH;
 use App\Models\SppbD;
-use App\Models\SpprbH;
-use App\Models\Sp3;
-use App\Models\SptbD;
-use App\Models\VSpprbRi;
-use Yajra\DataTables\Facades\DataTables;
+use App\Models\Views\VSpprbRi;
 use Flasher\Prime\FlasherInterface;
-use DB;
-use Session;
-use Validator;
-use Storage;
+use Illuminate\Support\Collection;
 
 class SppApprovalController extends Controller
 {
@@ -27,7 +20,7 @@ class SppApprovalController extends Controller
     	$noSppb = str_replace("|", "/", $request->nosppb);
         $approval = $request->urutan;
 
-    	$data = SppbH::with(['detail', 'spprb'])
+    	$data = SppbH::with(['detail', 'spprb', 'npp'])
     		->where('no_sppb', $noSppb)
     		->first();
 
@@ -45,6 +38,95 @@ class SppApprovalController extends Controller
 
             $arrData = $this->getDataSpprb($noSpprb, $noNpp);
         }
+        if (!empty($data->no_npp)) {
+            $npp = $data->npp;
+            if (!empty($npp->no_info)) {
+                $arrData['kontrak'] = DB::table('KD_SEPEDM_D')
+                    ->where('no_proyek', $npp->no_info)
+                    ->where('no_dok', '12')
+                    ->whereRaw("P_KE = (select
+                            max(P_KE)
+                        from
+                            KD_SEPEDM_D
+                        WHERE
+                            NO_DOK = '12'
+                            AND NO_PROYEK = '$npp->no_info'
+                        )")
+                    ->first();
+            }
+        }
+
+        //RUTE Data
+        $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
+        $muat = VPotensiMuat::with('pat')->where('no_npp',$arrData['no_npp'])->get();
+        
+        $arrData['lokasi_muat'] = VSpprbRi::with(['produk', 'pat'])
+            ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
+            ->select('v_spprb_ri.pat_to')
+            ->where('v_spprb_ri.no_npp', $arrData['no_npp'])
+            ->get()
+            ->map(function($item){
+                return $item->pat->ket;
+            })
+            ->unique()
+            ->all();
+
+
+        $collection_table = new Collection();
+        foreach($muat as $row){
+            $spprbRi = VSpprbRi::
+                        select('kd_produk','pat_to','no_npp','vol_spprb')
+                        ->with(['produk' => function($sql){
+                            $sql->select('kd_produk','tipe', 'vol_m3');
+                        }])
+                        ->with(['ppb_muat' =>function($sql){
+                            $sql->select('kd_pat','lat_gps','lng_gps');
+                        }])
+                        ->where('no_npp',$row->no_npp)
+                        ->where('pat_to',$row->ppb_muat)
+                        ->groupBy('kd_produk','pat_to','no_npp','vol_spprb')
+                        ->get();
+
+            $sqlNpp = Npp::select('npp.nama_proyek',
+                        'npp.nama_pelanggan',
+                        'npp.no_npp',
+                        'tb_region.kabupaten_name as kab', 'tb_region.kecamatan_name as kec',
+                        'tb_pat.ket as pat',
+                        'npp.kd_pat',
+                        'tb_pat.singkatan',
+                        'info_pasar_h.lat as info_pasar_lat','info_pasar_h.lang as info_pasar_long',
+                        'tb_region.lat as tb_region_lat','tb_region.lang as tb_region_long')
+                    ->leftJoin('info_pasar_h', 'npp.no_info', '=', 'info_pasar_h.no_info')
+                    ->leftJoin('tb_region', 'tb_region.kd_region', '=', 'info_pasar_h.kd_region')
+                    ->leftJoin('tb_pat', 'tb_pat.kd_pat', '=', 'npp.kd_pat')
+                    ->where('npp.no_npp', $row->no_npp)
+                    ->first();
+
+            $potensiH = PotensiH::where('no_npp',$row->no_npp)
+                    ->where('pat_to', $row->ppb_muat)
+                    ->first();
+
+            $collection_table->push((object)[
+                'no_npp' => $row->no_npp,
+                'ppb_muat' => $row->ppb_muat,
+                'vol_btg' => $row->vol_btg,
+                'tonase' => $row->tonase,
+                'jadwal3' => $row->jadwal3,
+                'jadwal4' => $row->jadwal4,
+                'jml_rit' => $row->jml_rit,
+                'pat' => $row->pat->ket,
+                'jarak_km' => $row->jarak_km,
+                'spprbri' => $spprbRi,
+                'lat_source' => $spprbRi[0]->ppb_muat->lat_gps,
+                'long_source' => $spprbRi[0]->ppb_muat->lng_gps,
+                'lat_dest' => $sqlNpp->info_pasar_lat ?? $sqlNpp->tb_region_lat,
+                'long_dest' => $sqlNpp->info_pasar_long ?? $sqlNpp->tb_region_long,
+                'destination' => $sqlNpp->kab. ',' . $sqlNpp->kec,
+                'potensiH' => $potensiH
+            ]);
+        }
+        $arrData['pat'] = $pat;
+        $arrData['muat'] = $collection_table;
 
     	return view('pages.spp.approve', [
     		'data' => $data,

@@ -54,7 +54,7 @@
 
                         <div class="form-group mb-3 col-lg-3">
                             <label class="form-label">Driver</label>
-                            <input type="text" name="_" class="form-control" disabled value="{{$data->driver->nama}}">
+                            <input type="text" name="_" class="form-control" disabled value="{{$data->driver->nama ?? '-'}}">
                         </div>
 
                         <div class="form-group mb-3 col-lg-3">
@@ -169,7 +169,9 @@
             
                 <div class="card-footer" style="text-align: right;">
                     <a href="{{ route('verifikasi-armada.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
-                    <input type="submit" class="btn btn-success" value="Simpan">
+                    @if ($data->driver)
+                        <input type="submit" class="btn btn-success" value="Simpan">
+                    @endif
                 </div>
             </div>
         </div>
