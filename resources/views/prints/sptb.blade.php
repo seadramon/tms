@@ -203,8 +203,16 @@
                                 <td>{{ $detail->produk->tipe }}</td>
                                 <td>{{ $detail->produk->satuan }}</td>
                                 <td>{{ $detail->vol }}</td>
-                                <td>{{ !empty($detail2[$detail->kd_produk]) ? date('d-m-Y', strtotime($detail2[$detail->kd_produk]['tgl'])) : "-" }}</td>
-                                <td>{{ !empty($detail2[$detail->kd_produk]) ? $detail2[$detail->kd_produk]['stockid'] : "" }}</td>
+                                <td>
+                                    @foreach ($sptbd2[$detail->kd_produk] as $d2)
+                                        {{ date('d-m-Y', strtotime($d2->tgl_produksi)) }}<br>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @foreach ($sptbd2[$detail->kd_produk] as $d2)
+                                        {{ $d2->stockid }}<br>
+                                    @endforeach
+                                </td>
                                 <td></td>
                                 <td></td>
                             </tr>

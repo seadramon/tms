@@ -147,6 +147,9 @@
                     </table>
 
                     <div class="row" id="container-produk">
+                        @php
+                            $sptbd2 = $data->sptbd2->groupBy('kd_produk');
+                        @endphp
                         @foreach ($data->sptbd as $key => $sptbd)
                             <div class="form-group col-lg-6">
                                 <input type="text" class="form-control" value="{{ $sptbd->kd_produk . ' - ' . $sptbd->ket }}" readonly style="background-color: var(--kt-input-disabled-bg);">
@@ -170,11 +173,11 @@
                                 <label class="form-label col-lg-6">Tanggal Produksi</label>
                                 <label class="form-label col-lg-6">No. Produk</label>
 
-                                @for ($i=0; $i<$sptbd->vol; $i++)
+                                @foreach ($sptbd2[$sptbd->kd_produk] as $d2)
                                     <div class="form-group col-lg-6">
                                         <div class="input-group date">
                                             <input type="text" name="child_tgl_produksi[]" disabled class="form-control datepicker child_tgl_produksi_{{ $key }}" 
-                                                value="{{ !blank($data->sptbd2) ? date('d-m-Y', strtotime($data->sptbd2[$i]->tgl_produksi)) : date('d-m-Y') }}">
+                                                value="{{ date('d-m-Y', strtotime($d2->tgl_produksi)) }}">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" style="display: block">
                                                     <i class="la la-calendar-check-o"></i>
@@ -184,9 +187,9 @@
                                     </div>
                                     <div class="form-group col-lg-6">
                                         <input type="text" name="child_kd_produk[]" class="form-control" readonly
-                                            value="{{ !blank($data->sptbd2) ? $data->sptbd2[$i]->stockid : 'test' }}">
+                                            value="{{ $d2->stockid }}">
                                     </div>
-                                @endfor
+                                @endforeach
                             @endif
                         @endforeach
                     </div>

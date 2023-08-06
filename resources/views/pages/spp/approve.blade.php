@@ -7,7 +7,7 @@
 @section('page-title')
 <!--begin::Page title-->
 <div class="page-title d-flex justify-content-center flex-column me-5">
-	<h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Create SPP</h1>
+	<h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Approve SPP</h1>
 </div>
 <!--end::Page title-->
 @endsection

@@ -236,6 +236,7 @@ class SptbController extends Controller
                 $sptbD->no_sptb = $noSptb;
                 $sptbD->kd_produk = $request->kd_produk[$i];
                 $sptbD->vol = $sppbD->segmental == 1 ? ($request->vol[$i] / $sppbD->jml_segmen) : $request->vol[$i];
+                // $sptbD->vol = $request->vol[$i];
                 $sptbD->save();
 
                 for($j=0; $j < $request->vol[$i]; $j++){
@@ -487,21 +488,23 @@ class SptbController extends Controller
             $ppb = $pat_ppb->ket;
         }
 
-        $sptbd2 = SptbD2::where('no_sptb', $noSptb)->get();
-        $detail2 = [];
-        if (count($sptbd2) > 0) {
-            foreach ($sptbd2 as $row) {
-                $detail2[$row->kd_produk] = [
-                    'stockid' => $row->stockid,
-                    'tgl' => $row->tgl_produksi
-                ];
-            }
-        }
+        $sptbd2 = SptbD2::where('no_sptb', $noSptb)->get()->groupBy('kd_produk');
+
+        // $detail2 = [];
+        // if (count($sptbd2) > 0) {
+        //     foreach ($sptbd2 as $row) {
+        //         $detail2[$row->kd_produk] = [
+        //             'stockid' => $row->stockid,
+        //             'tgl' => $row->tgl_produksi
+        //         ];
+        //     }
+        // }
+        // return response()->json(full_url_from_path($data->penerima_ttd ?? 'penerima_ttd.jpg'));
 
         $pdf = Pdf::loadView('prints.sptb', [
             'data' => $data,
             'ppb' => $ppb,
-            'detail2' => $detail2,
+            'sptbd2' => $sptbd2,
         ]);
 
         $filename = "SPTB-Report";

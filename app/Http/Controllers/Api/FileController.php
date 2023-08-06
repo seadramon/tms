@@ -32,6 +32,11 @@ class FileController extends Controller
                 $file = Storage::get($path_file);
                 $size = Storage::size($path_file);
                 $code = 200;
+            }else{
+                $logo = "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwsHDw0IBxARCAkHDRYIBgYHCg8IFQcKFREWFhQRExMYHCggGBolGxMTITEhJSkrLi4uFx8zODMsNygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAJYA4QMBIgACEQEDEQH/xAAWAAEBAQAAAAAAAAAAAAAAAAAAAQf/xAAVEAEBAAAAAAAAAAAAAAAAAAAAAf/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwDcQARQAAARQBFAAARQBFAEUARQBFAEUARQBBQEUAAARQARQEFQAVAFAEUARUUEUARQBFAEFAQVABUAFAAAAAAAAQFBAUAARQBFAEUAEBQAASgogCggKIAoigiooAAAAAAAAAAAAAAAAAAAAAAAAAAAigiooAAAAAAAAAAAAAAAAAAAAAAAAAAIoAigAigAAAAAAAAAAAAAAAAAAAAAAAAIoAigAigAAAAAAAAAAAAAAAAAAAAAAAAIqKCCgJBQAAAAAAAAAAAAAAAAAAAAAAAAEqooIqKAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAQAFAAAAAAAAAAAAAAAAAAAAAAAB//Z";
+                $raw_image_string = base64_decode($logo);
+
+                return response($raw_image_string)->header('Content-Type', 'image/png');
             }
         }else{
             $personal = Personal::select('employee_id', 'signature')->find($path);
