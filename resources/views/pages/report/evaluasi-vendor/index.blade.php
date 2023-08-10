@@ -148,10 +148,42 @@
 	                {data: 'nilai_mutu', defaultContent: '-', orderable: false, searchable: false},
 	                {data: 'tepat_waktu', defaultContent: '-', orderable: false, searchable: false},
 	                {data: 'terlambat', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'ket', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'ket', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'ket', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'ket', defaultContent: '-', orderable: false, searchable: false},
+                    {
+                        "mData": "aspek_waktu",
+                        "mRender": function (data, type, row) {
+                            // console.log(row);
+                            // console.log('DATA ' + data);
+                            var nilai = 0;
+                            if(parseInt(row.tepat_waktu) < 50){
+                                nilai = 50;
+                            }else if(parseInt(row.tepat_waktu) > 70){
+                                nilai = 90;
+                            }else{
+                                nilai = 70;
+                            }
+                            return nilai;
+                        },
+                        orderable: false,
+                        searchable: false,
+                    },
+	                {data: 'aspek_pelayanan', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'aspek_k3l', defaultContent: '-', orderable: false, searchable: false},
+                    {
+                        "mData": "nilai_total",
+                        "mRender": function (data, type, row) {
+                            var wkt = 0;
+                            if(parseInt(row.tepat_waktu) < 50){
+                                wkt = 50;
+                            }else if(parseInt(row.tepat_waktu) > 70){
+                                wkt = 90;
+                            }else{
+                                wkt = 70;
+                            }
+                            return ((wkt + parseInt(row.nilai_mutu) + parseInt(row.aspek_pelayanan) + parseInt(row.aspek_k3l)) / 4).toFixed(2);
+                        },
+                        orderable: false,
+                        searchable: false,
+                    },
 	            ],
 	        });
 

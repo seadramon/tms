@@ -12,4 +12,9 @@ class ArmadaRating extends Model
 
     protected $table = 'tms_armada_ratings';
     protected $primaryKey = 'id';
+
+    public function details()
+    {
+    	return $this->hasMany(ArmadaRatingDetail::class, 'ar_id');
+    }
 }

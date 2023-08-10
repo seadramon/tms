@@ -135,6 +135,24 @@ class EvaluasiVendorController extends Controller
                 });
                 return round(($v - $late) / $v * 100, 2) . '%';
             })
+            ->addColumn('aspek_pelayanan', function ($model) {
+                $nilai = $model->sptbh->avg(function($item){
+                    if($item->nilai_pelayanan == null){
+                        return 0;
+                    }else{
+                        return $item->nilai_pelayanan;
+                    }
+                });
+                return $nilai;
+            })
+            ->addColumn('aspek_k3l', function ($model) {
+                $nilai = $model->sptbh->filter(function($item){ 
+                    return $item->spmh->armada_rating != null; 
+                })->avg(function($item){
+                    return $item->spmh->armada_rating->details->sum('bobot');
+                });
+                return $nilai;
+            })
             ->editColumn('tgl_sp3', function ($model) {
                 return date('Ymd', strtotime($model->tgl_sp3));
             })

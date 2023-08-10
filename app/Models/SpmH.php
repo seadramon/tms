@@ -55,6 +55,11 @@ class SpmH extends Model
     {
         return $this->hasOne(SptbH::class, 'no_spm', 'no_spm');
     }
+    
+    public function armada_rating()
+    {
+        return $this->hasOne(ArmadaRating::class, 'no_spm', 'no_spm');
+    }
 
     public function armada()
     {

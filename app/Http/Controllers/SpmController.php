@@ -743,6 +743,7 @@ class SpmController extends Controller
                 $spm->save();
             }else{
                 $active_week = DB::select("select  WOS.\"FNC_GETMG\" (to_Date('" . $now . "','dd/mm/yyyy'), '1A') minggu from dual")[0]->minggu;
+                $blth = DB::select("select  WOS.\"FNC_GETBL\" (to_Date('" . $now . "','dd/mm/yyyy')) bulan from dual")[0]->bulan;
                 $spm = SpmH::find($request->no_spm);
                 $spm->waktu_datang = date('Y-m-d H:i:s');
                 $spm->save();
@@ -750,6 +751,8 @@ class SpmController extends Controller
                 $rating = new ArmadaRating;
                 $rating->tahun = $year;
                 $rating->minggu = $active_week;
+                $rating->blth = $blth;
+                $rating->no_spm = $spm->no_spm;
                 $rating->nopol = $spm->no_pol;
                 $rating->driver_name = $spm->app2_name;
                 $rating->driver_hp = $spm->app2_hp;
