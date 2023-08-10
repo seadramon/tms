@@ -151,7 +151,7 @@ class EvaluasiVendorController extends Controller
                 })->avg(function($item){
                     return $item->spmh->armada_rating->details->sum('bobot');
                 });
-                return $nilai;
+                return $nilai ?? 0;
             })
             ->editColumn('tgl_sp3', function ($model) {
                 return date('Ymd', strtotime($model->tgl_sp3));
