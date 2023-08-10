@@ -46,11 +46,13 @@ class SptbController extends Controller
                 ];
             }
         }
+        $sptbd2 = SptbD2::where('no_sptb', $noSptb)->get()->groupBy('kd_produk');
 
         $pdf = Pdf::loadView('prints.sptb', [
             'data' => $data,
             'ppb' => $ppb,
             'detail2' => $detail2,
+            'sptbd2' => $sptbd2,
         ]);
 
         $filename = "SPTB-SuratJalan";
