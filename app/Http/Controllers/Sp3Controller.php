@@ -126,7 +126,9 @@ class Sp3Controller extends Controller
                     $teks = '';
                     if(Auth::check()){
                         if($model->app2 == 1){
-                            $teks .= '<span class="badge badge-light-success mr-2 mb-2">Approved&nbsp;<i class="fas fa-check text-success"></i></span>';
+                            $teks .= '<span class="badge badge-light-success mr-2 mb-2">Confirmed&nbsp;<i class="fas fa-check text-success"></i></span>';
+                        }else{
+                            $teks .= '<span class="badge badge-light-warning mr-2 mb-2">To Be Confirmed&nbsp;<i class="fas fa-check text-warning"></i></span>';
                         }
                     }else{
                         if($model->app1 == 1){
