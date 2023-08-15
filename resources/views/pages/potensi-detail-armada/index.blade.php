@@ -147,14 +147,8 @@
 	                {data: 'ppbmuat.singkatan', name: 'ppbmuat.singkatan', defaultContent: '-', orderable: false, searchable: false},
 	                {data: 'jarak_km', name: 'jarak_km', defaultContent: '-'},
 	                {data: 'offer', class: "{{ Auth::check() ? 'hidden' : '' }}", orderable: false, searchable: false},
-	                // {data: 'status', orderable: false, searchable: false},
-					{
-						"mData": "Name",
-						"mRender": function (data, type, row) {
-							return "<a href='Admin/Categories/Edit/" + data + "'>EDIT</a>";
-						}
-					}
-	                {data: 'menu', orderable: false, searchable: false}
+	                {data: 'status', orderable: false, searchable: false},
+					{data: 'menu', orderable: false, searchable: false}
 	            ],
 	        });
 
