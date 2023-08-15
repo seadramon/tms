@@ -218,7 +218,7 @@ class Sp3Controller extends Controller
                     if(Auth::check()){
                         $list .= '<li><a class="dropdown-item" href="'.route('sp3.print', str_replace('/', '|', $model->no_sp3)).'">Print</a></li>';
                         $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
-                        if($model->app1 == 1 && in_array($model->app1, [null, 0])){
+                        if($model->app1 == 1 && in_array($model->app2, [null, 0])){
                             $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
                         }
                     }else{
