@@ -105,7 +105,7 @@ class PdaController extends Controller
                     return $model->jadwal4 ? date('d-m-y', strtotime($model->jadwal4)) : '-';
                 })
                 ->addColumn('rit_hari', function ($model) {
-                    if($model->jadwal3 == null || $model->jadwal4 == null){
+                    if($model->jadwal3 == null || $model->jadwal4 == null || (strtotime($model->jadwal4) - strtotime($model->jadwal3) == 0)){
                         return 0;
                     }
                     return round($model->jml_rit / ((strtotime($model->jadwal4) - strtotime($model->jadwal3)) / (3600*24)), 0);
