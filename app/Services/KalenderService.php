@@ -90,37 +90,12 @@ class KalenderService {
 				];
 			});
 			// ->values();
-		$sptb = SptbH::whereBetween('tgl_berangkat', [date('Y-m-d 00:00:00', strtotime($this->start)), date('Y-m-d 23:59:59', strtotime($this->end))]);
-		// if($nopol){
-		// 	$sptb->whereHas('spmh', function($sql) use($nopol){
-		// 		$sql->whereNoPol($nopol);
-		// 	});
-		// }
-		if($this->kd_pat && $this->kd_pat != '0A'){
-			$sptb->where('kd_pat', $this->kd_pat);
-		}
-		$sptb = $sptb->get()
-			->groupBy(function ($item, $key) {
-				return date('Y-m-d', strtotime($item->tgl_berangkat));
-			})
-			->map(function ($item, $key) {
-				return [
-					'title' => $item->count(),
-					'start' => $key,
-					'textColor' => '#50cd89',
-					'backgroundColor' => '#8fbea5',
-					'extendedProps' => [
-						'withText' => true
-					]
-				];
-			});
 		if($sp3->count() > 0){
-			$data = $sp3->merge($spp->all())->merge($sptb->all())->values();
-		}elseif($spp->count() > 0){
-			$data = $spp->merge($sptb->all())->values();
+			$data = $sp3->merge($spp->all())->values();
 		}else{
-			$data = $sptb->values();
+			$data = $spp->values();
 		}
+
         return $data;
     }
 
