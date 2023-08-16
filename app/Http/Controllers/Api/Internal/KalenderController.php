@@ -13,7 +13,9 @@ class KalenderController extends Controller
     {
         if($request->type == 'spm'){
             $temp = (new KalenderService($request->start, $request->end, $request->kd_pat))->rekapDailySpm($request->nopol ?? null);
-            $color = null;
+            $color = [
+                'spm' => '#12eb66'
+            ];
         }elseif($request->type == 'sptb'){
             $temp = (new KalenderService($request->start, $request->end))->rekapDailySptb($request->nopol);
             $color = [

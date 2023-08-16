@@ -9,6 +9,7 @@ use App\Models\GpsLog;
 use App\Models\Personal;
 use App\Models\SpprbH;
 use App\Models\SptbH;
+use App\Services\KalenderService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -152,6 +153,20 @@ class DriverController extends Controller
             'message' => 'success',
             'data' => $data
         ])->setStatusCode(200, 'OK');
+    }
+
+    public function daily(Request $request)
+    {
+        if($request->type == 'sptb'){
+            $temp = (new KalenderService($request->start, $request->end))->rekapDailySptb($request->nopol, 'vendor');
+            $color = [
+                'history_sptb' => '#8fbea5'
+            ];
+        }
+		return response()->json([
+            'data' => $temp,
+            'color' => $color,
+        ]);
     }
 }
 

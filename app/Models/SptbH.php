@@ -35,6 +35,11 @@ class SptbH extends Model
     {
         return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
     }
+    
+    public function pelanggan_npp()
+    {
+        return $this->belongsTo(PelangganNpp::class, 'no_npp', 'no_npp');
+    }
 
     public function monOp()
     {

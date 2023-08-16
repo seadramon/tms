@@ -46,6 +46,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::post('gps-log', [DriverController::class, 'gpsLog'])->name('gps-log');
         Route::get('sptb-detail', [DriverController::class, 'sptbDetail'])->name('sptb-detail');
         Route::get('sptb-list', [DriverController::class, 'sptbList'])->name('sptb-list');
+        Route::post('kalender-daily', [DriverController::class, 'daily'])->name('daily');
     });
 
     Route::name('internal.')->prefix('internal')->namespace('Internal')->group(function() {
