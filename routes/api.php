@@ -74,6 +74,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::middleware('auth:sanctum')->group(function() {
             Route::post('login1', [PelangganController::class, 'login1'])->name('login1');
             Route::post('kalender-daily', [PelangganController::class, 'daily'])->name('daily');
+            Route::post('sptb-daily', [PelangganController::class, 'sptbDaily'])->name('sptb-daily');
         });
     });
 });

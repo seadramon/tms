@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Driver;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Driver\LoginResource;
+use App\Http\Resources\Internal\SptbListResource;
 use App\Models\Driver;
 use App\Models\GpsLog;
 use App\Models\Personal;
@@ -167,6 +168,16 @@ class DriverController extends Controller
             'data' => $temp,
             'color' => $color,
         ]);
+    }
+
+    public function sptbDaily(Request $request)
+    {
+        $sptb = SptbH::with('npp', 'spmh', 'ppb_muat')
+            ->whereBetween('tgl_berangkat', [date('Y-m-d 00:00:00', strtotime($request->tgl)), date('Y-m-d 23:59:59', strtotime($request->tgl))])
+            ->whereRaw("app_pelanggan = '1' and replace(no_pol, ' ','') ='" . $request->nopol . "'")
+            ->get();
+		
+        return SptbListResource::collection($sptb);
     }
 }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Pelanggan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Internal\SptbListResource;
 use App\Http\Resources\Pelanggan\PelangganResource;
 use App\Models\Pelanggan;
 use App\Models\PelangganUser;
@@ -131,6 +132,19 @@ class PelangganController extends Controller
             'data' => $temp,
             'color' => $color,
         ]);
+    }
+    
+    public function sptbDaily(Request $request)
+    {
+        $sptb = SptbH::with('npp', 'spmh', 'ppb_muat')
+            ->whereBetween('tgl_berangkat', [date('Y-m-d 00:00:00', strtotime($request->tgl)), date('Y-m-d 23:59:59', strtotime($request->tgl))])
+            ->whereHas('pelanggan_npp.pelanggan_user', function($sql) use($request) {
+                $sql->where('no_hp', $request->nohp);
+            })
+            ->where('app_pelanggan', '<>', '1')
+            ->get();
+		
+        return SptbListResource::collection($sptb);
     }
 
     public function produkDetail(Request $request)
