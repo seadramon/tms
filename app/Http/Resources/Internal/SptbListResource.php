@@ -19,6 +19,7 @@ class SptbListResource extends JsonResource
         }else{
             $status = 'on_progress';
         }
+        $proc = $this->sptbd[0]->singkatan2 ?? null;
         return [
             "no_sptb"      => $this->no_sptb,
             "no_npp"       => $this->no_npp,
@@ -28,7 +29,8 @@ class SptbListResource extends JsonResource
             "ppb_muat"     => $this->ppb_muat->ket,
             "tgl_dikirim"  => date('d/m/Y', strtotime($this->tgl_berangkat)),
             "tgl_diterima" => date('d/m/Y', strtotime($this->tgl_sampai)),
-            "status"       => $status
+            "status"       => $status,
+            "procedure_path" => $proc ? "http://tms.wika-beton.co.id/document/procedure/" . $proc . ".pdf" : null
         ];
     }
 }

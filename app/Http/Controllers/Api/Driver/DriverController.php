@@ -173,6 +173,9 @@ class DriverController extends Controller
     public function sptbDaily(Request $request)
     {
         $sptb = SptbH::with('npp', 'spmh', 'ppb_muat')
+            ->with(['sptbd' => function($sql){
+                $sql->leftJoin('tb_sbu', DB::raw('substr(sptb_d.kd_produk,1,1)'), '=', 'tb_sbu.kd_sbu');
+            }])
             ->whereBetween('tgl_berangkat', [date('Y-m-d 00:00:00', strtotime($request->tgl)), date('Y-m-d 23:59:59', strtotime($request->tgl))])
             ->whereRaw("app_pelanggan = '1' and replace(no_pol, ' ','') ='" . $request->nopol . "'")
             ->get();

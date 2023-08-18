@@ -47,6 +47,8 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::get('sptb-detail', [DriverController::class, 'sptbDetail'])->name('sptb-detail');
         Route::get('sptb-list', [DriverController::class, 'sptbList'])->name('sptb-list');
         Route::post('kalender-daily', [DriverController::class, 'daily'])->name('daily');
+        Route::post('sptb-daily', [DriverController::class, 'sptbDaily'])->name('sptb-daily');
+        Route::get('spm-list', [DriverController::class, 'spmList'])->name('spm-list'); // filter by nopol
     });
 
     Route::name('internal.')->prefix('internal')->namespace('Internal')->group(function() {

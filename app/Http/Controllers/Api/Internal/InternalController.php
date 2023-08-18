@@ -99,7 +99,10 @@ class InternalController extends Controller
     
     public function sptbList(Request $request)
     {
-        $query = SptbH::with('npp', 'spmh', 'ppb_muat');
+        $query = SptbH::with('npp', 'spmh', 'ppb_muat')
+            ->with(['sptbd' => function($sql){
+                $sql->leftJoin('tb_sbu', DB::raw('substr(sptb_d.kd_produk,1,1)'), '=', 'tb_sbu.kd_sbu');
+            }]);
         if($request->no_npp){
             $query->whereNoNpp($request->no_npp);
         }

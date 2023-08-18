@@ -103,7 +103,13 @@
         <div class="form-group row">
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 required ">Jalur</label>
-                {!! Form::select('jalur[]', $jalur, null, ['class'=>'form-control form-select-solid col-sm-3', "multiple" => true, 'data-control'=>'select2', 'id'=>'jalur']) !!}
+                @php
+                    $attr = ['class'=>'form-control form-select-solid col-sm-3', "multiple" => true, "disabled" => false, 'data-control'=>'select2', 'id'=>'jalur'];
+                    if($source = 'show'){
+                        $attr['disabled'] = true;
+                    }
+                @endphp
+                {!! Form::select('jalur[]', $jalur, null, $attr) !!}
             </div>
         </div>
         <div class="separator separator-dashed border-primary my-10"></div>
