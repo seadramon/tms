@@ -32,6 +32,11 @@ class SppbH extends Model
         return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
     }
 
+    public function pelanggan_npp()
+    {
+        return $this->belongsTo(PelangganNpp::class, 'no_npp', 'no_npp');
+    }
+
     public function personal()
     {
         return $this->belongsTo(Personal::class, 'app_empid', 'employee_id');

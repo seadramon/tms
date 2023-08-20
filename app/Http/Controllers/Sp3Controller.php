@@ -106,7 +106,6 @@ class Sp3Controller extends Controller
         if($request->pat){
             $query->where('kd_pat', $request->pat);
         }
-
         if($request->periode){
             $query->whereYear('tgl_sp3', $request->periode);
         }
@@ -133,6 +132,9 @@ class Sp3Controller extends Controller
                     }else{
                         if($model->app1 == 1){
                             $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
+                        }
+                        if($model->app2 == 1){
+                            $teks .= '<span class="badge badge-light-success mr-2 mb-2">Vendor&nbsp;<i class="fas fa-check text-success"></i></span>';
                         }
                     }
                     return $teks;

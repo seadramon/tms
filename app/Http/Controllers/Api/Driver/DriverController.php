@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\Driver;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Driver\LoginResource;
+use App\Http\Resources\Internal\SpmListResource;
 use App\Http\Resources\Internal\SptbListResource;
 use App\Models\Driver;
 use App\Models\GpsLog;
 use App\Models\Personal;
+use App\Models\SpmH;
 use App\Models\SpprbH;
 use App\Models\SptbH;
 use App\Services\KalenderService;
@@ -181,6 +183,18 @@ class DriverController extends Controller
             ->get();
 		
         return SptbListResource::collection($sptb);
+    }
+
+    public function spmList(Request $request)
+    {
+        $query = SpmH::with('sppb.npp', 'vendor', 'pat', 'spmd.sbu', 'sptbh')
+            ->whereBetween('tgl_spm', [date('Y-m-d 00:00:00', strtotime($request->tgl)), date('Y-m-d 23:59:59', strtotime($request->tgl))])
+            ->whereRaw("replace(no_pol, ' ','') ='" . $request->nopol . "'");
+
+        $spm = $query->get();
+
+
+        return SpmListResource::collection($spm);
     }
 }
 
