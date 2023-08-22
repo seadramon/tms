@@ -110,7 +110,9 @@
                                             <tr>
                                                 <th width='10%'>No.</th>
                                                 <th width='30%'>Range Jarak</th>
-                                                <th width='30%'>Rencana Harsat Pusat</th>
+                                                @if (session('TMP_KDWIL') == '0A')
+                                                    <th width='30%'>Rencana Harsat Pusat</th>
+                                                @endif
                                                 <th width='30%'>Harsat Final</th>
                                             </tr>
                                         </thead>
@@ -129,10 +131,12 @@
                                                         <input type="hidden" name="range_min[{{($key+1)}}][]" value="{{ $pad2->range_min }}">
                                                         <input type="hidden" name="range_max[{{($key+1)}}][]" value="{{ $pad2->range_max }}">
                                                     </td>
+                                                    @if (session('TMP_KDWIL') == '0A')
                                                     <td>
                                                         {{ number_format($pad2->h_pusat) }}
                                                         <input type="hidden" name="h_pusat[{{($key+1)}}][]" value="{{ $pad2->h_pusat }}">
                                                     </td>
+                                                    @endif
                                                     <td>
                                                         {{ number_format($pad2->h_final) }}
                                                         <input type="hidden" name="h_final[{{($key+1)}}][]" value="{{ $pad2->h_final }}">
