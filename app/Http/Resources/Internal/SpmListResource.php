@@ -23,6 +23,7 @@ class SpmListResource extends JsonResource
         }
         return [
             "no_spm"         => $this->no_spm,
+            "no_sptb"        => $this->sptbh->no_sptb ?? null,
             "no_npp"         => $this->sppb->no_npp,
             "nama_proyek"    => $this->sppb->npp->nama_proyek,
             "nama_pelanggan" => $this->sppb->npp->nama_pelanggan,
