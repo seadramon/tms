@@ -33,8 +33,25 @@ class KalenderPengirimanController extends Controller
 	public function detailWeekly()
 	{
 		$labelSemua = ["" => "Semua"];
-        $pat = Pat::all()->pluck('ket', 'kd_pat')->toArray();
-        $pat = $labelSemua + $pat;
+        if(session('TMP_KDWIL') != '0A'){
+            $pat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['1', '4', '5'])
+                ->whereKdPat(session('TMP_KDWIL'))
+                ->get()
+                ->pluck('ket', 'kd_pat')
+                ->toArray();
+        }else{
+            $pat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['1', '4', '5'])
+                ->whereKdPat('1A')
+                ->get()
+                ->pluck('ket', 'kd_pat')
+                ->toArray();
+    
+            $pat = $labelSemua + $pat;
+        }
+		$ppb_muat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['2', '4', '5'])
+            ->get()
+            ->pluck('ket', 'kd_pat')
+            ->toArray();
 		
 		$periode = [];
         for($i=0; $i<10; $i++){
@@ -58,6 +75,7 @@ class KalenderPengirimanController extends Controller
 
 		return view('pages.kalender-pengiriman.detail-weekly', [
 			'pat'            => $pat,
+			'ppb_muat'       => $ppb_muat,
 			'periode'        => $periode,
 			'periode_minggu' => $periode_minggu,
 			'active_week'    => $active_week,

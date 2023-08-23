@@ -136,6 +136,7 @@ class RoleController extends Controller
         // return response()->json($actions[1]->map(function($item){ return explode("|", $item)[1]; }));
         
         $clearing = RoleMenu::where('role_id',$id)->delete();
+        // $clearing = RoleMenuMobile::where('role_id',$id)->delete();
        
         foreach($data as $row){
             if($row != null){

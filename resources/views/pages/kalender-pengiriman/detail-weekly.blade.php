@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 custom-label">PPB Muat</label>
-                            {!! Form::select('ppbmuat', $pat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'ppbmuat']) !!}
+                            {!! Form::select('ppbmuat', $ppb_muat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'ppbmuat']) !!}
                         </div>
                     </div>
 

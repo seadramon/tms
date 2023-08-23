@@ -64,6 +64,7 @@
 @endsection
 @section('js')
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
 	"use strict";
 
@@ -122,5 +123,50 @@
 	KTUtil.onDOMContentLoaded(function () {
 	    KTDatatablesServerSide.init();
 	});
+
+	$(document).ready(function(){
+		$('.delete-btn').on("click", function(e) { 
+			console.log("aa");
+			
+		});
+	});
+
+	$(document).on('click', '.delete-btn', function(){
+		console.log("aa1");
+		swal({
+				title: "Apakah anda yakin?",
+				text: "Menghapus data",
+				icon: "error",
+				buttons: true,
+				dangerMode: true,
+			})
+			.then((willDelete) => {
+				if (willDelete) {
+					$.ajax({
+						type: "POST",
+						url: "{{ route('pricelist-angkutan.delete') }}",
+						headers: {
+							'X-CSRF-TOKEN': "{{csrf_token()}}"
+						},
+						data: {
+								id : $(this).attr('data-id'),
+							},
+						success: function(result) {
+							// swal("Menu Successfully Update");
+							flasher.success("Data telah berhasil dihapus!");
+							$('#tabel_sptb').DataTable().ajax.reload()
+						},
+						error: function(xhr, ajaxOptions, thrownError) {
+							console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+						}
+					});
+				} else {
+					swal("Delete Canceled", {
+						icon: "success",
+					}); 
+				}
+			});
+	});
+
 </script>
 @endsection

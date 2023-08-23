@@ -52,6 +52,9 @@ class PricelistAngkutanController extends Controller
                     if(in_array('view', $action)){
                         $list .= '<li><a class="dropdown-item" href="' . route('pricelist-angkutan.show', str_replace('/', '|', $model->id)) . '">View</a></li>';
                     }
+                    if(in_array('delete', $action)){
+                        $list .= '<li><span class="dropdown-item delete-btn" data-id="' . $model->id . '">delete</span></li>';
+                    }
                 }
                 $edit = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -132,6 +135,16 @@ class PricelistAngkutanController extends Controller
         ])->render();
         
         return response()->json(array('success' => true, 'html'=> $html));
+    }
+    
+    public function delete(Request $request)
+    {
+        $pricelistAngkutanH = PricelistAngkutanH::find($request->id);
+        $pricelistAngkutanH->pad->each(function($d){ $d->pad2()->delete(); });
+        $pricelistAngkutanH->pad()->delete();
+        $pricelistAngkutanH->delete();
+        
+        return response()->json(true);
     }
 
     public function store(Request $request, FlasherInterface $flasher)

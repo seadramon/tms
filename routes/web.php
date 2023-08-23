@@ -114,6 +114,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 		Route::post('/get-lokasi-pemuatan', [PricelistAngkutanController::class, 'getLokasiPemuatan'])->name('get-lokasi-pemuatan');
 		Route::post('/upload-excel', [PricelistAngkutanController::class, 'uploadExcel'])->name('upload-excel');
+		Route::post('/delete', [PricelistAngkutanController::class, 'delete'])->name('delete');
 	});
 
 	Route::group(['prefix' => '/master-driver', 'as' => 'master-driver.'], function(){
