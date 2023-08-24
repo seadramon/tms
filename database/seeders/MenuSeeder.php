@@ -101,6 +101,7 @@ class MenuSeeder extends Seeder
                     'create',
                     'view',
                     'edit',
+                    'delete',
                 ]
             ],
             [
