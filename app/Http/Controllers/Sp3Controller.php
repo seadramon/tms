@@ -106,6 +106,11 @@ class Sp3Controller extends Controller
         if($request->pat){
             $query->where('kd_pat', $request->pat);
         }
+        if($request->ppb_muat){
+            $query->whereHas('sp3D', function($sql) use ($request){
+                $sql->where('pat_to', $request->ppb_muat);
+            });
+        }
         if($request->periode){
             $query->whereYear('tgl_sp3', $request->periode);
         }

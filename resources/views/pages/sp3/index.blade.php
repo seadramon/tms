@@ -32,7 +32,7 @@
                         
                         <div class="col-lg-6 custom-form mb-2">
                             <label class="form-label col-sm-3 custom-label">Lokasi Muat</label>
-                            {!! Form::select('pbbMuat', $muat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pbbMuat']) !!}
+                            {!! Form::select('ppb_muat', $muat, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'ppb_muat']) !!}
                         </div>
                     </div>
 
@@ -164,6 +164,7 @@
                         d.month = $("#monthCutOff").val();
                         d.status = $("#status").val();
                         d.pekerjaan = $("#pekerjaan").val();
+                        d.ppb_muat = $("#ppb_muat").val();
                     }
                 },
 	            columns: [
