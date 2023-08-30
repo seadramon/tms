@@ -196,9 +196,8 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		])->parameters(['' => 'report-pemenuhan-armada']);
 	});
 	Route::group(['prefix' => 'report-evaluasi-vendor', 'as' => 'report-evaluasi-vendor.'], function(){
-		Route::post('/data', [EvaluasiVendorController::class, 'data'])->name('data');
-		// Route::post('/chart', [EvaluasiVendorController::class, 'chart'])->name('chart');
-		// Route::post('/box-data', [EvaluasiVendorController::class, 'boxData'])->name('box-data');
+		Route::post('/data-sp3', [EvaluasiVendorController::class, 'dataSp3'])->name('data-sp3');
+		Route::post('/data-vendor-semester', [EvaluasiVendorController::class, 'dataVendorSemester'])->name('data-vendor-semester');
 
 	    Route::resource('/',  EvaluasiVendorController::class)->except([
 			'destroy', 'show'

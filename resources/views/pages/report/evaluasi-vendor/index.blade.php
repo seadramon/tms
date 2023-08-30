@@ -91,7 +91,7 @@
     });
 
 	// Class definition
-	var KTDatatablesServerSide__ = function () {
+	var KTDatatablesServerSide_sp3 = function () {
 	    // Shared variables
 	    var table;
 	    var dt;
@@ -99,7 +99,7 @@
 
 	    // Private functions
 	    var initDatatable = function () {
-	        dt = $("#tabel_evaluasi_vendor").DataTable({
+	        dt = $("#tabel_evaluasi_vendor_sp3").DataTable({
 				language: {
   					lengthMenu: "Show _MENU_",
  				},
@@ -109,7 +109,7 @@
 	            serverSide: true,
 	            // order: [[0, 'asc']],
 	            stateSave: true,
-                searching: true,
+                // searching: true,
                 buttons: [
                     // {
                     //     extend: 'excel',
@@ -125,7 +125,7 @@
                     // }
                 ],
 	            ajax: {
-                    url: "{{ route('report-evaluasi-vendor.data') }}",
+                    url: "{{ route('report-evaluasi-vendor.data-sp3') }}",
                     type: "POST",
                     data: function(d){
                         d._token = '{{ csrf_token() }}';
@@ -200,13 +200,45 @@
 
     $(document).on('click', '#filter', function(){
         if(!isShowBox2){
-            $('#box2').show();
-
             isShowBox2 = true;
-            
-            KTDatatablesServerSide__.init();
-        }else{
-            $('#tabel_evaluasi_vendor').DataTable().ajax.reload();            
+            $('#box2').show();
+            KTDatatablesServerSide_sp3.init();
+            if($("#tipe").val() == "sp3"){
+            }
+        }
+        if($("#tipe").val() == "sp3"){
+            $('#tabel_evaluasi_vendor_sp3').DataTable().ajax.reload();            
+
+            $('#div_evaluasi_vendor_sp3').show();
+            $('#div_evaluasi_vendor_monthly').hide();
+            $('#div_evaluasi_vendor_semester').hide();
+        }else if($("#tipe").val() == "semester"){
+            $.ajax({
+                type: "post",
+                url: "{{ route('report-evaluasi-vendor.data-vendor-semester') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    kd_pat: $("#kd_pat").val(),
+                    pekerjaan: $("#pekerjaan").val(),
+                    vendor_id: $("#vendor_id").val(),
+                    tipe: $("#tipe").val(),
+                    periode: $("#periode").val()
+                },
+                success: function(res) {
+                    $("#tbody-semester").html("");
+
+                    $("#tbody-semester").html(res);
+
+                    blockUI.release();
+                },
+                error: function(res) {
+                    console.log(res);
+                    blockUI.release();
+                }
+            })
+            $('#div_evaluasi_vendor_sp3').hide();
+            $('#div_evaluasi_vendor_monthly').hide();
+            $('#div_evaluasi_vendor_semester').show();
         }
 
         // getChart();
@@ -221,124 +253,6 @@
         }
     });
 
-    function getChart(){
-        $.ajax({
-            url: "{{ route('report-pemenuhan-armada.chart') }}",
-            type: "POST",
-            data: {
-                '_token': '{{ csrf_token() }}',
-                'kd_pat' : $("#kd_pat").val(),
-                'pbb_muat' : $("#pbb_muat").val(),
-                'vendor_id' : $("#vendor_id").val(),
-                'kd_material' : $("#kd_material").val(),
-                'periode' : $("#periode").val(),
-                'tipe' : $("#tipe").val()
-            },
-            dataType: 'json',
-            beforeSend: function() {
-                blockUI.block();
-            },
-            complete: function() {
-                blockUI.release();
-            },
-            success: function(result) {
-                $("#chart-container").html('');
-
-                $("#chart-container").insertFusionCharts({
-                    type: "msline",
-                    width: "100%",
-                    height: "500",
-                    dataFormat: "json",
-                    dataSource: {
-                        chart: {
-                            caption: "Pemenuhan Armada",
-                            subcaption: $("#periode").val(),
-                            showhovereffect: "1",
-                            drawcrossline: "1",
-                            plottooltext: "<b>$dataValue</b>",
-                            theme: "fusion"
-                        },
-                        categories: [
-                            {
-                                category: result.kategori
-                            }
-                        ],
-                        dataset: [
-                            {
-                                seriesname: "Rencana",
-                                data: result.rencana
-                            },
-                            {
-                                seriesname: "Realisasi",
-                                data: result.realisasi
-                            },
-                        ]
-                    }
-                });
-            },
-            error: function(result) {
-                console.log(result);
-            }
-        });
-
-        $.ajax({
-            url: "{{ route('report-pemenuhan-armada.box-data') }}",
-            type: "POST",
-            data: {
-                '_token': '{{ csrf_token() }}',
-                'kd_pat' : $("#kd_pat").val(),
-                'pbb_muat' : $("#pbb_muat").val(),
-                'vendor_id' : $("#vendor_id").val(),
-                'kd_material' : $("#kd_material").val(),
-                'periode' : $("#periode").val(),
-                'tipe' : $("#tipe").val()
-            },
-            dataType: 'json',
-            beforeSend: function() {
-                blockUIBox.block();
-            },
-            complete: function() {
-                blockUIBox.release();
-            },
-            success: function(result) {
-                $("#box1-content").html('');
-
-                result.box1.forEach(element => {
-                    $("#box1-content").append(`
-                        <tr>
-                            <td class="text-center">` + element.rn + `</td>
-                            <td>` + element.nama + `</td>
-                            <td class="text-center">` + $.number( element.total, 2 ) + `</td>
-                        </tr>
-                    `); 
-                });
-
-                $("#box2-content1").html(result.box2[0]);
-                $("#box2-content2").html('%');
-                $("#box2-content3").html($.number( result.box2[1], 2 ) + ' SPtB');
-                $("#box2-content4").html('/');
-                $("#box2-content5").html($.number( result.box2[2], 2 ) + ' SPM');
-
-                $("#box3-content").html(`
-                    <tr>
-                        <td>Dipercepat</td>
-                        <td class="text-center">` + result.box3[0] + `</td>
-                    </tr>
-                    <tr>
-                        <td>Tepat Waktu</td>
-                        <td class="text-center">` + result.box3[1] + `</td>
-                    </tr>
-                    <tr>
-                        <td>Terlambat</td>
-                        <td class="text-center">` + result.box3[2] + `</td>
-                    </tr>
-                `);
-            },
-            error: function(result) {
-                console.log(result);
-            }
-        });
-    }
 
     function exportDatatables(e, dt, button, config) {
         var self = this;
@@ -378,6 +292,14 @@
 
         // Requery the server with the new one-time export settings
         dt.ajax.reload();
+    }
+
+    function getParam(){
+        var unitkerja = $("#unitkerja").val();
+        var ppbmuat = $("#ppbmuat").val();
+        var tahun = $("#tahun").val();
+        var minggu = $("#minggu").val();
+        return $.param({unitkerja, ppbmuat, tahun, minggu});
     }
 </script>
 @endsection

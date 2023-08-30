@@ -175,6 +175,13 @@ class MenuSeeder extends Seeder
                 'sequence' => '1020'
             ],
             [
+                'name' => 'Evaluasi Vendor',
+                'route_name' => 'report-evaluasi-vendor..index',
+                'icon' => 'bi bi-card-list fs-3',
+                'level' => '2',
+                'sequence' => '1030'
+            ],
+            [
                 'name' => 'Setting',
                 'route_name' => '#',
                 'icon' => 'fas fa-atom fs-3',
