@@ -49,7 +49,6 @@ class PdaController extends Controller
                 ->toArray();
         }else{
             $kd_pat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['1', '4', '5'])
-                ->whereKdPat('1A')
                 ->get()
                 ->pluck('ket', 'kd_pat')
                 ->toArray();

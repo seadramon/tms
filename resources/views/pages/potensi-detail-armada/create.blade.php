@@ -48,7 +48,7 @@
                                         @php $i=1; @endphp
                                         @foreach($muat as $row)
                                             @php
-                                                if($row->jadwal3 == null || $row->jadwal4 == null){
+                                                if($row->jadwal3 == null || $row->jadwal4 == null || (strtotime($row->jadwal4) - strtotime($row->jadwal3)) == 0){
                                                     $rit_hari = 0;
                                                 }else{
                                                     $rit_hari = round($row->jml_rit / ((strtotime($row->jadwal4) - strtotime($row->jadwal3)) / (3600*24)), 0);
@@ -64,7 +64,7 @@
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal3)) }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($row->jadwal4)) }}</td>
                                                 <td>
-                                                    <select class="form-select" data-control="select2" data-placeholder="Select Armada.." name="kd_material[]">
+                                                    <select class="form-select" data-control="select2" data-placeholder="Select Armada.." name="kd_material[]" @if (Auth::check()) disabled @endif>
                                                         <option></option>
                                                         @foreach($trmaterial as $item)
                                                             @if(!empty($row->potensiH))

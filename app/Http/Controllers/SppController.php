@@ -791,11 +791,11 @@ class SppController extends Controller
     public function monitorApprovalData()
     {
         $query = SppbH::with(['spprb.npp'])->select('*');
-        // if(!Auth::check() && session('TMP_KDWIL') != '0A'){
-		// 	$query->whereHas('npp', function($sql){
-        //         $sql->where('kd_pat', session('TMP_KDWIL'));
-        //     });
-		// }
+        if(!Auth::check() && session('TMP_KDWIL') != '0A'){
+            $query->whereHas('npp', function($sql){
+                $sql->where('kd_pat', session('TMP_KDWIL'));
+            });
+        }
 
         return DataTables::eloquent($query)
             ->editColumn('tgl_sppb', function ($model) {
