@@ -176,7 +176,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'name' => 'Evaluasi Vendor',
-                'route_name' => 'report-evaluasi-vendor..index',
+                'route_name' => 'report-evaluasi-vendor.index',
                 'icon' => 'bi bi-card-list fs-3',
                 'level' => '2',
                 'sequence' => '1030'

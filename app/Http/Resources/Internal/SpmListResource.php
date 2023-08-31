@@ -28,7 +28,7 @@ class SpmListResource extends JsonResource
             "nama_proyek"    => $this->sppb->npp->nama_proyek,
             "nama_pelanggan" => $this->sppb->npp->nama_pelanggan,
             "nopol"          => $this->no_pol,
-            "vendor"         => $this->vendor->nama,
+            "vendor"         => $this->vendor->nama ?? "Not Found",
             "sbu"            => $this->spmd->first()->sbu->singkatan,
             "ppb_muat"       => $this->pat->ket,
             "status"         => $status
