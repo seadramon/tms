@@ -30,6 +30,9 @@ class PricelistAngkutanController extends Controller
     public function data()
     {
         $query = PricelistAngkutanH::with(['pad' => function($sql) { $sql->with('angkutan'); }, 'pat'])->select('*');
+        if(session('TMP_KDWIL') != '0A'){
+            $query->whereKdPat(session('TMP_KDWIL'));
+        }
 
         return DataTables::eloquent($query)
             ->addColumn('angkutan', function ($model) {
@@ -73,9 +76,21 @@ class PricelistAngkutanController extends Controller
 
     public function create()
     {
-        $kd_pat = Pat::get()
-            ->pluck('ket', 'kd_pat')
-            ->toArray();
+        if(session('TMP_KDWIL') != '0A'){
+            $kd_pat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['1', '4', '5'])
+                ->whereKdPat(session('TMP_KDWIL'))
+                ->get()
+                ->pluck('ket', 'kd_pat')
+                ->toArray();
+        }else{
+            $kd_pat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['1', '4', '5'])
+                ->get()
+                ->pluck('ket', 'kd_pat')
+                ->toArray();
+        }
+        // $kd_pat = Pat::get()
+        //     ->pluck('ket', 'kd_pat')
+        //     ->toArray();
 
         $min_tahun = (int) date('Y', strtotime(date('Y') . " -5 year"));
         $max_tahun = (int) date('Y', strtotime(date('Y') . " +5 year"));

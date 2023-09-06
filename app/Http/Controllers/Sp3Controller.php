@@ -101,7 +101,8 @@ class Sp3Controller extends Controller
             ->join(DB::raw($joinQuery), function($join) {
                 $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
             })
-            ->select('sp3_h.no_sp3', 'sp3_h.tgl_sp3', 'sp3_h.app1', 'sp3_h.app2', 'sp3_h.no_npp', 'sp3_h.vendor_id', 'sp3_h.kd_pat', 'sp3_h.jadwal1', 'sp3_h.jadwal2');
+            ->leftJoin('v_sp3_ri', 'sp3_h.no_sp3', '=', 'v_sp3_ri.no_sp3')
+            ->select('sp3_h.no_sp3', 'sp3_h.tgl_sp3', 'sp3_h.app1', 'sp3_h.app2', 'sp3_h.no_npp', 'sp3_h.vendor_id', 'sp3_h.kd_pat', 'sp3_h.jadwal1', 'sp3_h.jadwal2', 'v_sp3_ri.vol_sp3', 'v_sp3_ri.vol_sptb');
 
         if($request->pat){
             $query->where('kd_pat', $request->pat);
@@ -116,6 +117,13 @@ class Sp3Controller extends Controller
         }
         if($request->pekerjaan){
             $query->where('kd_jpekerjaan', $request->pekerjaan);
+        }
+        if($request->status){
+            if($request->status == 'aktif'){
+                $query->whereRaw('v_sp3_ri.vol_sp3 > v_sp3_ri.vol_sptb');
+            }elseif ($request->status == 'selesai') {
+                $query->whereRaw('v_sp3_ri.vol_sp3 <= v_sp3_ri.vol_sptb');
+            }
         }
         
         if(Auth::check()){

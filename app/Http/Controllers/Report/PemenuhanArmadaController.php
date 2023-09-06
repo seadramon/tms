@@ -25,12 +25,20 @@ class PemenuhanArmadaController extends Controller
     public function index(){
         $labelSemua = ["" => "Semua"];
 
-        $kd_pat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['1', '4', '5'])
-            ->get()
-            ->pluck('ket', 'kd_pat')
-            ->toArray();
-
-        $kd_pat = $labelSemua + $kd_pat;
+        if(session('TMP_KDWIL') != '0A'){
+            $kd_pat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['1', '4', '5'])
+                ->whereKdPat(session('TMP_KDWIL'))
+                ->get()
+                ->pluck('ket', 'kd_pat')
+                ->toArray();
+        }else{
+            $kd_pat = Pat::whereIn(DB::raw('SUBSTR(KD_PAT, 1, 1)'), ['1', '4', '5'])
+                ->get()
+                ->pluck('ket', 'kd_pat')
+                ->toArray();
+    
+            $kd_pat = $labelSemua + $kd_pat;
+        }
 
         if(Auth::check()){
             $vendor = Vendor::where('vendor_id', Auth::user()->vendor_id)->get()->pluck('nama', 'vendor_id')->toArray();
