@@ -35,8 +35,8 @@ class KalenderService {
 				return [
 					'title' => $item->count(),
 					'start' => $key,
-                    'textColor' => '#50cd89',
-                    'backgroundColor' => '#e8fff3',
+                    'textColor' => '#006600',
+                    'backgroundColor' => '#D6E8D4',
 					'extendedProps' => [
 						'withText' => true
 					]
@@ -132,8 +132,8 @@ class KalenderService {
 				return [
 					'title' => $item->count(),
 					'start' => $key,
-					'textColor' => '#53d2f9',
-					'backgroundColor' => '#2521b6',
+					'textColor' => '#000066',
+					'backgroundColor' => '#DAE8FC',
 					'extendedProps' => [
 						'withText' => true
 					]

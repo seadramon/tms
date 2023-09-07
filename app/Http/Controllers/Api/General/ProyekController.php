@@ -63,6 +63,7 @@ class ProyekController extends Controller
               from spprb_h a 
                inner join sptb_h b on a.no_spprb=b.no_spprb
                inner join sptb_d c on b.no_sptb=c.no_sptb
+               where b.jns_sptb in (0,2) and b.no_sptb not like '%BAT%'
                group by a.no_npp,c.kd_produk,b.app_pelanggan
               )    S3 on S1.no_npp=S3.no_npp and S1.kd_produk_konfirmasi like substr(S3.kd_produk,1,6)||'_'||  substr(S3.kd_produk,-3)  
               inner join tb_produk S4 on  S1.kd_produk_konfirmasi=S4.kd_produk 
@@ -89,6 +90,7 @@ class ProyekController extends Controller
 
     public function proyekProgressTipe($no_npp)
     {
+        // select * from sptb_h where sptb_h.jns_sptb in (0,2) and sptb_h.no_sptb not like '%BAT%';
         $sql = "select NO_NPP,kd_produk_konfirmasi,tipe,max(VOL_OK)VOL_OK,max(VOL_OP)VOL_OP,sum(VOL_SPTB_DITERIMA)VOL_ESPTB_DITERIMA,
 			 max(VOL_SPTB)VOL_SPTB,max(STOCK_PPB)STOCK_PPB ,max(STOCK_PROD)STOCK_PROD   from (
 			   SELECT S1.NO_NPP,S1.kd_produk_konfirmasi ,s4.tipe,S1.VOL_KONFIRMASI VOL_OK, 
@@ -107,6 +109,7 @@ class ProyekController extends Controller
 			   from spprb_h a 
 			    inner join sptb_h b on a.no_spprb=b.no_spprb
 			    inner join sptb_d c on b.no_sptb=c.no_sptb
+                where b.jns_sptb in (0,2) and b.no_sptb not like '%BAT%'
 			    group by a.no_npp,c.kd_produk,b.app_pelanggan
 			   )    S3 on S1.no_npp=S3.no_npp and S1.kd_produk_konfirmasi=S3.kd_produk 
 			   inner join tb_produk S4 on  S1.kd_produk_konfirmasi=S4.kd_produk 
