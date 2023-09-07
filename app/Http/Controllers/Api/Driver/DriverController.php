@@ -163,7 +163,7 @@ class DriverController extends Controller
         if($request->type == 'sptb'){
             $temp = (new KalenderService($request->start, $request->end))->rekapDailySptb($request->nopol, 'vendor');
             $color = [
-                'history_sptb' => '#8fbea5'
+                'history_sptb' => '#DAE8FC'
             ];
         }
 		return response()->json([

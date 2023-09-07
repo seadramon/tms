@@ -125,7 +125,7 @@ class PelangganController extends Controller
         if($request->type == 'sptb'){
             $temp = (new KalenderService($request->start, $request->end))->rekapDailySptb($request->nohp, 'pelanggan');
             $color = [
-                'sptb_on_progress' => '#8fbea5'
+                'sptb_on_progress' => '#DAE8FC'
             ];
         }
 		return response()->json([
