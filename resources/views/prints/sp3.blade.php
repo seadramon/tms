@@ -259,7 +259,7 @@
                     <tr>
                         <td>4.3.</td>
                         <td>
-                            Proses penanganan barang/jasa agar berhubungan & berkoordinasi dengan Pelaksana Utama Wilayah Penjualan I {{ $pics }}
+                            Proses penanganan barang/jasa agar berhubungan & berkoordinasi dengan Pelaksana Utama {{ $data->unitkerja->ket ?? "Unknown"}} {{ $pics }}
                         </td>
                     </tr>
                 </table>
@@ -302,7 +302,7 @@
                     <tr>
                         <td>6.1.</td>
                         <td>
-                            PT Wijaya Karya Beton, Tbk Wilayah Penjualan I berhak membatalkan pekerjaan secara sepihak apabila Vendor dinilai tidak mampu melaksanakan pekerjaan sesuai Surat Perjanjian Pelaksanaan Pekerjaan ini.
+                            PT Wijaya Karya Beton, Tbk {{ $data->unitkerja->ket ?? "Unknown"}} berhak membatalkan pekerjaan secara sepihak apabila Vendor dinilai tidak mampu melaksanakan pekerjaan sesuai Surat Perjanjian Pelaksanaan Pekerjaan ini.
                         </td>
                     </tr>
                     <tr>
@@ -344,7 +344,7 @@
                     <tr>
                         <td>8.1.</td>
                         <td>
-                            PT. Wijaya Karya Beton, Tbk Wilayah Penjualan I dan Vendor wajib tunduk pada semua pasal sesuai lampiran dibalik perjanjian ini
+                            PT. Wijaya Karya Beton, Tbk {{ $data->unitkerja->ket ?? "Unknown"}} dan Vendor wajib tunduk pada semua pasal sesuai lampiran dibalik perjanjian ini
                         </td>
                     </tr>
                 </table>
@@ -356,7 +356,7 @@
                     <td width="70%" style="padding-left: 35px;">
                         Setuju melaksanakan,<br>
                         {{ !empty($data->vendor)?$data->vendor->nama:'' }}
-                        {{ !empty($data->app2_jbt)?$data->app2_jbt:'' }}
+                        
                     </td>
                     <td width="30%">
                         PT. Wijaya Karya Beton, Tbk<br>
@@ -369,7 +369,8 @@
                 </tr>
                 <tr>
                     <td style="padding-left: 35px;" class="tebal">
-                        {{ $data->app2_name }}
+                        {{ $data->app2_name }}<br>
+                        {{ !empty($data->app2_jbt)?$data->app2_jbt:'' }}
                     </td>
                     <td class="tebal">
                         {{ !empty($data->manajer)?$data->manajer->first_name.' '.$data->manajer->last_name:'' }}

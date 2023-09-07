@@ -69,18 +69,18 @@ class Sp3Controller extends Controller
         ];
 
         $monthCutOff = [
-            'januari'   => 'Januari',
-            'februari'  => 'Februari',
-            'maret'     => 'Maret',
-            'april'     => 'April',
-            'mei'       => 'Mei',
-            'juni'      => 'Juni',
-            'juli'      => 'Juli',
-            'agustus'   => 'Agustus',
-            'september' => 'September',
-            'oktober'   => 'Oktober',
-            'november'  => 'November',
-            'desember'  => 'Desember'
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember'
         ];
 
         $jenisPekerjaan = JenisPekerjaan::get()
@@ -96,6 +96,7 @@ class Sp3Controller extends Controller
 
     public function data(Request $request)
     {
+        // 
         $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
         $query = Sp3::with('vendor', 'sp3D', 'unitkerja')
             ->join(DB::raw($joinQuery), function($join) {
@@ -112,17 +113,26 @@ class Sp3Controller extends Controller
                 $sql->where('pat_to', $request->ppb_muat);
             });
         }
-        if($request->periode){
-            $query->whereYear('tgl_sp3', $request->periode);
+        if($request->periode && $request->periode != ''){
+            if($request->range == 'sd'){
+                $awal = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AWAL_THN\" ('" . $request->periode . "') tgl FROM dual")[0]->tgl);
+                $akhir = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AKHIR_BLN\" ('" . $request->periode . "', '" . $request->month . "') tgl FROM dual")[0]->tgl);
+            }else{
+                $awal = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AWAL_BLN\" ('" . $request->periode . "', '" . $request->month . "') tgl FROM dual")[0]->tgl);
+                $akhir = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AKHIR_BLN\" ('" . $request->periode . "', '" . $request->month . "') tgl FROM dual")[0]->tgl);
+            }
+            $query->whereBetween('tgl_sp3', [date('Y-m-d 00:00:00', strtotime($awal)), date('Y-m-d 23:59:59', strtotime($akhir))]);
         }
         if($request->pekerjaan){
             $query->where('kd_jpekerjaan', $request->pekerjaan);
         }
         if($request->status){
             if($request->status == 'aktif'){
-                $query->whereRaw('v_sp3_ri.vol_sp3 > v_sp3_ri.vol_sptb');
+                $query->where('app1', 1)->whereRaw('v_sp3_ri.vol_sp3 > v_sp3_ri.vol_sptb');
             }elseif ($request->status == 'selesai') {
-                $query->whereRaw('v_sp3_ri.vol_sp3 <= v_sp3_ri.vol_sptb');
+                $query->where('app1', 1)->whereRaw('v_sp3_ri.vol_sp3 <= v_sp3_ri.vol_sptb');
+            }elseif ($request->status == 'belum_verifikasi') {
+                $query->where('app1', '<>', 1);
             }
         }
         
@@ -1084,7 +1094,7 @@ class Sp3Controller extends Controller
     {
         $noSp3 = str_replace('|', '/', $noSp3);
 
-        $data = Sp3::find($noSp3);
+        $data = Sp3::with('unitkerja')->find($noSp3);
         $detail = $data->sp3D;
         $sp3pics = $data->pic;
         

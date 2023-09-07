@@ -20,13 +20,13 @@ class KalenderController extends Controller
             $temp = (new KalenderService($request->start, $request->end))->rekapDailySptb($request->nopol);
             $color = [
                 'sptb' => '#DAE8FC',
-                'spm' => '#D6E8D4'
+                'spm' => '#EAFFE9'
             ];
         }else{
             $temp = (new KalenderService($request->start, $request->end, $request->kd_pat))->rekapDailySppWithSp3();
             $color = [
-                'spp' => '#af96e2',
-                'sp3' => '#b6f5f7',
+                'spp' => '#E1D4E7',
+                'sp3' => '#DAE8FC',
                 'sptb' => '#DAE8FC'
             ];
         }

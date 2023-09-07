@@ -44,8 +44,8 @@
                         
                         <div class="col-lg-6 custom-form mb-2">
                             <label class="form-label col-sm-3 custom-label">Cut Off</label>
-                            {!! Form::select('rangeCutOff', $rangeCutOff, null, ['class'=>'form-control form-select-solid col-sm-1', 'data-control'=>'select2', 'id'=>'rangeCutOff', "disabled" => true]) !!}
-                            {!! Form::select('monthCutOff', $monthCutOff, null, ['class'=>'form-control form-select-solid col-sm-2', 'data-control'=>'select2', 'id'=>'monthCutOff', "disabled" => true]) !!}
+                            {!! Form::select('rangeCutOff', $rangeCutOff, null, ['class'=>'form-control form-select-solid col-sm-1', 'data-control'=>'select2', 'id'=>'rangeCutOff', 'disabled' => 'disabled']) !!}
+                            {!! Form::select('monthCutOff', $monthCutOff, null, ['class'=>'form-control form-select-solid col-sm-2', 'data-control'=>'select2', 'id'=>'monthCutOff', 'disabled' => 'disabled']) !!}
                         </div>
                     </div>
 
@@ -221,12 +221,12 @@
     });
     $(document).on('change', '#periode', function(){
         if($('#periode').val() == ''){
-            var disabled = true; 
+            $("#monthCutOff").attr("disabled", disabled);
+            $("#rangeCutOff").attr("disabled", disabled);
         }else{
-            var disabled = false; 
+            $("#rangeCutOff").removeAttr("disabled");
+            $("#monthCutOff").removeAttr("disabled");
         }
-        $("#rangeCutOff").attr("disabled", disabled);
-        $("#monthCutOff").attr("disabled", disabled);
     });
 </script>
 @endsection
