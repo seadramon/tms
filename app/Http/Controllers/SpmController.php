@@ -768,6 +768,7 @@ class SpmController extends Controller
                     $rating_->save();
                 }
             }
+            DB::commit();
             return response()->json(['success' => true]);
         } catch(Exception $e) {
             DB::rollback();
