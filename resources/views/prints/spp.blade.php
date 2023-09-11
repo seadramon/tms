@@ -187,8 +187,8 @@
             
             <table width="100%">
                 <tr>
-                    <td width="25%">&nbsp;</td>
                     <td width="25%"><br>Menyetujui</td>
+                    <td width="25%">&nbsp;</td>
                     <td width="25%">&nbsp;</td>
                     <td width="25%">
                         {{$npp->kota}}, {{ date('d/m/Y', strtotime($data->created_date))}}<br>
@@ -242,8 +242,8 @@
                     @endfor
                     <td>
                         <img alt="Logo" src="data:image/png;base64, {{ $data->createdby->signature_base_64 }}" class="logo" height="50px;"/><br>
-                        {{ $data->createdby->full_name }}<br>
-                        {{ $data->createdby->jabatan->ket }}
+                        {{ $data->createdby->full_name ?? "" }}<br>
+                        {{ $data->createdby->jabatan->ket ?? "" }}
                     </td>
                 </tr>
             </table>

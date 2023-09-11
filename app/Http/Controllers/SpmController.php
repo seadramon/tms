@@ -121,7 +121,7 @@ class SpmController extends Controller
                         if(in_array('view', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . route('spm.show', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">View</a></li>';
                         }
-                        if(in_array('armada_tiba', $action)){
+                        if(in_array('armada_tiba', $action) && is_null($model->waktu_datang)){
                             $list .= '<li><a class="dropdown-item armada-tiba" href="javascript:void(0)" data-spm="' . $model->no_spm . '">Armada Tiba</a></li>';
                         }
                     }
