@@ -121,7 +121,7 @@ class Sp3Controller extends Controller
                 $awal = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AWAL_BLN\" ('" . $request->periode . "', '" . $request->month . "') tgl FROM dual")[0]->tgl);
                 $akhir = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AKHIR_BLN\" ('" . $request->periode . "', '" . $request->month . "') tgl FROM dual")[0]->tgl);
             }
-            $query->whereBetween('tgl_sp3', [date('Y-m-d 00:00:00', strtotime($awal)), date('Y-m-d 23:59:59', strtotime($akhir))]);
+            $query->whereBetween('sp3_h.tgl_sp3', [date('Y-m-d 00:00:00', strtotime($awal)), date('Y-m-d 23:59:59', strtotime($akhir))]);
         }
         if($request->pekerjaan){
             $query->where('kd_jpekerjaan', $request->pekerjaan);
