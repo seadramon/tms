@@ -81,7 +81,7 @@
                                 <td style="width: 10.3%;" style="background-color: #f2f2f2;">{{$produk}}</td>
                                 @foreach ($dates as $i => $baris)
                                     <td class="text-center" style="width: {{1.3 + (0.15 * $i)}}%;" style="font-weight: bolder;">
-                                        {{ count(($detail[$key][$produk][$baris] ?? false) ? $detail[$key][$produk][$baris] ?? []) }}
+                                        {{ count(($detail[$key][$produk][$baris] ?? false) ? $detail[$key][$produk][$baris] : []) }}
                                     </td>
                                 @endforeach
                                 <td colspan="3" class="text-center" style="width: 48.3%;"></td>
