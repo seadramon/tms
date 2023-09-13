@@ -355,12 +355,12 @@
                 <tr>
                     <td width="70%" style="padding-left: 35px;">
                         Setuju melaksanakan,<br>
-                        {{ !empty($data->vendor)?$data->vendor->nama:'' }}
+                        {{ !empty($data->vendor) ? $data->vendor->nama : '' }}
                         
                     </td>
                     <td width="30%">
                         PT. Wijaya Karya Beton, Tbk<br>
-                        {{ !empty($data->unitkerja)?'Manajer '.$data->unitkerja->ket:''}}
+                        {{ !empty($data->unitkerja) ? $data->unitkerja->ket : ''}}
                     </td>
                 </tr>
                 <tr>
@@ -370,10 +370,11 @@
                 <tr>
                     <td style="padding-left: 35px;" class="tebal">
                         {{ $data->app2_name }}<br>
-                        {{ !empty($data->app2_jbt)?$data->app2_jbt:'' }}
+                        {{ !empty($data->app2_jbt) ? $data->app2_jbt : '' }}
                     </td>
                     <td class="tebal">
-                        {{ !empty($data->manajer)?$data->manajer->first_name.' '.$data->manajer->last_name:'' }}
+                        {{ !empty($data->manajer) ? $data->manajer->first_name . ' ' . $data->manajer->last_name : '' }}<br>
+                        {{ !empty($data->unitkerja) ? 'Manajer ' . $data->unitkerja->ket : ''}}
                     </td>
                 </tr>
             </table>

@@ -171,7 +171,7 @@
                 <tr>
                     <td>{{ $spmh->app2_name }}</td>
                     <td>
-                        {{ $spmh->approval->full_name }}
+                        {{ $spmh->approval->full_name ?? "" }}
                     </td>
                 </tr>
             </tbody>
