@@ -198,7 +198,7 @@ class PdaController extends Controller
                 'jadwal3' => $row->jadwal3,
                 'jadwal4' => $row->jadwal4,
                 'jml_rit' => $row->jml_rit,
-                'pat' => $row->pat->ket,
+                'pat' => $row->pat->ket ?? "not found",
                 'jarak_km' => $row->jarak_km,
                 'spprbri' => $spprbRi,
                 'lat_source' => $spprbRi[0]->ppb_muat->lat_gps,
