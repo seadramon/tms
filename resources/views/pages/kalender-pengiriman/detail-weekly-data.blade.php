@@ -81,7 +81,7 @@
                                 <td style="width: 10.3%;" style="background-color: #f2f2f2;">{{$produk}}</td>
                                 @foreach ($dates as $i => $baris)
                                     <td class="text-center" style="width: {{1.3 + (0.15 * $i)}}%;" style="font-weight: bolder;">
-                                        {{ count($detail[$key][$produk][$baris] ?? []) }}
+                                        {{ count(($detail[$key][$produk][$baris] ?? false) ? $detail[$key][$produk][$baris] ?? []) }}
                                     </td>
                                 @endforeach
                                 <td colspan="3" class="text-center" style="width: 48.3%;"></td>
@@ -104,7 +104,7 @@
             @endphp
             @foreach ($dates as $baris)
                 @php
-                    $ttl+= $data->filter(function($item, $key) use($detail) { return ($detail[$key] ?? false); })->map(function($item, $key) use($detail, $baris) { return $detail[$key]->map(function($item1, $key1) use($detail, $baris, $key) { return $detail[$key][$key1][$baris]->sum('vol') ?? 0; })->values(); })->values()->flatten()->sum();
+                    $ttl+= $data->filter(function($item, $key) use($detail) { return ($detail[$key] ?? false); })->map(function($item, $key) use($detail, $baris) { return $detail[$key]->map(function($item1, $key1) use($detail, $baris, $key) { return ($detail[$key][$key1][$baris] ?? false) ? $detail[$key][$key1][$baris]->sum('vol') : 0; })->values(); })->values()->flatten()->sum();
                 @endphp
             @endforeach
             <th width="10%" style="vertical-align: middle; background-color: #ace1af;">TOTAL: {{$ttl}}</th>
@@ -114,7 +114,7 @@
                     $tgl = date('d', strtotime($baris));
                 @endphp
                 <th width="1.2%" style="vertical-align: middle; background-color: #ace1af;">
-                    {{ $data->filter(function($item, $key) use($detail) { return ($detail[$key] ?? false); })->map(function($item, $key) use($detail, $baris) { return $detail[$key]->map(function($item1, $key1) use($detail, $baris, $key) { return $detail[$key][$key1][$baris]->sum('vol') ?? 0; })->values(); })->values()->flatten()->sum() }}
+                    {{ $data->filter(function($item, $key) use($detail) { return ($detail[$key] ?? false); })->map(function($item, $key) use($detail, $baris) { return $detail[$key]->map(function($item1, $key1) use($detail, $baris, $key) { return ($detail[$key][$key1][$baris] ?? false) ? $detail[$key][$key1][$baris]->sum('vol') : 0; })->values(); })->values()->flatten()->sum() }}
                 </th>
             @endforeach
             <th width="33%" style="vertical-align: middle;" colspan="3"></th>
@@ -156,7 +156,7 @@
                             <td width="10%" class="text-center" style="background-color: darkblue; color:white; vertical-align: middle; font-weight: bolder;">{{$produk}}</td>
                             @foreach ($dates as $i => $baris)
                                 <td width="1.2%" class="text-center" style="background-color: lavenderblush; color:black; vertical-align: middle; font-weight: bolder;">
-                                    {{ $detail[$key][$produk][$baris]->sum('vol') ?? 0 }}
+                                    {{ ($detail[$key][$produk][$baris] ?? false) ? $detail[$key][$produk][$baris]->sum('vol') : 0 }}
                                 </td>
                             @endforeach
                             <td class="text-center" width="15%" rowspan="{{$detail[$key]->keys()->count()}}">{{ $row->first()->armada->jenis->name ?? '-' }}</td>
@@ -167,7 +167,7 @@
                             <td width="10%" class="text-center" style="background-color: darkblue; color:white; vertical-align: middle; font-weight: bolder;">{{$produk}}</td>
                             @foreach ($dates as $i => $baris)
                                 <td width="1.2%" class="text-center" style="background-color: lavenderblush; color:black; vertical-align: middle; font-weight: bolder;">
-                                    {{ $detail[$key][$produk][$baris]->sum('vol') ?? 0 }}
+                                    {{ ($detail[$key][$produk][$baris] ?? false) ? $detail[$key][$produk][$baris]->sum('vol') : 0 }}
                                 </td>
                             @endforeach
                         </tr>

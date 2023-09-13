@@ -27,7 +27,7 @@ class SptbListResource extends JsonResource
             "nama_pelanggan"  => $this->npp->nama_pelanggan,
             "nopol"        => $this->no_pol,
             "vendor"       => $this->spmh->vendor->nama ?? "Not Found",
-            "ppb_muat"     => $this->spmh->pat->ket ?? "Not Found",
+            "ppb_muat"     => $proc . ' / ' . $this->spmh->pat->ket ?? "Not Found",
             "tgl_dikirim"  => date('d/m/Y', strtotime($this->tgl_berangkat)),
             "tgl_diterima" => date('d/m/Y', strtotime($this->tgl_sampai)),
             "status"       => $status,
