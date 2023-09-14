@@ -170,10 +170,16 @@ class KalenderPengirimanController extends Controller
 			->sortBy(function ($item) {
 				return (int) $item->mg;
 			})
-			->mapWithKeys(function($item){ 
+			->mapWithKeys(function($item) use ($request) { 
+				$awal_ = date('d-m-Y', strtotime($item->tgl_awal));
+				$akhir_ = date('d-m-Y', strtotime($item->tgl_akhir));
 				$awal = date('d/m/Y', strtotime($item->tgl_awal));
 				$akhir = date('d/m/Y', strtotime($item->tgl_akhir));
-				return [$item->mg => "Minggu ke-" . $item->mg . " ({$awal}-{$akhir})"]; 
+				if($request->type == 'date'){
+					return [$awal_ . ';' . $akhir_ => "Minggu ke-" . $item->mg . " ({$awal}-{$akhir})"]; 
+				}else{
+					return [$item->mg => "Minggu ke-" . $item->mg . " ({$awal}-{$akhir})"]; 
+				}
 			})
 			->all();
 

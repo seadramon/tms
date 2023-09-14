@@ -124,8 +124,8 @@
     });
     $(document).on('click', '.generate', function(){
         tahun = $("#tahun").val();
-        minggu1 = $("#minggu1").val();
-        minggu2 = $("#minggu2").val();
+        minggu1 = $("#minggu1").val().split(';')[0];
+        minggu2 = $("#minggu2").val().split(';')[1];
         kd_pat = $("#kd_pat").val();
         format = $(this).text().toLowerCase();
 
@@ -144,7 +144,7 @@
         $("#minggu2").empty();
         $.ajax({
             type:"get",
-            url: "{{ route('kalender-pengiriman.periode-minggu') }}?tahun=" + $("#tahun").val(),
+            url: "{{ route('kalender-pengiriman.periode-minggu') }}?type=date&tahun=" + $("#tahun").val(),
             data: {_token: "{{ csrf_token() }}"},
             success: function(result){
                 $.each(result.periode_minggu, function(k, v){
