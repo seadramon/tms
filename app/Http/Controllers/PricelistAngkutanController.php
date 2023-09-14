@@ -31,7 +31,7 @@ class PricelistAngkutanController extends Controller
     {
         $query = PricelistAngkutanH::with(['pad' => function($sql) { $sql->with('angkutan'); }, 'pat'])->select('*');
         if(session('TMP_KDWIL') != '0A'){
-            $query->whereKdPat(session('TMP_KDWIL'));
+            $query->where('tms_pricelist_angkutan_h.kd_pat', session('TMP_KDWIL'));
         }
 
         return DataTables::eloquent($query)
