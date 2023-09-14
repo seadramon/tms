@@ -137,7 +137,7 @@ class Sp3Controller extends Controller
         }
         
         if(Auth::check()){
-            $query->whereVendorId(Auth::user()->vendor_id)->where('app1', 1);
+            $query->where('sp3_h.vendor_id', Auth::user()->vendor_id)->where('app1', 1);
         }
 
         return DataTables::eloquent($query)

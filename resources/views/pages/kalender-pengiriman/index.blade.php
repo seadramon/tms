@@ -30,8 +30,9 @@
 						</div>
                     </div>
 					<div id="kalender-pengiriman"></div>
-					<p class="text-inverse-primary p-3 fw-semibold fw-6 mt-5 col-3" style="background-color: #1a428b; font-weight: bold">SP3</p>
-					<p class="text-inverse-primary p-3 fw-semibold fw-6 mt-2 col-3" style="background-color: #af96e2; font-weight: bold">SPP</p>
+					<p class="text-inverse-primary p-3 fw-semibold fw-6 mt-5 col-3" style="background-color: #DAE8FC; font-weight: bold">SP3</p>
+					<p class="text-inverse-primary p-3 fw-semibold fw-6 mt-2 col-3" style="background-color: #E1D4E7; font-weight: bold">SPP</p>
+					<p class="text-inverse-primary p-3 fw-semibold fw-6 mt-2 col-3" style="background-color: #EAFFE9; font-weight: bold">SPM</p>
                 </div>
                 <div class="card-footer">
                 </div>
