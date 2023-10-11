@@ -42,9 +42,9 @@ class EvaluasiVendorController extends Controller
         }
 
         $tipe = [
-            'sp3' => 'Sp3 Bulanan',
-            'bulanan' => 'Vendor Bulanan',
-            'semester' => 'Vendor Semester'
+            'sp3' => 'Evaluasi Vendor Bulanan',
+            'bulanan' => 'Evaluasi Vendor Semesteran'
+            // 'semester' => 'Vendor Semester'
         ];
         $pekerjaan = [
             'darat' => 'Angkutan Darat'

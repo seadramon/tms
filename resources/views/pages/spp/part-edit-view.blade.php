@@ -121,7 +121,7 @@
 						<th>No</th>
 						<th>Nama Produk</th>
 						<th>Kode Produk</th>
-						<th>Saat Ini</th>
+						<th>Pengajuan Pelaksana Vol</th>
 						<th>S.d Saat ini</th>
 						<th>Keterangan</th>
 						<th>Segmen</th>

@@ -1,0 +1,25 @@
+SPP Print 
+- Vol pesanan dari detail pesanan [X]
+- vol mwp
+- vol saat ini
+  - jika mpeo approve dan >0 diisi vol mpeo
+  - jika mwp approve dan >0 diisi vol mwp
+- vol s/d saat ini sum dari sppb lalu dan saat ini
+
+SPP view
+- Saat ini diganti pengajuan pelaksana vol
+
+SP3 print page break nya terlalu TP.02.01|WB-1C.0455|2023P00 [X]
+
+evaluasi vendor [X]
+- ditambah filter tahun
+- Evaluasi Vendor Bulanan
+  - periode disamain sp3
+- Evaluasi Vendor Semesteran
+  - periode disamain mon distribusi
+
+- Master armada
+  - sewaktu edit pop up foto
+
+- potensi detail armada [login vendor]
+  - data yg muncul sesuai vendor id di pricelist angkutan

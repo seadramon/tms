@@ -112,8 +112,11 @@
                             <td style="text-align: center;">
                                 <?php
                                 $volSaatIni = 0;
-                                if ($volMwp > 0) {
-                                    $volSaatIni = $volMpeo / $volMwp;
+                                if (!empty($detail->app3_vol) && $detail->app3_vol > 0) {
+                                    $volSaatIni = $detail->app3_vol;
+                                }
+                                elseif (!empty($detail->app2_vol) && $detail->app2_vol > 0) {
+                                    $volSaatIni = $detail->app2_vol;
                                 }
                                 ?>
                                 {{ round($volSaatIni,2) }}
