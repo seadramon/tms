@@ -90,6 +90,22 @@
         message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Loading data...</div>',
     });
 
+    $(document).ready(function() {
+        loadPeriodeMinggu();
+        // loadData();
+        $("#tahun1").change(function(){
+            loadPeriodeMinggu();
+        });
+        $("#tipe").change(function(){
+            if($("#tipe").val() == "sp3"){
+                $(".tahun1").addClass("hidden");
+                $(".tahun2").removeClass("hidden");
+            }else{
+                $(".tahun2").addClass("hidden");
+                $(".tahun1").removeClass("hidden");
+            }
+        });
+    });
 	// Class definition
 	var KTDatatablesServerSide_sp3 = function () {
 	    // Shared variables
@@ -133,7 +149,9 @@
                         d.pekerjaan = $("#pekerjaan").val();
                         d.vendor_id = $("#vendor_id").val();
                         d.tipe = $("#tipe").val();
-                        d.periode = $("#periode").val();
+                        d.tahun2 = $("#tahun2").val();
+                        d.range = $("#range").val();
+                        d.month = $("#month").val();
                     }
                 },
 	            columns: [
@@ -222,7 +240,9 @@
                     pekerjaan: $("#pekerjaan").val(),
                     vendor_id: $("#vendor_id").val(),
                     tipe: $("#tipe").val(),
-                    periode: $("#periode").val()
+                    tahun1: $("#tahun1").val(),
+                    minggu1: $("#minggu1").val(),
+                    minggu2: $("#minggu2").val()
                 },
                 success: function(res) {
                     $("#tbody-semester").html("");
@@ -297,9 +317,28 @@
     function getParam(){
         var unitkerja = $("#unitkerja").val();
         var ppbmuat = $("#ppbmuat").val();
-        var tahun = $("#tahun").val();
-        var minggu = $("#minggu").val();
-        return $.param({unitkerja, ppbmuat, tahun, minggu});
+        var tahun1 = $("#tahun1").val();
+        var minggu1 = $("#minggu1").val();
+        var minggu2 = $("#minggu2").val();
+        return $.param({unitkerja, ppbmuat, tahun, minggu1, minggu2});
+    }
+
+    function loadPeriodeMinggu(){
+        $("#minggu1").empty();
+        $("#minggu2").empty();
+        $.ajax({
+            type:"get",
+            url: "{{ route('kalender-pengiriman.periode-minggu') }}?type=date&tahun=" + $("#tahun1").val(),
+            data: {_token: "{{ csrf_token() }}"},
+            success: function(result){
+                $.each(result.periode_minggu, function(k, v){
+                    $("#minggu1").append('<option value="' + k + '">' + v + '</option>')
+                    $("#minggu2").append('<option value="' + k + '">' + v + '</option>')
+                })
+                $("#minggu1").select2("destroy").select2();
+                $("#minggu2").select2("destroy").select2();
+            }
+        });
     }
 </script>
 @endsection

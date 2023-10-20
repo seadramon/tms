@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Report;
 
 use App\Http\Controllers\Controller;
+use App\Models\KalenderMg;
 use App\Models\Pat;
 use App\Models\Sp3;
 use App\Models\SpmH;
@@ -43,18 +44,62 @@ class EvaluasiVendorController extends Controller
 
         $tipe = [
             'sp3' => 'Evaluasi Vendor Bulanan',
-            'bulanan' => 'Evaluasi Vendor Semesteran'
+            // 'bulanan' => 'Evaluasi Vendor Semesteran'
+            'semester' => 'Evaluasi Vendor Semesteran'
             // 'semester' => 'Vendor Semester'
         ];
         $pekerjaan = [
             'darat' => 'Angkutan Darat'
         ];
+        
+        $range = [
+            'sd'    => 's/d',
+            'di'    => '='
+        ];
+
+        $month = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember'
+        ];
+
+
+        $tahun = [];
+        for($i=0; $i<5; $i++){
+            $year = date('Y', strtotime('-' . $i . ' years'));
+            $tahun[$year] = $year;
+        }
+        $periode_minggu = KalenderMg::whereTh(date('Y'))
+			->whereKdPat('1A')
+			->get()
+			->sortBy(function ($item) {
+				return (int) $item->mg;
+			})
+			->mapWithKeys(function($item){ 
+				$awal = date('d-m-Y', strtotime($item->tgl_awal));
+				$akhir = date('d-m-Y', strtotime($item->tgl_akhir));
+				return [$awal => "Mg " . $item->mg . " ({$awal})"]; 
+			})
+			->all();
 
         return view('pages.report.evaluasi-vendor.index', compact(
             'kd_pat',
             'vendor_id',
             'tipe',
-            'pekerjaan'
+            'pekerjaan',
+            'periode_minggu',
+            'tahun',
+            'range',
+            'month'
         ));
     }
 
@@ -80,13 +125,24 @@ class EvaluasiVendorController extends Controller
             $query->where('sp3_h.vendor_id', $request->vendor_id);
         }
 
-        if($request->periode){
-            $periode = explode(' - ', $request->periode);
+        // if($request->periode){
+        //     $periode = explode(' - ', $request->periode);
 
-            $periode[0] = date('Y-m-d', strtotime($periode[0]));
-            $periode[1] = date('Y-m-d', strtotime($periode[1]));
+        //     $periode[0] = date('Y-m-d', strtotime($periode[0]));
+        //     $periode[1] = date('Y-m-d', strtotime($periode[1]));
 
-            $query->whereBetween('sp3_h.tgl_sp3', $periode);
+        //     $query->whereBetween('sp3_h.tgl_sp3', $periode);
+        // }
+        // $query->whereBetween('sp3_h.tgl_sp3', ['2022-01-01', '2022-09-31']);
+        if($request->tahun2 && $request->tahun2 != ''){
+            if($request->range == 'sd'){
+                $awal = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AWAL_THN\" ('" . $request->tahun2 . "') tgl FROM dual")[0]->tgl);
+                $akhir = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AKHIR_BLN\" ('" . $request->tahun2 . "', '" . $request->month . "') tgl FROM dual")[0]->tgl);
+            }else{
+                $awal = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AWAL_BLN\" ('" . $request->tahun2 . "', '" . $request->month . "') tgl FROM dual")[0]->tgl);
+                $akhir = str_replace('.', '-', DB::select("select WOS.\"FNC_GET_TGL_AKHIR_BLN\" ('" . $request->tahun2 . "', '" . $request->month . "') tgl FROM dual")[0]->tgl);
+            }
+            $query->whereBetween('sp3_h.tgl_sp3', [date('Y-m-d', strtotime($awal)), date('Y-m-d', strtotime($akhir))]);
         }
 
         return DataTables::eloquent($query->orderBy('tgl_sp3', 'asc'))
@@ -201,11 +257,12 @@ class EvaluasiVendorController extends Controller
             $query->where('sp3_h.vendor_id', $request->vendor_id);
         }
 
-        if($request->periode){
-            $periode = explode(' - ', $request->periode);
+        if($request->minggu1){
+            $minggu1 = explode(';', $request->minggu1);
+            $minggu2 = explode(';', $request->minggu2);
 
-            $periode[0] = date('Y-m-d', strtotime($periode[0]));
-            $periode[1] = date('Y-m-d', strtotime($periode[1]));
+            $periode[0] = date('Y-m-d', strtotime($minggu1[0]));
+            $periode[1] = date('Y-m-d', strtotime($minggu2[1]));
 
             $query->whereBetween('sp3_h.tgl_sp3', $periode);
         }

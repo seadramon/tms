@@ -505,7 +505,8 @@ class SppController extends Controller
         if (count($pesanans) > 0) {
             foreach ($pesanans as $pesanan) {
                 $volm3 = !empty($pesanan->vol_m3)?$pesanan->vol_m3:1;
-                $pesananVolBtg  = $pesanan->vSpprbRi->vol_spprb ?? 0;
+                $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
+                // $pesananVolBtg  = $pesanan->vSpprbRi->vol_spprb ?? 0;
                 $pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
                 $sppVolBtg = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
                 $sppVolTon = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;

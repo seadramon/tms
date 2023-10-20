@@ -314,7 +314,8 @@
                 </table>
             </div>
 
-            <div style="page-break-after: always;">
+            {{-- <div style="page-break-after: always;"> --}}
+            <div style="">
                 <b>7. Resiko Pelaksanaan (Khusus Vendor Angkutan)</b>
                 <table style="margin-left: 7px;margin-bottom: 21px;">
                     <tr>

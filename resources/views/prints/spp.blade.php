@@ -80,11 +80,11 @@
                         <th>NAMA/TIPE<br>BARANG</th>
                         <th>SATUAN</th>
                         <th>VOLUME<br>PESANAN</th>
-                        <th>VOLUME<br>PENGAJUAN<br>PELAKSANA</th>
+                        {{-- <th>VOLUME<br>PENGAJUAN<br>PELAKSANA</th>
                         <th>VOLUME<br>APP<br>MKSDM</th>
                         <th>VOLUME<br>APP<br>MPEO</th>
-                        <th>VOLUME<br>APP<br>MWP</th>
-                        <th>VOLUME<br>SPPB<br>LALU</th>
+                        <th>VOLUME<br>APP<br>MWP</th> --}}
+                        <th>VOLUME<br>SPP<br>LALU</th>
                         <th>SAAT<br>INI</th>
                         <th>S/D SAAT<br>INI</th>
                     </tr>
@@ -104,10 +104,10 @@
                             <td>{{ $detail->master_produk->nama_sub_sbu . '/' . $detail->produk->tipe }}</td>
                             <td style="text-align: center;">{{ strtoupper($detail->produk->satuan) }}</td>
                             <td style="text-align: center;">{{ isset($dataPesanan[$kdProduk])?$dataPesanan[$kdProduk]['pesananVolBtg']:0 }}</td>
-                            <td style="text-align: center;">{{ $detail->vol }}</td>
+                            {{-- <td style="text-align: center;">{{ $detail->vol }}</td>
                             <td style="text-align: center;">{{ !empty($detail->app1_vol)?$detail->app1_vol:'-' }}</td>
                             <td style="text-align: center;">{{ $volMpeo }}</td>
-                            <td style="text-align: center;">{{ $volMwp }}</td>
+                            <td style="text-align: center;">{{ $volMwp }}</td> --}}
                             <td style="text-align: center;">{{ $volLalu }}</td>
                             <td style="text-align: center;">
                                 <?php
