@@ -364,14 +364,12 @@ class Sp3Controller extends Controller
             ->where('no_npp', $parameters['no_npp'])
             ->first();
 
-        $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
-            ->get()
-            ->pluck('no_ban', 'no_ban')->toArray();
+        // $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
+        $ban = Ban::get()->pluck('no_ban', 'no_ban')->toArray();
         $ban = ["" => "---Pilih---"] + $ban;
 
-        $kontrak = Kontrak::where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
-            ->get()
-            ->pluck('no_kontrak', 'no_kontrak')->toArray();
+        // $kontrak = Kontrak::where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
+        $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
         $kontrak = ["" => "---Pilih---"] + $kontrak;
 
         $vendor = Vendor::where('vendor_id', $parameters['vendor_id'])->first();
