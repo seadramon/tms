@@ -35,10 +35,10 @@ class EvaluasiVendorController extends Controller
         $kd_pat = $labelSemua + $kd_pat;
 
         if(Auth::check()){
-            $vendor = Vendor::where('vendor_id', Auth::user()->vendor_id)->get()->pluck('nama', 'vendor_id')->toArray();
+            $vendor = Vendor::where('vendor_id', Auth::user()->vendor_id)->where("sync_eproc", "1")->get()->pluck('nama', 'vendor_id')->toArray();
             $vendor_id = $labelSemua + $vendor;
         }else{
-            $vendor = Vendor::get()->pluck('nama', 'vendor_id')->toArray();
+            $vendor = Vendor::get()->pluck('nama', 'vendor_id')->where("sync_eproc", "1")->toArray();
             $vendor_id = $labelSemua + $vendor;
         }
 
