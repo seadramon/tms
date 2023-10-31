@@ -94,7 +94,7 @@
                     <?php $i = 1; ?>
                     @foreach($data->detail as $detail)
                         <?php
-                        $kdProduk = $data->kd_produk;
+                        $kdProduk = $detail->kd_produk;
                         $volLalu = isset($dataPesanan[$kdProduk])?$dataPesanan[$kdProduk]['sppVolBtg']:0;
                         $volMpeo = !empty($detail->app2_vol)?$detail->app2_vol:0;
                         $volMwp = !empty($detail->app3_vol)?$detail->app3_vol:0;
