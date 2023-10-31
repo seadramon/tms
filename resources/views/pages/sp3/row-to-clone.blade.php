@@ -6,14 +6,14 @@
         {!! Form::hidden('kd_produk[]', $detailPesanan->first()?->produk?->kd_produk, []) !!}
         {!! Form::select('tipe[]', $produk, null, ['class'=>'form-control', 'data-control'=>'select2', 'disabled']) !!}
     </td>
-    <td style="width: 12%;">
+    <td style="width: 10%;">
         {!! Form::text('jarak_pekerjaan[]', null, ['class'=>'form-control jarak_pekerjaan decimal', 'disabled']) !!}
     </td>
-    <td style="width: 13%;">
+    <td style="width: 10%;">
         {!! Form::text('vol_btg[]', null, ['class'=>'form-control vol_btg decimal', 'disabled']) !!}
         <input type="hidden" value="0" disabled>
     </td>
-    <td style="width: 13%;">
+    <td style="width: 10%;">
         {!! Form::text('vol_ton[]', null, ['class'=>'form-control vol_ton decimal', 'disabled']) !!}
     </td>
     @if ($sat_harsat != 'ritase')
@@ -24,7 +24,7 @@
     <td style="width: 15%;">
         {!! Form::text('harsat[]', null, ['class'=>'form-control harsat decimal', 'disabled']) !!}
     </td>
-    <td style="width: 10%;">
+    <td style="width: 18%;">
         {!! Form::text('jumlah[]', null, ['class'=>'form-control jumlah decimal', 'readonly', 'disabled']) !!}
     </td>
     <td style="vertical-align: middle; padding-left: 0px; width: 3%;">
