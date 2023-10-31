@@ -278,7 +278,9 @@
 					}
 				}
 				if(val.split('.').length > 1){
-					$(this).val(format(val, '.', val.split('.')[1].length)); 
+					if(val.split('.')[1].length > 1){
+						$(this).val(format(val, '.', val.split('.')[1].length)); 
+					}
 				}else{
 					$(this).val(format(val, '.', 0)); 
 				}

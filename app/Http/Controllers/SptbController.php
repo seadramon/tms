@@ -361,6 +361,7 @@ class SptbController extends Controller
             $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
                 ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
                 ->first();
+
             $lasttrxidnum   = $maxTrxid->max_trxid ?? 0;
 
             for($i=0; $i < count($request->kd_produk); $i++){

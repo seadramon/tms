@@ -103,7 +103,7 @@
                             <td style="text-align: center;">{{ $i }}</td>
                             <td>{{ $detail->master_produk->nama_sub_sbu . '/' . $detail->produk->tipe }}</td>
                             <td style="text-align: center;">{{ strtoupper($detail->produk->satuan) }}</td>
-                            <td style="text-align: center;">{{ isset($dataPesanan[$kdProduk])?$dataPesanan[$kdProduk]['pesananVolBtg']:0 }}</td>
+                            <td style="text-align: center;">{{ isset($dataPesanan[$kdProduk])?$dataPesanan[$kdProduk]['pesananVolBtg']:$kdProduk }}</td>
                             {{-- <td style="text-align: center;">{{ $detail->vol }}</td>
                             <td style="text-align: center;">{{ !empty($detail->app1_vol)?$detail->app1_vol:'-' }}</td>
                             <td style="text-align: center;">{{ $volMpeo }}</td>

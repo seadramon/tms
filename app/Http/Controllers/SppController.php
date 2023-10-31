@@ -504,6 +504,7 @@ class SppController extends Controller
 
         if (count($pesanans) > 0) {
             foreach ($pesanans as $pesanan) {
+                
                 $volm3 = !empty($pesanan->vol_m3)?$pesanan->vol_m3:1;
                 $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
                 // $pesananVolBtg  = $pesanan->vSpprbRi->vol_spprb ?? 0;
