@@ -1,0 +1,11 @@
+SPtb:
+- button konfirmasi dengan upload file ketika app_pelanggan != 1 dan update app_pelanggan = 1
+- tambah status jika penilaian mutu sudah diisi [berlaku untuk pelayanan dan mutu]
+- dapat lihat penilaian mutu yg sudah diisi [berlaku untuk pelayanan dan mutu]
+
+SPM
+- armada tiba, tampilkan data yg diinput
+
+Dashboard
+- redirect ke menu yang relate
+
