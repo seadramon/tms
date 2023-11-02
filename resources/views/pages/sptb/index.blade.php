@@ -39,7 +39,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                         </tbody>
                     </table>
                 </div>
@@ -157,7 +157,7 @@
         display: flex;
     }
     .custom-label {
-        display: flex; 
+        display: flex;
         align-items: center;
         margin-bottom: 0px;
     }
@@ -214,7 +214,7 @@
 
 	        table = dt.$;
 	    }
-	    
+
 	    // Public methods
 	    return {
 	        init: function () {

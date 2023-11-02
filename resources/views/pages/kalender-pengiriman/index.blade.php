@@ -30,9 +30,9 @@
 						</div>
                     </div>
 					<div id="kalender-pengiriman"></div>
-					<p class="text-inverse-primary p-3 fw-semibold fw-6 mt-5 col-3" style="background-color: #DAE8FC; font-weight: bold">SP3</p>
-					<p class="text-inverse-primary p-3 fw-semibold fw-6 mt-2 col-3" style="background-color: #E1D4E7; font-weight: bold">SPP</p>
-					<p class="text-inverse-primary p-3 fw-semibold fw-6 mt-2 col-3" style="background-color: #EAFFE9; font-weight: bold">SPM</p>
+					<p class="text-dark p-3 fw-semibold fw-6 mt-5 col-3" style="background-color: #DAE8FC; font-weight: bold">SP3</p>
+					<p class="text-dark p-3 fw-semibold fw-6 mt-2 col-3" style="background-color: #E1D4E7; font-weight: bold">SPP</p>
+					<p class="text-dark p-3 fw-semibold fw-6 mt-2 col-3" style="background-color: #EAFFE9; font-weight: bold">SPM</p>
                 </div>
                 <div class="card-footer">
                 </div>
@@ -52,7 +52,7 @@
         display: flex;
     }
     .custom-label {
-        display: flex; 
+        display: flex;
         align-items: center;
         margin-bottom: 0px;
     }
@@ -66,7 +66,7 @@
 <script src="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js') }}"></script>
 <script type="text/javascript">
  	$(document).ready(function() {
-		
+
     });
 	const element = document.getElementById("kalender-pengiriman");
 

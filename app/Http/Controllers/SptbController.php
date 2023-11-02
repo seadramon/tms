@@ -28,7 +28,7 @@ class SptbController extends Controller
 
     public function data()
     {
-        $query = SptbH::with(['spmh', 'npp'])->select('*');
+        $query = SptbH::with(['spmh', 'npp', 'sptbd2'])->select('*');
         if(Auth::check()){
             $query->whereHas('spmh', function($sql){
                 $sql->whereVendorId(Auth::user()->vendor_id);
@@ -94,12 +94,19 @@ class SptbController extends Controller
                 }else{
                     $teks = '<span class="badge badge-light-warning mr-2 mb-2">onProgress</i></span>';
                 }
+                if(!is_null($model->nilai_pelayanan)){
+                    $teks .= '<span class="badge badge-light-dark mr-2 mb-2">Pelayanan-K3&nbsp;<i class="fas fa-check text-success"></i></span>';
+                }
+                $mutu = $model->sptbd2->map(function($item){ return !is_null($item->kondisi_produk); })->contains(true);
+                if($mutu){
+                    $teks .= '<span class="badge badge-light-dark mr-2 mb-2">Mutu&nbsp;<i class="fas fa-check text-success"></i></span>';
+                }
                 return $teks;
             })
             ->rawColumns(['menu', 'status'])
             ->toJson();
     }
-    
+
     public function create(Request $request)
     {
         if(session('TMP_KDWIL') != '0A'){
@@ -107,11 +114,11 @@ class SptbController extends Controller
         }else{
             $no_spm = SpmH::doesntHave('sptbh')->where('tgl_spm', '>=', date('Y-m-d 00:00:00', strtotime('-1 years')))->pluck('no_spm', 'no_spm')->toArray();
         }
-            
+
         $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
 
         $jns_sptb =  [
-            '2' => 'Stok Titipan', 
+            '2' => 'Stok Titipan',
             '0' => 'Stok Aktif'
         ];
 
@@ -135,7 +142,7 @@ class SptbController extends Controller
         //     $sppbD = SppbD::where('no_sppb', $spmH->no_sppb)
         //         ->where('kd_produk', $spmd->kd_produk)
         //         ->first();
-            
+
         //     return $volume[] = $sppbD->segmental == 1 ? ($spmd->vol / $sppbD->jml_segmen) : $spmd->vol;
         // });
 
@@ -150,7 +157,7 @@ class SptbController extends Controller
         $sppbD = SppbD::where('no_sppb', $request->no_sppb)
             ->where('kd_produk', $request->kd_produk)
             ->first();
-    
+
         return $sppbD->segmental == 1 ? ($request->volume / $sppbD->jml_segmen) : $request->volume;
     }
 
@@ -159,7 +166,7 @@ class SptbController extends Controller
         $kdPat = session("TMP_KDWIL") ?? '1A';
         try {
             DB::beginTransaction();
-                        
+
             Validator::make($request->all(), [
                 'no_spm'        => 'required'
             ])->validate();
@@ -170,7 +177,7 @@ class SptbController extends Controller
             $noDokumen = 'SPtB/'.$kdPat.'/'. substr($month[0]->month, 0, 2);
 
             $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
-            
+
             if($msNoDokumen->exists()){
                 $msNoDokumen = $msNoDokumen->first();
 
@@ -282,15 +289,15 @@ class SptbController extends Controller
     public function show($no_sptb)
     {
         $data = SptbH::with('ppb_muat')->find(str_replace('|', '/', $no_sptb));
-        
+
         $no_spm = SpmH::where('app2', 1)
             ->pluck('no_spm', 'no_spm')
             ->toArray();
-            
+
         $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
 
         $jns_sptb =  [
-            '2' => 'Stok Titipan', 
+            '2' => 'Stok Titipan',
             '0' => 'Stok Aktif'
         ];
 
@@ -304,15 +311,15 @@ class SptbController extends Controller
     public function edit($no_sptb)
     {
         $data = SptbH::with('sptbd2')->find(str_replace('|', '/', $no_sptb));
-        
+
         $no_spm = SpmH::where('app2', 1)
             ->pluck('no_spm', 'no_spm')
             ->toArray();
-            
+
         $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
 
         $jns_sptb =  [
-            '2' => 'Stok Titipan', 
+            '2' => 'Stok Titipan',
             '0' => 'Stok Aktif'
         ];
 
@@ -322,19 +329,19 @@ class SptbController extends Controller
             'data', 'no_spm', 'jns_sptb'
         ));
     }
-    
+
     public function penilaianMutu($no_sptb)
     {
-        $data = SptbH::find(str_replace('|', '/', $no_sptb));
-        
+        $data = SptbH::with("sptbd2")->find(str_replace('|', '/', $no_sptb));
+
         $no_spm = SpmH::where('app2', 1)
             ->pluck('no_spm', 'no_spm')
             ->toArray();
-            
+
         $no_spm = ["" => "Pilih No. SPM"] + $no_spm;
 
         $jns_sptb =  [
-            '2' => 'Stok Titipan', 
+            '2' => 'Stok Titipan',
             '0' => 'Stok Aktif'
         ];
 
@@ -349,7 +356,7 @@ class SptbController extends Controller
     {
         try {
             DB::beginTransaction();
-                        
+
             Validator::make($request->all(), [
                 'no_sptb'        => 'required'
             ])->validate();
@@ -357,7 +364,7 @@ class SptbController extends Controller
             $kdPat = session("TMP_KDWIL") ?? '1A';
 
             $j = 0;
-            
+
             $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
                 ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
                 ->first();
@@ -385,7 +392,7 @@ class SptbController extends Controller
 
         return redirect()->route('sptb.index');
     }
-    
+
     public function penilaianPelayananSimpan(Request $request, FlasherInterface $flasher)
     {
         try {
@@ -407,7 +414,7 @@ class SptbController extends Controller
     {
         try {
             DB::beginTransaction();
-                        
+
             Validator::make($request->all(), [
                 'no_sptb'        => 'required'
             ])->validate();
@@ -419,7 +426,7 @@ class SptbController extends Controller
             // SptbD2::where('no_sptb', $no_sptb)->delete();
 
             $j = 0;
-            
+
             // $maxTrxid = SptbD2::selectRaw('max(substr(trxid_tpd2,23,6)) as MAX_TRXID')
             //     ->where(DB::raw('substr(trxid,15,4)'), date('Y'))
             //     ->first();
