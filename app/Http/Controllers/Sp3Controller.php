@@ -46,7 +46,7 @@ class Sp3Controller extends Controller
 
         $muat = Pat::where('kd_pat', 'like', '2%')->get()->pluck('ket', 'kd_pat')->toArray();
         $muat = $labelSemua + $muat;
-        
+
         $periode = [];
 
         for($i=0; $i<10; $i++){
@@ -86,7 +86,7 @@ class Sp3Controller extends Controller
         $jenisPekerjaan = JenisPekerjaan::get()
             ->pluck('ket', 'kd_jpekerjaan')
             ->toArray();
-            
+
         $jenisPekerjaan = ["" => "Semua"] + $jenisPekerjaan;
 
         return view('pages.sp3.index', compact(
@@ -96,7 +96,7 @@ class Sp3Controller extends Controller
 
     public function data(Request $request)
     {
-        // 
+        //
         $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))no_sp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
         $query = Sp3::with('vendor', 'sp3D', 'unitkerja')
             ->join(DB::raw($joinQuery), function($join) {
@@ -135,7 +135,7 @@ class Sp3Controller extends Controller
                 $query->where('app1', '<>', 1);
             }
         }
-        
+
         if(Auth::check()){
             $query->where('sp3_h.vendor_id', Auth::user()->vendor_id)->where('app1', 1);
         }
@@ -192,7 +192,7 @@ class Sp3Controller extends Controller
                     $sp3d = $model->sp3D->groupBy(function($item){ return $item->kd_produk . '_' . $item->pat_to; });
                     $vol_sptb = SptbD::with('sptbh')->whereHas('sptbh',function($sql) use ($model) {
                         $sql->where('no_npp', $model->no_npp);
-                        $sql->whereHas('spmh',function($sql) use ($model) {    
+                        $sql->whereHas('spmh',function($sql) use ($model) {
                             $sql->where('vendor_id', $model->vendor_id);
                         });
                     })
@@ -291,13 +291,13 @@ class Sp3Controller extends Controller
             ->get()
             ->pluck('nama', 'vendor_id')
             ->toArray();
-            
+
         $vendor = ["" => "Pilih Vendor"] + $vendor;
 
         $jenisPekerjaan = JenisPekerjaan::get()
             ->pluck('ket', 'kd_jpekerjaan')
             ->toArray();
-            
+
         $jenisPekerjaan = ["" => "Pilih Pekerjaan"] + $jenisPekerjaan;
 
         $sat_harsat = ["tonase" => "Tonase", "ritase" => "Ritase"];
@@ -319,7 +319,7 @@ class Sp3Controller extends Controller
         if(session('TMP_KDWIL') != '0A'){
             $query->where('kd_pat', session('TMP_KDWIL') ?? '1A');
         }
-        
+
         return $query->get();
     }
 
@@ -343,13 +343,13 @@ class Sp3Controller extends Controller
     public function getDataBox2(Request $request)
     {
         $parameters = $request->all();
-        
+
         $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
             ->where('no_npp', $parameters['no_npp'])
             ->get();
 
         $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
-        
+
         $sp3D = Sp3D::whereNoNpp($parameters['no_npp'])
             ->whereIn('kd_produk', $kd_produks)
             ->get()
@@ -379,9 +379,9 @@ class Sp3Controller extends Controller
 					->first();
 
         $kondisiPenyerahan = [
-            'L' => 'LOKO', 
-            'F' => 'FRANKO', 
-            'T' => 'TERPASANG', 
+            'L' => 'LOKO',
+            'F' => 'FRANKO',
+            'T' => 'TERPASANG',
             'D' => 'DISPENSASI'
         ];
 
@@ -403,7 +403,7 @@ class Sp3Controller extends Controller
             ->get()
             ->pluck('ket', 'kd_pat')
             ->toArray();
-            
+
         $unit = ["" => "Pilih Unit"] + $unit;
 
         $satuan = [
@@ -420,7 +420,7 @@ class Sp3Controller extends Controller
             ->select('tb_pph_d.pph_id', 'tb_pph_d.ket', 'tb_pph_h.pph_nama','tb_pph_d.value')
             ->get()
             ->sortBy(['pph_id', 'value'])
-            ->mapWithKeys(function($item){ 
+            ->mapWithKeys(function($item){
                 return [$item->pph_id . '|' . $item->value => $item->pph_nama . ' [' . $item->value . '%]'];
             })
             ->all();
@@ -431,7 +431,7 @@ class Sp3Controller extends Controller
             ->get()
             ->pluck('name', 'kd_material')->toArray();
         $kd_material = ["" => "---Pilih---"] + $kd_material;
-        
+
 
         $html = view('pages.sp3.box2', [
             'detailPesanan' => $detailPesanan,
@@ -452,7 +452,7 @@ class Sp3Controller extends Controller
             'sat_harsat' => $request->sat_harsat,
             'kd_material' => $kd_material,
         ])->render();
-        
+
         return response()->json( array('success' => true, 'html'=> $html) );
     }
 
@@ -460,7 +460,7 @@ class Sp3Controller extends Controller
     {
         try {
             DB::beginTransaction();
-                        
+
             Validator::make($request->all(), [
                 'no_npp'        => 'required',
                 'vendor_id'     => 'required',
@@ -468,11 +468,11 @@ class Sp3Controller extends Controller
             ])->validate();
 
             $vendor = Vendor::find($request->vendor_id);
-            
+
             $noDokumen = 'TP.02.01/WB-' . (session('TMP_KDWIL') ?? '1A');
 
             $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
-            
+
             if($msNoDokumen->exists()){
                 $msNoDokumen = $msNoDokumen->first();
 
@@ -544,7 +544,7 @@ class Sp3Controller extends Controller
                 if(strtolower($request->sat_harsat) == 'tonase'){
                     $sp3D->sat_harsat = $request->satuan[$i];
                 }
-                
+
                 $sp3D->harsat_awal = str_replace(',', '', $request->harsat[$i]);
                 $sp3D->harsat_akhir = str_replace(',', '', $request->harsat[$i]);
                 $sp3D->save();
@@ -591,7 +591,7 @@ class Sp3Controller extends Controller
     public function show($noSp3)
     {
         $noSp3 = str_replace('|', '/', $noSp3);
-        
+
         $data = Sp3::with('sp3D')->find($noSp3);
 
         $detailPesanan = MonOp::with(['produk', 'sp3D' => function($sql) use ($noSp3) {
@@ -601,7 +601,7 @@ class Sp3Controller extends Controller
             ->get();
 
         $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
-        
+
         $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))nosp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
         $sp3D = Sp3D::whereNoNpp($data->no_npp)
             ->whereIn('kd_produk', $kd_produks)
@@ -621,13 +621,11 @@ class Sp3Controller extends Controller
             ->where('no_npp', $data->no_npp)
             ->first();
 
-        $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
-            ->get()
+        // $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
+        $ban = Ban::get()
             ->pluck('no_ban', 'no_ban');
 
-        $kontrak = Kontrak::where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
-            ->get()
-            ->pluck('no_kontrak', 'no_kontrak');
+        $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak');
 
         $vendor = Vendor::where('vendor_id', $data->vendor_id)->first();
         $trader = DB::connection('oracle-eproc')
@@ -635,9 +633,9 @@ class Sp3Controller extends Controller
 					->where('vendor_id', $data->vendor_id)
 					->first();
         $kondisiPenyerahan = [
-            'L' => 'LOKO', 
-            'F' => 'FRANKO', 
-            'T' => 'TERPASANG', 
+            'L' => 'LOKO',
+            'F' => 'FRANKO',
+            'T' => 'TERPASANG',
             'D' => 'DISPENSASI'
         ];
 
@@ -659,7 +657,7 @@ class Sp3Controller extends Controller
             ->get()
             ->pluck('ket', 'kd_pat')
             ->toArray();
-            
+
         $unit = ["" => "Pilih Unit"] + $unit;
 
         $satuan = [
@@ -678,7 +676,7 @@ class Sp3Controller extends Controller
             ->select('tb_pph_d.pph_id', 'tb_pph_d.ket', 'tb_pph_h.pph_nama','tb_pph_d.value')
             ->get()
             ->sortBy(['pph_id', 'value'])
-            ->mapWithKeys(function($item){ 
+            ->mapWithKeys(function($item){
                 return [$item->pph_id . '|' . $item->value => $item->pph_nama . ' [' . $item->value . '%]'];
             })
             ->all();
@@ -746,7 +744,7 @@ class Sp3Controller extends Controller
             ->get();
 
         $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
-        
+
         $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))nosp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
         $sp3D = Sp3D::whereNoNpp($data->no_npp)
             ->whereIn('kd_produk', $kd_produks)
@@ -781,9 +779,9 @@ class Sp3Controller extends Controller
 					->first();
 
         $kondisiPenyerahan = [
-            'L' => 'LOKO', 
-            'F' => 'FRANKO', 
-            'T' => 'TERPASANG', 
+            'L' => 'LOKO',
+            'F' => 'FRANKO',
+            'T' => 'TERPASANG',
             'D' => 'DISPENSASI'
         ];
 
@@ -805,7 +803,7 @@ class Sp3Controller extends Controller
             ->get()
             ->pluck('ket', 'kd_pat')
             ->toArray();
-            
+
         $unit = ["" => "Pilih Unit"] + $unit;
 
         $satuan = [
@@ -823,7 +821,7 @@ class Sp3Controller extends Controller
             ->select('tb_pph_d.pph_id', 'tb_pph_d.ket', 'tb_pph_h.pph_nama','tb_pph_d.value')
             ->get()
             ->sortBy(['pph_id', 'value'])
-            ->mapWithKeys(function($item){ 
+            ->mapWithKeys(function($item){
                 return [$item->pph_id . '|' . $item->value => $item->pph_nama . ' [' . $item->value . '%]'];
             })
             ->all();
@@ -889,7 +887,7 @@ class Sp3Controller extends Controller
             DB::beginTransaction();
 
             $noSp3 = str_replace('|', '/', $noSp3);
-            
+
             if($request->isAmandemen){
                 $noSp3Sequence = sprintf('%02s', ((int)substr($noSp3, -2))+1);
 
@@ -907,7 +905,7 @@ class Sp3Controller extends Controller
                 Sp3D2::where('no_sp3', $noSp3)->delete();
                 Sp3Dokumen::where('no_sp3', $noSp3)->delete();
             }
-            
+
             $vendor = Vendor::find($request->vendor_id);
 
             $pph = explode('|', $request->pph);
@@ -958,7 +956,7 @@ class Sp3Controller extends Controller
                 if(strtolower($request->sat_harsat) == 'tonase'){
                     $sp3D->sat_harsat = $request->satuan[$i];
                 }
-                
+
                 $sp3D->harsat_awal = str_replace(',', '', $request->harsat[$i]);
                 $sp3D->harsat_akhir = str_replace(',', '', $request->harsat[$i]);
                 $sp3D->save();
@@ -999,7 +997,7 @@ class Sp3Controller extends Controller
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
 
-        // return $request->isAmandemen 
+        // return $request->isAmandemen
         //     ? redirect()->route('sp3.amandemen', str_replace('/', '|', $newNoSp3))
         //     : redirect()->route('sp3.edit', str_replace('/', '|', $newNoSp3));
         return redirect()->route('sp3.index');
@@ -1015,7 +1013,7 @@ class Sp3Controller extends Controller
             ->get();
 
         $kd_produks = $detailPesanan->map(function ($item, $key) { return $item->kd_produk_konfirmasi; })->all();
-    
+
         $joinQuery = '(SELECT substr(no_sp3, 1, LENGTH(no_sp3)-2)|| max(substr(no_sp3,-2))nosp3 FROM sp3_h GROUP BY substr(no_sp3, 1, LENGTH(no_sp3)-2))last_sp3';
         $sp3D = Sp3D::whereNoNpp($data->no_npp)
             ->whereIn('kd_produk', $kd_produks)
@@ -1032,9 +1030,9 @@ class Sp3Controller extends Controller
             ], true);
 
         $kondisiPenyerahan = [
-            'L' => 'LOKO', 
-            'F' => 'FRANKO', 
-            'T' => 'TERPASANG', 
+            'L' => 'LOKO',
+            'F' => 'FRANKO',
+            'T' => 'TERPASANG',
             'D' => 'DISPENSASI'
         ];
 
@@ -1055,7 +1053,7 @@ class Sp3Controller extends Controller
             ->select('tb_pph_d.pph_id', 'tb_pph_d.ket', 'tb_pph_h.pph_nama','tb_pph_d.value')
             ->get()
             ->sortBy(['pph_id', 'value'])
-            ->mapWithKeys(function($item){ 
+            ->mapWithKeys(function($item){
                 return [$item->pph_id . '|' . $item->value => $item->pph_nama . ' [' . $item->value . '%]'];
             })
             ->all();
@@ -1095,7 +1093,7 @@ class Sp3Controller extends Controller
         $data = Sp3::with('unitkerja')->find($noSp3);
         $detail = $data->sp3D;
         $sp3pics = $data->pic;
-        
+
         $sbu = null;
         if ($detail->count() > 0) {
             $sbu = Sbu::where('kd_sbu',  substr($detail[0]->kd_produk, 1, 1))->first();
