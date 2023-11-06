@@ -18,6 +18,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class SptbController extends Controller
 {
@@ -63,7 +66,8 @@ class SptbController extends Controller
                         $list .= '<li><a class="dropdown-item" href="' . route('sptb.show', str_replace('/', '|', $model->no_sptb)) . '">View</a></li>';
                     }
                     if(in_array('konfirmasi', $action)){
-                        $list .= '<li><a class="dropdown-item set-konfirmasi" href="javascript:void(0)" data-id="'. $model->no_sptb .'">Konfirmasi</a></li>';
+                        $url = $model->suratjalan_path ? full_url_from_path($model->suratjalan_path) : "";
+                        $list .= '<li><a class="dropdown-item set-konfirmasi-upload" href="javascript:void(0)" data-id="'. $model->no_sptb .'" data-url="'. $url .'">Konfirmasi</a></li>';
                     }
                     if(in_array('print', $action)){
                         // $list .= '<li><a class="dropdown-item" href="http://10.3.1.80/genreport/genreport.asp?RptName=sptb2020.rpt&fparam='.$model->no_sptb.'&ftype=5&keyId=OS">Print Test</a></li>';
@@ -73,7 +77,7 @@ class SptbController extends Controller
                         $list .= '<li><a class="dropdown-item" href="' . route('sptb.penilaian-mutu', str_replace('/', '|', $model->no_sptb)) . '">Penilaian Mutu</a></li>';
                     }
                     if($model->app_pelanggan == '1' && in_array('penilaian_pelayanan', $action)){
-                        $list .= '<li><a class="dropdown-item penilaian-pelayanan" href="javascript:void(0)" data-sptb="' . $model->no_sptb . '">Penilaian Pelayanan</a></li>';
+                        $list .= '<li><a class="dropdown-item penilaian-pelayanan" href="javascript:void(0)" data-sptb="' . $model->no_sptb . '" data-pelayanan="' . ($model->nilai_pelayanan ?? 0) . '">Penilaian Pelayanan</a></li>';
                     }
                 }
                 $edit = '<div class="btn-group">
@@ -95,7 +99,7 @@ class SptbController extends Controller
                     $teks = '<span class="badge badge-light-warning mr-2 mb-2">onProgress</i></span>';
                 }
                 if(!is_null($model->nilai_pelayanan)){
-                    $teks .= '<span class="badge badge-light-dark mr-2 mb-2">Pelayanan-K3&nbsp;<i class="fas fa-check text-success"></i></span>';
+                    $teks .= '<span class="badge badge-light-dark mr-2 mb-2">Pelayanan&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 $mutu = $model->sptbd2->map(function($item){ return !is_null($item->kondisi_produk); })->contains(true);
                 if($mutu){
@@ -481,6 +485,41 @@ class SptbController extends Controller
 
             return response()->json(['status' => 'failed']);
         }
+    }
+    public function konfirmasiUploadSimpan(Request $request, FlasherInterface $flasher)
+    {
+        return response()->json($request->all());
+        try {
+            DB::beginTransaction();
+
+            $sptb = SptbH::find($request->no_sptb);
+            $sptb->app_pelanggan = 1;
+            if ($request->hasFile('surat_jalan')) {
+                $file = $request->file('surat_jalan');
+                $extension = $file->getClientOriginalExtension();
+
+                $dir = 'sptb/' . date('Ym', strtotime($sptb->tgl_sptb)) . '/' . Str::of($sptb->no_sptb)->slug('-');
+                cekDir($dir);
+
+                $filename = 'suratjalan.jpg';
+                $fullpath = $dir .'/'. $filename;
+
+                Storage::disk('local')->put($fullpath, File::get($file));
+
+                $sptb->suratjalan_path = $fullpath;
+            }
+            $sptb->save();
+
+            DB::commit();
+
+            $flasher->addSuccess('Data has been saved successfully!');
+        } catch(Exception $e) {
+            DB::rollback();
+
+            $flasher->addError('TES' + $e->getMessage());
+        }
+
+        return redirect()->route('sptb.index');
     }
 
     public function print($noSptb)

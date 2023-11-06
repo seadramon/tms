@@ -80,9 +80,8 @@
                 <input type="hidden" name="no_sptb" id="no_sptb">
                 <!--begin::Modal body-->
                 <div class="modal-body px-lg-10">
-                    <!--begin::Scroll-->
                     <div class="scroll-y me-n7 pe-7" id="modal_armada_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_armada_header" data-kt-scroll-wrappers="#modal_armada_scroll" data-kt-scroll-offset="300px">
-                        <table style="width: 100%;" class="table table-bordered">
+                        <table style="width: 100%;" class="table">
                             <thead>
                                 <tr style="font-weight: bold">
                                     <th style="width: 20%; border: solid 1px black; text-align: center;">No</th>
@@ -91,40 +90,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-								<tr>
-									<td style="width: 10%; border: solid 1px black; text-align: center;">1.</td>
-									<td style="width: 35%; border: solid 1px black;">
-										Tidak ada keluhan ada ada keluhan ditanggapi dengan cepat dan benar
-									</td>
-									<td style="width: 10%; border: solid 1px black; text-align: center;">
-										<input class="form-check-input criteria-radio" name="layanan" type="radio" data-type="yes" value="90" id="flexRadioDefault"/>
-									</td>
-								</tr>
-								<tr>
-									<td style="width: 10%; border: solid 1px black; text-align: center;">2.</td>
-									<td style="width: 35%; border: solid 1px black;">
-										Ada keluhan ditanggapi dan ditindaklanjuti vendor secara tepat tapi lambat
-									</td>
-									<td style="width: 10%; border: solid 1px black; text-align: center;">
-										<input class="form-check-input criteria-radio" name="layanan" type="radio" data-type="yes" value="70" id="flexRadioDefault"/>
-									</td>
-								</tr>
-								<tr>
-									<td style="width: 10%; border: solid 1px black; text-align: center;">3.</td>
-									<td style="width: 35%; border: solid 1px black;">
-										Ada keluhan tapi tidak ditanggapi vendor
-									</td>
-									<td style="width: 10%; border: solid 1px black; text-align: center;">
-										<input class="form-check-input criteria-radio" name="layanan" type="radio" data-type="yes" value="50" id="flexRadioDefault"/>
-									</td>
-								</tr>
-								<tr>
-									<td style="width: 10%; border: solid 1px black; text-align: center;"></td>
-									<td style="width: 35%; border: solid 1px black;">
-									</td>
-									<td style="width: 10%; border: solid 1px black; text-align: center;">
-									</td>
-								</tr>
+                                <tr>
+                                    <td style="width: 10%; border: solid 1px black; text-align: center;">1.</td>
+                                    <td style="width: 35%; border: solid 1px black;">
+                                        Tidak ada keluhan ada ada keluhan ditanggapi dengan cepat dan benar
+                                    </td>
+                                    <td style="width: 10%; border: solid 1px black; text-align: center;">
+                                        <input class="form-check-input criteria-radio" name="layanan" type="radio" data-type="yes" value="90" id="flexRadioDefault"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 10%; border: solid 1px black; text-align: center;">2.</td>
+                                    <td style="width: 35%; border: solid 1px black;">
+                                        Ada keluhan ditanggapi dan ditindaklanjuti vendor secara tepat tapi lambat
+                                    </td>
+                                    <td style="width: 10%; border: solid 1px black; text-align: center;">
+                                        <input class="form-check-input criteria-radio" name="layanan" type="radio" data-type="yes" value="70" id="flexRadioDefault"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 10%; border: solid 1px black!important; text-align: center;">3.</td>
+                                    <td style="width: 35%; border: solid 1px black!important;">
+                                        Ada keluhan tapi tidak ditanggapi vendor
+                                    </td>
+                                    <td style="width: 10%; border: solid 1px black!important; text-align: center;">
+                                        <input class="form-check-input criteria-radio" name="layanan" type="radio" data-type="yes" value="50" id="flexRadioDefault"/>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -136,6 +128,86 @@
                 <div class="modal-footer flex-right">
                     <button type="submit" id="modal_armada_submit" class="btn btn-primary">
                         <span class="indicator-label">Penilaian Pelayanan</span>
+                        <span class="indicator-progress">Please wait...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                    </button>
+                </div>
+                <!--end::Modal footer-->
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
+
+<div class="modal fade" id="modal_konfirmasi" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal modal-dialog-centered">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header" id="modal_konfirmasi_header">
+                <!--begin::Modal title-->
+                <h2>Form Konfirmasi</h2>
+                <!--end::Modal title-->
+                <!--begin::Close-->
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                    <span class="svg-icon svg-icon-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </div>
+                <!--end::Close-->
+            </div>
+            <!--end::Modal header-->
+            <!--begin::Form-->
+            <form method="post" id="modal_konfirmasi_form" class="form" action="{{ route('sptb.konfirmasi-upload-simpan') }}" enctype="multipart/form-data">
+                <input type="hidden" name="no_sptb" id="no_sptb">
+                <!--begin::Modal body-->
+                <div class="modal-body px-lg-10">
+                    <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                        <!--begin::Icon-->
+                        <i class="ki-duotone ki-message-text-2 fs-2hx text-danger me-4 mb-5 mb-sm-0"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>                    <!--end::Icon-->
+    
+                        <!--begin::Content-->
+                        <div class="d-flex flex-column pe-0 pe-sm-10">
+                            <h5 class="mb-1">Peringatan</h5>
+                            <span>Unggahan surat jalan ini akan mengganti surat jalan yang sudah di unggah sebelumnya</span>
+                        </div>
+                        <!--end::Content-->
+    
+                        <!--begin::Close-->
+                        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                            <i class="ki-duotone ki-cross fs-1 text-danger"><span class="path1"></span><span class="path2"></span></i>                    </button>
+                        <!--end::Close-->
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group row mb-2">
+                                <label class="form-label">No. SPTB</label>
+                                {!! Form::text('no_sptb', null, ['class'=>'form-control', 'id'=>'ku_no_sptb', 'readonly']) !!}
+                            </div>
+                            <div class="form-group row mb-2">
+                                <label class="form-label">Surat Jalan</label>
+                                {!! Form::file('surat_jalan', ['class'=>'form-control', 'id'=>'ku_surat_jalan']) !!}
+                            </div>
+                            <div class="form-group row hidden" id="div-ket-suratjalan">
+                                <label class="form-label">Surat Jalan sudah di upload, <a href="/a" id="suratjalan-url">klik disini</a> untuk melihat</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Modal body-->
+
+                <!--begin::Modal footer-->
+                <div class="modal-footer flex-right">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="indicator-label">Simpan</span>
                         <span class="indicator-progress">Please wait...
                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                     </button>
@@ -230,7 +302,8 @@
 
 	$('body').on('click', '.set-konfirmasi', function () {
 		var id = $(this).data("id");
-
+        // $("#ku_no_sptb").val(id);
+		// $('#modal_konfirmasi').modal('toggle');
 		Swal.fire({
 	        html: `Apakah anda yakin melakukan konfirmasi sptb?`,
 	        icon: "info",
@@ -266,8 +339,25 @@
 		  	}
 		});
 	});
+	$('body').on('click', '.set-konfirmasi-upload', function () {
+		var id = $(this).data("id");
+		var url = $(this).data("url");
+        $("#ku_no_sptb").val(id);
+        $("#div-ket-suratjalan").addClass('hidden');
+        if(url != ""){
+            $("#suratjalan-url").attr('href', url);
+            $("#div-ket-suratjalan").removeClass('hidden');
+        }
+		$('#modal_konfirmasi').modal('toggle');
+	});
+
 	$(document).on("click", ".penilaian-pelayanan", function () {
         var sptb = $(this).data('sptb');
+        var pelayanan = $(this).data('pelayanan');
+        $('.criteria-radio').prop('checked', false);
+        if(pelayanan != "0"){
+            $(".criteria-radio[value=" + pelayanan + "]").prop('checked', true);
+        }
 		$("#no_sptb").val(sptb);
 		$('#modal_armada').modal('toggle');
     });

@@ -71,7 +71,7 @@ class SpmController extends Controller
 
     public function data(Request $request)
     {
-        $query = SpmH::with(['sppb', 'vendornya', 'sptbh']);
+        $query = SpmH::with(['sppb', 'vendornya', 'sptbh', 'armada_rating']);
         if(Auth::check()){
             $query->whereVendorId(Auth::user()->vendor_id);
         }
@@ -92,6 +92,9 @@ class SpmController extends Controller
                 }
                 if($model->no_pol != null){
                     $teks .= '<span class="badge badge-light-success mr-2 mb-2">Nopol&nbsp;<i class="fas fa-check text-success"></i></span>';
+                }
+                if(!is_null($model->armada_rating)){
+                    $teks .= '<span class="badge badge-light-dark mr-2 mb-2">K3&nbsp;<i class="fas fa-check text-success"></i></span>';
                 }
                 return $teks;
             })

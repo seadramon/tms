@@ -19,8 +19,10 @@ use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaControll
 use App\Http\Controllers\LoginVendorController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Master\PelabuhanController;
 use App\Http\Controllers\Report\EvaluasiVendorController;
 use App\Http\Controllers\Report\MonitoringDistribusiController;
+use App\Http\Controllers\Verifikasi\HistoryController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 use App\Models\User;
@@ -103,6 +105,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::get('/penilaian-mutu/{no_sptb}', [SptbController::class, 'penilaianMutu'])->name('penilaian-mutu');
 		Route::post('/penilaian-mutu-simpan', [SptbController::class, 'penilaianMutuSimpan'])->name('penilaian-mutu-simpan');
 		Route::post('/penilaian-pelayanan-simpan', [SptbController::class, 'penilaianPelayananSimpan'])->name('penilaian-pelayanan-simpan');
+		Route::post('/konfirmasi-upload-simpan', [SptbController::class, 'konfirmasiUploadSimpan'])->name('konfirmasi-upload-simpan');
 	});
 
 	Route::group(['prefix' => '/pricelist-angkutan', 'as' => 'pricelist-angkutan.'], function(){
@@ -115,6 +118,14 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::post('/get-lokasi-pemuatan', [PricelistAngkutanController::class, 'getLokasiPemuatan'])->name('get-lokasi-pemuatan');
 		Route::post('/upload-excel', [PricelistAngkutanController::class, 'uploadExcel'])->name('upload-excel');
 		Route::post('/delete', [PricelistAngkutanController::class, 'delete'])->name('delete');
+	});
+
+	Route::group(['prefix' => '/master-pelabuhan', 'as' => 'master-pelabuhan.'], function(){
+	    Route::post('/destroy', [PelabuhanController::class, 'destroy'])->name('destroy');
+	    Route::get('/data', [PelabuhanController::class, 'data'])->name('data');
+	    Route::resource('/',  PelabuhanController::class)->except([
+	        'show', 'destroy'
+	    ])->parameters(['' => 'master-pelabuhan']);
 	});
 
 	Route::group(['prefix' => '/master-driver', 'as' => 'master-driver.'], function(){
@@ -139,6 +150,12 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('data', [VerifikasiArmadaController::class, 'data'])->name('data');
 		Route::resource('/',  VerifikasiArmadaController::class)->only([
 			'index'
+		])->parameters(['' => 'id']);
+	});
+	Route::group(['prefix' => 'history-armada', 'as' => 'history-armada.'], function(){
+		Route::get('data', [HistoryController::class, 'data'])->name('data');
+		Route::resource('/',  HistoryController::class)->only([
+			'index', 'show'
 		])->parameters(['' => 'id']);
 	});
 

@@ -126,6 +126,13 @@ class MenuSeeder extends Seeder
                 'sequence' => '0620'
             ],
             [
+                'name' => 'Pelabuhan',
+                'route_name' => 'master-pelabuhan.index',
+                'icon' => 'bi bi-card-list fs-3',
+                'level' => '2',
+                'sequence' => '0630'
+            ],
+            [
                 'name' => 'Verifikasi',
                 'route_name' => '#',
                 'icon' => 'fas fa-atom fs-3',
@@ -138,6 +145,13 @@ class MenuSeeder extends Seeder
                 'icon' => 'bi bi-card-list fs-3',
                 'level' => '2',
                 'sequence' => '0710'
+            ],
+            [
+                'name' => 'History Armada',
+                'route_name' => 'history-armada.index',
+                'icon' => 'bi bi-card-list fs-3',
+                'level' => '2',
+                'sequence' => '0720'
             ],
             [
                 'name' => 'Potensi Detail Armada',
