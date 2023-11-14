@@ -194,6 +194,8 @@
                 }else{
                     $('#jumlah_' + rowId).val(reFormat($('#harsat_' + rowId).val().replaceAll(",", "") * $('#vol_ton_' + rowId).val().replaceAll(",", "")));
                 }
+            }else if($("#sat_harsat").val().toLowerCase() == "ritase"){
+                $('#jumlah_' + rowId).val(reFormat($('#harsat_' + rowId).val().replaceAll(",", "") * $('#vol_btg_' + rowId).val().replaceAll(",", "")));
             }
 
             calculateSubTotal(rowId);
@@ -314,7 +316,11 @@
             $('#vol_ton_' + newIndex).attr('row-id', newIndex);
             if(sat_harsat == 'tonase'){
                 $('#satuan_' + newIndex).attr('row-id', newIndex);
+            }else{
+                $('#vol_btg_' + newIndex).attr('readonly', true);
+                $('#vol_ton_' + newIndex).attr('readonly', true);
             }
+            
             $('#harsat_' + newIndex).attr('row-id', newIndex);
             $('#jumlah_' + newIndex).attr('row-id', newIndex);
             $('#delete_pekerjaan_' + newIndex).attr('row-id', newIndex);
