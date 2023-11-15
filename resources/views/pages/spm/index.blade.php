@@ -164,13 +164,13 @@
                             <tbody>
                                 @foreach ($criterias as $index => $criteria)
                                     <tr>
-                                        <td style="width: 10%; border: solid 1px black; text-align: center;">{{$index+1}}.</td>
-                                        <td style="width: 35%; border: solid 1px black;">{{$criteria->criteria}}</td>
-                                        <td style="width: 35%; border: solid 1px black;">{{$criteria->description}}</td>
-                                        <td style="width: 10%; border: solid 1px black; text-align: center;">
+                                        <td style="width: 10%; border: solid 1px black!important; text-align: center;">{{$index+1}}.</td>
+                                        <td style="width: 35%; border: solid 1px black!important;">{{$criteria->criteria}}</td>
+                                        <td style="width: 35%; border: solid 1px black!important;">{{$criteria->description}}</td>
+                                        <td style="width: 10%; border: solid 1px black!important; text-align: center;">
                                             <input class="form-check-input criteria-radio" name="{{$criteria->code}}" type="radio" data-type="yes" value="{{$criteria->bobot}}" id="flexRadioDefault"/>
                                         </td>
-                                        <td style="width: 10%; border: solid 1px black; text-align: center;">
+                                        <td style="width: 10%; border: solid 1px black!important; text-align: center;">
                                             <input class="form-check-input criteria-radio" name="{{$criteria->code}}" type="radio" data-type="no" value="0" id="flexRadioDefault"/>
                                         </td>
                                     </tr>
@@ -302,9 +302,10 @@
     
     $(document).on("click", ".armada-tiba", function () {
         var spm = $(this).data('spm');
+        var mode = $(this).data('mode');
         $.ajax({
             type:"get",
-            url: "{{ route('spm.armada-tiba-validation') }}?no_spm=" + spm,
+            url: "{{ route('spm.armada-tiba-validation') }}?no_spm=" + spm + "&mode=" + mode,
             success: function(res) {
                 // alert(res.filled)  
                 if(res.filled){
@@ -348,6 +349,15 @@
                     });
                 }else{
                     $(".criteria-radio[data-type=yes]").prop('checked', true);
+                    $("#modal_armada_submit").removeClass("hidden");
+                    if(mode == "view"){
+                        $.each(res.ratings, function(key, item){
+                            if(item.bobot == "0"){
+                                $("[name=" + item.criteria_code + "][data-type=no]").prop('checked', true);
+                            }
+                        });
+                        $("#modal_armada_submit").addClass("hidden");
+                    }
                     $("#armada_no_spm").val(spm);
                     $('#modal_armada').modal('toggle');
                 }

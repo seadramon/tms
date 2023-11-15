@@ -340,10 +340,53 @@
             </div>
 
             <div>
-                <b>8. Pasal Perjanjian</b>
+                <b>8. Kerahasiaan Dokumen</b>
                 <table style="margin-left: 7px;margin-bottom: 10px;">
                     <tr>
                         <td>8.1.</td>
+                        <td>
+                            PT Wijaya Karya Beton, Tbk dan Vendor harus:
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td>8.1.1.</td>
+                                    <td>Menyatakan dan menjamin akan menjaga kerahasiaan terkait ketentuan-ketentuan yang tercantum dalam perjanjian ini dan tidak akan mempublikasikan dan/atau menyebarluaskan termasuk setiap informasi atau dokumen apapun yang berkaitan dengan perjanjian ini tanpa persetujuan tertulis yang disepakati para pihak.</td>
+                                </tr>
+                                <tr>
+                                    <td>8.1.2.</td>
+                                    <td>Menggunakan informasi Rahasia tersebut secara ekslusif hanya untuk pelaksanaan pekerjaan ini.</td>
+                                </tr>
+                                <tr>
+                                    <td>8.1.3.</td>
+                                    <td>Melakukan tindakan apapun yang diperlukan untuk menjaga kerahasiaan Informasi Rahasia.</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>8.2.</td>
+                        <td>
+                            Pemberitahuan, siaran pers atau komunikasi lain terkait perjanjian ini tidak dapat dibuat atau diijinkan tanpa persetujuan tertulis sebelumnya dari PT Wijaya Karya Beton, Tbk dan Vendor, kecuali apabila pemberitahuan, siaran pers, atau komunikasi tersebut dibuat berdasarkan Undang-Undang atau perintah instansi pemerintah, yang harus terlebih dahulu didiskusikan dan disetujui terlebih dahulu oleh PT Wijaya Karya Beton, Tbk dan Vendor.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>8.3.</td>
+                        <td>
+                            Pihak yang membocorkan informasi rahasia (Pihak yang Merugikan) dengan ini menyatakan dan menjamin akan bertanggung jawab penuh dan akan mengganti atas setiap kerugiaan baik materiil dan immateriil yang diderita oleh Pihak yang dibocorkan informasi rahasianya (Pihak yang Dirugikan) sebagaimana yang dimaksud dalam butir 8.1 baik oleh pengurus, pegawai dan/atau afiliasi dari Pihak yang Merugikan serta membebaskan Pihak yang Dirugikan dalam gugatan apapun yang diajukan oleh pihak ketiga.
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div>
+                <b>9. Pasal Perjanjian</b>
+                <table style="margin-left: 7px;margin-bottom: 10px;">
+                    <tr>
+                        <td>9.1.</td>
                         <td>
                             PT. Wijaya Karya Beton, Tbk {{ $data->unitkerja->ket ?? "Unknown"}} dan Vendor wajib tunduk pada semua pasal sesuai lampiran dibalik perjanjian ini
                         </td>
@@ -351,34 +394,35 @@
                 </table>
             </div>
             <div style="margin-bottom: 30px">Demikian Surat Perjanjian Pelaksanaan Pekerjaan ini dibuat untuk dilaksanakan sebagaimana mestinya.</div>
-
-            <table width="100%">
-                <tr>
-                    <td width="70%" style="padding-left: 35px;">
-                        Setuju melaksanakan,<br>
-                        {{ !empty($data->vendor) ? $data->vendor->nama : '' }}
-                        
-                    </td>
-                    <td width="30%">
-                        PT. Wijaya Karya Beton, Tbk<br>
-                        {{ !empty($data->unitkerja) ? $data->unitkerja->ket : ''}}
-                    </td>
-                </tr>
-                <tr>
-                    <td style="height: 100px"></td>
-                    <td style="height: 100px"></td>
-                </tr>
-                <tr>
-                    <td style="padding-left: 35px;" class="tebal">
-                        {{ $data->app2_name }}<br>
-                        {{ !empty($data->app2_jbt) ? $data->app2_jbt : '' }}
-                    </td>
-                    <td class="tebal">
-                        {{ !empty($data->manajer) ? $data->manajer->first_name . ' ' . $data->manajer->last_name : '' }}<br>
-                        {{ !empty($data->unitkerja) ? 'Manajer ' . $data->unitkerja->ket : ''}}
-                    </td>
-                </tr>
-            </table>
+            <div style="page-break-inside: avoid;">
+                <table width="100%">
+                    <tr>
+                        <td width="70%" style="padding-left: 35px;">
+                            Setuju melaksanakan,<br>
+                            {{ !empty($data->vendor) ? $data->vendor->nama : '' }}
+                            
+                        </td>
+                        <td width="30%">
+                            PT. Wijaya Karya Beton, Tbk<br>
+                            {{ !empty($data->unitkerja) ? $data->unitkerja->ket : ''}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 100px"></td>
+                        <td style="height: 100px"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 35px;" class="tebal">
+                            {{ $data->app2_name }}<br>
+                            {{ !empty($data->app2_jbt) ? $data->app2_jbt : '' }}
+                        </td>
+                        <td class="tebal">
+                            {{ !empty($data->manajer) ? $data->manajer->first_name . ' ' . $data->manajer->last_name : '' }}<br>
+                            {{ !empty($data->unitkerja) ? 'Manajer ' . $data->unitkerja->ket : ''}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </main>
     </body>
 </html>

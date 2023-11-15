@@ -74,6 +74,7 @@ class PelabuhanController extends Controller
 
             $data = new Pelabuhan();
             $data->nama = $request->nama;
+            $data->status = "active";
             $data->save();
 
             DB::commit();

@@ -22,6 +22,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\PelabuhanController;
 use App\Http\Controllers\Report\EvaluasiVendorController;
 use App\Http\Controllers\Report\MonitoringDistribusiController;
+use App\Http\Controllers\Report\ProyekBerjalanController;
 use App\Http\Controllers\Verifikasi\HistoryController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
@@ -219,6 +220,14 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::resource('/',  EvaluasiVendorController::class)->except([
 			'destroy', 'show'
 		])->parameters(['' => 'report-evaluasi-vendor']);
+	});
+	Route::group(['prefix' => 'report-proyek-berjalan', 'as' => 'report-proyek-berjalan.'], function(){
+		// Route::post('/data-sp3', [ProyekBerjalanController::class, 'dataSp3'])->name('data-sp3');
+		// Route::post('/data-vendor-semester', [ProyekBerjalanController::class, 'dataVendorSemester'])->name('data-vendor-semester');
+
+	    Route::resource('/',  ProyekBerjalanController::class)->except([
+			'destroy', 'show'
+		])->parameters(['' => 'report-proyek-berjalan']);
 	});
 	
 	Route::group(['prefix' => 'report-monitoring-distribusi', 'as' => 'report-monitoring-distribusi.'], function(){

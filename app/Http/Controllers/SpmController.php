@@ -124,8 +124,8 @@ class SpmController extends Controller
                         if(in_array('view', $action)){
                             $list .= '<li><a class="dropdown-item" href="' . route('spm.show', ['spm' => str_replace('/', '|', $model->no_spm)]) . '">View</a></li>';
                         }
-                        if(in_array('armada_tiba', $action) && is_null($model->waktu_datang)){
-                            $list .= '<li><a class="dropdown-item armada-tiba" href="javascript:void(0)" data-spm="' . $model->no_spm . '">Armada Tiba</a></li>';
+                        if((in_array('armada_tiba', $action) && is_null($model->waktu_datang)) || !is_null($model->armada_rating)){
+                            $list .= '<li><a class="dropdown-item armada-tiba" href="javascript:void(0)" data-spm="' . $model->no_spm . '" data-mode="' . (is_null($model->armada_rating) ? 'store' : 'view') . '">' . (!is_null($model->armada_rating) ? 'VSMS Data' : 'Armada Tiba') . '</a></li>';
                         }
                     }
                 $edit = '<div class="btn-group">
@@ -724,13 +724,21 @@ class SpmController extends Controller
     }
 
     public function armadaTibaValidation(Request $request){
-        $now = date('d/m/Y');
-        // $now = '15/11/2022';
-        $active_week = DB::select("select  WOS.\"FNC_GETMG\" (to_Date('" . $now . "','dd/mm/yyyy'), '1A') minggu from dual")[0]->minggu;
-        $year = date('Y');
-        $spm = SpmH::find($request->no_spm);
-        $rating = ArmadaRating::whereTahun($year)->whereMinggu($active_week)->whereNopol($spm->no_pol)->first();
-        return response()->json(['filled' => $rating ? true : false]);
+        if($request->mode == 'store'){
+            $now = date('d/m/Y');
+            // $now = '15/11/2022';
+            $active_week = DB::select("select  WOS.\"FNC_GETMG\" (to_Date('" . $now . "','dd/mm/yyyy'), '1A') minggu from dual")[0]->minggu;
+            $year = date('Y');
+            $spm = SpmH::find($request->no_spm);
+            $rating = ArmadaRating::whereTahun($year)->whereMinggu($active_week)->whereNopol($spm->no_pol)->first();
+            $filled = $rating ? true : false;
+            $ratings = [];
+        }else{
+            $spm = SpmH::with('armada_rating.details')->find($request->no_spm);
+            $filled = false;
+            $ratings = $spm->armada_rating->details ?? [];
+        }
+        return response()->json(['filled' => $filled, 'ratings' => $ratings]);
     }
     
     public function armadaTiba(Request $request){
@@ -766,6 +774,7 @@ class SpmController extends Controller
                     $var = $criteria->code;
                     $rating_ = new ArmadaRatingDetail;
                     $rating_->ar_id = $rating->id;
+                    $rating_->criteria_code = $var;
                     $rating_->criteria = implode('|', [$criteria->criteria, $criteria->description]);
                     $rating_->bobot = $request->$var ?? '0';
                     $rating_->save();
