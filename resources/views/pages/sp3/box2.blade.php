@@ -167,7 +167,7 @@
             @endif
         </div>
         @php
-            $readonly = $sat_harsat != 'tonase';
+            $readonly = false;
         @endphp
         <div class="separator separator-dashed border-primary my-10"></div>
         <h3>Detail Pekerjaan</h3>
@@ -187,6 +187,8 @@
                         <th style="width: 10%;">Vol (Ton)</th>
                         @if ($sat_harsat != 'ritase')
                             <th style="width: 10%;">Satuan</th>
+                        @else
+                            <th style="width: 10%;">Ritase</th>
                         @endif
                         <th style="width: 15%;">Harsat {{ $sat_harsat == 'tonase' ? '[Btg/Ton]' : 'Rit' }}</th>
                         <th style="width: 18%;">Jumlah</th>
@@ -224,6 +226,10 @@
                             @if ($sat_harsat != 'ritase')
                                 <td style="width: 10%;">
                                     {!! Form::select('satuan[]', $satuan, null, ['class'=>'form-control form-select-solid satuan', 'data-control'=>'select2', 'id'=>'satuan_' . $key, 'row-id'=>$key]) !!}
+                                </td>
+                            @else
+                                <td style="width: 10%;">
+                                    {!! Form::text('ritase[]', null, ['class'=>'form-control ritase decimal', 'id'=>'ritase_' . $key, 'row-id'=>$key]) !!}
                                 </td>
                             @endif
                             <td style="width: 15%;">

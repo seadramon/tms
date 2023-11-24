@@ -173,8 +173,9 @@
 
         $(document).on('change', '.vol_btg, .vol_ton, .harsat, .satuan', function(){
             let rowId = $(this).attr('row-id');
-
-            calculateJumlah(rowId);
+            if($(this).attr('row-id') != undefined){
+                calculateJumlah(rowId);
+            }
         });
 
         $('#ppn, #pph').on('change', function(){
@@ -195,7 +196,7 @@
                     $('#jumlah_' + rowId).val(reFormat($('#harsat_' + rowId).val().replaceAll(",", "") * $('#vol_ton_' + rowId).val().replaceAll(",", "")));
                 }
             }else if($("#sat_harsat").val().toLowerCase() == "ritase"){
-                $('#jumlah_' + rowId).val(reFormat($('#harsat_' + rowId).val().replaceAll(",", "") * $('#vol_btg_' + rowId).val().replaceAll(",", "")));
+                $('#jumlah_' + rowId).val(reFormat($('#harsat_' + rowId).val().replaceAll(",", "") * $('#ritase_' + rowId).val().replaceAll(",", "")));
             }
 
             calculateSubTotal(rowId);
@@ -264,14 +265,14 @@
         });
         
         $('#est-rit').on('change', function(){
-            est = parseFloat($('#est-rit').val().replaceAll(",", "")) / $('.harsat').length;
-            $('.harsat').each(function(){
+            est = parseFloat($('#est-rit').val().replaceAll(",", ""));
+            $('.ritase').each(function(){
                 $(this).val(reFormat(est));
             });
-            $('.jumlah').each(function(){
-                $(this).val(reFormat(est));
-            });
-            $('#subtotal').val($('#est-rit').val());
+            // $('.jumlah').each(function(){
+            //     $(this).val(reFormat(est));
+            // });
+            // $('#subtotal').val($('#est-rit').val());
             calculateTotal();
         });
 
@@ -296,9 +297,13 @@
             clone.getElementsByTagName('input')[4].id = 'vol_ton_' + newIndex;
             if(sat_harsat == 'tonase'){
                 clone.getElementsByTagName('select')[2].id = 'satuan_' + newIndex;
+                clone.getElementsByTagName('input')[5].id = 'harsat_' + newIndex;
+                clone.getElementsByTagName('input')[6].id = 'jumlah_' + newIndex;
+            }else{
+                clone.getElementsByTagName('input')[5].id = 'ritase_' + newIndex;
+                clone.getElementsByTagName('input')[6].id = 'harsat_' + newIndex;
+                clone.getElementsByTagName('input')[7].id = 'jumlah_' + newIndex;
             }
-            clone.getElementsByTagName('input')[5].id = 'harsat_' + newIndex;
-            clone.getElementsByTagName('input')[6].id = 'jumlah_' + newIndex;
             clone.getElementsByTagName('button')[0].id = 'delete_pekerjaan_' + newIndex;
             
             $(table).find('tbody').append(clone) // add new row to end of table
@@ -317,8 +322,7 @@
             if(sat_harsat == 'tonase'){
                 $('#satuan_' + newIndex).attr('row-id', newIndex);
             }else{
-                $('#vol_btg_' + newIndex).attr('readonly', true);
-                $('#vol_ton_' + newIndex).attr('readonly', true);
+                $('#ritase_' + newIndex).attr('row-id', newIndex);
             }
             
             $('#harsat_' + newIndex).attr('row-id', newIndex);
@@ -334,6 +338,8 @@
             $('#vol_ton_' + newIndex).removeAttr('disabled');
             if(sat_harsat == 'tonase'){
                 $('#satuan_' + newIndex).removeAttr('disabled');
+            }else{
+                $('#ritase_' + newIndex).removeAttr('disabled');
             }
             $('#harsat_' + newIndex).removeAttr('disabled');
             $('#jumlah_' + newIndex).removeAttr('disabled');
@@ -346,7 +352,15 @@
             if(sat_harsat == 'tonase'){
                 $('#satuan_' + newIndex).select2();
             }
-            
+
+            //set value
+            $('#jarak_pekerjaan_' + newIndex).val($("#jarak_pesanan").val())
+            if(sat_harsat != 'tonase'){
+                $('#vol_btg_' + newIndex).val(1);
+                $('#vol_ton_' + newIndex).val(1);
+                $('#harsat_' + newIndex).val($("#harga_satuan_ritase").val());
+            }
+            calculateJumlah(newIndex)
             //Show New Row
             $('#detail_pekerjaan_' + newIndex).show();
         });

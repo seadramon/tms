@@ -20,6 +20,10 @@
         <td style="width: 10%;">
             {!! Form::select('satuan[]', $satuan, null, ['class'=>'form-control satuan', 'data-control'=>'select2', 'disabled']) !!}
         </td>
+    @else
+        <td style="width: 10%;">
+            {!! Form::text('ritase[]', null, ['class'=>'form-control ritase decimal']) !!}
+        </td>
     @endif
     <td style="width: 15%;">
         {!! Form::text('harsat[]', null, ['class'=>'form-control harsat decimal', 'disabled']) !!}

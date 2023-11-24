@@ -18,8 +18,9 @@
                     <h3 class="card-title">LIST Kontrak / SP3 / SPK</h3>
                     <div class="card-toolbar">
                         @if (in_array('create', json_decode(session('TMS_ACTION_MENU'))))
-                            <a href="{{route('sp3.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
+                            <a href="{{route('sp3.create')}}" class="btn btn-light-primary me-2" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah SP3</a>
                         @endif
+                        <a href="{{route('sp3.v2.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah SP3 Angk. Laut</a>
                     </div>
                 </div>
 
