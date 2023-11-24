@@ -46,7 +46,7 @@ class SptbController extends Controller
 
         return DataTables::eloquent($query)
             ->editColumn('tgl_sptb', function ($model) {
-                return Carbon::createFromFormat('Y-m-d H:i:s', $model->tgl_sptb)->format('d-m-Y');
+                return date('d-m-Y', strtotime($model->tgl_sptb));
             })
             ->editColumn('tgl_berangkat', function ($model) {
                 return date('d-m-Y', strtotime($model->tgl_berangkat));

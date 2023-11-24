@@ -94,9 +94,9 @@ class PdaController extends Controller
         }
         if(Auth::check()){
             $query->where('jenis_armada', '<>', 'BELUM DISET');
-            $query->whereHas('potensiH.potensi_vendors', function($sql){
-                $sql->whereVendorId(Auth::user()->vendor_id);
-            });
+            // $query->whereHas('potensiH.potensi_vendors', function($sql){
+            //     $sql->whereVendorId(Auth::user()->vendor_id);
+            // });
         }
 
         return DataTables::eloquent($query)
