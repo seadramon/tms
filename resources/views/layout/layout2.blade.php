@@ -271,21 +271,28 @@
 		<script type="text/javascript">
 			$(document).on('keyup', '.decimal', function(){
 				var val = $(this).val().replace(",","");
+				var formated = currencyFormat(val);
+				if(formated != ""){
+					$(this).val(formated); 
+				}
+			});
+			function currencyFormat(val){
 				if(isNaN(val)){
 					val = val.replace(/[^0-9\.]/g,'');
 					if(val.split('.').length>2){
 						val =val.replace(/\.+$/,"");
 					}
 				}
-				if(val.split('.').length > 1){
-					if(val.split('.')[1].length > 1){
-						$(this).val(format(val, '.', val.split('.')[1].length)); 
+				if(val.split('.').length > 1) {
+					if(val.split('.')[1].length > 0){
+						return format(val, '.', val.split('.')[1].length);
+					}else{
+						return "";
 					}
 				}else{
-					$(this).val(format(val, '.', 0)); 
+					return format(val, '.', 0);
 				}
-				
-			});
+			}
 			function format(n, sep, decimals) {
 				n = parseFloat(n);
 				sep = sep || "."; // Default to period as decimal separator

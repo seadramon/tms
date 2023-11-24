@@ -104,7 +104,7 @@
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 required ">Jalur</label>
                 @php
-                    $attr = ['class'=>'form-control form-select-solid col-sm-3', "multiple" => true, "disabled" => false, 'data-control'=>'select2', 'id'=>'jalur'];
+                    $attr = ['class'=>'form-control form-select-solid col-sm-3', "multiple" => true, 'data-control'=>'select2', 'id'=>'jalur'];
                     if($source = 'show'){
                         $attr['disabled'] = true;
                     }

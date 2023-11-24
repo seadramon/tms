@@ -147,7 +147,7 @@ class MenuSeeder extends Seeder
                 'sequence' => '0710'
             ],
             [
-                'name' => 'History Armada',
+                'name' => 'Armada Terverifikasi',
                 'route_name' => 'history-armada.index',
                 'icon' => 'bi bi-card-list fs-3',
                 'level' => '2',
