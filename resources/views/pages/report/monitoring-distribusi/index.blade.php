@@ -130,9 +130,11 @@
         format = $(this).text().toLowerCase();
 
         exportExcelUrl = "{{ URL::to('report-monitoring-distribusi/export-excel') }}/" + minggu1 + '/' + minggu2 + '/' + kd_pat;
+        exportPdfUrl = "{{ URL::to('report-monitoring-distribusi/export-pdf') }}/" + minggu1 + '/' + minggu2 + '/' + kd_pat;
         
         if(format == 'pdf'){
-            window.open('http://10.3.1.80/genreport/genreport.asp?RptName=monitoring_distribusi.rpt&fparam='+kd_pat+';'+minggu1+';'+minggu2+'&ftype=5&keyId=OS', '_blank'); 
+            // window.open('http://10.3.1.80/genreport/genreport.asp?RptName=monitoring_distribusi.rpt&fparam='+kd_pat+';'+minggu1+';'+minggu2+'&ftype=5&keyId=OS', '_blank'); 
+            window.open(exportPdfUrl, '_blank');
         }else{
             window.open(exportExcelUrl, '_blank');
         }
