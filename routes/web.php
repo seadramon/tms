@@ -264,6 +264,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	Route::group(['prefix' => 'report-monitoring-distribusi', 'as' => 'report-monitoring-distribusi.'], function(){
 		Route::get('/', [MonitoringDistribusiController::class, 'index'])->name('index');
 		Route::get('/export-excel/{minggu1}/{minggu2}/{kd_pat}', [MonitoringDistribusiController::class, 'exportExcel'])->name('export-excel');
+		Route::get('/export-pdf/{minggu1}/{minggu2}/{kd_pat}', [MonitoringDistribusiController::class, 'exportPdf'])->name('export-pdf');
 	});
 	
 	Route::controller(RoleController::class)->prefix('setting-akses-menu')->name('setting.akses.menu.')->group(function () {
