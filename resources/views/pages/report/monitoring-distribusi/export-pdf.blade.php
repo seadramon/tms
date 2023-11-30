@@ -99,6 +99,7 @@
                     <th rowspan="2">NAMA PELANGGAN</th>
                     <th rowspan="2">PROYEK</th>
                     <th colspan="3">PRODUK</th>
+                    <th rowspan="2">STATUS</th>
                 </tr>
                 <tr>
                     <th>NAMA</th>
@@ -122,10 +123,11 @@
                         <td>{{ $data->kd_produk }}</td>
                         <td>{{ $data->tipe }}</td>
                         <td>{{ $data->vol }}</td>
+                        <td>{{ $data->app_pelanggan == '1' ? 'Received' : 'On Progress' }}</td>
                     @endforeach
                 @else
                     <tr>
-                        <td colspan="11" class="text-center">Data Kosong</td>
+                        <td colspan="12" class="text-center">Data Kosong</td>
                     </tr>
                 @endif
                 <!-- <tr class="row-total">

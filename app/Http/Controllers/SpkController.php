@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\V2;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class Sp3Controller extends Controller
+class SpkController extends Controller
 {
     public function create(Request $request)
     {
@@ -53,7 +53,7 @@ class Sp3Controller extends Controller
         $sat_harsat = ["tonase" => "Tonase | Batang", "ritase" => "Ritase"];
         $npp = Npp::find($request->npp);
 
-        return view('pages.sp3.v2.create', [
+        return view('pages.spk.create', [
             'vendor' => $vendor,
             'jenisPekerjaan' => $jenisPekerjaan,
             'sat_harsat' => $sat_harsat,
@@ -93,9 +93,13 @@ class Sp3Controller extends Controller
 
             $ban = Ban::get()->pluck('no_ban', 'no_ban')->toArray();
             $ban = ["" => "---Pilih---"] + $ban;
+            $opt_ban = Ban::get()->mapWithKeys(function($item){ 
+                return [$item->no_ban => ['data-tgl' => date('d-m-Y', strtotime($item->tgl_ban))]];
+            })
+            ->all();
 
-            $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
-            $kontrak = ["" => "---Pilih---"] + $kontrak;
+            // $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
+            // $kontrak = ["" => "---Pilih---"] + $kontrak;
 
             $vendor = Vendor::where('vendor_id', $parameters['vendor_id'])->first();
             $trader = DB::connection('oracle-eproc')
@@ -198,11 +202,11 @@ class Sp3Controller extends Controller
                 '10' => 'Lembar Kendali Pembayaran'
             ];
 
-            $html = view('pages.sp3.v2.box2', [
+            $html = view('pages.spk.box2', [
                 'detailPesanan' => $detailPesanan,
                 'npp' => $npp,
                 'ban' => $ban,
-                'kontrak' => $kontrak,
+                'opt_ban' => $opt_ban,
                 'vendor' => $vendor,
                 'trader' => $trader,
                 'kondisiPenyerahan' => $kondisiPenyerahan,
@@ -409,7 +413,7 @@ class Sp3Controller extends Controller
         $jenis_angkutan = $data->kd_jpekerjaan == '20' ? 'laut' : 'darat';
         $npp = Npp::find($data->no_npp);
 
-        return view('pages.sp3.v2.create', [
+        return view('pages.spk.create', [
             'vendor' => $vendor,
             'jenisPekerjaan' => $jenisPekerjaan,
             'sat_harsat' => $sat_harsat,

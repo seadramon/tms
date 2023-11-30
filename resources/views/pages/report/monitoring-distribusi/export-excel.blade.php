@@ -16,13 +16,13 @@
             <th style="font-weight: bold;">PPB Bogor</th>
         </tr>
         <tr>
-            <th rowspan="2" colspan="11" style="text-align: center; vertical-align: middle; font-weight: bold;">MONITORING DISTRIBUSI</th>
+            <th rowspan="2" colspan="12" style="text-align: center; vertical-align: middle; font-weight: bold;">MONITORING DISTRIBUSI</th>
         </tr>
         <tr>
             <th>&nbsp;</th>
         </tr>
         <tr>
-            <td rowspan="2" colspan="11" style="text-align: center; vertical-align: middle;">Periode : {{ $minggu1 }} s/d {{ $minggu2 }}</td>
+            <td rowspan="2" colspan="12" style="text-align: center; vertical-align: middle;">Periode : {{ $minggu1 }} s/d {{ $minggu2 }}</td>
         </tr>
         <tr>
             <th>&nbsp;</th>
@@ -36,6 +36,7 @@
             <th style="border: 1px solid #000000; text-align: center; font-weight: bold; vertical-align: middle;" rowspan="2">NAMA PELANGGAN</th>
             <th style="border: 1px solid #000000; text-align: center; font-weight: bold; vertical-align: middle;" rowspan="2">PROYEK</th>
             <th style="border: 1px solid #000000; text-align: center; font-weight: bold;" colspan="3">PRODUK</th>
+            <th style="border: 1px solid #000000; text-align: center; font-weight: bold; vertical-align: middle;" rowspan="2">STATUS</th>
         </tr>
         <tr>
             <th style="border: 1px solid #000000; text-align: center; font-weight: bold;">NAMA</th>
@@ -59,6 +60,7 @@
                 <td style="border: 1px solid #000000; width: 200%;">{{ $data->kd_produk }}</td>
                 <td style="border: 1px solid #000000; width: 200%;">{{ $data->tipe }}</td>
                 <td style="border: 1px solid #000000; width: 100%;">{{ $data->vol }}</td>
+                <td style="border: 1px solid #000000; width: 100%;">{{ $data->app_pelanggan == '1' ? 'Received' : 'On Progress' }}</td>
             </tr>
         @endforeach
     </tbody>

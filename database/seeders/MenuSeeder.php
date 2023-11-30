@@ -20,7 +20,7 @@ class MenuSeeder extends Seeder
             [
                 'name' => 'Dashboard',
                 'route_name' => 'dashboard.index',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-grip fs-3',
                 'level' => '0',
                 'sequence' => '0050',
                 'action' => []
@@ -28,7 +28,7 @@ class MenuSeeder extends Seeder
             [
                 'name' => 'SP3',
                 'route_name' => 'sp3.index',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-pen-to-square fs-3',
                 'level' => '0',
                 'sequence' => '0100',
                 'action' => [
@@ -44,7 +44,7 @@ class MenuSeeder extends Seeder
             [
                 'name' => 'SPP',
                 'route_name' => 'spp.index',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-pen-to-square fs-3',
                 'level' => '0',
                 'sequence' => '0200',
                 'action' => [
@@ -61,7 +61,7 @@ class MenuSeeder extends Seeder
             [
                 'name' => 'SPM',
                 'route_name' => 'spm.index',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-pen-to-square fs-3',
                 'level' => '0',
                 'sequence' => '0300',
                 'action' => [
@@ -78,7 +78,7 @@ class MenuSeeder extends Seeder
             [
                 'name' => 'SPTB',
                 'route_name' => 'sptb.index',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-pen-to-square fs-3',
                 'level' => '0',
                 'sequence' => '0400',
                 'action' => [
@@ -94,7 +94,7 @@ class MenuSeeder extends Seeder
             [
                 'name' => 'Pricelist Angkutan',
                 'route_name' => 'pricelist-angkutan.index',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-calculator fs-3',
                 'level' => '0',
                 'sequence' => '0500',
                 'action' => [
@@ -107,105 +107,105 @@ class MenuSeeder extends Seeder
             [
                 'name' => 'Master',
                 'route_name' => '#',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-warehouse fs-3',
                 'level' => '1',
                 'sequence' => '0600'
             ],
             [
                 'name' => 'Driver',
                 'route_name' => 'master-driver.index',
-                'icon' => 'bi bi-card-list fs-3',
+                'icon' => 'fas fa-user-plus fs-3',
                 'level' => '2',
                 'sequence' => '0610'
             ],
             [
                 'name' => 'Armada',
                 'route_name' => 'master-armada.index',
-                'icon' => 'bi bi-card-list fs-3',
+                'icon' => 'fas fa-truck-front fs-3',
                 'level' => '2',
                 'sequence' => '0620'
             ],
             [
                 'name' => 'Pelabuhan',
                 'route_name' => 'master-pelabuhan.index',
-                'icon' => 'bi bi-card-list fs-3',
+                'icon' => 'fas fa-ship fs-3',
                 'level' => '2',
                 'sequence' => '0630'
             ],
             [
                 'name' => 'Verifikasi',
                 'route_name' => '#',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-clipboard-check fs-3',
                 'level' => '1',
                 'sequence' => '0700'
             ],
             [
                 'name' => 'Armada',
                 'route_name' => 'verifikasi-armada.index',
-                'icon' => 'bi bi-card-list fs-3',
+                'icon' => 'fas fa-truck fs-3',
                 'level' => '2',
                 'sequence' => '0710'
             ],
             [
                 'name' => 'Armada Terverifikasi',
                 'route_name' => 'history-armada.index',
-                'icon' => 'bi bi-card-list fs-3',
+                'icon' => 'fas fa-truck-arrow-right fs-3',
                 'level' => '2',
                 'sequence' => '0720'
             ],
             [
                 'name' => 'Potensi Detail Armada',
                 'route_name' => 'potensi.detail.armada.index',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-map-location-dot fs-3',
                 'level' => '0',
                 'sequence' => '0800'
             ],
             [
                 'name' => 'Kalender Pengiriman',
                 'route_name' => 'kalender-pengiriman.index',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-calendar-days fs-3',
                 'level' => '0',
                 'sequence' => '0900'
             ],
             [
                 'name' => 'Report',
                 'route_name' => '#',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-clipboard-list fs-3',
                 'level' => '1',
                 'sequence' => '1000'
             ],
             [
                 'name' => 'Ra Ri Pemenuhan Armada',
                 'route_name' => 'report-pemenuhan-armada.index',
-                'icon' => 'bi bi-card-list fs-3',
+                'icon' => 'fas fa-file fs-3',
                 'level' => '2',
                 'sequence' => '1010'
             ],
             [
                 'name' => 'Monitoring Distribusi',
                 'route_name' => 'report-monitoring-distribusi.index',
-                'icon' => 'bi bi-card-list fs-3',
+                'icon' => 'fas fa-file fs-3',
                 'level' => '2',
                 'sequence' => '1020'
             ],
             [
                 'name' => 'Evaluasi Vendor',
                 'route_name' => 'report-evaluasi-vendor.index',
-                'icon' => 'bi bi-card-list fs-3',
+                'icon' => 'fas fa-file fs-3',
                 'level' => '2',
                 'sequence' => '1030'
             ],
             [
                 'name' => 'Setting',
                 'route_name' => '#',
-                'icon' => 'fas fa-atom fs-3',
+                'icon' => 'fas fa-sliders fs-3',
                 'level' => '1',
                 'sequence' => '1100'
             ],
             [
                 'name' => 'Akses Menu',
                 'route_name' => 'setting.akses.menu.index',
-                'icon' => 'bi bi-card-list fs-3',
+                'icon' => 'fas fa-square-check fs-3',
                 'level' => '2',
                 'sequence' => '1110'
             ],

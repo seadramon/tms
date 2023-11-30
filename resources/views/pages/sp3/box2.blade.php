@@ -4,7 +4,8 @@
     </div>
 
     <div class="card-body">
-        <div class="hover-scroll-overlay-y h-400px">
+        {{-- hover-scroll-overlay-y h-400px --}}
+        <div class="hover-scroll-overlay-y h-400px"> 
             <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
                 <thead>
                     <tr>
@@ -23,7 +24,7 @@
                         <th>Vol (Ton)</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="t-body">
                     @foreach($detailPesanan as $key => $pesanan)
                         @php
                             $pesananVolBtg  = $pesanan->vSpprbRi->vol_spprb ?? 0;
@@ -176,7 +177,7 @@
                 <i class="la la-plus"></i>Tambah
             </button>
         </div>
-        <div class="hover-scroll-overlay-y h-400px">
+        <div class="">
             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
                 <thead>
                     <tr>
@@ -195,7 +196,7 @@
                         <th style="width: 3%;"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="scroll scroll-y" data-kt-scroll-max-height="100px">
                     @php
                         $produk = $detailPesanan->mapWithKeys(function($item){
                             return [$item->produk->kd_produk => $item->produk->tipe];

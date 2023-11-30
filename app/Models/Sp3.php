@@ -19,6 +19,10 @@ class Sp3 extends Model
     const CREATED_AT = 'created_date';
     const UPDATED_AT = 'last_update_date';
 
+    protected $casts = [
+        'data' => 'array',
+    ];
+
     public function vendor()
     {
     	return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');

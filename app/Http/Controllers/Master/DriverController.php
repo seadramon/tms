@@ -37,7 +37,7 @@ class DriverController extends Controller
                     return Carbon::parse($model->tgl_bergabung)->diff(Carbon::now())->y . ' tahun';
                 })
                 ->editColumn('sim_expired', function ($model) {
-                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->sim_expired)->format('d-m-Y');
+                    return date('d-m-Y', strtotime($model->sim_expired));
                 })
                 ->addColumn('menu', function ($model) {
                     $column = '<div class="btn-group">

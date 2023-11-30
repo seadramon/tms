@@ -199,10 +199,10 @@ class SppController extends Controller
 
         return DataTables::eloquent($query)
             ->editColumn('jadwal1', function ($model) {
-                return Carbon::createFromFormat('Y-m-d H:i:s', $model->jadwal1)->format('d-m-Y');
+                return date('d-m-Y', strtotime($model->jadwal1));
             })
             ->editColumn('jadwal2', function ($model) {
-                return $model->jadwal2 ? Carbon::createFromFormat('Y-m-d H:i:s', $model->jadwal2)->format('d-m-Y') : '-';
+                return $model->jadwal2 ? date('d-m-Y', strtotime($model->jadwal2)) : '-';
             })
             ->toJson();
     }

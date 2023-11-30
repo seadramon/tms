@@ -103,7 +103,7 @@ class Sp3Controller extends Controller
                 $join->on('sp3_h.no_sp3', '=', 'last_sp3.no_sp3');
             })
             ->leftJoin('v_sp3_ri', 'sp3_h.no_sp3', '=', 'v_sp3_ri.no_sp3')
-            ->select('sp3_h.no_sp3', 'sp3_h.tgl_sp3', 'sp3_h.app1', 'sp3_h.app2', 'sp3_h.no_npp', 'sp3_h.vendor_id', 'sp3_h.kd_pat', 'sp3_h.jadwal1', 'sp3_h.jadwal2', 'v_sp3_ri.vol_sp3', 'v_sp3_ri.vol_sptb');
+            ->select('sp3_h.no_sp3', 'sp3_h.tgl_sp3', 'sp3_h.app1', 'sp3_h.app2', 'sp3_h.no_npp', 'sp3_h.vendor_id', 'sp3_h.kd_pat', 'sp3_h.jadwal1', 'sp3_h.jadwal2', 'v_sp3_ri.vol_sp3', 'v_sp3_ri.vol_sptb', 'sp3_h.kd_jpekerjaan');
 
         if($request->pat){
             $query->where('kd_pat', $request->pat);
@@ -254,7 +254,12 @@ class Sp3Controller extends Controller
                             $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
                         }
                         if(in_array('edit', $action) && $model->app1 != 1){
-                            $list .= '<li><a class="dropdown-item" href="' . route('sp3.edit', str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>';
+                            if($model->kd_jpekerjaan == '20'){
+                                $route = 'sp3.v2.edit';
+                            }else{
+                                $route = 'sp3.edit';                                
+                            }
+                            $list .= '<li><a class="dropdown-item" href="' . route($route, str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>';
                         }
                         if(in_array('amandemen', $action) && $model->app1 == 1){
                             $list .= '<li><a class="dropdown-item" href="' . route('sp3.amandemen', str_replace('/', '|', $model->no_sp3)) . '">Amandemen</a></li>';
@@ -543,6 +548,8 @@ class Sp3Controller extends Controller
 
                 if(strtolower($request->sat_harsat) == 'tonase'){
                     $sp3D->sat_harsat = $request->satuan[$i];
+                }else{
+                    $sp3D->ritase = $request->ritase[$i];
                 }
 
                 $sp3D->harsat_awal = str_replace(',', '', $request->harsat[$i]);

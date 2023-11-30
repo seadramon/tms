@@ -3,7 +3,7 @@
         return [$item->produk->kd_produk => $item->produk->kd_produk . " | " . $item->produk->tipe];
     })->all();
 @endphp
-<div class="modal fade" id="modal_pekerjaan" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_pekerjaan" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <!--begin::Modal content-->
@@ -39,23 +39,23 @@
                 <div class="row">
                     <div class="form-group col-lg-6">
                         <label class="form-label">Unit</label>
-                        {!! Form::select('modal_unit', $unit, null, ['class'=>'form-control form-select-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_unit']) !!}
+                        {!! Form::select('modal_unit', $unit, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_unit']) !!}
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="form-label">Site</label>
-                        {!! Form::select('modal_site', $site, null, ['class'=>'form-control form-select-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_site']) !!}
+                        {!! Form::select('modal_site', $site, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_site']) !!}
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="form-label">Pelabuhan Asal</label>
-                        {!! Form::select('modal_pelabuhan_asal', $pelabuhan, null, ['class'=>'form-control form-select-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_asal']) !!}
+                        {!! Form::select('modal_pelabuhan_asal', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_asal']) !!}
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="form-label">Pelabuhan Tujuan</label>
-                        {!! Form::select('modal_pelabuhan_tujuan', $pelabuhan, null, ['class'=>'form-control form-select-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_tujuan']) !!}
+                        {!! Form::select('modal_pelabuhan_tujuan', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_tujuan']) !!}
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="form-label">Tipe</label>
-                        {!! Form::select('modal_tipe', $produk, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'modal_tipe']) !!}
+                        {!! Form::select('modal_tipe', $produk, null, ['class'=>'form-control form-select-modal-solid', 'data-control'=>'select2', 'id'=>'modal_tipe']) !!}
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="form-label">Jarak</label>
@@ -69,10 +69,17 @@
                         <label class="form-label">Vol Ton</label>
                         {!! Form::text('modal_vol_ton', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_vol_ton']) !!}
                     </div>
-                    <div class="form-group col-lg-6">
-                        <label class="form-label">Satuan</label>
-                        {!! Form::select('modal_satuan', $satuan, null, ['class'=>'form-control form-select-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_satuan']) !!}
-                    </div>
+                    @if ($sat_harsat == 'tonase')
+                        <div class="form-group col-lg-6">
+                            <label class="form-label">Satuan</label>
+                            {!! Form::select('modal_satuan', $satuan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_satuan']) !!}
+                        </div>
+                    @else
+                        <div class="form-group col-lg-6">
+                            <label class="form-label">Ritase</label>
+                            {!! Form::text('modal_ritase', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_ritase']) !!}
+                        </div>
+                    @endif
                     <div class="form-group col-lg-6">
                         <label class="form-label">Harga Satuan</label>
                         {!! Form::text('modal_harsat', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_harsat']) !!}
@@ -101,8 +108,19 @@
 </div>
 
 <script type="text/javascript">
-    $('#modal_pekerjaan_submit').on('click', function(){
+    $(document).ready(function() {
+        $('.form-select-modal-solid').select2({
+            dropdownParent: $("#modal_pekerjaan")
+        });
+    });
+    $('#modal_pekerjaan_submit').on('click', function(e){
+        e.preventDefault();
         var data_ = modalPekerjaanData();
+        if($("#sat_harsat").val() == 'tonase'){
+            var temp_ = "<td><input name=\"satuan[]\" class=\"satuan\" type=\"hidden\" value=\"" + data_.satuan + "\">" + data_.satuan + "</td>";
+        }else{
+            var temp_ = "<td><input name=\"ritase[]\" class=\"ritase\" type=\"hidden\" value=\"" + data_.ritase + "\">" + data_.ritase + "</td>";
+        }
         var table_row = "<td><input name=\"unit[]\" class=\"unit\" type=\"hidden\" value=\"" + data_.unit + "\">" + data_.unit_teks + "</td>" + 
             "<td><input name=\"pelabuhan_asal[]\" class=\"pelabuhan_asal\" type=\"hidden\" value=\"" + data_.pelabuhan_asal + "\">" + data_.pelabuhan_asal + "</td>" + 
             "<td><input name=\"pelabuhan_tujuan[]\" class=\"pelabuhan_tujuan\" type=\"hidden\" value=\"" + data_.pelabuhan_tujuan + "\">" + data_.pelabuhan_tujuan + "</td>" + 
@@ -111,7 +129,7 @@
             "<td><input name=\"jarak[]\" class=\"jarak\" type=\"hidden\" value=\"" + data_.jarak + "\">" + data_.jarak + "</td>" + 
             "<td><input name=\"vol_btg[]\" class=\"vol_btg\" type=\"hidden\" value=\"" + data_.vol_btg + "\">" + data_.vol_btg + "</td>" + 
             "<td><input name=\"vol_ton[]\" class=\"vol_ton\" type=\"hidden\" value=\"" + data_.vol_ton + "\">" + data_.vol_ton + "</td>" + 
-            "<td><input name=\"satuan[]\" class=\"satuan\" type=\"hidden\" value=\"" + data_.satuan + "\">" + data_.satuan + "</td>" + 
+            temp_ + 
             "<td><input name=\"harsat[]\" class=\"harsat\" type=\"hidden\" value=\"" + data_.harsat + "\">" + data_.harsat + "</td>" + 
             "<td><input name=\"jumlah[]\" class=\"input-jumlah\" type=\"hidden\" value=\"" + data_.jumlah + "\">" + currencyFormat(data_.jumlah.toString()) + "</td>" + 
             "<td><button class=\"btn btn-danger btn-sm delete_pekerjaan me-1 mb-1\" style=\"padding: 5px 6px;\"><span class=\"bi bi-trash\"></span></button><button class=\"btn btn-warning btn-sm edit_pekerjaan\" style=\"padding: 5px 6px;\"><span class=\"bi bi-pencil-square\"></span></button></td>";
@@ -140,10 +158,15 @@
         var vol_ton = $("#modal_vol_ton").val();
         var harsat = $("#modal_harsat").val();
         var satuan = $("#modal_satuan").val();
-        if(satuan == 'btg'){
-            var jumlah = harsat.replace(/[^0-9\.]/g,'') * vol_btg.replace(/[^0-9\.]/g,'');
+        var ritase = $("#modal_ritase").val();
+        if($("#sat_harsat").val() == 'tonase'){
+            if(satuan == 'btg'){
+                var jumlah = harsat.replace(/[^0-9\.]/g,'') * vol_btg.replace(/[^0-9\.]/g,'');
+            }else{
+                var jumlah = harsat.replace(/[^0-9\.]/g,'') * vol_ton.replace(/[^0-9\.]/g,'');
+            }
         }else{
-            var jumlah = harsat.replace(/[^0-9\.]/g,'') * vol_ton.replace(/[^0-9\.]/g,'');
+            var jumlah = harsat.replace(/[^0-9\.]/g,'') * ritase.replace(/[^0-9\.]/g,'');
         }
 
         return {
@@ -159,6 +182,7 @@
             vol_ton: vol_ton,
             harsat: harsat,
             satuan: satuan,
+            ritase: ritase,
             jumlah: jumlah.toFixed(2),
         };
     }

@@ -84,26 +84,51 @@
                     </div>
                 </div>
             </div>
-
+            <div class="form-group col-lg-6">
+                <label class="form-label">Nama Pihak Pertama</label>
+                {!! Form::text('pihak_pertama', "", ['class'=>'form-control', 'id'=>'pihak_pertama']) !!}
+            </div>
+            <div class="form-group col-lg-6">
+                <label class="form-label">Nama Pihak Kedua</label>
+                {!! Form::text('vendor', $trader->pimpinan_nama ?? "", ['class'=>'form-control', 'id'=>'vendor', 'readonly']) !!}
+            </div>
+            <div class="form-group col-lg-6">
+                <label class="form-label">Jabatan Pihak Pertama</label>
+                {!! Form::text('jabatan_pertama', "", ['class'=>'form-control', 'id'=>'jabatan_pertama']) !!}
+            </div>
+            <div class="form-group col-lg-6">
+                <label class="form-label">Jabatan Pihak Kedua</label>
+                {!! Form::text('jabatan', $trader->pimpinan_jabatan ?? "", ['class'=>'form-control', 'id'=>'jabatan', 'readonly']) !!}
+            </div>
+            <div class="form-group col-lg-6">
+                <label class="form-label">Anggaran Dasar Pihak Pertama</label>
+                <div class="" data-bs-theme="light">
+                    <textarea name="kt_docs_ckeditor_classic" class="ckeditor" id="kt_docs_ckeditor_classic">
+                        <p style="text-align: justify;">Suatu Perseroan Terbatas yang tunduk pada hukum Negara Republik Indonesia, berkedudukan di Jakarta Timur dan beralamat di Gedung WIKA Tower 1, Jln. D.I. Panjaitan Kav. 9, Jati Negara, Jakarta Timur, Indonesia, 13340, didirikan berdasarkan Hukum Negara Republik Indonesia, berdasarkan Anggaran Dasar PT Wijaya Karya Beton Tbk., No. 44 tertanggal 11 Maret 1997, yang dibuat dihadapan Achmad Bajumi, S.H., pengganti dari Imas Fatimah, S.H., Notaris di Jakarta, yang telah beberapa kali diubah dan terakhir kali diubah dengan Akta Perubahan Anggaran Dasar No. 72 tanggal 30 Mei 2017 dibuat dihadapan Ir. Nanette Cahyanie Handari Adi Warsito S.H., M.Kn., Notaris di Jakarta Selatan dan telah memperoleh persetujuan Kementerian Hukum dan HAM RI No. AHU-0011827.AH.01.02.Tahun 2017 tanggal 31 Mei 2017, dalam hal ini diwakili oleh {header:APP1_NAMA} selaku {header:APP1_JBT}, bertindak untuk dan atas nama PT Wijaya Karya Beton Tbk. Selanjutnya dalam Perjanjian ini disebut &ldquo;PIHAK KESATU&rdquo;</p>    
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label class="form-label">Anggaran Dasar Pihak Kedua</label>
+                <div class="" data-bs-theme="light">
+                    <textarea name="kt_docs_ckeditor_classic2" class="ckeditor" id="kt_docs_ckeditor_classic1">
+                        <p style="text-align: justify;">nulldalam hal ini diwakili oleh {header:APP2_NAMA} selaku {header:APP2_JBT}, bertindak untuk dan atas nama {header:NAMA_VENDOR}. Selanjutnya dalam Perjanjian ini disebut &ldquo;PIHAK KEDUA&rdquo;</p>
+                    </textarea>
+                </div>
+            </div>
             <div class="form-group col-lg-6">
                 <label class="form-label">No BAN</label>
                 {!! Form::select('no_ban', $ban, $sp3->no_ban ?? null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'no_ban']) !!}
             </div>
 
             <div class="form-group col-lg-6">
-                <label class="form-label">No Induk Kontrak</label>
-                {!! Form::select('no_kontrak_induk', $kontrak, $sp3->no_kontrak_induk ?? null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'no_kontrak_induk']) !!}
+                <label class="form-label">Tanggal BAN</label>
+                {!! Form::text('tgl_ban', null, ['class'=>'form-control', 'id' => 'tgl_ban', 'readonly']) !!}
             </div>
 
-            <div class="form-group col-lg-6">
-                <label class="form-label">Nama Pihak Kedua / Vendor</label>
-                {!! Form::text('vendor', $trader->pimpinan_nama ?? "", ['class'=>'form-control', 'id'=>'vendor', 'readonly']) !!}
-            </div>
+            
 
-            <div class="form-group col-lg-6">
-                <label class="form-label">Jabatan</label>
-                {!! Form::text('jabatan', $trader->pimpinan_jabatan ?? "", ['class'=>'form-control', 'id'=>'jabatan', 'readonly']) !!}
-            </div>
+            
 
             <div class="form-group col-lg-6">
                 <label class="form-label">PIC</label>
@@ -157,22 +182,6 @@
                 <label class="form-label">Kondisi Penyerahan</label>
                 {!! Form::text('kondisi_penyerahan', $kondisiPenyerahanDipilih, ['class'=>'form-control', 'id'=>'kondisi_penyerahan', 'readonly']) !!}
             </div>
-
-            <div class="form-group col-lg-6">
-                <label class="form-label">Estimasi Total Ritase</label>
-                {!! Form::text('rit', $sp3->rit ?? 0, ['class'=>'form-control decimal', 'id' => $sat_harsat != 'tonase' ? 'est-rit' : 'rit', 'required']) !!}
-            </div>
-
-            <div class="form-group col-lg-6">
-                <label class="form-label">Jarak</label>
-                {!! Form::number('jarak_pesanan', $mode == 'edit' ? $sp3->jarak_km : $jarak, ['class'=>'form-control', 'id'=>'jarak_pesanan', 'required']) !!}
-            </div>
-            @if ($sat_harsat == 'ritase')
-                <div class="form-group col-lg-6">
-                    <label class="form-label">Harga Satuan Ritase</label>
-                    {!! Form::text('harga_satuan_ritase', $sp3->data['harga_satuan_ritase'] ?? 0, ['class'=>'form-control decimal', 'id'=>'harga_satuan_ritase']) !!}
-                </div>
-            @endif
         </div>
         @php
             $readonly = $sat_harsat != 'tonase';
@@ -253,71 +262,6 @@
 
         <div class="separator separator-dashed border-primary my-10"></div>
 
-        <h3>Material Tambahan</h3>
-        <div id="material_tambahan">
-            <div class="form-group">
-                <div data-repeater-list="material_tambahan">
-                    @if ($mode == 'edit')
-                        @foreach ($sp3->sp3D2 as $d2)
-                            <div data-repeater-item>
-                                <div class="form-group row">
-                                    <div class="col-md-3">
-                                        <label class="form-label">Material</label>
-                                        {!! Form::text('material', $d2->material, ['class'=>'form-control', 'required']) !!}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Spesifikasi</label>
-                                        {!! Form::text('spesifikasi', $d2->spesifikasi, ['class'=>'form-control', 'required']) !!}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">Volume</label>
-                                        {!! Form::number('volume', $d2->volume, ['class'=>'form-control', 'required']) !!}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <a href="javascript:;" data-repeater-delete class="btn btn-md btn-light-danger mt-md-8">
-                                            <i class="la la-trash-o"></i>Hapus
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else    
-                        <div data-repeater-item>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="form-label">Material</label>
-                                    {!! Form::text('material', null, ['class'=>'form-control', 'required']) !!}
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Spesifikasi</label>
-                                    {!! Form::text('spesifikasi', null, ['class'=>'form-control', 'required']) !!}
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Volume</label>
-                                    {!! Form::number('volume', null, ['class'=>'form-control', 'required']) !!}
-                                </div>
-                                <div class="col-md-3">
-                                    <a href="javascript:;" data-repeater-delete class="btn btn-md btn-light-danger mt-md-8">
-                                        <i class="la la-trash-o"></i>Hapus
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        
-            <div class="form-group" style="margin-top: 20px">
-                <div class="col-md-3">
-                    <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
-                        <i class="la la-plus"></i>Tambah
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="separator separator-dashed border-primary my-10"></div>
-
         <div class="form-group">
             <label class="form-label">Harga Termasuk</label>
             {!! Form::text('harga_include', collect($sp3->data['harga_include'] ?? [])->implode(','), ['class'=>'form-control', 'id' => "harga_include"]) !!}
@@ -325,48 +269,48 @@
 
         <div class="separator separator-dashed border-primary my-10"></div>
 
-        <div class="form-group">
-            <label class="form-label">Dokumen Tagihan harus melampirkan :</label>
-            
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Asli</th>
-                        <th>Copy</th>
-                        <th>&nbsp;</th>
-                        <th></th>
-                        <th>Asli</th>
-                        <th>Copy</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $dokumen = $sp3 ? $sp3->dokumen->groupBy('dok_id') : [];
-                    @endphp
-                    @for ($i = 1; $i <= 9; $i+=2)
-                        <tr>
-                            <th>{{ $documents[$i] }}</th>
-                            <td>
-                                {!! Form::number('dokumen_asli['.$i.']', $mode == 'edit' ? $dokumen[$i]->first()->asli : null, ['class'=>'form-control']) !!}
-                            </td>
-                            <td>
-                                {!! Form::number('dokumen_copy['.$i.']', $mode == 'edit' ? $dokumen[$i]->first()->copy : null, ['class'=>'form-control']) !!}
-                            </td>
-                            
-                            <th>&nbsp;</th>
-
-                            <th>{{ $documents[$i+1] }}</th>
-                            <td>
-                                {!! Form::number('dokumen_asli['.($i+1).']', $mode == 'edit' ? $dokumen[$i+1]->first()->asli : null, ['class'=>'form-control']) !!}
-                            </td>
-                            <td>
-                                {!! Form::number('dokumen_copy['.($i+1).']', $mode == 'edit' ? $dokumen[$i+1]->first()->copy : null, ['class'=>'form-control']) !!}
-                            </td>
-                        </tr>
-                    @endfor
-                </tbody>
-            </table>
+        
+        <div id="pasal">
+            <div class="form-group">
+                <div class="accordion" id="kt_accordion__">
+                    <div data-repeater-list="pasal">
+                        <div data-repeater-item>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="kt_accordion_1_header_1">
+                                    <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_1" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
+                                        Pasal 1
+                                    </button>
+                                </h2>
+                                <div id="kt_accordion_1_body_1" class="accordion-collapse collapse" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                    <div class="accordion-body">
+                                        <div class="form-group col-12">
+                                            <label class="form-label">Judul</label>
+                                            {!! Form::text('pasal_judul[]', '', ['class'=>'form-control', 'id'=>'pasal_judul1', 'readonly']) !!}
+                                        </div>
+                                        <div class="form-group col-12" data-bs-theme="light">
+                                            <textarea name="pasal_isi" class="ckeditor" id="">
+                                            
+                                            </textarea>
+                                        </div>
+                                        <div class="form-group col-12">
+                                            <a href="javascript:;" data-repeater-delete class="btn btn-md btn-light-danger mt-md-8">
+                                                <i class="la la-trash-o"></i>Hapus
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 20px">
+                <div class="col-md-3">
+                    <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+                        <i class="la la-plus"></i>Tambah
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -379,6 +323,7 @@
 @include('pages.sp3.v2.modal_detail_pekerjaan')
 
 <script type="text/javascript">
+    var pasal_ckeditor = [];
     var edit_ = false;
     @if($mode == 'edit')
         edit_ = true;
@@ -400,15 +345,22 @@
         }
     });
 
-    $('#material_tambahan').repeater({
+    ClassicEditor.create(document.querySelector('#kt_docs_ckeditor_classic')).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
+    ClassicEditor.create(document.querySelector('#kt_docs_ckeditor_classic1')).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
+
+    $('#pasal').repeater({
         initEmpty: !edit_,
 
         show: function () {
             $(this).slideDown();
+            reOrganizeItemPasal()
         },
 
         hide: function (deleteElement) {
             $(this).slideUp(deleteElement);
+            reOrganizeItemPasal();
+        },
+        ready: function (setIndexes) {
         }
     });
 
@@ -523,5 +475,21 @@
             $("#modal_ritase").val($("#est-rit").val());
             $("#modal_harsat").val($("#harga_satuan_ritase").val());
         }
+    }
+
+    function reOrganizeItemPasal(){
+        var index = 1;
+        $("div[data-repeater-item]").each(function(){
+            $(this).find('.accordion-header').attr('id', 'pasal-header-' + index);
+            $(this).find('.accordion-button').attr('data-bs-target', '#pasal-body-' + index);
+            $(this).find('.accordion-button').attr('aria-controls', '#pasal-body-' + index);
+            $(this).find('.accordion-button').text("Pasal " + index);
+            $(this).find('.accordion-collapse').attr('id', 'pasal-body-' + index);
+            // reinit ckeditor
+            $(this).find('.ck-editor').remove();
+            $(this).find('.ckeditor').attr('id', 'pasal_ckeditor' + index);
+            ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index)).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
+            index++;
+        });
     }
 </script>

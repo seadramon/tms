@@ -116,10 +116,10 @@ class PemenuhanArmadaController extends Controller
 
         return DataTables::eloquent($query)
             ->editColumn('tgl_spm', function ($model) {
-                return Carbon::createFromFormat('Y-m-d H:i:s', $model->tgl_spm)->format('d-m-Y');
+                return date('d-m-Y', strtotime($model->tgl_spm));
             })
             ->editColumn('tgl_sptb', function ($model) {
-                return $model->tgl_sptb ? Carbon::createFromFormat('Y-m-d H:i:s', $model->tgl_sptb)->format('d-m-Y') : '-';
+                return $model->tgl_sptb ? date('d-m-Y', strtotime($model->tgl_sptb)) : '-';
             })
             ->toJson();
     }

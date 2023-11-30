@@ -399,7 +399,7 @@
                     <tr>
                         <td width="70%" style="padding-left: 35px;">
                             Setuju melaksanakan,<br>
-                            {{ !empty($data->vendor) ? $data->vendor->nama : '' }}
+                            {{ !empty($data->vendor) ? Str::title($data->vendor->nama) : '' }}
                             
                         </td>
                         <td width="30%">
@@ -413,8 +413,8 @@
                     </tr>
                     <tr>
                         <td style="padding-left: 35px;" class="tebal">
-                            {{ $data->app2_name }}<br>
-                            {{ !empty($data->app2_jbt) ? $data->app2_jbt : '' }}
+                            {{ Str::title($data->app2_name) }}<br>
+                            {{ !empty($data->app2_jbt) ? Str::title($data->app2_jbt) : '' }}
                         </td>
                         <td class="tebal">
                             {{ !empty($data->manajer) ? $data->manajer->first_name . ' ' . $data->manajer->last_name : '' }}<br>

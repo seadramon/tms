@@ -33,13 +33,13 @@ class ArmadaController extends Controller
 
         return DataTables::eloquent($query)
                 ->editColumn('tgl_stnk', function ($model) {
-                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_stnk)->format('d-m-y');
+                    return date('d-m-Y', strtotime($model->tgl_stnk));
                 })
                 ->editColumn('tgl_kir_head', function ($model) {
-                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_kir_head)->format('d-m-y');
+                    return date('d-m-Y', strtotime($model->tgl_kir_head));
                 })
                 ->editColumn('tgl_pajak', function ($model) {
-                    return Carbon::createFromFormat('Y-m-d h:i:s', $model->tgl_pajak)->format('d-m-y');
+                    return date('d-m-Y', strtotime($model->tgl_pajak));
                 })
                 ->editColumn('detail', function ($model) {
                     return $model->detail;

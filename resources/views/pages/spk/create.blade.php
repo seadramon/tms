@@ -16,20 +16,20 @@
         <!--begin::Col-->
         <div class="col-12 mb-md-5 mb-xl-10">
             @if ($mode == 'edit')
-                {!! Form::open(['url' => route('sp3.v2.update', str_replace('/', '|', $data->no_sp3)), 'class' => 'form', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}
+                {!! Form::open(['url' => route('spk.update', str_replace('/', '|', $data->no_sp3)), 'class' => 'form', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}
                 @method('PUT')
                 @php
                     $disabled = ['disabled'];
                 @endphp
             @else
-                {!! Form::open(['url' => route('sp3.v2.store'), 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
+                {!! Form::open(['url' => route('spk.store'), 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
                 @php
                     $disabled = [];
                 @endphp
             @endif
 
             <div id="box1" style="margin-bottom: 20px">
-                @include('pages.sp3.v2.box1')
+                @include('pages.spk.box1')
             </div>
 
             <div id="box2">
@@ -50,6 +50,7 @@
 @section('js')
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <script src="{{ asset('assets/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
+<script src="{{ asset('assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
 <script type="text/javascript">
     var target = document.querySelector("#kt_body");
             
@@ -107,7 +108,7 @@
             };
             
             $.ajax({
-                url: "{{ route('sp3.v2.get-data-box2') }}",
+                url: "{{ route('spk.get-data-box2') }}",
                 type: "POST",
                 data: data,
                 dataType: 'json',
