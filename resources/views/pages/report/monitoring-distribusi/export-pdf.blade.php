@@ -112,18 +112,20 @@
             <tbody>
                 @if (count($datas) > 0)
                     @foreach($datas as $data)
-                        <td>{{ date('d-m-Y', strtotime($data->tgl_sptb)) }}</td>
-                        <td>{{ $data->no_sptb }}</td>
-                        <td>{{ $data->angkutan }}</td>
-                        <td>{{ $data->no_pol }}</td>
-                        <td>{{ $data->no_npp }}</td>
-                        <td>{{ $data->no_spprb }}</td>
-                        <td>{{ $data->nama_pelanggan }}</td>
-                        <td>{{ $data->nama_proyek }}</td>
-                        <td>{{ $data->kd_produk }}</td>
-                        <td>{{ $data->tipe }}</td>
-                        <td>{{ $data->vol }}</td>
-                        <td>{{ $data->app_pelanggan == '1' ? 'Received' : 'On Progress' }}</td>
+                        <tr>
+                            <td>{{ date('d-m-Y', strtotime($data->tgl_sptb)) }}</td>
+                            <td>{{ $data->no_sptb }}</td>
+                            <td>{{ $data->angkutan }}</td>
+                            <td>{{ $data->no_pol }}</td>
+                            <td>{{ $data->no_npp }}</td>
+                            <td>{{ $data->no_spprb }}</td>
+                            <td>{{ $data->nama_pelanggan }}</td>
+                            <td>{{ $data->nama_proyek }}</td>
+                            <td>{{ $data->kd_produk }}</td>
+                            <td>{{ $data->tipe }}</td>
+                            <td>{{ $data->vol }}</td>
+                            <td>{{ $data->app_pelanggan == '1' ? 'Received' : 'On Progress' }}</td>
+                        </tr>
                     @endforeach
                 @else
                     <tr>
