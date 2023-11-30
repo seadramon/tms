@@ -22,6 +22,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\MonitoringDistribusiExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MonitoringDistribusiController extends Controller
 {
@@ -58,6 +59,37 @@ class MonitoringDistribusiController extends Controller
 
     public function exportExcel($minggu1, $minggu2, $kd_pat){
         return Excel::download(new MonitoringDistribusiExport($minggu1, $minggu2, $kd_pat), 'Monitoring Distribusi.xlsx');
+    }
+
+    public function exportPdf($minggu1, $minggu2, $kd_pat)
+    {
+        $query = SptbH::from('sptb_h a')
+            ->selectRaw('tgl_sptb, a.no_sptb, a.no_spm, angkutan, a.no_pol, a.no_npp, a.no_spprb, b.nama_pelanggan, b.nama_proyek, c.kd_produk, d.tipe, c.vol')
+            ->join('npp b', 'a.no_npp', 'b.no_npp')
+            ->join('sptb_d c', 'a.no_sptb', 'c.no_sptb')
+            ->join('tb_produk d', 'c.kd_produk', 'd.kd_produk')
+            ->join('spm_h e', 'a.no_spm', 'e.no_spm')
+            ->whereBetween('tgl_sptb', [DB::raw("to_date('". $minggu1 ."','dd/mm/yyyy')"), DB::raw("to_date('". $minggu2 ."','dd/mm/yyyy')")])
+            ->whereRaw("a.kd_pat = '". $kd_pat ."'");
+
+        $lokasi = Pat::find($kd_pat);
+            
+        if(Auth::check()){
+            $query->whereRaw("e.vendor_id = '". Auth::user()->vendor_id ."'");
+        }
+        $datas = $query->orderBy('tgl_sptb')->orderBy('no_sptb')->get();
+
+        $pdf = Pdf::loadView('pages.report.monitoring-distribusi.export-pdf', [
+            'datas' => $datas, 
+            'minggu1' => $minggu1,
+            'minggu2' => $minggu2,
+            'lokasi' => $lokasi
+        ]);
+
+        $filename = "Monitoring-Distribusi";
+
+        return $pdf->setPaper('a4', 'landscape')
+            ->stream($filename . '.pdf');
     }
 
 }
