@@ -30,6 +30,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\Sp3Export;
 
 class Sp3Controller extends Controller
 {
@@ -273,6 +275,9 @@ class Sp3Controller extends Controller
                         if(in_array('approve2', $action) && $model->app1 == 1){
                             $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
                         }
+                        // if(in_array('print-excel', $action)){
+                            $list .= '<li><a class="dropdown-item" href="'.route('sp3.print-excel', str_replace('/', '|', $model->no_sp3)).'">Print Excel</a></li>';
+                        // }
                     }
                     $edit = '<div class="btn-group">
                                 <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -1131,6 +1136,13 @@ class Sp3Controller extends Controller
 
         return $pdf->setPaper('a4', 'portrait')
             ->stream($filename . '.pdf');
+    }
+
+    public function printExcel($noSp3)
+    {
+        $noSp3 = str_replace('|', '/', $noSp3);
+
+        return Excel::download(new Sp3Export($noSp3), 'Sp3.xlsx');
     }
 
     private function diffDate($date1, $date2)
