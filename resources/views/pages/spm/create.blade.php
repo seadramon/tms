@@ -45,7 +45,7 @@
 
                     <div class="form-group row mt-2">
                         <div class="col-lg-6 custom-form">
-                            <label class="form-label col-sm-3 required ">Tanggal</label>
+                            <label class="form-label col-sm-3 required ">Tanggal Muat</label>
                             <input  name="tanggal"
                              class="form-control flatpickr-input active" placeholder="Pilih Tanggal" id="kt_datepicker_3" type="text" readonly="readonly">
                         </div>

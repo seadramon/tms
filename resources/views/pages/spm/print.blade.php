@@ -108,7 +108,7 @@
 
         <div class="text-margin">
             <p>Kepada {{ $spmh->pat?->ket }}</p>
-            <p>Harap dimuat pada kendaraan : {{ $spmh->vendor->nama }} dengan No. Polisi : {{ strtoupper($spmh->no_pol) }}</p>
+            <p>Harap dimuat pada tanggal {{ fullDateHumanizeId($spmh->tgl_spm) }} kendaraan : {{ $spmh->vendor->nama }} dengan No. Polisi : {{ strtoupper($spmh->no_pol) }}</p>
         </div>
 
         <table>
@@ -166,7 +166,7 @@
             <tbody>
                 <tr>
                     <td class="header-sign"><br>Pengemudi,</td>
-                    <td class="header-sign">{{ $npp->kota }}, {{ date('d/m/Y') }}<br>Administrasi Distribusi,</td>
+                    <td class="header-sign">{{ $npp->kota }}, {{ date('d/m/Y', strtotime($spmh->created_date)) }}<br>Administrasi Distribusi,</td>
                 </tr>
                 <tr>
                     <td>{{ $spmh->app2_name }}</td>

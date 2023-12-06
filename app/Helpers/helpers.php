@@ -59,6 +59,28 @@ if (!function_exists('getListBulan')) {
     }
 }
 
+if (!function_exists('fullDateHumanizeId')) {
+    function fullDateHumanizeId($date)
+    {
+        $month = [
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember'
+        ];
+        $m = date('n', strtotime($date));
+        return date('d', strtotime($date)) . ' ' . $month[$m-1] . ' ' . date('Y', strtotime($date));
+    }
+}
+
 if (!function_exists('terbilang')) {
     function terbilang($nilai) {
         if($nilai<0) {
