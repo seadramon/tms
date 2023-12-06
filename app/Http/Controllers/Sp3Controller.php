@@ -332,7 +332,7 @@ class Sp3Controller extends Controller
     {
         $personal = Personal::select('employee_id', 'first_name', 'last_name')
             ->where('st', 1)
-            ->whereIn('kd_jbt', ['JBTP0001', 'JBTP0002'])
+            ->whereIn('kd_jbt', ['JBTP0001', 'JBTP0002', 'JBTA0093'])
             ->where(function($sql) use ($request) {
                 $sql->where(DB::raw('LOWER(employee_id)'), 'LIKE', '%' . $request->q . '%')
                 ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', '%' . $request->q . '%')

@@ -251,7 +251,7 @@ class SpkController extends Controller
 
             $vendor = Vendor::find($request->vendor_id);
 
-            $noDokumen = 'TP.02.01/WB-' . (session('TMP_KDWIL') ?? '1A');
+            $noDokumen = 'KU.08.02/WB-' . (session('TMP_KDWIL') ?? '1A');
 
             $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
 

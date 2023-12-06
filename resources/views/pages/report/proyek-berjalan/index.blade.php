@@ -66,6 +66,12 @@
         font-size: 15px;
         font-weight: normal;
     }
+    tbody tr td {
+        border: solid 0.5px black!important;
+    }
+    .table tbody tr:last-child td, .table tbody tr:last-child th, .table tfoot tr:last-child td, .table tfoot tr:last-child th {
+        border: solid 0.5px black!important;
+    }
 </style>
 @endsection
 @section('js')
@@ -97,7 +103,7 @@
         });
     });
 	// Class definition
-	var KTDatatablesServerSide_sp3 = function () {
+	var DT_proyek_berjalan = function () {
 	    // Shared variables
 	    var table;
 	    var dt;
@@ -105,7 +111,7 @@
 
 	    // Private functions
 	    var initDatatable = function () {
-	        dt = $("#tabel_evaluasi_vendor_sp3").DataTable({
+	        dt = $("#tabel_proyek_berjalan").DataTable({
 				language: {
   					lengthMenu: "Show _MENU_",
  				},
@@ -114,6 +120,7 @@
 	            processing: true,
 	            serverSide: true,
 	            // order: [[0, 'asc']],
+                "ordering": false,
 	            stateSave: true,
                 // searching: true,
                 buttons: [
@@ -131,7 +138,7 @@
                     // }
                 ],
 	            ajax: {
-                    url: "{{ route('report-evaluasi-vendor.data-sp3') }}",
+                    url: "{{ route('report-proyek-berjalan.data') }}",
                     type: "POST",
                     data: function(d){
                         d._token = '{{ csrf_token() }}';
@@ -146,52 +153,82 @@
                 },
 	            columns: [
 	                // {data: 'tgl_sp3', name: 'tgl_sp3', defaultContent: '-', class: "hide hidden"},
-	                {data: 'bulan', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'no_sp3', defaultContent: '-'},
-	                {data: 'volume', defaultContent: '-'},
-	                {data: 'ket', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'volume', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'volume_diterima', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'volume_rusak', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'nilai_mutu', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'tepat_waktu', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'terlambat', defaultContent: '-', orderable: false, searchable: false},
                     {
-                        "mData": "aspek_waktu",
+                        "mData": "pelanggan",
                         "mRender": function (data, type, row) {
-                            // console.log(row);
-                            // console.log('DATA ' + data);
-                            var nilai = 0;
-                            if(parseInt(row.tepat_waktu) < 50){
-                                nilai = 50;
-                            }else if(parseInt(row.tepat_waktu) > 70){
-                                nilai = 90;
-                            }else{
-                                nilai = 70;
-                            }
-                            return nilai;
+                            return row.nama_pelanggan + "<br><br>" + row.nama_proyek + "<br><br>" + row.no_npp;
                         },
                         orderable: false,
                         searchable: false,
                     },
-	                {data: 'aspek_pelayanan', defaultContent: '-', orderable: false, searchable: false},
-	                {data: 'aspek_k3l', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'tipe', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'panjang', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'vol_kontrak', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'vol_produksi', defaultContent: '-', orderable: false, searchable: false},
+	                {data: 'vol_distribusi', defaultContent: '-', orderable: false, searchable: false},
                     {
-                        "mData": "nilai_total",
+                        "mData": "stock_pabrik",
                         "mRender": function (data, type, row) {
-                            var wkt = 0;
-                            if(parseInt(row.tepat_waktu) < 50){
-                                wkt = 50;
-                            }else if(parseInt(row.tepat_waktu) > 70){
-                                wkt = 90;
-                            }else{
-                                wkt = 70;
-                            }
-                            return ((wkt + parseInt(row.nilai_mutu) + parseInt(row.aspek_pelayanan) + parseInt(row.aspek_k3l)) / 4).toFixed(2);
+                            return parseInt(row.vol_produksi) - parseInt(row.vol_distribusi);
                         },
                         orderable: false,
                         searchable: false,
                     },
+                    {
+                        "mData": "stock_site",
+                        "mRender": function (data, type, row) {
+                            // return parseInt(row.vol_produksi) - parseInt(row.vol_distribusi);
+                            return 0;
+                        },
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        "mData": "gagal_site",
+                        "mRender": function (data, type, row) {
+                            // return parseInt(row.vol_produksi) - parseInt(row.vol_distribusi);
+                            return 0;
+                        },
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        "mData": "prog_produksi_qty",
+                        "mRender": function (data, type, row) {
+                            // return parseInt(row.vol_produksi) - parseInt(row.vol_distribusi);
+                            return 0;
+                        },
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        "mData": "prog_produksi_bobot",
+                        "mRender": function (data, type, row) {
+                            // return parseInt(row.vol_produksi) - parseInt(row.vol_distribusi);
+                            return "0%";
+                        },
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        "mData": "prog_distribusi_qty",
+                        "mRender": function (data, type, row) {
+                            // return parseInt(row.vol_produksi) - parseInt(row.vol_distribusi);
+                            return 0;
+                        },
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        "mData": "prog_distribusi_bobot",
+                        "mRender": function (data, type, row) {
+                            // return parseInt(row.vol_produksi) - parseInt(row.vol_distribusi);
+                            return "0%";
+                        },
+                        orderable: false,
+                        searchable: false,
+                    },
+	                {data: 'pabrik', defaultContent: '-', orderable: false, searchable: false},
 	            ],
 	        });
 
@@ -210,47 +247,13 @@
         if(!isShowBox2){
             isShowBox2 = true;
             $('#box2').show();
-            KTDatatablesServerSide_sp3.init();
+            DT_proyek_berjalan.init();
+            $('#div_proyek_berjalan').show();
             if($("#tipe").val() == "sp3"){
             }
         }
-        if($("#tipe").val() == "sp3"){
-            $('#tabel_evaluasi_vendor_sp3').DataTable().ajax.reload();            
-
-            $('#div_evaluasi_vendor_sp3').show();
-            $('#div_evaluasi_vendor_monthly').hide();
-            $('#div_evaluasi_vendor_semester').hide();
-        }else if($("#tipe").val() == "semester"){
-            $.ajax({
-                type: "post",
-                url: "{{ route('report-evaluasi-vendor.data-vendor-semester') }}",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    kd_pat: $("#kd_pat").val(),
-                    pekerjaan: $("#pekerjaan").val(),
-                    vendor_id: $("#vendor_id").val(),
-                    tipe: $("#tipe").val(),
-                    tahun1: $("#tahun1").val(),
-                    minggu1: $("#minggu1").val(),
-                    minggu2: $("#minggu2").val()
-                },
-                success: function(res) {
-                    $("#tbody-semester").html("");
-
-                    $("#tbody-semester").html(res);
-
-                    blockUI.release();
-                },
-                error: function(res) {
-                    console.log(res);
-                    blockUI.release();
-                }
-            })
-            $('#div_evaluasi_vendor_sp3').hide();
-            $('#div_evaluasi_vendor_monthly').hide();
-            $('#div_evaluasi_vendor_semester').show();
-        }
-
+        $('#tabel_proyek_berjalan').DataTable().ajax.reload();            
+        
         // getChart();
     });
 

@@ -30,4 +30,9 @@ class VSpprbRi extends Model
 	{
 		return $this->belongsTo(Pat::class, 'pat_to', 'kd_pat');
 	}
+
+	public function sptbh()
+    {
+        return $this->belongsTo(SptbH::class, ['no_npp', 'pat_to'], ['no_npp', 'kd_pat']);
+    }
 }

@@ -21,6 +21,10 @@ class MonOp extends Model
     {
         return $this->belongsTo(Produk::class, 'kd_produk_konfirmasi', 'kd_produk');
     }
+    public function npp()
+    {
+        return $this->belongsTo(Npp::class, 'no_npp', 'no_npp');
+    }
 
     public function sp3D()
     {

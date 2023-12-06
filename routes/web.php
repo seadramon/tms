@@ -253,7 +253,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		])->parameters(['' => 'report-evaluasi-vendor']);
 	});
 	Route::group(['prefix' => 'report-proyek-berjalan', 'as' => 'report-proyek-berjalan.'], function(){
-		// Route::post('/data-sp3', [ProyekBerjalanController::class, 'dataSp3'])->name('data-sp3');
+		Route::post('/data', [ProyekBerjalanController::class, 'data'])->name('data');
 		// Route::post('/data-vendor-semester', [ProyekBerjalanController::class, 'dataVendorSemester'])->name('data-vendor-semester');
 
 	    Route::resource('/',  ProyekBerjalanController::class)->except([
