@@ -308,8 +308,9 @@ class Sp3Controller extends Controller
                 $sp3->kd_jpekerjaan = '01';
             }
             if(strtolower($request->sat_harsat) == 'ritase'){
-                $data['harga_satuan_ritase'] = $request->harga_satuan_ritase;
+                $data_['harga_satuan_ritase'] = $request->harga_satuan_ritase;
             }
+            $sp3->data = $data_;
             $sp3->save();
 
             foreach($request->pic as $pic){
@@ -471,18 +472,22 @@ class Sp3Controller extends Controller
             $sp3->created_by = session('TMP_NIP') ?? '12345';
             $sp3->created_date = date('Y-m-d H:i:s');
             $sp3->kd_pat = session('TMP_KDWIL') ?? '1A';
+            $data_ = $sp3->data;
             if($request->kd_jpekerjaan == 'laut'){
                 $sp3->kd_jpekerjaan = '20';
                 $sp3->spesifikasi = $request->spesifikasi;
                 
                 $harga_include = collect(json_decode($request->harga_include))->map(function($item){ return $item->value; })->all();
-                $data_ = $sp3->data;
+               
                 $data_['harga_include'] = $harga_include;
                 
-                $sp3->data = $data_;
             }else{
                 $sp3->kd_jpekerjaan = '01';
             }
+            if(strtolower($request->sat_harsat) == 'ritase'){
+                $data_['harga_satuan_ritase'] = $request->harga_satuan_ritase;
+            }
+            $sp3->data = $data_;
             $sp3->save();
 
             foreach($request->pic as $pic){

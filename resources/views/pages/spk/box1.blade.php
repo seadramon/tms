@@ -1,6 +1,14 @@
 <div class="card shadow-sm">
     <div class="card-header">
-        <h3 class="card-title">Tambah Baru SP3 / SPK</h3>
+        <h3 class="card-title">
+            @if ($mode == 'edit')
+                Edit SPK
+            @elseif ($mode == 'show')
+                View Data SPK
+            @else
+                Tambah Baru SPK
+            @endif
+        </h3>
     </div>
 
     <div class="card-body">    
@@ -12,7 +20,7 @@
         <div class="form-group row">
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 custom-label">NPP</label>
-                <select class="form-control search-npp" name="no_npp" id="no_npp" @if($mode == 'edit') disabled @endif>
+                <select class="form-control search-npp" name="no_npp" id="no_npp" @if(in_array($mode, ['edit', 'show'])) disabled @endif>
                     @if ($npp)
                         <option value="{{$npp->no_npp}}">{{$npp->no_npp}} | {{$npp->nama_proyek}}</option>
                     @endif
@@ -21,7 +29,7 @@
             
             <div class="col-lg-6 custom-form">
                 <label class="form-label col-sm-3 custom-label">No. SP3 / SPK</label>
-                {!! Form::text('no_sp3', $data->no_sp3 ?? 'AUTO', ['class'=>'form-control', 'id'=>'no_sp3'] + ['disabled']) !!}
+                {!! Form::text('no_spk', $data->no_spk ?? 'AUTO', ['class'=>'form-control', 'id'=>'no_spk'] + ['disabled']) !!}
             </div>
         </div>
 
@@ -45,6 +53,6 @@
     </div>
 
     <div class="card-footer" style="text-align: right;">
-        <input type="button" class="btn btn-primary {{ ($mode == 'edit') ? 'hidden' : ''}}" id="buat_draft" value="Buat Draft">
+        <input type="button" class="btn btn-primary {{ in_array($mode, ['edit', 'show']) ? 'hidden' : ''}}" id="buat_draft" value="Buat Draft">
     </div>
 </div>

@@ -16,7 +16,7 @@
         <!--begin::Col-->
         <div class="col-12 mb-md-5 mb-xl-10">
             @if ($mode == 'edit')
-                {!! Form::open(['url' => route('sp3.v2.update', str_replace('/', '|', $data->no_sp3)), 'class' => 'form', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}
+                {!! Form::model($data, ['route' => ['sp3.v2.update', $data->no_sp3], 'class' => 'form', 'method' => 'put', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}  
                 @method('PUT')
                 @php
                     $disabled = ['disabled'];

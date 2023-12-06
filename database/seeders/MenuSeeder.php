@@ -42,6 +42,22 @@ class MenuSeeder extends Seeder
                 ]
             ],
             [
+                'name' => 'SPK',
+                'route_name' => 'spk.index',
+                'icon' => 'fas fa-pen-to-square fs-3',
+                'level' => '0',
+                'sequence' => '0150',
+                'action' => [
+                    'create',
+                    'view',
+                    // 'edit',
+                    // 'amandemen',
+                    // 'approve1',
+                    // 'approve2',
+                    // 'print',
+                ]
+            ],
+            [
                 'name' => 'SPP',
                 'route_name' => 'spp.index',
                 'icon' => 'fas fa-pen-to-square fs-3',
@@ -194,6 +210,13 @@ class MenuSeeder extends Seeder
                 'icon' => 'fas fa-file fs-3',
                 'level' => '2',
                 'sequence' => '1030'
+            ],
+            [
+                'name' => 'Proyek Berjalan',
+                'route_name' => 'report-proyek-berjalan.index',
+                'icon' => 'fas fa-file fs-3',
+                'level' => '2',
+                'sequence' => '1040'
             ],
             [
                 'name' => 'Setting',

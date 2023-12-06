@@ -3,7 +3,7 @@
 @section('page-title')
 <!--begin::Page title-->
 <div class="page-title d-flex justify-content-center flex-column me-5">
-    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">SP3</h1>
+    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">SPK</h1>
 </div>
 <!--end::Page title-->
 @endsection
@@ -15,8 +15,8 @@
     <div class="row g-5 g-xl-8">
         <!--begin::Col-->
         <div class="col-12 mb-md-5 mb-xl-10">
-            @if ($mode == 'edit')
-                {!! Form::open(['url' => route('spk.update', str_replace('/', '|', $data->no_sp3)), 'class' => 'form', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}
+            @if (in_array($mode, ['edit', 'show']))
+                {!! Form::model($data, ['route' => ['spk.update', $data->no_spk], 'class' => 'form', 'method' => 'put', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}  
                 @method('PUT')
                 @php
                     $disabled = ['disabled'];
@@ -60,7 +60,7 @@
     
     $(document).ready(function() {
         $("#alert-box1").hide();
-        @if($mode == 'edit')
+        @if(in_array($mode, ['edit', 'show']))
             $('#buat_draft').trigger('click')
         @endif
     });
@@ -100,7 +100,7 @@
             let data = {
                 '_token': '{{ csrf_token() }}', 
                 'no_npp': $('#no_npp').val(), 
-                'sp3': $('#no_sp3').val(), 
+                'spk': $('#no_spk').val(), 
                 'vendor_id': $('#vendor_id').val(), 
                 'sat_harsat': $('#sat_harsat').val(), 
                 'kd_jpekerjaan': $('#kd_jpekerjaan').val(),

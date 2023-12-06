@@ -99,3 +99,9 @@ if (!function_exists('penyebut')) {
         return $temp;
     }
 }
+
+if (!function_exists('differenceDate')) {
+    function differenceDate($date1, $date2, $type = 'day') {
+        return (strtotime($date2)-strtotime($date1)) / 3600 / 24;
+    }
+}
