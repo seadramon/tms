@@ -86,7 +86,11 @@
             </div>
             <div class="form-group col-lg-6">
                 <label class="form-label">Nama Pihak Pertama</label>
-                {!! Form::text('pihak1', $spk->pihak1 ?? "", ['class'=>'form-control', 'id'=>'pihak1']) !!}
+                <select class="form-control search-pihak1" name="pihak1" id="pihak1" required>
+                    @if (in_array($mode, ['edit', 'show']))
+                        <option selected value="{{$item->pihak1}}">{{$item->pihak1}} - {{$item->employee->fullname}}</option>
+                    @endif
+                </select>
             </div>
             <div class="form-group col-lg-6">
                 <label class="form-label">Nama Pihak Kedua</label>
@@ -283,7 +287,7 @@
         <div class="separator separator-dashed border-primary my-10"></div>
 
         
-        <div id="pasal" data-index="{{$spk->spk_pasal->count()}}">
+        <div id="pasal" data-index="{{ $spk ? $spk->spk_pasal->count() : 0 }}">
             <div class="form-group">
                 <div class="accordion" id="kt_accordion__">
                     <div data-repeater-list="pasal">
@@ -455,6 +459,30 @@
             },
         }
     });
+    $('.search-pihak1').select2({
+        placeholder: 'Cari...',
+        ajax: {
+            url: "{{ route('spk.search-pihak-pertama') }}",
+            minimumInputLength: 2,
+            dataType: 'json',
+            cache: true,
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.employee_id + ' - ' + item.first_name + ' ' + (item.last_name ?? ''),
+                            jabatan: item.jabatan.ket,
+                            id: item.employee_id
+                        }
+                    })
+                };
+            },
+            templateSelection: function (data, container) {
+                $(data.element).attr('data-jabatan', data.jabatan);
+                return data.text;
+            },
+        }
+    });
 
     $('#form-edit').on('submit', function(){
         $("#form-edit :disabled").removeAttr('disabled');
@@ -468,8 +496,13 @@
     $('#ppn, #pph').on('change', function(){
         calculateTotal();
     });
+    
     $('#no_ban').on('change', function(){
         $("#tgl_ban").val($("#no_ban option:selected").attr('data-tgl'));
+    });
+    
+    $('#pihak1').on('change', function(){
+        $("#pihak1_jabatan").val($("#pihak1").select2('data')[0].jabatan);
     });
 
     $(document).on('click', '.delete_pekerjaan', function(event){

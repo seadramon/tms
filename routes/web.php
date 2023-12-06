@@ -84,7 +84,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    // Route::post('/destroy', [SpkController::class, 'destroy'])->name('destroy');
 	    Route::post('/data', [SpkController::class, 'data'])->name('data');
 		Route::get('/search-npp', [SpkController::class, 'searchNpp'])->name('search-npp');
-		Route::get('/search-pic', [SpkController::class, 'searchPic'])->name('search-pic');
+		Route::get('/search-pihak-pertama', [SpkController::class, 'searchPihakPertama'])->name('search-pihak-pertama');
 		Route::post('/get-data-box2', [SpkController::class, 'getDataBox2'])->name('get-data-box2');
 		// Route::get('/approve/{type}/{no_sp3}', [SpkController::class, 'showApprove'])->name('get-approve')->where('no_sp3', '(.*)');
 		// Route::post('/approve', [SpkController::class, 'storeApprove'])->name('store-approve');

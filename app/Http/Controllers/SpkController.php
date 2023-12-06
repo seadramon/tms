@@ -320,6 +320,27 @@ class SpkController extends Controller
         ]);
     }
 
+    public function searchPihakPertama(Request $request)
+    {
+        $personal = Personal::with('jabatan')
+            ->select('employee_id', 'first_name', 'last_name', 'kd_jbt')
+            ->where('st', 1)
+            ->where(function($sql) use ($request) {
+                $sql->whereIn('kd_jbt', ['JBTM0197', 'JBTM0169', 'JBTM0173', 'JBTM0174', 'JBTM0175', 'JBTM0178', 'JBTM0179', 'JBTM0168', 'JBTM0170', 'JBTM0172', 'JBTK0080', 'JBTS0002', 'JBTM0068', 'JBTM0194', 'JBTM0038']);
+                $sql->orWhere('kd_jbt', 'like', 'JBTD%');
+            })
+            ->where(function($sql) use ($request) {
+                $sql->where(DB::raw('LOWER(employee_id)'), 'LIKE', '%' . $request->q . '%')
+                ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', '%' . $request->q . '%')
+                ->orWhere(DB::raw('LOWER(last_name)'), 'LIKE', '%' . $request->q . '%');
+
+            });
+        // if(session('TMP_KDWIL') != '0A'){
+        //     $personal->where('kd_pat', session('TMP_KDWIL') ?? '0A');
+        // }
+        return $personal->get();
+    }
+
     public function getDataBox2(Request $request)
     {
         $code = 200;
