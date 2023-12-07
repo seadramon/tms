@@ -143,12 +143,10 @@
                     data: function(d){
                         d._token = '{{ csrf_token() }}';
                         d.kd_pat = $("#kd_pat").val();
-                        d.pekerjaan = $("#pekerjaan").val();
-                        d.vendor_id = $("#vendor_id").val();
-                        d.tipe = $("#tipe").val();
-                        d.tahun2 = $("#tahun2").val();
-                        d.range = $("#range").val();
-                        d.month = $("#month").val();
+                        d.minggu1 = $("#minggu1").val();
+                        d.minggu2 = $("#minggu2").val();
+                        d.tahun = $("#tahun").val();
+                        d.ppb_muat = $("#ppb_muat").val();
                     }
                 },
 	            columns: [

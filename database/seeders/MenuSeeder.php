@@ -39,6 +39,7 @@ class MenuSeeder extends Seeder
                     'approve1',
                     // 'approve2',
                     'print',
+                    'print-excel',
                 ]
             ],
             [

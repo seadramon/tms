@@ -15,9 +15,10 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class Sp3Export implements FromView, WithStyles, ShouldAutoSize
+class Sp3Export implements FromView, WithStyles
 {
     protected $jmlDetail = 0;
+    protected $noSp3 = null;
 
     function __construct($noSp3) {
         $this->noSp3 = $noSp3;

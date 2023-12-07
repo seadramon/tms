@@ -70,6 +70,20 @@ class ProyekBerjalanController extends Controller
 
     public function data(Request $request)
     {
+        $filter_kdpat = "";
+        $filter_ppbmuat = "";
+        $filter_sptb = "";
+        if($request->kd_pat){
+            $filter_kdpat = "and a.kd_pat='" . $request->kd_pat . "'";
+        }
+        if($request->ppb_muat){
+            $filter_ppbmuat .= "and d.pat_to='" . $request->ppb_muat . "'";
+        }
+        if($request->minggu1){
+            $m1 = explode(';', $request->minggu1);
+            $m2 = explode(';', $request->minggu2);
+            $filter_sptb = "and tgl_sptb between '" . date('Y-m-d', strtotime($m1[0])) . "' and '" . date('Y-m-d', strtotime($m2[1])) . "'";
+        }
         $raw_query = "SELECT
                 a.no_npp,
                 a.nama_pelanggan,
@@ -98,7 +112,7 @@ class ProyekBerjalanController extends Controller
                 FROM
                     sptb_h
                 WHERE
-                    jns_sptb = 0 )e ON
+                    jns_sptb = 0 " . $filter_sptb . ")e ON
                 a.no_npp = e.no_npp
                 AND e.kd_pat = d.pat_to
             INNER JOIN sptb_d f ON
@@ -110,7 +124,7 @@ class ProyekBerjalanController extends Controller
                 a.no_npp = h.no_npp
                 AND b.kd_produk_konfirmasi = h.kd_produk
             WHERE
-                nilai_kontrak > jml_pengajuan
+                nilai_kontrak > jml_pengajuan " . $filter_kdpat . " " . $filter_ppbmuat ."
             GROUP BY
                 a.no_npp,
                 a.nama_pelanggan,
@@ -137,9 +151,7 @@ class ProyekBerjalanController extends Controller
         //     })
         //     ->whereNoNpp('201A0576BL');
 
-        // if($request->kd_pat){
-        //     $query->where('sp3_h.kd_pat', $request->kd_pat);
-        // }
+        
 
         // if($request->vendor_id){
         //     $query->where('sp3_h.vendor_id', $request->vendor_id);

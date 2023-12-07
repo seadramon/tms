@@ -18,6 +18,7 @@ use App\Models\Views\VPotensiMuat;
 use App\Models\Views\VSpprbRi;
 use App\Models\PotensiH;
 use App\Models\PotensiVendor;
+use App\Models\PricelistAngkutanH;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -93,10 +94,21 @@ class PdaController extends Controller
             $query->whereBetween('jadwal3', [$start, $end]);
         }
         if(Auth::check()){
+            $pricelist = PricelistAngkutanH::with([
+                    'pad' => function($sql){
+                        $sql->where('vendors', 'like', '%' . Auth::user()->vendor_id . '%');
+                    }   
+                ])
+                ->whereHas('pad', function($sql){ 
+                    $sql->where('vendors', 'like', '%' . Auth::user()->vendor_id . '%'); 
+                })
+                ->get();
+
             $query->where('jenis_armada', '<>', 'BELUM DISET');
-            // $query->whereHas('potensiH.potensi_vendors', function($sql){
-            //     $sql->whereVendorId(Auth::user()->vendor_id);
-            // });
+            $query->whereIn('kd_pat', $pricelist->map(function($item){ return $item->kd_pat;})->all());
+            $query->whereHas('potensiH', function($sql) use ($pricelist) {
+                $sql->whereIn('kd_material', $pricelist->map(function($item){ return $item->pad->map(function($pad){ return $pad->kd_material; })->all(); })->flatten()->unique()->all());
+            });
         }
 
         return DataTables::eloquent($query)
