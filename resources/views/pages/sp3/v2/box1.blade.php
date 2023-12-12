@@ -1,6 +1,6 @@
 <div class="card shadow-sm">
     <div class="card-header">
-        <h3 class="card-title">Tambah Baru SP3 / SPK</h3>
+        <h3 class="card-title">Tambah Baru SP3</h3>
     </div>
 
     <div class="card-body">    

@@ -18,6 +18,9 @@
             @if ($mode == 'edit')
                 {!! Form::model($data, ['route' => ['sp3.v2.update', $data->no_sp3], 'class' => 'form', 'method' => 'put', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}  
                 @method('PUT')
+                @if ($amandemen)
+                    <input type="hidden" name="amandemen" value="{{ $amandemen }}">
+                @endif
                 @php
                     $disabled = ['disabled'];
                 @endphp
