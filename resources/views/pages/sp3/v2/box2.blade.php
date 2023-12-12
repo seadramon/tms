@@ -348,20 +348,20 @@
                         <tr>
                             <th>{{ $documents[$i] }}</th>
                             <td>
-                                {!! Form::number('dokumen_asli['.$i.']', ($mode == 'edit' && $dokumen[$i]) ? $dokumen[$i]->first()->asli : null, ['class'=>'form-control']) !!}
+                                {!! Form::number('dokumen_asli['.$i.']', ($mode == 'edit' && ($dokumen[$i] ?? false)) ? $dokumen[$i]->first()->asli : null, ['class'=>'form-control']) !!}
                             </td>
                             <td>
-                                {!! Form::number('dokumen_copy['.$i.']', ($mode == 'edit' && $dokumen[$i]) ? $dokumen[$i]->first()->copy : null, ['class'=>'form-control']) !!}
+                                {!! Form::number('dokumen_copy['.$i.']', ($mode == 'edit' && ($dokumen[$i] ?? false)) ? $dokumen[$i]->first()->asli : null, ['class'=>'form-control']) !!}
                             </td>
                             
                             <th>&nbsp;</th>
 
                             <th>{{ $documents[$i+1] }}</th>
                             <td>
-                                {!! Form::number('dokumen_asli['.($i+1).']', ($mode == 'edit' && $dokumen[$i]) ? $dokumen[$i+1]->first()->asli : null, ['class'=>'form-control']) !!}
+                                {!! Form::number('dokumen_asli['.($i+1).']', ($mode == 'edit' && ($dokumen[$i+1] ?? false)) ? $dokumen[$i+1]->first()->asli : null, ['class'=>'form-control']) !!}
                             </td>
                             <td>
-                                {!! Form::number('dokumen_copy['.($i+1).']', ($mode == 'edit' && $dokumen[$i]) ? $dokumen[$i+1]->first()->copy : null, ['class'=>'form-control']) !!}
+                                {!! Form::number('dokumen_copy['.($i+1).']', ($mode == 'edit' && ($dokumen[$i+1] ?? false)) ? $dokumen[$i+1]->first()->copy : null, ['class'=>'form-control']) !!}
                             </td>
                         </tr>
                     @endfor
