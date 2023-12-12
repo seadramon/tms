@@ -4,7 +4,7 @@
     </div>
 
     <div class="card-body">
-        <div class="hover-scroll-overlay-y h-400px">
+        <div class="h-400px">
             <table id="tabel_detail_pesanan" class="table table-row-bordered text-center">
                 <thead>
                     <tr>
@@ -44,13 +44,15 @@
                             <td>{{ nominal($sisaVolBtg) }}</td>
                             <td>{{ nominal($sisaVolTon) }}</td>
                         </tr>
-
+    
                         <input type="hidden" id="pesanan_vol_btg_max_{{ $key }}" row-id={{ $key }} value="{{ (float)$pesanan->vol_konfirmasi ?? 0 }}">
                         <input type="hidden" class="pesanan_kd_produk" row-id={{ $key }} value="{{ $pesanan->produk?->kd_produk }}">
                     @endforeach
                 </tbody>
             </table>
         </div>
+        {{-- <div class="hover-scroll-overlay-y h-400px">
+        </div> --}}
 
         <div class="separator separator-dashed border-primary my-10"></div>
 
@@ -184,7 +186,7 @@
                 <i class="la la-plus"></i>Tambah
             </button>
         </div>
-        <div class="hover-scroll-overlay-y h-400px">
+        <div class="h-400px">
             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
                 <thead>
                     <tr style="font-weight: bold;">
@@ -388,7 +390,24 @@
 </div>
 
 @include('pages.sp3.v2.modal_detail_pekerjaan')
-
+<style>
+    tbody {
+        display:block;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+    tfoot, thead, tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+    tfoot, thead {
+        width: calc( 100% - 10px ); 
+    }
+    table {
+        width: 100%;
+    }
+</style>
 <script type="text/javascript">
     var edit_ = false;
     @if($mode == 'edit')
