@@ -191,7 +191,8 @@
             @endif
         </div>
         @php
-            $readonly = $sat_harsat != 'tonase';
+            $readonly = false;
+            // $readonly = $sat_harsat != 'tonase';
         @endphp
         @if ($isAmandemen)
             <div class="separator separator-dashed border-primary my-10"></div>
