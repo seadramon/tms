@@ -68,7 +68,7 @@ class Sp3Controller extends Controller
     public function getDataBox2(Request $request)
     {
         $code = 200;
-        try {
+        // try {
             $parameters = $request->all();
 
             $detailPesanan = MonOp::with(['produk', 'sp3D', 'vSpprbRi'])
@@ -225,10 +225,10 @@ class Sp3Controller extends Controller
             ])->render();
             $result = array('success' => true, 'html'=> $html);
 
-        } catch(Exception $e) {
-            $code = 400;
-            $result = array('success' => false, 'message'=> $e->getMessage());
-        }
+        // } catch(Exception $e) {
+        //     $code = 400;
+        //     $result = array('success' => false, 'message'=> $e->getMessage());
+        // }
 
         return response()->json($result, $code);
     }
