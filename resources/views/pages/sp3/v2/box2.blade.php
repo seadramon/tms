@@ -189,9 +189,11 @@
                 <thead>
                     <tr style="font-weight: bold;">
                         <th>Unit</th>
-                        <th>Pelabuhan Asal</th>
-                        <th>Pelabuhan Tujuan</th>
-                        <th>Site</th>
+                        @if ($pekerjaan == 'laut')
+                            <th>Pelabuhan Asal</th>
+                            <th>Pelabuhan Tujuan</th>
+                            <th>Site</th>
+                        @endif
                         <th>Tipe</th>
                         <th>Jarak</th>
                         <th>Vol(Btg)</th>
@@ -211,9 +213,11 @@
                         @foreach ($sp3->sp3D as $item)
                             <tr>
                                 <td><input name="unit[]" class="unit" type="hidden" value="{{ $item->pat_to }}">{{ $item->pat->ket }}</td> 
-                                <td><input name="pelabuhan_asal[]" class="pelabuhan_asal" type="hidden" value="{{ $item->port_asal }}">{{ $item->port_asal }}</td> 
-                                <td><input name="pelabuhan_tujuan[]" class="pelabuhan_tujuan" type="hidden" value="{{ $item->port_tujuan }}">{{ $item->port_tujuan }}</td> 
-                                <td><input name="site[]" class="site" type="hidden" value="{{ $item->site }}">{{ $item->site }}</td> 
+                                @if ($pekerjaan == 'laut')
+                                    <td><input name="pelabuhan_asal[]" class="pelabuhan_asal" type="hidden" value="{{ $item->port_asal }}">{{ $item->port_asal }}</td> 
+                                    <td><input name="pelabuhan_tujuan[]" class="pelabuhan_tujuan" type="hidden" value="{{ $item->port_tujuan }}">{{ $item->port_tujuan }}</td> 
+                                    <td><input name="site[]" class="site" type="hidden" value="{{ $item->site }}">{{ $item->site }}</td> 
+                                @endif
                                 <td><input name="tipe[]" class="tipe" type="hidden" value="{{ $item->kd_produk }}">{{ $item->kd_produk }}<br>{{ $item->produk->tipe }}</td> 
                                 <td><input name="jarak[]" class="jarak" type="hidden" value="{{ $item->jarak_km }}">{{ $item->jarak_km }}</td> 
                                 <td><input name="vol_btg[]" class="vol_btg" type="hidden" value="{{ $item->vol_awal }}">{{ $item->vol_awal }}</td> 
@@ -232,19 +236,19 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="9" style="text-align: right; font-weight: bold;">Subtotal</td>
+                        <td colspan="{{ $pekerjaan == 'laut' ? 9 : 6 }}" style="text-align: right; font-weight: bold;">Subtotal</td>
                         <td colspan="2" id="subtotal" style="text-align: right; font-weight: bold;"></td>
                     </tr>
                     <tr>
-                        <td colspan="9" style="text-align: right; font-weight: bold;">PPN</td>
+                        <td colspan="{{ $pekerjaan == 'laut' ? 9 : 6 }}" style="text-align: right; font-weight: bold;">PPN</td>
                         <td colspan="2">{!! Form::select('ppn', $ppn, $mode == 'edit' ? $sp3->ppn*100 : null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'ppn']) !!}</td>
                     </tr>
                     <tr>
-                        <td colspan="9" style="text-align: right; font-weight: bold;">PPH</td>
+                        <td colspan="{{ $pekerjaan == 'laut' ? 9 : 6 }}" style="text-align: right; font-weight: bold;">PPH</td>
                         <td colspan="2">{!! Form::select('pph', $pph, $mode == 'edit' ? $sp3->pph_id.'|'.$sp3->pph : null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph']) !!}</td>
                     </tr>
                     <tr>
-                        <td colspan="9" style="text-align: right; font-weight: bold;">Total</td>
+                        <td colspan="{{ $pekerjaan == 'laut' ? 9 : 6 }}" style="text-align: right; font-weight: bold;">Total</td>
                         <td colspan="2" id="total" style="text-align: right; font-weight: bold;"></td>
                     </tr>
                 </tfoot>
@@ -318,10 +322,17 @@
 
         <div class="separator separator-dashed border-primary my-10"></div>
 
-        <div class="form-group">
-            <label class="form-label">Harga Termasuk</label>
-            {!! Form::text('harga_include', collect($sp3->data['harga_include'] ?? [])->implode(','), ['class'=>'form-control', 'id' => "harga_include"]) !!}
-        </div>
+        @if ($pekerjaan == 'laut')
+            <div class="form-group">
+                <label class="form-label">Harga Termasuk</label>
+                {!! Form::text('harga_include', collect($sp3->data['harga_include'] ?? [])->implode(','), ['class'=>'form-control', 'id' => "harga_include"]) !!}
+            </div>
+        @else
+            <div class="form-group">
+                <label class="form-label">Keterangan</label>
+                <textarea name="keterangan" id="keterangan" rows="5" class="col-md-12">{{ $sp3->keterangan }}</textarea>
+            </div>
+        @endif
 
         <div class="separator separator-dashed border-primary my-10"></div>
 
@@ -482,6 +493,7 @@
             $("#modal_ritase").val($(this).parent().parent().find("input.ritase").val());
         }
         $("#modal_harsat").val($(this).parent().parent().find("input.harsat").val());
+        $("#modal_harsat").trigger('keyup');
         $('#modal_pekerjaan').modal('toggle');
         // calculateTotal();
     });

@@ -215,6 +215,7 @@ class Sp3Controller extends Controller
                 'pph' => $pph,
                 'sp3D' => $sp3D,
                 'sat_harsat' => $request->sat_harsat,
+                'pekerjaan' => $request->kd_jpekerjaan ?? 'darat',
                 'kd_material' => $kd_material,
                 'spesifikasi' => $spesifikasi,
                 'documents' => $documents,
@@ -431,7 +432,7 @@ class Sp3Controller extends Controller
 
             $noSp3 = str_replace('|', '/', $noSp3);
 
-            if($request->isAmandemen){
+            if($request->amandemen){
                 $noSp3Sequence = sprintf('%02s', ((int)substr($noSp3, -2))+1);
 
                 $newNoSp3 = str_replace(substr($noSp3, -2), $noSp3Sequence, $noSp3);

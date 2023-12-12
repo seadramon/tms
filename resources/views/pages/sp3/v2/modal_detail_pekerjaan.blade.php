@@ -41,18 +41,20 @@
                         <label class="form-label">Unit</label>
                         {!! Form::select('modal_unit', $unit, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_unit']) !!}
                     </div>
-                    <div class="form-group col-lg-6">
-                        <label class="form-label">Site</label>
-                        {!! Form::select('modal_site', $site, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_site']) !!}
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="form-label">Pelabuhan Asal</label>
-                        {!! Form::select('modal_pelabuhan_asal', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_asal']) !!}
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="form-label">Pelabuhan Tujuan</label>
-                        {!! Form::select('modal_pelabuhan_tujuan', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_tujuan']) !!}
-                    </div>
+                    @if ($pekerjaan == 'laut')
+                        <div class="form-group col-lg-6">
+                            <label class="form-label">Site</label>
+                            {!! Form::select('modal_site', $site, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_site']) !!}
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="form-label">Pelabuhan Asal</label>
+                            {!! Form::select('modal_pelabuhan_asal', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_asal']) !!}
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="form-label">Pelabuhan Tujuan</label>
+                            {!! Form::select('modal_pelabuhan_tujuan', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_tujuan']) !!}
+                        </div>
+                    @endif
                     <div class="form-group col-lg-6">
                         <label class="form-label">Tipe</label>
                         {!! Form::select('modal_tipe', $produk, null, ['class'=>'form-control form-select-modal-solid', 'data-control'=>'select2', 'id'=>'modal_tipe']) !!}
@@ -116,15 +118,20 @@
     $('#modal_pekerjaan_submit').on('click', function(e){
         e.preventDefault();
         var data_ = modalPekerjaanData();
+        // kd_jpekerjaan
+        var temp_pekerjaan = "";
+        if($("#kd_jpekerjaan").val() == 'laut'){
+            temp_pekerjaan = "<td><input name=\"pelabuhan_asal[]\" class=\"pelabuhan_asal\" type=\"hidden\" value=\"" + data_.pelabuhan_asal + "\">" + data_.pelabuhan_asal + "</td>" + 
+                "<td><input name=\"pelabuhan_tujuan[]\" class=\"pelabuhan_tujuan\" type=\"hidden\" value=\"" + data_.pelabuhan_tujuan + "\">" + data_.pelabuhan_tujuan + "</td>" + 
+                "<td><input name=\"site[]\" class=\"site\" type=\"hidden\" value=\"" + data_.site + "\">" + data_.site + "</td>"; 
+        }
         if($("#sat_harsat").val() == 'tonase'){
             var temp_ = "<td><input name=\"satuan[]\" class=\"satuan\" type=\"hidden\" value=\"" + data_.satuan + "\">" + data_.satuan + "</td>";
         }else{
             var temp_ = "<td><input name=\"ritase[]\" class=\"ritase\" type=\"hidden\" value=\"" + data_.ritase + "\">" + data_.ritase + "</td>";
         }
         var table_row = "<td><input name=\"unit[]\" class=\"unit\" type=\"hidden\" value=\"" + data_.unit + "\">" + data_.unit_teks + "</td>" + 
-            "<td><input name=\"pelabuhan_asal[]\" class=\"pelabuhan_asal\" type=\"hidden\" value=\"" + data_.pelabuhan_asal + "\">" + data_.pelabuhan_asal + "</td>" + 
-            "<td><input name=\"pelabuhan_tujuan[]\" class=\"pelabuhan_tujuan\" type=\"hidden\" value=\"" + data_.pelabuhan_tujuan + "\">" + data_.pelabuhan_tujuan + "</td>" + 
-            "<td><input name=\"site[]\" class=\"site\" type=\"hidden\" value=\"" + data_.site + "\">" + data_.site + "</td>" + 
+            temp_pekerjaan +
             "<td><input name=\"tipe[]\" class=\"tipe\" type=\"hidden\" value=\"" + data_.tipe + "\">" + data_.tipe_teks.replace("|", "<br>") + "</td>" + 
             "<td><input name=\"jarak[]\" class=\"jarak\" type=\"hidden\" value=\"" + data_.jarak + "\">" + data_.jarak + "</td>" + 
             "<td><input name=\"vol_btg[]\" class=\"vol_btg\" type=\"hidden\" value=\"" + data_.vol_btg + "\">" + data_.vol_btg + "</td>" + 
