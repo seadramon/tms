@@ -409,6 +409,7 @@ class Sp3Controller extends Controller
         $sat_harsat = ["tonase" => "Tonase | Batang", "ritase" => "Ritase"];
         $jenis_angkutan = $data->kd_jpekerjaan == '20' ? 'laut' : 'darat';
         $npp = Npp::find($data->no_npp);
+        $amandemen = str_contains(request()->url(), 'amandemen');
 
         return view('pages.sp3.v2.create', [
             'vendor' => $vendor,
@@ -418,6 +419,7 @@ class Sp3Controller extends Controller
             'vendor_id' => $data->vendor_id ?? null,
             'mode' => "edit",
             'data' => $data,
+            'amandemen' => $amandemen,
             'jenis_angkutan' => $jenis_angkutan
         ]);
     }
