@@ -291,7 +291,7 @@ class ArmadaController extends Controller
             });
             $tr = TrMaterial::find($request->kd_armada);
             $armada = Armada::find($id);
-            $armada->vendor_id = Auth::user()->vendor_id ?? null;
+            $armada->vendor_id = Auth::user()->vendor_id ?? "qwe123";
             $armada->kd_armada = $request->kd_armada;
             $armada->detail = $tr->name;
             $armada->tahun = $request->tahun;

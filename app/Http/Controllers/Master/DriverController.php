@@ -172,7 +172,7 @@ class DriverController extends Controller
 
             $driver = Driver::find($id);
 
-            $driver->vendor_id = Auth::user()->vendor_id ?? null;
+            $driver->vendor_id = Auth::user()->vendor_id ?? "QWE123";
             $driver->nama = $request->nama;
             $driver->tgl_lahir = Carbon::createFromFormat('d-m-Y', $request->tgl_lahir)->format('Y-m-d');
             $driver->no_hp = $request->no_hp;

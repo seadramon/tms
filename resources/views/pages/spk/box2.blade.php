@@ -44,8 +44,7 @@
                             <td>{{ nominal($sisaVolBtg) }}</td>
                             <td>{{ nominal($sisaVolTon) }}</td>
                         </tr>
-
-                        <input type="hidden" id="pesanan_vol_btg_max_{{ $key }}" row-id={{ $key }} value="{{ (float)$pesanan->vol_konfirmasi ?? 0 }}">
+                        <input type="hidden" id="pesanan_vol_btg_max_{{ $key }}" data-produk="{{$pesanan->kd_produk_konfirmasi}}" row-id={{ $key }} value="{{ (float)$pesanan->vol_konfirmasi ?? 0 }}">
                         <input type="hidden" class="pesanan_kd_produk" row-id={{ $key }} value="{{ $pesanan->produk?->kd_produk }}">
                     @endforeach
                 </tbody>
@@ -88,7 +87,7 @@
                 <label class="form-label">Nama Pihak Pertama</label>
                 <select class="form-control search-pihak1" name="pihak1" id="pihak1" required>
                     @if (in_array($mode, ['edit', 'show']))
-                        <option selected value="{{$item->pihak1}}">{{$item->pihak1}} - {{$item->employee->fullname}}</option>
+                        <option selected value="{{$spk->pihak1}}">{{$spk->pihak1}} - {{ $spk->employee->fullname ?? "" }}</option>
                     @endif
                 </select>
             </div>

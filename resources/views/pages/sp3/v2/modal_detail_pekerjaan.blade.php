@@ -115,6 +115,17 @@
             dropdownParent: $("#modal_pekerjaan")
         });
     });
+    $('#modal_vol_btg').on('change', function(){
+        var kode = $("#modal_tipe").val();
+        var maks = parseFloat($("input[data-produk="+kode+"]").val());
+        var vol = parseFloat($("#modal_vol_btg").val().replace(",", ''));
+        if(vol > maks){
+            alert('Nilai Vol (Btg) Pekerjaan tidak Boleh lebih dari Vol (Btg) Pesanan! Maks. ' + maks);
+            $("#modal_vol_btg").val(maks)
+            $("#modal_vol_btg").trigger('keyup');
+        }
+    });
+
     $('#modal_pekerjaan_submit').on('click', function(e){
         e.preventDefault();
         var data_ = modalPekerjaanData();
@@ -147,6 +158,7 @@
             );
         }else{
             $(".editing").html(table_row);
+            $(".editing").removeClass("editing");
         }
         calculateTotal();
         $('#modal_pekerjaan').modal('toggle');

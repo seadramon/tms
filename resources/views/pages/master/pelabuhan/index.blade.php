@@ -26,6 +26,7 @@
                         <thead>
                             <tr class="fw-semibold fs-6 text-muted">
                                 <th>Nama</th>
+                                <th>Pengelolaan</th>
                                 <th>Menu</th>
                             </tr>
                         </thead>
@@ -94,6 +95,7 @@
 	            ajax: "{{ route('master-pelabuhan.data') }}",
 	            columns: [
 	                {data: 'nama', name: 'nama', defaultContent: '-'},
+	                {data: 'tipe', name: 'tipe', defaultContent: '-'},
 	                {data: 'menu', orderable: false, searchable: false}
 	            ],
 	        });

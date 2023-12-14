@@ -84,7 +84,7 @@
 
                         <div class="form-group mb-3 col-lg-3">
                             <label class="form-label">Foto STNK</label>
-                            {!! Form::file('foto_stnk', ['class'=>'form-control', 'id'=>'foto_stnk']) !!}
+                            {!! Form::file('foto_stnk', ['class'=>'form-control', 'id'=>'foto_stnk', 'accept' => 'image/jpeg,image/jpg,image/png,application/pdf']) !!}
                         </div>
 
                         <div class="form-group mb-3 col-lg-3">
@@ -113,7 +113,7 @@
 
                         <div class="form-group mb-3 col-lg-3">
                             <label class="form-label">Foto KIR Head</label>
-                            {!! Form::file('foto_kir_head', ['class'=>'form-control', 'id'=>'foto_kir_head']) !!}
+                            {!! Form::file('foto_kir_head', ['class'=>'form-control', 'id'=>'foto_kir_head', 'accept' => 'image/jpeg,image/jpg,image/png,application/pdf']) !!}
                         </div>
                         
                         <div class="form-group mb-3 col-lg-3">
@@ -142,7 +142,7 @@
 
                         <div class="form-group mb-3 col-lg-3">
                             <label class="form-label">Foto KIR Trailer</label>
-                            {!! Form::file('foto_kir_trailer', ['class'=>'form-control', 'id'=>'foto_kir_trailer']) !!}
+                            {!! Form::file('foto_kir_trailer', ['class'=>'form-control', 'id'=>'foto_kir_trailer', 'accept' => 'image/jpeg,image/jpg,image/png,application/pdf']) !!}
                         </div>
 
                         <div class="form-group mb-3 col-lg-3">
@@ -171,7 +171,7 @@
 
                         <div class="form-group mb-3 col-lg-3">
                             <label class="form-label">Foto Pajak</label>
-                            {!! Form::file('foto_pajak', ['class'=>'form-control', 'id'=>'foto_pajak']) !!}
+                            {!! Form::file('foto_pajak', ['class'=>'form-control', 'id'=>'foto_pajak', 'accept' => 'image/jpeg,image/jpg,image/png,application/pdf']) !!}
                         </div>
 
                         <div class="form-group mb-3 col-lg-3">
@@ -180,35 +180,55 @@
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label">Foto STNK</label>
-                            <div class="d-flex align-items-center">
-                                <div class="symbol symbol-200px me-3 images">
-                                    <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_stnk ?? 'foto_stnk.jpg') }}" class="lazy" alt="">
+                            @if (Str::of($data->foto_stnk)->contains('.pdf'))
+                                <br>
+                                <a href="{{full_url_from_path($data->foto_stnk)}}" target="_blank" class="btn btn-link btn-color-info btn-active-color-primary me-5 mb-2">Lihat File</a>
+                            @else
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-200px me-3 images">
+                                        <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_stnk ?? 'foto_stnk.jpg') }}" class="lazy" alt="">
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label">Foto KIR Head</label>
-                            <div class="d-flex align-items-center">
-                                <div class="symbol symbol-200px me-3 images">
-                                    <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_kir_head ?? 'foto_kir_head.jpg') }}" class="lazy" alt="">
+                            @if (Str::of($data->foto_kir_head)->contains('.pdf'))
+                                <br>
+                                <a href="{{full_url_from_path($data->foto_kir_head)}}" target="_blank" class="btn btn-link btn-color-info btn-active-color-primary me-5 mb-2">Lihat File</a>
+                            @else
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-200px me-3 images">
+                                        <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_kir_head ?? 'foto_kir_head.jpg') }}" class="lazy" alt="">
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label">Foto KIR Trailer</label>
-                            <div class="d-flex align-items-center">
-                                <div class="symbol symbol-200px me-3 images">
-                                    <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_kir_trailer ?? 'foto_kir_trailer.jpg') }}" class="lazy" alt="">
+                            @if (Str::of($data->foto_kir_trailer)->contains('.pdf'))
+                                <br>
+                                <a href="{{full_url_from_path($data->foto_kir_trailer)}}" target="_blank" class="btn btn-link btn-color-info btn-active-color-primary me-5 mb-2">Lihat File</a>
+                            @else
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-200px me-3 images">
+                                        <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_kir_trailer ?? 'foto_kir_trailer.jpg') }}" class="lazy" alt="">
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label">Foto Pajak</label>
-                            <div class="d-flex align-items-center">
-                                <div class="symbol symbol-200px me-3 images">
-                                    <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_pajak ?? 'foto_pajak.jpg') }}" class="lazy" alt="">
+                            @if (Str::of($data->foto_pajak)->contains('.pdf'))
+                                <br>
+                                <a href="{{full_url_from_path($data->foto_pajak)}}" target="_blank" class="btn btn-link btn-color-info btn-active-color-primary me-5 mb-2">Lihat File</a>
+                            @else
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-200px me-3 images">
+                                        <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->foto_pajak ?? 'foto_pajak.jpg') }}" class="lazy" alt="">
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -76,6 +76,7 @@
 
     $(document).on('change', '.vol_btg', function(){
         let rowId = $(this).attr('row-id');
+        let kd_produk = $(this).attr('row-kd-produk');
 
         let volBtg = parseFloat($('#vol_btg_' + rowId).val());
         let volBtgMax = parseFloat($('#vol_btg_max_' + rowId).val());

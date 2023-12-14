@@ -303,7 +303,7 @@
                                 {!! Form::text('jarak_pekerjaan[]', number_format($pekerjaan->jarak_km), ['class'=>'form-control jarak_pekerjaan decimal', 'id'=>'jarak_pekerjaan_' . $key, 'row-id'=>$key]) !!}
                             </td>
                             <td style="width: 13%;">
-                                {!! Form::text('vol_btg[]', number_format($vol_btg), ['class'=>'form-control vol_btg decimal', 'readonly' => $readonly, 'id'=>'vol_btg_' . $key, 'row-id'=>$key]) !!}
+                                {!! Form::text('vol_btg[]', number_format($vol_btg), ['class'=>'form-control vol_btg decimal', 'readonly' => $readonly, 'id'=>'vol_btg_' . $key, 'row-id'=>$key, 'row-kd-produk' => $pekerjaan->kd_produk]) !!}
                                 <input type="hidden" id="vol_btg_max_{{ $key }}" row-id={{ $key }} value="0">
                             </td>
                             <td style="width: 13%;">

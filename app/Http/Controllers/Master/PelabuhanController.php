@@ -47,20 +47,15 @@ class PelabuhanController extends Controller
 
     public function create()
     {
-        // $jenisSim = [
-        //     'A' => 'A',
-        //     'B' => 'B',
-        //     'B2' => 'B2'
-        // ];
-        // $status = [
-        //     'aktif' => 'Aktif',
-        //     'tidak_aktif' => 'Tidak Aktif'
-        // ];
-            
-        // $jenisSim = ["" => "Pilih Jenis SIM"] + $jenisSim;
-        // $status = ["" => "Pilih Status"] + $status;
+        $tipe = [
+            "" => "Pilih",
+            "pemerintah" => "Pemerintah",
+            "swasta" => "Swasta",
+        ];
 
-        return view('pages.master.pelabuhan.create', []);
+        return view('pages.master.pelabuhan.create', [
+            'tipe' => $tipe
+        ]);
     }
 
     public function store(Request $request, FlasherInterface $flasher)
@@ -70,10 +65,12 @@ class PelabuhanController extends Controller
                         
             Validator::make($request->all(), [
                 'nama'          => 'required',
+                'tipe'          => 'required',
             ])->validate();
 
             $data = new Pelabuhan();
             $data->nama = $request->nama;
+            $data->tipe = $request->tipe;
             $data->status = "active";
             $data->save();
 
@@ -92,9 +89,14 @@ class PelabuhanController extends Controller
     public function edit($id)
     {
         $data = Pelabuhan::find($id);
+        $tipe = [
+            "" => "Pilih",
+            "pemerintah" => "Pemerintah",
+            "swasta" => "Swasta",
+        ];
 
         return view('pages.master.pelabuhan.create', compact(
-            'data'
+            'data', 'tipe'
         ));
     }
 
@@ -104,12 +106,14 @@ class PelabuhanController extends Controller
             DB::beginTransaction();
                         
             Validator::make($request->all(), [
-                'nama'          => 'required'
+                'nama' => 'required',
+                'tipe' => 'required',
             ])->validate();
 
             $data = Pelabuhan::find($id);
 
             $data->nama = $request->nama;
+            $data->tipe = $request->tipe;
             $data->save();
 
             DB::commit();

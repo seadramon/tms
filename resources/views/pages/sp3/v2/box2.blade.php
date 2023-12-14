@@ -36,17 +36,16 @@
                         
                         <tr>
                             <td style="text-align: left">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
-                            
                             <td>{{ $pesanan->vol_konfirmasi }}</td>
                             <td>{{ nominal($pesananVolTon) }}</td>
                             <td>{{ nominal($sp3dVolBtg) }}</td>
                             <td>{{ nominal($sp3dVolTon) }}</td>
                             <td>{{ nominal($sisaVolBtg) }}</td>
                             <td>{{ nominal($sisaVolTon) }}</td>
+                            <input type="hidden" id="pesanan_vol_btg_max_{{ $key }}" data-produk="{{$pesanan->kd_produk_konfirmasi}}" row-id={{ $key }} value="{{ (float)$pesanan->vol_konfirmasi ?? 0 }}">
+                            <input type="hidden" class="pesanan_kd_produk" row-id={{ $key }} value="{{ $pesanan->produk?->kd_produk }}">
                         </tr>
     
-                        <input type="hidden" id="pesanan_vol_btg_max_{{ $key }}" row-id={{ $key }} value="{{ (float)$pesanan->vol_konfirmasi ?? 0 }}">
-                        <input type="hidden" class="pesanan_kd_produk" row-id={{ $key }} value="{{ $pesanan->produk?->kd_produk }}">
                     @endforeach
                 </tbody>
             </table>
@@ -186,7 +185,7 @@
                 <i class="la la-plus"></i>Tambah
             </button>
         </div>
-        <div class="h-400px">
+        <div class="h-450px">
             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
                 <thead>
                     <tr style="font-weight: bold;">
