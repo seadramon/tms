@@ -1,6 +1,14 @@
 <div class="card shadow-sm">
     <div class="card-header">
-        <h3 class="card-title">Tambah Baru SP3</h3>
+        <h3 class="card-title">
+            @if ($mode == 'edit')
+                Edit Data SP3
+            @elseif ($mode == 'show')
+                Lihat Data SP3
+            @else
+                Tambah Baru SP3
+            @endif
+        </h3>
     </div>
 
     <div class="card-body">    
@@ -45,6 +53,6 @@
     </div>
 
     <div class="card-footer" style="text-align: right;">
-        <input type="button" class="btn btn-primary {{ ($mode == 'edit') ? 'hidden' : ''}}" id="buat_draft" value="Buat Draft">
+        <input type="button" class="btn btn-primary {{ (in_array($mode, ['edit', 'show'])) ? 'hidden' : ''}}" id="buat_draft" value="Buat Draft">
     </div>
 </div>

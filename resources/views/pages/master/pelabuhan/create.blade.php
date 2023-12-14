@@ -41,8 +41,8 @@
                             <label class="form-label required">Nama</label>
                             {!! Form::text('nama', null, ['class'=>'form-control', 'id'=>'nama', 'autocomplete'=>'off']) !!}
                         </div>
-                        <div class="col-lg-6 custom-form">
-                            <label class="form-label col-sm-3 custom-label">Pengelolaan</label>
+                        <div class="fv-row form-group col-12">
+                            <label class="form-label required">Pengelolaan</label>
                             {!! Form::select('tipe', $tipe, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'tipe']) !!}
                         </div>
                     </div>

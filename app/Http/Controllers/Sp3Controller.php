@@ -253,14 +253,15 @@ class Sp3Controller extends Controller
                     }else{
                         $action = json_decode(session('TMS_ACTION_MENU'));
                         if(in_array('view', $action)){
-                            $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
+                            $list .= '<li><a class="dropdown-item" href="' . url('sp3-v2', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
                         }
                         if(in_array('edit', $action) && $model->app1 != 1){
-                            if($model->kd_jpekerjaan == '20'){
-                                $route = 'sp3.v2.edit';
-                            }else{
-                                $route = 'sp3.edit';                                
-                            }
+                            $route = 'sp3.v2.edit';
+                            // if($model->kd_jpekerjaan == '20'){
+                            //     $route = 'sp3.v2.edit';
+                            // }else{
+                            //     $route = 'sp3.edit';                                
+                            // }
                             $list .= '<li><a class="dropdown-item" href="' . route($route, str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>';
                         }
                         if(in_array('amandemen', $action) && $model->app1 == 1){

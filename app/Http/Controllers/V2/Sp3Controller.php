@@ -179,7 +179,7 @@ class Sp3Controller extends Controller
                 ->all();
             $site = ["" => "---Pilih---"] + $site;
 
-            if($request->mode == 'edit'){
+            if(in_array($request->mode, ['edit', 'show'])){
                 $sp3 = Sp3::with('pic.employee', 'sp3D.produk', 'dokumen')->find($request->sp3);
             }else{
                 $sp3 = null;
@@ -387,6 +387,42 @@ class Sp3Controller extends Controller
         }
 
         return redirect()->route('sp3.index');
+    }
+
+    public function show($noSp3)
+    {
+        $noSp3 = str_replace('|', '/', $noSp3);
+
+        $data = Sp3::find($noSp3);
+
+        $vendor = Vendor::where('sync_eproc', 1)
+            ->where('vendor_id', 'like', 'WB%')
+            ->get()
+            ->pluck('nama', 'vendor_id')
+            ->toArray();
+
+        $vendor = ["" => "Pilih Vendor"] + $vendor;
+
+        $jenisPekerjaan = ["darat" => "Angkutan Darat", "laut" => "Angkutan Laut"];
+
+        $jenisPekerjaan = ["" => "Pilih Pekerjaan"] + $jenisPekerjaan;
+
+        $sat_harsat = ["tonase" => "Tonase | Batang", "ritase" => "Ritase"];
+        $jenis_angkutan = $data->kd_jpekerjaan == '20' ? 'laut' : 'darat';
+        $npp = Npp::find($data->no_npp);
+        $amandemen = str_contains(request()->url(), 'amandemen');
+
+        return view('pages.sp3.v2.create', [
+            'vendor' => $vendor,
+            'jenisPekerjaan' => $jenisPekerjaan,
+            'sat_harsat' => $sat_harsat,
+            'npp' => $npp,
+            'vendor_id' => $data->vendor_id ?? null,
+            'mode' => "show",
+            'data' => $data,
+            'amandemen' => $amandemen,
+            'jenis_angkutan' => $jenis_angkutan
+        ]);
     }
 
     public function edit($noSp3)

@@ -109,10 +109,9 @@
             <div class="form-group col-lg-6">
                 <label class="form-label">PIC</label>
                 <select class="form-control search-pic" name="pic[]" id="pic" multiple required>
-                    @if ($mode == 'edit')
+                    @if (in_array($mode, ['edit', 'show']))
                         @foreach ($sp3->pic as $item)
                             <option selected value="{{$item->employee_id}}">{{$item->employee_id}} - {{$item->employee->fullname}}</option>
-                            
                         @endforeach
                     @endif
                 </select>
@@ -166,7 +165,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Jarak</label>
-                {!! Form::number('jarak_pesanan', $mode == 'edit' ? $sp3->jarak_km : $jarak, ['class'=>'form-control', 'id'=>'jarak_pesanan', 'required']) !!}
+                {!! Form::number('jarak_pesanan', in_array($mode, ['edit', 'show']) ? $sp3->jarak_km : $jarak, ['class'=>'form-control', 'id'=>'jarak_pesanan', 'required']) !!}
             </div>
             @if ($sat_harsat == 'ritase')
                 <div class="form-group col-lg-6">
@@ -210,7 +209,7 @@
                     </tr>
                 </thead>
                 <tbody id="tbody-pekerjaan">
-                    @if ($mode == 'edit')
+                    @if (in_array($mode, ['edit', 'show']))
                         @foreach ($sp3->sp3D as $item)
                             <tr>
                                 <td><input name="unit[]" class="unit" type="hidden" value="{{ $item->pat_to }}">{{ $item->pat->ket }}</td> 
@@ -242,11 +241,11 @@
                     </tr>
                     <tr>
                         <td colspan="{{ $pekerjaan == 'laut' ? 9 : 6 }}" style="text-align: right; font-weight: bold;">PPN</td>
-                        <td colspan="2">{!! Form::select('ppn', $ppn, $mode == 'edit' ? $sp3->ppn*100 : null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'ppn']) !!}</td>
+                        <td colspan="2">{!! Form::select('ppn', $ppn, in_array($mode, ['edit', 'show']) ? $sp3->ppn*100 : null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'ppn']) !!}</td>
                     </tr>
                     <tr>
                         <td colspan="{{ $pekerjaan == 'laut' ? 9 : 6 }}" style="text-align: right; font-weight: bold;">PPH</td>
-                        <td colspan="2">{!! Form::select('pph', $pph, $mode == 'edit' ? $sp3->pph_id.'|'.$sp3->pph : null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph']) !!}</td>
+                        <td colspan="2">{!! Form::select('pph', $pph, in_array($mode, ['edit', 'show']) ? $sp3->pph_id.'|'.$sp3->pph : null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'pph']) !!}</td>
                     </tr>
                     <tr>
                         <td colspan="{{ $pekerjaan == 'laut' ? 9 : 6 }}" style="text-align: right; font-weight: bold;">Total</td>
@@ -262,7 +261,7 @@
         <div id="material_tambahan">
             <div class="form-group">
                 <div data-repeater-list="material_tambahan">
-                    @if ($mode == 'edit')
+                    @if (in_array($mode, ['edit', 'show']))
                         @foreach ($sp3->sp3D2 as $d2)
                             <div data-repeater-item>
                                 <div class="form-group row">
@@ -331,7 +330,7 @@
         @else
             <div class="form-group">
                 <label class="form-label">Keterangan</label>
-                <textarea name="keterangan" id="keterangan" rows="5" class="col-md-12">{{ $sp3->keterangan }}</textarea>
+                <textarea name="keterangan" id="keterangan" rows="5" class="col-md-12">{{ $sp3->keterangan ?? '' }}</textarea>
             </div>
         @endif
 
@@ -360,20 +359,20 @@
                         <tr>
                             <th>{{ $documents[$i] }}</th>
                             <td>
-                                {!! Form::number('dokumen_asli['.$i.']', ($mode == 'edit' && ($dokumen[$i] ?? false)) ? $dokumen[$i]->first()->asli : null, ['class'=>'form-control']) !!}
+                                {!! Form::number('dokumen_asli['.$i.']', (in_array($mode, ['edit', 'show']) && ($dokumen[$i] ?? false)) ? $dokumen[$i]->first()->asli : null, ['class'=>'form-control']) !!}
                             </td>
                             <td>
-                                {!! Form::number('dokumen_copy['.$i.']', ($mode == 'edit' && ($dokumen[$i] ?? false)) ? $dokumen[$i]->first()->asli : null, ['class'=>'form-control']) !!}
+                                {!! Form::number('dokumen_copy['.$i.']', (in_array($mode, ['edit', 'show']) && ($dokumen[$i] ?? false)) ? $dokumen[$i]->first()->asli : null, ['class'=>'form-control']) !!}
                             </td>
                             
                             <th>&nbsp;</th>
 
                             <th>{{ $documents[$i+1] }}</th>
                             <td>
-                                {!! Form::number('dokumen_asli['.($i+1).']', ($mode == 'edit' && ($dokumen[$i+1] ?? false)) ? $dokumen[$i+1]->first()->asli : null, ['class'=>'form-control']) !!}
+                                {!! Form::number('dokumen_asli['.($i+1).']', (in_array($mode, ['edit', 'show']) && ($dokumen[$i+1] ?? false)) ? $dokumen[$i+1]->first()->asli : null, ['class'=>'form-control']) !!}
                             </td>
                             <td>
-                                {!! Form::number('dokumen_copy['.($i+1).']', ($mode == 'edit' && ($dokumen[$i+1] ?? false)) ? $dokumen[$i+1]->first()->copy : null, ['class'=>'form-control']) !!}
+                                {!! Form::number('dokumen_copy['.($i+1).']', (in_array($mode, ['edit', 'show']) && ($dokumen[$i+1] ?? false)) ? $dokumen[$i+1]->first()->copy : null, ['class'=>'form-control']) !!}
                             </td>
                         </tr>
                     @endfor
@@ -384,7 +383,9 @@
 
     <div class="card-footer" style="text-align: right;">
         <a href="{{ route('sp3.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
-        <input type="submit" class="btn btn-success" id="btn-sumbit" value="Simpan">
+        @if ($mode != "show")
+            <input type="submit" class="btn btn-success" id="btn-sumbit" value="Simpan">
+        @endif
     </div>
 </div>
 
@@ -409,11 +410,11 @@
 </style>
 <script type="text/javascript">
     var edit_ = false;
-    @if($mode == 'edit')
+    @if(in_array($mode, ['edit', 'show']))
         edit_ = true;
     @endif
     $(document).ready(function() {
-        @if($mode == 'edit')
+        @if(in_array($mode, ['edit', 'show']))
             calculateTotal()
         @endif
 

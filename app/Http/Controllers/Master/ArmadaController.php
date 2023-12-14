@@ -321,7 +321,7 @@ class ArmadaController extends Controller
 
                     Storage::disk('local')->put($fullPath, File::get($file));
 
-                    $armada->foto_stnk = $fullPath;
+                    $armada->$param_foto = $fullPath;
                 }
             }
             $armada->save();

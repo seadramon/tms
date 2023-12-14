@@ -15,7 +15,7 @@
     <div class="row g-5 g-xl-8">
         <!--begin::Col-->
         <div class="col-12 mb-md-5 mb-xl-10">
-            @if ($mode == 'edit')
+            @if (in_array($mode, ['edit', 'show']))
                 {!! Form::model($data, ['route' => ['sp3.v2.update', $data->no_sp3], 'class' => 'form', 'method' => 'put', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}  
                 @method('PUT')
                 @if ($amandemen)
@@ -62,7 +62,7 @@
     
     $(document).ready(function() {
         $("#alert-box1").hide();
-        @if($mode == 'edit')
+        @if(in_array($mode, ['edit', 'show']))
             $('#buat_draft').trigger('click')
         @endif
     });
