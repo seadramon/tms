@@ -107,19 +107,21 @@
                             {!! Form::select('status', $status, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'status']) !!}
                         </div>
 
-                        <div class="col-12 mb-2">
-                            <label class="form-label">Foto SIM</label>
-                            @if (Str::of($data->sim_path)->contains('.pdf'))
-                                <br>
-                                <a href="{{full_url_from_path($data->sim_path)}}" target="_blank" class="btn btn-link btn-color-info btn-active-color-primary me-5 mb-2">Lihat File</a>
-                            @else
-                                <div class="d-flex align-items-center">
-                                    <div class="symbol symbol-200px me-3 images">
-                                        <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->sim_path ?? 'foto_sim.jpg') }}" class="lazy" alt="">
+                        @if ($data)
+                            <div class="col-12 mb-2">
+                                <label class="form-label">Foto SIM</label>
+                                @if (Str::of($data->sim_path)->contains('.pdf'))
+                                    <br>
+                                    <a href="{{full_url_from_path($data->sim_path)}}" target="_blank" class="btn btn-link btn-color-info btn-active-color-primary me-5 mb-2">Lihat File</a>
+                                @else
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-200px me-3 images">
+                                            <img src="{{asset('content/loader.gif')}}" data-src="{{ full_url_from_path($data->sim_path ?? 'foto_sim.jpg') }}" class="lazy" alt="">
+                                        </div>
                                     </div>
-                                </div>
-                            @endif
-                        </div>
+                                @endif
+                            </div>
+                        @endif
                         
                     </div>
                 </div>
