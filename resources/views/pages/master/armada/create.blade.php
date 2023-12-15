@@ -180,7 +180,7 @@
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label">Foto STNK</label>
-                            @if (Str::of($data->foto_stnk)->contains('.pdf'))
+                            @if (Str::of($data->foto_stnk ?? "")->contains('.pdf'))
                                 <br>
                                 <a href="{{full_url_from_path($data->foto_stnk)}}" target="_blank" class="btn btn-link btn-color-info btn-active-color-primary me-5 mb-2">Lihat File</a>
                             @else
@@ -193,7 +193,7 @@
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label">Foto KIR Head</label>
-                            @if (Str::of($data->foto_kir_head)->contains('.pdf'))
+                            @if (Str::of($data->foto_kir_head ?? "")->contains('.pdf'))
                                 <br>
                                 <a href="{{full_url_from_path($data->foto_kir_head)}}" target="_blank" class="btn btn-link btn-color-info btn-active-color-primary me-5 mb-2">Lihat File</a>
                             @else
@@ -206,7 +206,7 @@
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label">Foto KIR Trailer</label>
-                            @if (Str::of($data->foto_kir_trailer)->contains('.pdf'))
+                            @if (Str::of($data->foto_kir_trailer ?? "")->contains('.pdf'))
                                 <br>
                                 <a href="{{full_url_from_path($data->foto_kir_trailer)}}" target="_blank" class="btn btn-link btn-color-info btn-active-color-primary me-5 mb-2">Lihat File</a>
                             @else
@@ -219,7 +219,7 @@
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label">Foto Pajak</label>
-                            @if (Str::of($data->foto_pajak)->contains('.pdf'))
+                            @if (Str::of($data->foto_pajak ?? "")->contains('.pdf'))
                                 <br>
                                 <a href="{{full_url_from_path($data->foto_pajak)}}" target="_blank" class="btn btn-link btn-color-info btn-active-color-primary me-5 mb-2">Lihat File</a>
                             @else
