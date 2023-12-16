@@ -36,6 +36,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SpkExport;
 
 class SpkController extends Controller
 {
@@ -244,6 +246,8 @@ class SpkController extends Controller
                 ->addColumn('menu', function ($model) {
                     $list = '';
                     $list .= '<li><a class="dropdown-item" href="' . route('spk.show', str_replace('/', '|', $model->no_spk)) . '">View</a></li>';
+                    $list .= '<li><a class="dropdown-item" href="' . route('spk.print-pdf', str_replace('/', '|', $model->no_spk)) . '">Print PDF</a></li>';
+                    /*$list .= '<li><a class="dropdown-item" href="' . route('spk.print-excel', str_replace('/', '|', $model->no_spk)) . '">Print Excel</a></li>';*/
                     // if(Auth::check()){
                     //     $list .= '<li><a class="dropdown-item" href="'.route('sp3.print', str_replace('/', '|', $model->no_sp3)).'">Print</a></li>';
                     //     $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
@@ -821,7 +825,7 @@ class SpkController extends Controller
         }
 
         return redirect()->route('sp3.index');
-    }   
+    }
 
     public function show($noSpk)
     {
@@ -855,5 +859,31 @@ class SpkController extends Controller
             'data' => $data,
             'jenis_angkutan' => $jenis_angkutan
         ]);
+    }
+
+    public function printExcel($noSpk)
+    {
+        $noSpk = str_replace('|', '/', $noSpk);
+        $noSpk = "KU.08.02/WB-0A.0002/2023";
+        return Excel::download(new SpkExport($noSpk), 'Spk.xlsx');
+    }
+
+    public function printPdf($noSpk)
+    {
+        $noSpk = str_replace('|', '/', $noSpk);
+
+        $data = Spk::with(['vendor', 'spk_d', 'unitkerja', 'jenisPekerjaan'])->find($noSpk);
+
+        $npp = Npp::find($data->no_npp);
+// dd($npp);
+        $pdf = Pdf::loadView('pages.spk.export-pdf', [
+            'data' => $data,
+            'npp' => $npp
+        ]);
+
+        $filename = "SPK";
+
+        return $pdf->setPaper('a4', 'portrait')
+            ->stream($filename . '.pdf');
     }
 }

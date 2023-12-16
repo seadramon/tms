@@ -24,4 +24,14 @@ class Npp extends Model
     {
     	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
     }
+
+    public function sbu()
+    {
+        return $this->belongsTo(Sbu::class, 'kd_sbu', 'kd_sbu');
+    }
+
+    public function pelanggan()
+    {
+        return $this->belongsTo(Pelanggan::class, 'pelanggan_id', 'pelanggan_id');
+    }
 }
