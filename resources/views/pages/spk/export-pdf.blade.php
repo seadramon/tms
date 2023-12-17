@@ -312,17 +312,29 @@
 				<th>(Ton)</th>
 				<th>(Rp)</th>
 			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>{{ !empty($npp->sbu)?$npp->sbu->ket:"" }}</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
 			@if(count($data->spk_d) > 0)
 				<?php $i = 1; ?>
 				@foreach($data->spk_d as $detail)
-					<td>{{ $i }}</td>
-					<td>{{ !empty($detail->pat)?$detail->pat->ket:'' }}</td>
-					<td>{{ !empty($detail->produk)?$detail->produk->tipe:"" }}</td>
-					<td>{{ !empty($detail->vol_btg)?$detail->vol_btg:"0" }}</td>
-					<td>{{ !empty($detail->vol_ton)?$detail->vol_ton:"0" }}</td>
-					<td>{{ !empty($detail->sat_harsat)?$detail->sat_harsat:"0" }}</td>
-					<td>{{ !empty($detail->sat_volume)?$detail->sat_volume:"0" }}</td>
-					<td>(Rp)</td>
+					<tr>
+						<td>{{ $i }}</td>
+						<td>{{ !empty($detail->pat)?$detail->pat->ket:'' }}</td>
+						<td>{{ !empty($detail->produk)?$detail->produk->tipe:"" }}</td>
+						<td>{{ !empty($detail->vol_btg)?$detail->vol_btg:"0" }}</td>
+						<td>{{ !empty($detail->vol_ton)?$detail->vol_ton:"0" }}</td>
+						<td>{{ !empty($detail->sat_harsat)?$detail->sat_harsat:"0" }}</td>
+						<td>{{ !empty($detail->sat_volume)?$detail->sat_volume:"0" }}</td>
+						<td>(Rp)</td>
+					</tr>
 
 					<?php $i++; ?>
 				@endforeach
