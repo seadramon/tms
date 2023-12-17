@@ -295,7 +295,7 @@
 		<div style="margin-bottom: 5px;margin-top: 15px;">
 			1.&nbsp;&nbsp;Nilai Pekerjaan sebagai berikut  :	
 		</div>
-		<table width="100%" cellpadding="0" cellspacing="0" border="1" style="border-color: #000000;margin-left: 15px;">
+		<table width="100%" cellspacing="0" border="1" style="border-color: #000000;margin-left: 15px;">
 			<tr>
 				<th rowspan="2">No.</th>
 				<th colspan="2">Uraian</th>
@@ -322,18 +322,34 @@
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
+			<?php 
+				$i = 1; 
+				$total_vol_btg = 0;
+				$total_vol_ton = 0;
+				$subtotal = 0;
+				$total = 0;
+			?>
 			@if(count($data->spk_d) > 0)
-				<?php $i = 1; ?>
 				@foreach($data->spk_d as $detail)
+					<?php 
+						$volBtg = !empty($detail->vol_btg)?$detail->vol_btg:"0";
+						$volTon = !empty($detail->vol_ton)?$detail->vol_ton:"0";
+						$harsat = !empty($detail->harsat)?$detail->harsat:"0";
+						$jmlHrga = $volTon * $harsat;
+
+						$total_vol_btg += $volBtg;
+						$total_vol_ton += $volTon;
+						$subtotal += $jmlHrga;
+					?>
 					<tr>
-						<td>{{ $i }}</td>
+						<td class="tengah">{{ $i }}</td>
 						<td>{{ !empty($detail->pat)?$detail->pat->ket:'' }}</td>
-						<td>{{ !empty($detail->produk)?$detail->produk->tipe:"" }}</td>
-						<td>{{ !empty($detail->vol_btg)?$detail->vol_btg:"0" }}</td>
-						<td>{{ !empty($detail->vol_ton)?$detail->vol_ton:"0" }}</td>
-						<td>{{ !empty($detail->sat_harsat)?$detail->sat_harsat:"0" }}</td>
-						<td>{{ !empty($detail->sat_volume)?$detail->sat_volume:"0" }}</td>
-						<td>(Rp)</td>
+						<td class="tengah">{{ !empty($detail->produk)?$detail->produk->tipe:"" }}</td>
+						<td class="tengah">{{ $volBtg }}</td>
+						<td class="right">{{ nominal($volTon) }}</td>
+						<td class="right">{{ nominal($harsat, 0) }}</td>
+						<td class="right">{{ nominal($harsat, 0) }}</td>
+						<td class="right">{{ nominal($jmlHrga, 0) }}</td>
 					</tr>
 
 					<?php $i++; ?>
@@ -345,24 +361,30 @@
 			@endif
 			<tr>
 				<td colspan="3" class="tengahBold">Jumlah</td>
-				<td class="tengah">-</td>
-				<td class="tengah">-</td>
-				<td colspan="2">-</td>
-				<td>-</td>
+				<td class="tengah">{{ nominal($total_vol_btg, 0) }}</td>
+				<td class="right">{{ nominal($total_vol_ton) }}</td>
+				<td colspan="2">&nbsp;</td>
+				<td class="right">{{ nominal($subtotal, 0) }}</td>
 			</tr>
 			<tr>
+				<?php 
+				$ppn = 0.11 * $subtotal;
+				?>
 				<td colspan="3" class="tengahBold">PPN 11%</td>
 				<td colspan="4">&nbsp;</td>
-				<td class="tebal">-</td>
+				<td class="tebal right">{{ nominal($ppn, 0) }}</td>
 			</tr>
 			<tr>
+				<?php 
+				$total = $subtotal + $ppn;
+				?>
 				<td colspan="3" class="tengahBold">Harga</td>
 				<td colspan="4">&nbsp;</td>
-				<td class="tebal">-</td>
+				<td class="tebal right">{{ nominal($total, 0) }}</td>
 			</tr>
 		</table>
 		<div style="margin-top: 5px;margin-left: 15px;margin-bottom: 10px;">
-			<b>Terbilang : &nbsp;&nbsp;&nbsp;</b><i>Delapan Belas Milyar Sembilan Ratus Sembilan Puluh Delapan Puluh Satu Juta Rupiah</i>
+			<b>Terbilang : &nbsp;&nbsp;&nbsp;</b><i>{{ ucwords(terbilang($total)) }}</i>
 		</div>
 
 		<div style="margin-bottom: 5px;">
