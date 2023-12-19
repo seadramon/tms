@@ -333,17 +333,30 @@ class Sp3Controller extends Controller
                 $sp3D->vol_ton_awal = str_replace(',', '', $request->vol_ton[$i]);
                 $sp3D->vol_ton_akhir = str_replace(',', '', $request->vol_ton[$i]);
 
+                $vol = 0;
                 if(strtolower($request->sat_harsat) == 'tonase'){
                     $sp3D->sat_harsat = $request->satuan[$i];
+                    if($request->satuan[$i] == 'btg') {
+                        $vol = str_replace(',', '', $request->vol_btg[$i]);
+                    }elseif($request->satuan[$i] == 'ton') {
+                        $vol = str_replace(',', '', $request->vol_ton[$i]);
+                    }
                 }else{
                     $sp3D->ritase = $request->ritase[$i] ?? null;
+                    $vol = str_replace(',', '', $request->ritase[$i] ?? null);
                 }
                 if($request->kd_jpekerjaan == 'laut'){
                     $sp3D->port_asal = $request->pelabuhan_asal[$i] ?? null;
                     $sp3D->port_tujuan = $request->pelabuhan_tujuan[$i] ?? null;
                     $sp3D->site = $request->site[$i] ?? null;
                     $sp3D->site = $request->site[$i] ?? null;
-                    $sp3D->total = str_replace(',', '', $request->jumlah[$i]);
+                }
+
+                // total
+                $jml = str_replace(',', '', $request->jumlah[$i]);
+                $sp3D->total = $jml;
+                if($jml == 0){
+                    $sp3D->total = str_replace(',', '', $request->harsat[$i]) * $vol;
                 }
 
                 $sp3D->harsat_awal = str_replace(',', '', $request->harsat[$i]);
@@ -548,19 +561,32 @@ class Sp3Controller extends Controller
                 $sp3D->vol_ton_awal = str_replace(',', '', $request->vol_ton[$i]);
                 $sp3D->vol_ton_akhir = str_replace(',', '', $request->vol_ton[$i]);
 
+                $vol = 0;
                 if(strtolower($request->sat_harsat) == 'tonase'){
                     $sp3D->sat_harsat = $request->satuan[$i];
+                    if($request->satuan[$i] == 'btg') {
+                        $vol = str_replace(',', '', $request->vol_btg[$i]);
+                    }elseif($request->satuan[$i] == 'ton') {
+                        $vol = str_replace(',', '', $request->vol_ton[$i]);
+                    }
                 }else{
-                    $sp3D->ritase = $request->ritase[$i] ?? null;
+                    $sp3D->ritase = str_replace(',', '', $request->ritase[$i] ?? null);
+                    $vol = str_replace(',', '', $request->ritase[$i] ?? null);
                 }
                 if($request->kd_jpekerjaan == 'laut'){
                     $sp3D->port_asal = $request->pelabuhan_asal[$i] ?? null;
                     $sp3D->port_tujuan = $request->pelabuhan_tujuan[$i] ?? null;
                     $sp3D->site = $request->site[$i] ?? null;
                     $sp3D->site = $request->site[$i] ?? null;
-                    $sp3D->total = str_replace(',', '', $request->jumlah[$i]);
                 }
 
+                // total
+                $jml = str_replace(',', '', $request->jumlah[$i]);
+                $sp3D->total = $jml;
+                if($jml == 0){
+                    $sp3D->total = str_replace(',', '', $request->harsat[$i]) * $vol;
+                }
+                
                 $sp3D->harsat_awal = str_replace(',', '', $request->harsat[$i]);
                 $sp3D->harsat_akhir = str_replace(',', '', $request->harsat[$i]);
                 $sp3D->save();
