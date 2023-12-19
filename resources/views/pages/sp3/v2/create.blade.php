@@ -16,7 +16,7 @@
         <!--begin::Col-->
         <div class="col-12 mb-md-5 mb-xl-10">
             @if (in_array($mode, ['edit', 'show']))
-                {!! Form::model($data, ['route' => ['sp3.v2.update', $data->no_sp3], 'class' => 'form', 'method' => 'put', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}  
+                {!! Form::model($data, ['route' => ['sp3.v2.update', str_replace('/', '|', $data->no_sp3)], 'class' => 'form', 'method' => 'put', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}  
                 @method('PUT')
                 @if ($amandemen)
                     <input type="hidden" name="amandemen" value="{{ $amandemen }}">

@@ -184,7 +184,7 @@
                 <i class="la la-plus"></i>Tambah
             </button>
         </div>
-        <div class="h-450px">
+        <div class="h-550px">
             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
                 <thead>
                     <tr style="font-weight: bold;">
