@@ -107,7 +107,7 @@
                             {!! Form::select('status', $status, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'status']) !!}
                         </div>
 
-                        @if ($data)
+                        @if (isset($data))
                             <div class="col-12 mb-2">
                                 <label class="form-label">Foto SIM</label>
                                 @if (Str::of($data->sim_path)->contains('.pdf'))
