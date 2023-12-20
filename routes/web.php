@@ -143,6 +143,9 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 
 	Route::group(['prefix' => '/pricelist-angkutan', 'as' => 'pricelist-angkutan.'], function(){
 		Route::get('/data', [PricelistAngkutanController::class, 'data'])->name('data');
+		Route::get('/create-laut', [PricelistAngkutanController::class, 'createLaut'])->name('create-laut');
+		Route::post('/store-laut', [PricelistAngkutanController::class, 'storeLaut'])->name('store-laut');
+		Route::put('/{id}/update-laut', [PricelistAngkutanController::class, 'updateLaut'])->name('update-laut');
 
 	    Route::resource('/',  PricelistAngkutanController::class)->except([
 			'destroy'

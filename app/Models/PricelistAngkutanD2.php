@@ -12,4 +12,10 @@ class PricelistAngkutanD2 extends Model
 
     protected $table = 'tms_pricelist_angkutan_d2';
     protected $guarded = [];
+
+
+    public function unit_()
+    {
+    	return $this->belongsTo(Pat::class, 'unit', 'kd_pat');
+    }
 }

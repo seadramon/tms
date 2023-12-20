@@ -3,7 +3,7 @@
 @section('page-title')
 <!--begin::Page title-->
 <div class="page-title d-flex justify-content-center flex-column me-5">
-    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Price List Angkutan</h1>
+    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Price List Angkutan Darat</h1>
 </div>
 <!--end::Page title-->
 @endsection
@@ -19,7 +19,7 @@
 
             <div class="card shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">Tambah Baru Price List Angkutan</h3>
+                    <h3 class="card-title">Tambah Baru Price List Angkutan Darat</h3>
                 </div>
             
                 <div class="card-body">

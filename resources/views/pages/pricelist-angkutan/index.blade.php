@@ -18,7 +18,8 @@
                     <h3 class="card-title">Price List Angkutan</h3>
                     <div class="card-toolbar">
 						@if (in_array('create', json_decode(session('TMS_ACTION_MENU'))))
-							<a href="{{route('pricelist-angkutan.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
+							<a href="{{route('pricelist-angkutan.create')}}" class="btn btn-light-primary me-2" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data (Darat)</a>
+							<a href="{{route('pricelist-angkutan.create-laut')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data (Laut)</a>
 						@endif
 					</div>
                 </div>
