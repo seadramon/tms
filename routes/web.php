@@ -90,6 +90,8 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		// Route::post('/approve', [SpkController::class, 'storeApprove'])->name('store-approve');
 		// Route::get('/amandemen/{no_sp3}', [SpkController::class, 'edit'])->name('amandemen');
 		// Route::get('/print/{no_sp3}', [SpkController::class, 'print'])->name('print');
+		Route::get('/printPdf/{no_spk}', [SpkController::class, 'printPdf'])->name('print-pdf');
+		Route::get('/print/{no_spk}', [SpkController::class, 'printExcel'])->name('print-excel');
 		Route::resource('/',  SpkController::class)->except([
 	        'destroy'
 	    ])->parameters(['' => 'id']);
