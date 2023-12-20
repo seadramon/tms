@@ -164,10 +164,12 @@
                             <td></td>
                             <td></td>
                         </tr>
+                        @php
+                            $i = 1; 
+                            $total_vol_akhir = 0;
+                            $total_vol_ton_akhir = 0;
+                        @endphp
                         <?php 
-                        $i = 1; 
-                        $total_vol_akhir = 0;
-                        $total_vol_ton_akhir = 0;
                         ?>
 
                         @foreach($detail as $row)
@@ -191,7 +193,11 @@
                             </tr>
                             <?php $i++; ?>
                         @endforeach
-
+                        @php
+                            $ppn = $data->ppn ?? 0;
+                            $ppn_nilai = $total_jml_harga * $ppn;
+                            $total_plus_ppn = $total_jml_harga + $ppn_nilai;
+                        @endphp
                         <tr>
                             <td></td>
                             <td colspan="2">Jumlah</td>
@@ -207,14 +213,14 @@
                         </tr>
                         <tr>
                             <td class="right" colspan="5">PPN</td>
-                            <td>0%</td>
-                            <td class="right">0</td>
+                            <td>{{ $ppn * 100 }}%</td>
+                            <td class="right">{{number_format($ppn_nilai)}}</td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td class="right" colspan="6">Total Harga</td>
-                            <td class="right">{{ number_format($total_jml_harga) }}</td>
+                            <td class="right">{{ number_format($total_plus_ppn) }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -226,7 +232,7 @@
                 </tbody>
             </table>
             <div style="margin-bottom: 5px;">
-                <b>Terbilang : </b># <i>{{ !empty($total_jml_harga)?ucwords(terbilang($total_jml_harga)):'Nol' }} Rupiah</i>
+                <b>Terbilang : </b># <i>{{ !empty($total_plus_ppn) ? ucwords(terbilang($total_plus_ppn)) : 'Nol' }} Rupiah</i>
             </div>
 
             <div>
