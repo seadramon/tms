@@ -127,3 +127,37 @@ if (!function_exists('differenceDate')) {
         return (strtotime($date2)-strtotime($date1)) / 3600 / 24;
     }
 }
+
+if (!function_exists('getDay')) {
+    function getDay($date)
+    {
+        $d = date('l', strtotime($date));
+        $res = "";
+
+        switch (strtolower($d)) {
+            case 'sunday':
+                $res = "Minggu";
+                break;
+            case 'monday':
+                $res = "Senin";
+                break;
+            case 'tuesday':
+                $res = "Selasa";
+                break;
+            case 'wednesday':
+                $res = "Rabu";
+                break;
+            case 'thursday':
+                $res = "Kamis";
+                break;
+            case 'friday':
+                $res = "Jumat";
+                break;
+            case 'saturday':
+                $res = "Sabtu";
+                break;
+        }
+
+        return $res;
+    }
+}
