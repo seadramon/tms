@@ -63,7 +63,7 @@ class ArmadaController extends Controller
 
     public function create()
     {
-        $jenis = TrMaterial::where('kd_jmaterial', 'T')
+        $jenis = TrMaterial::angkutan()
             ->get()
             ->mapWithKeys(function($item){
                 return [$item->kd_material => $item->kd_material . ' | ' . $item->name];
@@ -227,7 +227,7 @@ class ArmadaController extends Controller
     {
         $data = Armada::find($id);
 
-        $jenis = TrMaterial::where('kd_jmaterial', 'T')
+        $jenis = TrMaterial::angkutan()
             ->get()
             ->mapWithKeys(function($item){
                 return [$item->kd_material => $item->kd_material . ' | ' . $item->name];

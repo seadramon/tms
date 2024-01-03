@@ -49,7 +49,7 @@ class PemenuhanArmadaController extends Controller
         }
 
 
-        $kd_material = TrMaterial::where('kd_jmaterial', 'T')
+        $kd_material = TrMaterial::angkutan()
             ->get()
             ->pluck('name', 'kd_material')
             ->toArray();

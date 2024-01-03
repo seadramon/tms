@@ -438,6 +438,7 @@ class SpkController extends Controller
             $pph = ["0|0" => "0%"] + $pph;
 
             $kd_material = TrMaterial::where('kd_jmaterial', 'T')
+                ->where('kd_material', 'NOT LIKE', 'TC%')
                 ->get()
                 ->pluck('name', 'kd_material')->toArray();
             $kd_material = ["" => "---Pilih---"] + $kd_material;

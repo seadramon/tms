@@ -376,11 +376,11 @@ class Sp3Controller extends Controller
             ->first();
 
         // $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
-        $ban = Ban::get()->pluck('no_ban', 'no_ban')->toArray();
+        $ban = Ban::where('no_ban', 'like', 'TP.01.01%')->get()->pluck('no_ban', 'no_ban')->toArray();
         $ban = ["" => "---Pilih---"] + $ban;
 
         // $kontrak = Kontrak::where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
-        $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
+        $kontrak = Kontrak::where('no_kontrak', 'like', '%TP.01.03%')->get()->pluck('no_kontrak', 'no_kontrak')->toArray();
         $kontrak = ["" => "---Pilih---"] + $kontrak;
 
         $vendor = Vendor::where('vendor_id', $parameters['vendor_id'])->first();
@@ -438,7 +438,7 @@ class Sp3Controller extends Controller
 
         $pph = ["0|0" => "0%"] + $pph;
 
-        $kd_material = TrMaterial::where('kd_jmaterial', 'T')
+        $kd_material = TrMaterial::angkutan()
             ->get()
             ->pluck('name', 'kd_material')->toArray();
         $kd_material = ["" => "---Pilih---"] + $kd_material;
@@ -633,12 +633,12 @@ class Sp3Controller extends Controller
         $npp = Npp::with(['infoPasar.region'])
             ->where('no_npp', $data->no_npp)
             ->first();
-
+            
         // $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
-        $ban = Ban::get()
+        $ban = Ban::where('no_ban', 'like', 'TP.01.01%')->get()
             ->pluck('no_ban', 'no_ban');
 
-        $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak');
+        $kontrak = Kontrak::where('no_kontrak', 'like', '%TP.01.03%')->get()->pluck('no_kontrak', 'no_kontrak');
 
         $vendor = Vendor::where('vendor_id', $data->vendor_id)->first();
         $trader = DB::connection('oracle-eproc')
@@ -777,11 +777,11 @@ class Sp3Controller extends Controller
             ->where('no_npp', $data->no_npp)
             ->first();
 
-        $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
+        $ban = Ban::where('no_ban', 'like', 'TP.01.01%')->where('pat_ban', session('TMP_KDWIL') ?? '0A')
             ->get()
             ->pluck('no_ban', 'no_ban');
 
-        $kontrak = Kontrak::where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
+        $kontrak = Kontrak::where('no_kontrak', 'like', '%TP.01.03%')->where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
             ->get()
             ->pluck('no_kontrak', 'no_kontrak');
 
@@ -853,7 +853,7 @@ class Sp3Controller extends Controller
 
         $isAmandemen = str_contains(request()->url(), 'amandemen');
 
-        $kd_material = TrMaterial::where('kd_jmaterial', 'T')
+        $kd_material = TrMaterial::angkutan()
             ->get()
             ->pluck('name', 'kd_material')
             ->toArray();

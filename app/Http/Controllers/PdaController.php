@@ -226,7 +226,7 @@ class PdaController extends Controller
         }
 
 
-        $trmaterial = TrMaterial::where('kd_jmaterial', 'T')->where('kd_material', 'NOT LIKE', 'TC%')->get();
+        $trmaterial = TrMaterial::angkutan()->get();
         // return response()->json($collection_table);
         return view('pages.potensi-detail-armada.create', ['pat' => $pat, 'muat' => $collection_table, 'trmaterial' => $trmaterial]);
     }

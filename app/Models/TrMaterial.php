@@ -23,4 +23,9 @@ class TrMaterial extends Model
         });
         return trim(implode(' ', $full->all()));
     }
+
+    public function scopeAngkutan($query)
+    {
+        return $query->where('kd_jmaterial', 'T')->where('kd_material', 'NOT LIKE', 'TC%');
+    }
 }

@@ -91,10 +91,10 @@ class Sp3Controller extends Controller
                 ->where('no_npp', $parameters['no_npp'])
                 ->first();
 
-            $ban = Ban::get()->pluck('no_ban', 'no_ban')->toArray();
+            $ban = Ban::where('no_ban', 'like', 'TP.01.01%')->get()->pluck('no_ban', 'no_ban')->toArray();
             $ban = ["" => "---Pilih---"] + $ban;
 
-            $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
+            $kontrak = Kontrak::where('no_kontrak', 'like', '%TP.01.03%')->get()->pluck('no_kontrak', 'no_kontrak')->toArray();
             $kontrak = ["" => "---Pilih---"] + $kontrak;
 
             $vendor = Vendor::where('vendor_id', $parameters['vendor_id'])->first();
@@ -153,6 +153,7 @@ class Sp3Controller extends Controller
             $pph = ["0|0" => "0%"] + $pph;
 
             $kd_material = TrMaterial::where('kd_jmaterial', 'T')
+                ->where('kd_material', 'NOT LIKE', 'TC%')
                 ->get()
                 ->pluck('name', 'kd_material')->toArray();
             $kd_material = ["" => "---Pilih---"] + $kd_material;
