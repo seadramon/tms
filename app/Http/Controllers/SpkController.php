@@ -333,6 +333,7 @@ class SpkController extends Controller
                 $sql->whereIn('kd_jbt', ['JBTM0197', 'JBTM0169', 'JBTM0173', 'JBTM0174', 'JBTM0175', 'JBTM0178', 'JBTM0179', 'JBTM0168', 'JBTM0170', 'JBTM0172', 'JBTK0080', 'JBTS0002', 'JBTM0068', 'JBTM0194', 'JBTM0038']);
                 $sql->orWhere('kd_jbt', 'like', 'JBTD%');
             })
+            ->where('kd_jbt', 'not like', 'TX%')
             ->where(function($sql) use ($request) {
                 $sql->where(DB::raw('LOWER(employee_id)'), 'LIKE', '%' . $request->q . '%')
                 ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', '%' . $request->q . '%')

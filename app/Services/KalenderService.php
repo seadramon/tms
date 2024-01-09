@@ -27,6 +27,12 @@ class KalenderService {
 			// $query->whereNoPol($nopol);
 			$query->whereRaw("replace(no_pol, ' ','') ='".$nopol."'");
 		}
+		if($this->kd_pat && $this->kd_pat != '0A'){
+			$query->whereHas('sppb.npp', function($sql){
+                $sql->where('kd_pat', $this->kd_pat);
+            });
+            // ->orWhere('pat_to', $this->kd_pat);
+		}
 		$data = $query->get()
 			->groupBy(function ($item, $key) {
 				return date('Y-m-d', strtotime($item->tgl_spm));
