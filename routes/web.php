@@ -23,13 +23,14 @@ use App\Http\Controllers\Master\PelabuhanController;
 use App\Http\Controllers\Report\EvaluasiVendorController;
 use App\Http\Controllers\Report\MonitoringDistribusiController;
 use App\Http\Controllers\Report\ProyekBerjalanController;
+use App\Http\Controllers\Settings\SettingSpkController;
 use App\Http\Controllers\SpkController;
 use App\Http\Controllers\V2\Sp3Controller as V2Sp3Controller;
 use App\Http\Controllers\Verifikasi\HistoryController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 use App\Models\User;
-
+use Novay\WordTemplate\WordTemplate;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,26 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('template-word', function () {
+	$file = public_path('test.rtf');
+	
+	$array = array(
+		'[NOMOR_SURAT]' => '015/BT/SK/V/2017',
+		'[PERUSAHAAN]' => 'CV. Borneo Teknomedia',
+		'[NAMA]' => 'Melani Malik',
+		'[NIP]' => '6472065508XXXX',
+		'[ALAMAT]' => 'Jl. Manunggal Gg. 8 Loa Bakung, Samarinda',
+		'[PERMOHONAN]' => '<table><tr><td>test1</td><td>test1</td><td>test1</td></tr></table>',
+		'[KOTA]' => 'Samarinda',
+		'[DIRECTOR]' => 'Noviyanto Rahmadi',
+		'[TANGGAL]' => date('d F Y'),
+	);
+
+	$nama_file = 'surat-keterangan-kerja.doc';
+	
+	return (new WordTemplate)->export($file, $array, $nama_file);
+});
 
 Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::get('/', function () {
@@ -281,6 +302,12 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
         Route::post('/tree-data', 'tree_data')->name('tree.data');
         Route::get('/delete-setting/{id}', 'delete_setting')->name('delete.setting');
     });
+	Route::group(['prefix' => 'setting-spk', 'as' => 'setting-spk.'], function(){
+		Route::resource('/',  SettingSpkController::class)->except([
+			'destroy', 'show'
+		])->parameters(['' => 'setting-spk']);
+	});
+
 
 	Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function(){
 		Route::get('/', [DashboardController::class, 'index'])->name('index');
