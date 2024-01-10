@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\Sp3Export;
+use App\Models\TbSurat;
 
 class Sp3Controller extends Controller
 {
@@ -376,12 +377,24 @@ class Sp3Controller extends Controller
             ->first();
 
         // $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
-        $ban = Ban::where('no_ban', 'like', 'TP.01.01%')->get()->pluck('no_ban', 'no_ban')->toArray();
-        $ban = ["" => "---Pilih---"] + $ban;
+        // $ban = Ban::where('no_ban', 'like', 'SE.01.01%')->get()->pluck('no_ban', 'no_ban')->toArray();
+        // $ban = ["" => "---Pilih---"] + $ban;
+        $ban = Ban::get()->pluck('no_ban', 'no_ban')->toArray();
+        $ban_surat = TbSurat::where('no_surat', 'like', 'SE.01.01%')->get()->mapWithKeys(function($item){
+            return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
+        })->all();
+        $ban = ["" => "---Pilih---"] + $ban + $ban_surat;
+        
+        $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
+        $ban_kontrak = TbSurat::where('no_surat', 'like', 'TP.01.03%')->get()->mapWithKeys(function($item){
+            return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
+        })->all();
+        $kontrak = ["" => "---Pilih---"] + $kontrak + $ban_kontrak;
+
 
         // $kontrak = Kontrak::where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
-        $kontrak = Kontrak::where('no_kontrak', 'like', '%TP.01.03%')->get()->pluck('no_kontrak', 'no_kontrak')->toArray();
-        $kontrak = ["" => "---Pilih---"] + $kontrak;
+        // $kontrak = Kontrak::where('no_kontrak', 'like', '%TP.01.03%')->get()->pluck('no_kontrak', 'no_kontrak')->toArray();
+        // $kontrak = ["" => "---Pilih---"] + $kontrak;
 
         $vendor = Vendor::where('vendor_id', $parameters['vendor_id'])->first();
         $trader = DB::connection('oracle-eproc')
@@ -635,10 +648,22 @@ class Sp3Controller extends Controller
             ->first();
             
         // $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
-        $ban = Ban::where('no_ban', 'like', 'TP.01.01%')->get()
-            ->pluck('no_ban', 'no_ban');
+        $ban = Ban::get()->pluck('no_ban', 'no_ban')->toArray();
+        $ban_surat = TbSurat::where('no_surat', 'like', 'SE.01.01%')->get()->mapWithKeys(function($item){
+            return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
+        })->all();
+        $ban = ["" => "---Pilih---"] + $ban + $ban_surat;
+        
+        $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
+        $ban_kontrak = TbSurat::where('no_surat', 'like', 'TP.01.03%')->get()->mapWithKeys(function($item){
+            return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
+        })->all();
+        $kontrak = ["" => "---Pilih---"] + $kontrak + $ban_kontrak;
 
-        $kontrak = Kontrak::where('no_kontrak', 'like', '%TP.01.03%')->get()->pluck('no_kontrak', 'no_kontrak');
+        // $ban = Ban::where('no_ban', 'like', 'SE.01.01%')->get()
+        //     ->pluck('no_ban', 'no_ban');
+
+        // $kontrak = Kontrak::where('no_kontrak', 'like', '%TP.01.03%')->get()->pluck('no_kontrak', 'no_kontrak');
 
         $vendor = Vendor::where('vendor_id', $data->vendor_id)->first();
         $trader = DB::connection('oracle-eproc')
@@ -777,13 +802,25 @@ class Sp3Controller extends Controller
             ->where('no_npp', $data->no_npp)
             ->first();
 
-        $ban = Ban::where('no_ban', 'like', 'TP.01.01%')->where('pat_ban', session('TMP_KDWIL') ?? '0A')
-            ->get()
-            ->pluck('no_ban', 'no_ban');
+        // $ban = Ban::where('no_ban', 'like', 'SE.01.01%')->where('pat_ban', session('TMP_KDWIL') ?? '0A')
+        //     ->get()
+        //     ->pluck('no_ban', 'no_ban');
 
-        $kontrak = Kontrak::where('no_kontrak', 'like', '%TP.01.03%')->where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
-            ->get()
-            ->pluck('no_kontrak', 'no_kontrak');
+        // $kontrak = Kontrak::where('no_kontrak', 'like', '%TP.01.03%')->where('pat_kontrak', session('TMP_KDWIL') ?? '0A')
+        //     ->get()
+        //     ->pluck('no_kontrak', 'no_kontrak');
+        $ban = Ban::get()->pluck('no_ban', 'no_ban')->toArray();
+        $ban_surat = TbSurat::where('no_surat', 'like', 'SE.01.01%')->get()->mapWithKeys(function($item){
+            return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
+        })->all();
+        $ban = ["" => "---Pilih---"] + $ban + $ban_surat;
+        
+        $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
+        $ban_kontrak = TbSurat::where('no_surat', 'like', 'TP.01.03%')->get()->mapWithKeys(function($item){
+            return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
+        })->all();
+        $kontrak = ["" => "---Pilih---"] + $kontrak + $ban_kontrak;
+
 
         $vendor = Vendor::where('vendor_id', $data->vendor_id)->first();
         $trader = DB::connection('oracle-eproc')
