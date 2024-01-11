@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 if (!function_exists('nominal')) {
     function nominal($nominal, $decimal = 2){
@@ -159,5 +160,20 @@ if (!function_exists('getDay')) {
         }
 
         return $res;
+    }
+}
+
+if (!function_exists('reFormatCompanyName')) {
+    function reFormatCompanyName($name){
+        $prefix = ['PT', 'CV'];
+        $position = 0;
+        foreach ($prefix as $pre) {
+            $result = Str::position($name, $pre);
+            if($result){
+                $position = $result;
+                break;
+            }
+        }
+        return Str::substrReplace(Str::title($name), Str::substr($name, $position), $position);
     }
 }
