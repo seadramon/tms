@@ -168,12 +168,12 @@ if (!function_exists('reFormatCompanyName')) {
         $prefix = ['PT', 'CV'];
         $position = 0;
         foreach ($prefix as $pre) {
-            $result = Str::position($name, $pre);
+            $result = strpos($name, $pre);
             if($result){
                 $position = $result;
                 break;
             }
         }
-        return Str::substrReplace(Str::title($name), Str::substr($name, $position), $position);
+        return Str::substrReplace(Str::of($name)->title(), Str::substr($name, $position), $position);
     }
 }
