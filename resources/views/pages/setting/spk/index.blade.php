@@ -12,13 +12,13 @@
 	<div class="post d-flex flex-column-fluid" id="kt_post">
 		<!--begin::Container-->
 		<div id="kt_content_container" class="container-xxl">
-			
+			{!! Form::open(['url' => route('setting-spk.store'), 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
 			<!--begin::Tables Widget 12-->
 			<div class="card mb-5 mb-xl-8">
 				<!--begin::Header-->
 				<div class="card-header border-0 pt-5">
 					<h3 class="card-title align-items-start flex-column">
-						<span class="card-label fw-bolder fs-3 mb-1">Akses Menu</span>
+						<span class="card-label fw-bolder fs-3 mb-1">Setting SPK Pasal</span>
 						<!-- <span class="text-muted mt-1 fw-bold fs-7">Over 500 new members</span> -->
 					</h3>
 				</div>
@@ -29,7 +29,7 @@
 						<div class="form-group">
 							<div class="accordion" id="kt_accordion__">
 								<div data-repeater-list="pasal">
-									@if (in_array($mode, ['edit', 'show']))
+									@if ($spk)
 										@foreach ($spk->spk_pasal as $pasal)
 											<div data-repeater-item>
 												<div class="accordion-item">
@@ -93,16 +93,17 @@
 						</div>
 						<div class="form-group" style="margin-top: 20px">
 							<div class="col-md-3">
-								@if (!in_array($mode, ['show']))
-									<a href="javascript:;" data-repeater-create class="btn btn-light-primary">
-										<i class="la la-plus"></i>Tambah
-									</a>
-								@endif
+								<a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+									<i class="la la-plus"></i>Tambah
+								</a>
 							</div>
 						</div>
 					</div>
 				</div>
 				<!--begin::Body-->
+				<div class="card-footer" style="text-align: right;">
+					<input type="submit" class="btn btn-success" id="btn-sumbit" value="Simpan">
+				</div>
 			</div>
 			<!--end::Tables Widget 12-->
 
@@ -117,35 +118,39 @@
 
 @section('js')
 	<script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}" type="text/javascript"></script>
+	<script src="{{ asset('assets/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
+	<script src="{{ asset('assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
 	<script type="text/javascript">
-		$('#pasal').repeater({
-			initEmpty: !edit_,
-
-			show: function () {
-				$(this).slideDown();
-				
-				var index = parseInt($("#pasal").attr('data-index')) + 1;
-				$(this).find('.accordion-header').attr('id', 'pasal-header-' + index);
-				$(this).find('.accordion-button').attr('data-bs-target', '#pasal-body-' + index);
-				$(this).find('.accordion-button').attr('aria-controls', '#pasal-body-' + index);
-				$(this).find('.accordion-button').text("Pasal " + index);
-				$(this).find('.accordion-collapse').attr('id', 'pasal-body-' + index);
-				// reinit ckeditor
-				// $(this).find('.ck-editor').remove();
-				$(this).find('.ckeditor').attr('id', 'pasal_ckeditor' + index);
-				ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index)).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
-				$("#pasal").attr('data-index', index);
-				reOrganizeItemPasal();
-			},
-
-			hide: function (deleteElement) {
-				$(this).slideUp(deleteElement);
-				reOrganizeItemPasal();
-			},
-			ready: function (setIndexes) {
-			}
+		$(document).ready(function(){
+			$('#pasal').repeater({
+				initEmpty: true,
+	
+				show: function () {
+					$(this).slideDown();
+					
+					var index = parseInt($("#pasal").attr('data-index')) + 1;
+					$(this).find('.accordion-header').attr('id', 'pasal-header-' + index);
+					$(this).find('.accordion-button').attr('data-bs-target', '#pasal-body-' + index);
+					$(this).find('.accordion-button').attr('aria-controls', '#pasal-body-' + index);
+					$(this).find('.accordion-button').text("Pasal " + index);
+					$(this).find('.accordion-collapse').attr('id', 'pasal-body-' + index);
+					// reinit ckeditor
+					// $(this).find('.ck-editor').remove();
+					$(this).find('.ckeditor').attr('id', 'pasal_ckeditor' + index);
+					ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index)).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
+					$("#pasal").attr('data-index', index);
+					reOrganizeItemPasal();
+				},
+	
+				hide: function (deleteElement) {
+					$(this).slideUp(deleteElement);
+					reOrganizeItemPasal();
+				},
+				ready: function (setIndexes) {
+				}
+			});
 		});
-		
+
 		function reOrganizeItemPasal(){
 			var index = 1;
 			$("div[data-repeater-item]").each(function(){

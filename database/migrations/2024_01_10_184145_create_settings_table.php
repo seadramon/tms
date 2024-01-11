@@ -14,11 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tms_settings', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id');
             $table->string('modul', 50)->nullable();
             $table->string('kode', 50)->nullable();
             $table->jsonb('data')->default("{}");
             $table->timestamps();
+            $table->primary('id');
         });
     }
 

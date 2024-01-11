@@ -51,11 +51,11 @@ class MenuSeeder extends Seeder
                 'action' => [
                     'create',
                     'view',
-                    // 'edit',
+                    'edit',
                     // 'amandemen',
                     // 'approve1',
                     // 'approve2',
-                    // 'print',
+                    'print',
                 ]
             ],
             [
@@ -232,6 +232,13 @@ class MenuSeeder extends Seeder
                 'icon' => 'fas fa-square-check fs-3',
                 'level' => '2',
                 'sequence' => '1110'
+            ],
+            [
+                'name' => 'Pasal SPK',
+                'route_name' => 'setting-spk.index',
+                'icon' => 'fas fa-square-check fs-3',
+                'level' => '2',
+                'sequence' => '1120'
             ],
         ];
 
