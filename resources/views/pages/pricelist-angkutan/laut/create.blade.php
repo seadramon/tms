@@ -273,6 +273,13 @@
         $('.form-select-modal-solid').select2({
             dropdownParent: $("#modal_harsat")
         });
+        $("#modal_kondisi").change(function(){
+            if($("#modal_kondisi").val() == 'DTD'){
+                $("#div-site").removeClass('hidden');
+            }else{
+                $("#div-site").addClass('hidden');
+            }
+        });
     });
 
     $('.form-select-solid').select2();

@@ -49,7 +49,7 @@
                         <label class="form-label">Pelabuhan Tujuan</label>
                         {!! Form::select('modal_pelabuhan_tujuan', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_tujuan']) !!}
                     </div>
-                    <div class="form-group col-lg-6">
+                    <div class="form-group col-lg-6" id="div-site">
                         <label class="form-label">Site</label>
                         {!! Form::select('modal_site', $site, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_site']) !!}
                     </div>

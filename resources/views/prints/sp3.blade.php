@@ -405,7 +405,7 @@
                     <tr>
                         <td width="70%" style="padding-left: 35px;">
                             Setuju melaksanakan,<br>
-                            {{ !empty($data->vendor) ? Str::title($data->vendor->nama) : '' }}
+                            {{ !empty($data->vendor) ? reFormatCompanyName($data->vendor->nama) : '' }}
                             
                         </td>
                         <td width="30%">
