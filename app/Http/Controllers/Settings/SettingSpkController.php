@@ -34,8 +34,8 @@ class SettingSpkController extends Controller
             $setting->modul = 'spk-pasal';
             $setting->kode = 'pasal-' . sprintf('%02s', $index + 1);
             $setting->data = [
-                'judul' => $pasal->pasal_judul,
-                'isi' => $pasal->pasal_isi
+                'judul' => $pasal['pasal_judul'],
+                'isi' => $pasal['pasal_isi']
             ];
             $setting->save();
         }
