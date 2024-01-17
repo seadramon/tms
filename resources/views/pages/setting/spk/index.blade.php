@@ -25,28 +25,28 @@
 				<!--end::Header-->
 				<!--begin::Body-->
 				<div class="card-body py-3">
-					<div id="pasal" data-index="{{ $spk ? $spk->spk_pasal->count() : 0 }}">
+					<div id="pasal" data-index="{{ $spk ? $spk->count() : 0 }}">
 						<div class="form-group">
 							<div class="accordion" id="kt_accordion__">
 								<div data-repeater-list="pasal">
 									@if ($spk)
-										@foreach ($spk->spk_pasal as $pasal)
+										@foreach ($spkl as $index => $pasal)
 											<div data-repeater-item>
 												<div class="accordion-item">
-													<h2 class="accordion-header" id="pasal-header-{{ $pasal->pasal }}">
-														<button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pasal-body-{{ $pasal->pasal }}" aria-expanded="true" aria-controls="pasal-body-{{ $pasal->pasal }}">
-															Pasal {{ $pasal->pasal }}
+													<h2 class="accordion-header" id="pasal-header-{{ $index + 1 }}">
+														<button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pasal-body-{{ $index + 1 }}" aria-expanded="true" aria-controls="pasal-body-{{ $index + 1 }}">
+															Pasal {{ $index + 1 }}
 														</button>
 													</h2>
-													<div id="pasal-body-{{ $pasal->pasal }}" class="accordion-collapse collapse" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+													<div id="pasal-body-{{ $index + 1 }}" class="accordion-collapse collapse" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
 														<div class="accordion-body">
 															<div class="form-group col-12">
 																<label class="form-label">Judul</label>
-																{!! Form::text('pasal_judul', $pasal->judul, ['class'=>'form-control', 'id'=>'pasal_judul' . $pasal->judul]) !!}
+																{!! Form::text('pasal_judul', $pasal->data['judul'], ['class'=>'form-control', 'id'=>'pasal_judul' . ($index + 1)]) !!}
 															</div>
 															<div class="form-group col-12" data-bs-theme="light">
-																<textarea name="pasal_isi" class="ckeditor" id="pasal_ckeditor{{ $pasal->pasal }}">
-																	{!! $pasal->keterangan !!}
+																<textarea name="pasal_isi" class="ckeditor" id="pasal_ckeditor{{ $index + 1 }}">
+																	{!! $pasal->data['isi'] !!}
 																</textarea>
 															</div>
 															{{-- <div class="form-group col-12">

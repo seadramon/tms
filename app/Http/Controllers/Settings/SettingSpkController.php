@@ -20,9 +20,9 @@ class SettingSpkController extends Controller
     
     public function index()
     {
-        // $spk = Setting::whereModul('spk-pasal')->get();
+        $spk = Setting::whereModul('spk-pasal')->orderBy('kode', 'asc')->get();
         return view('pages.setting.spk.index', [
-            'spk' => null
+            'spk' => $spk
         ]);
     }
 
