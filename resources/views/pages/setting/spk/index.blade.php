@@ -30,7 +30,7 @@
 							<div class="accordion" id="kt_accordion__">
 								<div data-repeater-list="pasal">
 									@if ($spk)
-										@foreach ($spkl as $index => $pasal)
+										@foreach ($spk as $index => $pasal)
 											<div data-repeater-item>
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="pasal-header-{{ $index + 1 }}">
