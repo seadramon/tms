@@ -122,6 +122,7 @@
 	<script src="{{ asset('assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
+			initCkEditExisting();
 			$('#pasal').repeater({
 				initEmpty: true,
 	
