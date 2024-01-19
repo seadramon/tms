@@ -320,6 +320,36 @@
                                     </div>
                                 </div>
                             @endforeach
+                        @elseif ($pasals->count() > 0)
+                            @foreach ($pasals as $index => $pasal)
+                                <div data-repeater-item>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="pasal-header-{{ $index + 1 }}">
+                                            <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pasal-body-{{ $index + 1 }}" aria-expanded="true" aria-controls="pasal-body-{{ $index + 1 }}">
+                                                Pasal {{ $index + 1 }}
+                                            </button>
+                                        </h2>
+                                        <div id="pasal-body-{{ $index + 1 }}" class="accordion-collapse collapse" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                            <div class="accordion-body">
+                                                <div class="form-group col-12">
+                                                    <label class="form-label">Judul</label>
+                                                    {!! Form::text('pasal_judul', $pasal->data['judul'], ['class'=>'form-control', 'id'=>'pasal_judul' . ($index + 1)]) !!}
+                                                </div>
+                                                <div class="form-group col-12" data-bs-theme="light">
+                                                    <textarea name="pasal_isi" class="ckeditor" id="pasal_ckeditor{{ $index + 1 }}">
+                                                        {!! $pasal->data['isi'] !!}
+                                                    </textarea>
+                                                </div>
+                                                {{-- <div class="form-group col-12">
+                                                    <a href="javascript:;" data-repeater-delete class="btn btn-md btn-light-danger mt-md-8">
+                                                        <i class="la la-trash-o"></i>Hapus
+                                                    </a>
+                                                </div> --}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         @else    
                             <div data-repeater-item>
                                 <div class="accordion-item">
@@ -377,7 +407,7 @@
 <script type="text/javascript">
     var pasal_ckeditor = [];
     var edit_ = false;
-    @if(in_array($mode, ['edit', 'show']))
+    @if(in_array($mode, ['edit', 'show']) || $pasals->count() > 0)
         edit_ = true;
     @endif
     $(document).ready(function() {

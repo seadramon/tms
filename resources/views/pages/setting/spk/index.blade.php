@@ -29,7 +29,7 @@
 						<div class="form-group">
 							<div class="accordion" id="kt_accordion__">
 								<div data-repeater-list="pasal">
-									@if ($spk)
+									@if ($spk->count() > 0)
 										@foreach ($spk as $index => $pasal)
 											<div data-repeater-item>
 												<div class="accordion-item">
@@ -59,7 +59,7 @@
 												</div>
 											</div>
 										@endforeach
-									@else    
+									@else
 										<div data-repeater-item>
 											<div class="accordion-item">
 												<h2 class="accordion-header" id="kt_accordion_1_header_1">
@@ -121,10 +121,14 @@
 	<script src="{{ asset('assets/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
 	<script src="{{ asset('assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
 	<script type="text/javascript">
+		var empty_ = true;
 		$(document).ready(function(){
-			initCkEditExisting();
+			@if($spk->count() > 0)
+				initCkEditExisting();
+				empty_ = false;
+			@endif
 			$('#pasal').repeater({
-				initEmpty: true,
+				initEmpty: empty_,
 	
 				show: function () {
 					$(this).slideDown();

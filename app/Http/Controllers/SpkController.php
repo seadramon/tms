@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SpkExport;
+use App\Models\Setting;
 
 class SpkController extends Controller
 {
@@ -472,6 +473,8 @@ class SpkController extends Controller
                 $spk = null;
             }
 
+            $pasals = Setting::whereModul('spk-pasal')->orderBy('kode', 'asc')->get();
+
             $documents = [
                 '1' => 'Faktur / Invoice / Kwitansi',
                 '2' => 'Packing List',
@@ -508,6 +511,7 @@ class SpkController extends Controller
                 'pelabuhan' => $pelabuhan,
                 'site' => $site,
                 'spk' => $spk,
+                'pasals' => $pasals,
                 'mode' => $request->mode,
                 'pekerjaan' => $request->kdjpekerjaan,
             ])->render();
@@ -634,11 +638,11 @@ class SpkController extends Controller
             }
 
             foreach ($request->pasal as $index => $pasal) {
-                $spk_pasal = new SpkPasal;
+                $spk_pasalSetting = new SpkPasal;
                 $spk_pasal->no_spk = $noSpk;
                 $spk_pasal->pasal = ($index + 1);
                 $spk_pasal->judul = ($index + 1);
-                $spk_pasal->keterangan = $pasal['pasal_isi'];
+                $spk_pasal->keterangan = $pasal['pasal_isi'];Setting
                 $spk_pasal->save();
             }
 
