@@ -414,6 +414,8 @@
         @if(in_array($mode, ['edit', 'show']))
             calculateTotal()
             initCkEditExisting()
+        @elseif ($pasals->count() > 0)
+            initCkEditExisting()
         @endif
 
         var input1 = document.querySelector("#harga_include");
