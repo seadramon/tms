@@ -638,11 +638,11 @@ class SpkController extends Controller
             }
 
             foreach ($request->pasal as $index => $pasal) {
-                $spk_pasalSetting = new SpkPasal;
+                $spk_pasal = new SpkPasal;
                 $spk_pasal->no_spk = $noSpk;
                 $spk_pasal->pasal = ($index + 1);
                 $spk_pasal->judul = ($index + 1);
-                $spk_pasal->keterangan = $pasal['pasal_isi'];Setting
+                $spk_pasal->keterangan = $pasal['pasal_isi'];
                 $spk_pasal->save();
             }
 
