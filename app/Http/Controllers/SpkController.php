@@ -595,13 +595,13 @@ class SpkController extends Controller
                 $spk->spesifikasi = $request->spesifikasi;
                 
                 $harga_include = collect(json_decode($request->harga_include))->map(function($item){ return $item->value; })->all();
+                $data_['harga_include'] = $harga_include;
             }else{
                 $spk->kd_jpekerjaan = '01';
             }
             // if(strtolower($request->sat_harsat) == 'ritase'){
                 //     $data['harga_satuan_ritase'] = $request->harga_satuan_ritase;
                 // }
-            $data_['harga_include'] = $harga_include;
             $data_['proyek'] = $request->proyek;
             $data_['pelanggan'] = $request->pelanggan;
             $data_['region'] = $request->region;
