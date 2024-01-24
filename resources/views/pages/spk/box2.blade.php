@@ -110,7 +110,7 @@
                         @if ($spk)
                             {!! $spk->pihak1_ket !!}
                         @else
-                            <p style="text-align: justify;">1Suatu Perseroan Terbatas yang tunduk pada hukum Negara Republik Indonesia, berkedudukan di Jakarta Timur dan beralamat di Gedung WIKA Tower 1, Jln. D.I. Panjaitan Kav. 9, Jati Negara, Jakarta Timur, Indonesia, 13340, didirikan berdasarkan Hukum Negara Republik Indonesia, berdasarkan Anggaran Dasar PT Wijaya Karya Beton Tbk., No. 44 tertanggal 11 Maret 1997, yang dibuat dihadapan Achmad Bajumi, S.H., pengganti dari Imas Fatimah, S.H., Notaris di Jakarta, yang telah beberapa kali diubah dan terakhir kali diubah dengan Akta Perubahan Anggaran Dasar No. 72 tanggal 30 Mei 2017 dibuat dihadapan Ir. Nanette Cahyanie Handari Adi Warsito S.H., M.Kn., Notaris di Jakarta Selatan dan telah memperoleh persetujuan Kementerian Hukum dan HAM RI No. AHU-0011827.AH.01.02.Tahun 2017 tanggal 31 Mei 2017, dalam hal ini diwakili oleh {header:APP1_NAMA} selaku {header:APP1_JBT}, bertindak untuk dan atas nama PT Wijaya Karya Beton Tbk. Selanjutnya dalam Perjanjian ini disebut &ldquo;PIHAK KESATU&rdquo;</p>
+                            <p style="text-align: justify;">Suatu Perseroan Terbatas yang tunduk pada hukum Negara Republik Indonesia, berkedudukan di Jakarta Timur dan beralamat di Gedung WIKA Tower 1, Jln. D.I. Panjaitan Kav. 9, Jati Negara, Jakarta Timur, Indonesia, 13340, didirikan berdasarkan Hukum Negara Republik Indonesia, berdasarkan Anggaran Dasar PT Wijaya Karya Beton Tbk., No. 44 tertanggal 11 Maret 1997, yang dibuat dihadapan Achmad Bajumi, S.H., pengganti dari Imas Fatimah, S.H., Notaris di Jakarta, yang telah beberapa kali diubah dan terakhir kali diubah dengan Akta Perubahan Anggaran Dasar No. 72 tanggal 30 Mei 2017 dibuat dihadapan Ir. Nanette Cahyanie Handari Adi Warsito S.H., M.Kn., Notaris di Jakarta Selatan dan telah memperoleh persetujuan Kementerian Hukum dan HAM RI No. AHU-0011827.AH.01.02.Tahun 2017 tanggal 31 Mei 2017, dalam hal ini diwakili oleh {header:APP1_NAMA} selaku {header:APP1_JBT}, bertindak untuk dan atas nama PT Wijaya Karya Beton Tbk. Selanjutnya dalam Perjanjian ini disebut &ldquo;PIHAK KESATU&rdquo;</p>
                         @endif
                     </textarea>
                 </div>
@@ -122,7 +122,7 @@
                         @if ($spk)
                             {!! $spk->pihak2_ket !!}
                         @else
-                            <p style="text-align: justify;">nulldalam hal ini diwakili oleh {header:APP2_NAMA} selaku {header:APP2_JBT}, bertindak untuk dan atas nama {header:NAMA_VENDOR}. Selanjutnya dalam Perjanjian ini disebut &ldquo;PIHAK KEDUA&rdquo;</p>
+                            <p style="text-align: justify;">dalam hal ini diwakili oleh {header:APP2_NAMA} selaku {header:APP2_JBT}, bertindak untuk dan atas nama {header:NAMA_VENDOR}. Selanjutnya dalam Perjanjian ini disebut &ldquo;PIHAK KEDUA&rdquo;</p>
                         @endif
                     </textarea>
                 </div>
@@ -407,6 +407,14 @@
 <script type="text/javascript">
     var pasal_ckeditor = [];
     var edit_ = false;
+    var option = {
+        alignment: {
+            options: [ 'left', 'right', 'center', 'justify']
+        },
+        toolbar: [
+            'heading', '|', 'bulletedList', 'numberedList', 'alignment', 'undo', 'redo'
+        ]
+    };
     @if(in_array($mode, ['edit', 'show']) || $pasals->count() > 0)
         edit_ = true;
     @endif
@@ -430,8 +438,8 @@
         }
     });
 
-    ClassicEditor.create(document.querySelector('#kt_docs_ckeditor_classic')).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
-    ClassicEditor.create(document.querySelector('#kt_docs_ckeditor_classic1')).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
+    ClassicEditor.create(document.querySelector('#kt_docs_ckeditor_classic'), option).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
+    ClassicEditor.create(document.querySelector('#kt_docs_ckeditor_classic1'), option).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
 
     $('#pasal').repeater({
         initEmpty: !edit_,
@@ -448,7 +456,7 @@
             // reinit ckeditor
             // $(this).find('.ck-editor').remove();
             $(this).find('.ckeditor').attr('id', 'pasal_ckeditor' + index);
-            ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index)).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
+            ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index), option).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
             $("#pasal").attr('data-index', index);
             reOrganizeItemPasal();
         },
@@ -624,7 +632,7 @@
     function initCkEditExisting(){
         var index = 1;
         $("div[data-repeater-item]").each(function(){
-            ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index)).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
+            ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index), option).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
             index++;
         });
     }

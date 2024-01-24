@@ -641,7 +641,7 @@ class SpkController extends Controller
                 $spk_pasal = new SpkPasal;
                 $spk_pasal->no_spk = $noSpk;
                 $spk_pasal->pasal = ($index + 1);
-                $spk_pasal->judul = ($index + 1);
+                $spk_pasal->judul = $pasal['pasal_judul'];
                 $spk_pasal->keterangan = $pasal['pasal_isi'];
                 $spk_pasal->save();
             }
@@ -878,7 +878,7 @@ class SpkController extends Controller
     {
         $noSpk = str_replace('|', '/', $noSpk);
 
-        $data = Spk::with(['vendor', 'spk_d', 'unitkerja', 'jenisPekerjaan'])->find($noSpk);
+        $data = Spk::with(['vendor', 'spk_d', 'unitkerja', 'jenisPekerjaan', 'spk_pasal'])->find($noSpk);
 
         $npp = Npp::find($data->no_npp);
 // dd($npp);

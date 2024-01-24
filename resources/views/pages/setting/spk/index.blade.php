@@ -122,6 +122,14 @@
 	<script src="{{ asset('assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
 	<script type="text/javascript">
 		var empty_ = true;
+		var option = {
+			alignment: {
+				options: [ 'left', 'right', 'center', 'justify']
+			},
+			toolbar: [
+				'heading', '|', 'bulletedList', 'numberedList', 'alignment', 'undo', 'redo'
+			]
+		};
 		$(document).ready(function(){
 			@if($spk->count() > 0)
 				initCkEditExisting();
@@ -142,7 +150,7 @@
 					// reinit ckeditor
 					// $(this).find('.ck-editor').remove();
 					$(this).find('.ckeditor').attr('id', 'pasal_ckeditor' + index);
-					ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index)).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
+					ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index), option).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
 					$("#pasal").attr('data-index', index);
 					reOrganizeItemPasal();
 				},
@@ -174,7 +182,7 @@
 		function initCkEditExisting(){
 			var index = 1;
 			$("div[data-repeater-item]").each(function(){
-				ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index)).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
+				ClassicEditor.create(document.querySelector('#pasal_ckeditor' + index), option).then(editor => { console.log(editor); }).catch(error => { console.error(error); });
 				index++;
 			});
 		}
