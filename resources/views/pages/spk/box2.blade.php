@@ -291,7 +291,7 @@
                 <div class="accordion" id="kt_accordion__">
                     <div data-repeater-list="pasal">
                         @if (in_array($mode, ['edit', 'show']))
-                            @foreach ($spk->spk_pasal->orderBy('pasal') as $pasal)
+                            @foreach ($spk->spk_pasal->sortBy('pasal') as $pasal)
                                 <div data-repeater-item>
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="pasal-header-{{ $pasal->pasal }}">

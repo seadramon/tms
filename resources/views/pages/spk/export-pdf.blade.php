@@ -154,9 +154,6 @@
 		<p>
 		<strong>PIHAK KESATU</strong> dan <strong>PIHAK KEDUA</strong> secara bersama-sama selanjutnya disebut <strong>“PARA PIHAK”</strong>.
 		</p>
-
-		<div class="page_break"></div>
-
 		<p>
 			<b>PARA PIHAK</b> menerangkan terlebih dahulu bahwa <b>PARA PIHAK</b> telah membuat dan menandatangani Berita Acara Negosiasi {{$data->no_ban}} {{fullDateHumanizeId($data->tgl_ban)}} tentang {{ $data->jenisPekerjaan->ket }} untuk {{ $npp->nama_proyek }}
 		</p><br>
