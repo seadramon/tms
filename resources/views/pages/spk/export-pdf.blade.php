@@ -77,6 +77,27 @@
 </style>
 </head>
 <body>	
+	<footer>
+		<table cellspacing="0" cellpadding="2" width="100%" style="font-size: 12px;">
+			<tr>
+				<td width="18%" colspan="3" style="border: 1px solid #000000;text-align: center;">PIHAK KEDUA</td>
+				<td width="64%">&nbsp;</td>
+				<td width="18%" colspan="3" style="border: 1px solid #000000;text-align: center;">PIHAK PERTAMA</td>
+			</tr>
+			<tr>
+				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
+				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
+				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
+
+				<td width="64%">&nbsp;</td>
+
+				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
+				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
+				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
+
+			</tr>
+		</table>
+	</footer>
 	<main>
 		<table cellspacing="0" cellpadding="0">
 		    <tr>
@@ -171,26 +192,5 @@
 			<br><br>
 		@endforeach
 	</main>
-	<footer>
-		<table cellspacing="0" cellpadding="2" width="100%" style="font-size: 12px;">
-			<tr>
-				<td width="18%" colspan="3" style="border: 1px solid #000000;text-align: center;">PIHAK KEDUA</td>
-				<td width="64%">&nbsp;</td>
-				<td width="18%" colspan="3" style="border: 1px solid #000000;text-align: center;">PIHAK PERTAMA</td>
-			</tr>
-			<tr>
-				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
-				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
-				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
-
-				<td width="64%">&nbsp;</td>
-
-				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
-				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
-				<td width="6%" style="border: 1px solid #000000;padding-top: 5px;">&nbsp;</td>
-
-			</tr>
-		</table>
-	</footer>
 </body>
 </html>
