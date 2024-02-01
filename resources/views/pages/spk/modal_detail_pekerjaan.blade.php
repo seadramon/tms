@@ -127,15 +127,20 @@
     $('#modal_pekerjaan_submit').on('click', function(e){
         e.preventDefault();
         var data_ = modalPekerjaanData();
+        var temp_pekerjaan = "";
+        if($("#kd_jpekerjaan").val() == 'laut'){
+            temp_pekerjaan = "<td><input name=\"pelabuhan_asal[]\" class=\"pelabuhan_asal\" type=\"hidden\" value=\"" + data_.pelabuhan_asal + "\">" + data_.pelabuhan_asal + "</td>" + 
+                "<td><input name=\"pelabuhan_tujuan[]\" class=\"pelabuhan_tujuan\" type=\"hidden\" value=\"" + data_.pelabuhan_tujuan + "\">" + data_.pelabuhan_tujuan + "</td>" + 
+                "<td><input name=\"site[]\" class=\"site\" type=\"hidden\" value=\"" + data_.site + "\">" + data_.site + "</td>"; 
+        }
+        
         if($("#sat_harsat").val() == 'tonase'){
             var temp_ = "<td><input name=\"satuan[]\" class=\"satuan\" type=\"hidden\" value=\"" + data_.satuan + "\">" + data_.satuan + "</td>";
         }else{
             var temp_ = "<td><input name=\"ritase[]\" class=\"ritase\" type=\"hidden\" value=\"" + data_.ritase + "\">" + data_.ritase + "</td>";
         }
         var table_row = "<td><input name=\"unit[]\" class=\"unit\" type=\"hidden\" value=\"" + data_.unit + "\">" + data_.unit_teks + "</td>" + 
-            "<td><input name=\"pelabuhan_asal[]\" class=\"pelabuhan_asal\" type=\"hidden\" value=\"" + data_.pelabuhan_asal + "\">" + data_.pelabuhan_asal + "</td>" + 
-            "<td><input name=\"pelabuhan_tujuan[]\" class=\"pelabuhan_tujuan\" type=\"hidden\" value=\"" + data_.pelabuhan_tujuan + "\">" + data_.pelabuhan_tujuan + "</td>" + 
-            "<td><input name=\"site[]\" class=\"site\" type=\"hidden\" value=\"" + data_.site + "\">" + data_.site + "</td>" + 
+            temp_pekerjaan +
             "<td><input name=\"tipe[]\" class=\"tipe\" type=\"hidden\" value=\"" + data_.tipe + "\">" + data_.tipe_teks.replace("|", "<br>") + "</td>" + 
             "<td><input name=\"jarak[]\" class=\"jarak\" type=\"hidden\" value=\"" + data_.jarak + "\">" + data_.jarak + "</td>" + 
             "<td><input name=\"vol_btg[]\" class=\"vol_btg\" type=\"hidden\" value=\"" + data_.vol_btg + "\">" + data_.vol_btg + "</td>" + 
