@@ -141,13 +141,19 @@
 
 @section('css')
 <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css"/>
+<link href="{{asset('css/viewer.css')}}" rel="stylesheet">
 @endsection
 
 @section('js')
 <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <script src="{{ asset('assets/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>
+<script src="{{asset('js/viewerjs/viewer.js')}}"></script>
+<script src="{{asset('js/viewerjs/jquery-viewer.js')}}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        $('.images').viewer({
+            title: [4, (image, imageData) => `${image.alt} (${imageData.naturalWidth} × ${imageData.naturalHeight})`]
+        });
         if("{{isset($data)}}" == ""){
             $(".datepicker").daterangepicker({
                 singleDatePicker: true,
