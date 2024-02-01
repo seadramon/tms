@@ -66,6 +66,14 @@
         bottom: 0px;
         margin-bottom: -150px;
     }
+    footer{
+        position: fixed;
+        left: 0px;
+        right: 0px;
+        height: 150px;
+        bottom: 0px;
+        margin-bottom: -150px;
+    }
 </style>
 </head>
 <body>	
@@ -147,7 +155,7 @@
 		<strong>PIHAK KESATU</strong> dan <strong>PIHAK KEDUA</strong> secara bersama-sama selanjutnya disebut <strong>“PARA PIHAK”</strong>.
 		</p>
 
-		<div class="footer">
+		<footer>
 			<table cellspacing="0" cellpadding="2" width="100%" style="font-size: 12px;">
 				<tr>
 					<td width="18%" colspan="3" style="border: 1px solid #000000;text-align: center;">PIHAK KEDUA</td>
@@ -167,7 +175,7 @@
 
 				</tr>
 			</table>
-		</div>
+		</footer>
 		<div class="page_break"></div>
 
 		<p>
