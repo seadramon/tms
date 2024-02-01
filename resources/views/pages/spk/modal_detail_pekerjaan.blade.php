@@ -41,18 +41,20 @@
                         <label class="form-label">Unit</label>
                         {!! Form::select('modal_unit', $unit, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_unit']) !!}
                     </div>
-                    <div class="form-group col-lg-6">
-                        <label class="form-label">Site</label>
-                        {!! Form::select('modal_site', $site, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_site']) !!}
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="form-label">Pelabuhan Asal</label>
-                        {!! Form::select('modal_pelabuhan_asal', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_asal']) !!}
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="form-label">Pelabuhan Tujuan</label>
-                        {!! Form::select('modal_pelabuhan_tujuan', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_tujuan']) !!}
-                    </div>
+                    @if ($pekerjaan == 'laut')
+                        <div class="form-group col-lg-6">
+                            <label class="form-label">Site</label>
+                            {!! Form::select('modal_site', $site, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_site']) !!}
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="form-label">Pelabuhan Asal</label>
+                            {!! Form::select('modal_pelabuhan_asal', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_asal']) !!}
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="form-label">Pelabuhan Tujuan</label>
+                            {!! Form::select('modal_pelabuhan_tujuan', $pelabuhan, null, ['class'=>'form-control form-select-modal-solid modal-select2', 'data-control'=>'select2', 'id'=>'modal_pelabuhan_tujuan']) !!}
+                        </div>
+                    @endif
                     <div class="form-group col-lg-6">
                         <label class="form-label">Tipe</label>
                         {!! Form::select('modal_tipe', $produk, null, ['class'=>'form-control form-select-modal-solid', 'data-control'=>'select2', 'id'=>'modal_tipe']) !!}
