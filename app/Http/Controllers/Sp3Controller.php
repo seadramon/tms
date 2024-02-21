@@ -1146,7 +1146,7 @@ class Sp3Controller extends Controller
 
         $sbu = null;
         if ($detail->count() > 0) {
-            $sbu = Sbu::where('kd_sbu',  substr($detail[0]->kd_produk, 1, 1))->first();
+            $sbu = Sbu::where('kd_sbu',  substr($detail[0]->kd_produk, 0, 1))->first();
         }
 
         $VSpprbRi = VSpprbRi::where('no_npp', $data->no_npp)->first();
