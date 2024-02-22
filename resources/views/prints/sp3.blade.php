@@ -289,14 +289,14 @@
                     <tr>
                         <td>5.3.</td>
                         <td>
-                            Pembayaran berdasarkan progres pengiriman dengan Fasilitas SCF usance 180 hari, beban bunga SCF ditanggung oleh Vendor.
+                            Pembayaran berdasarkan progres pengiriman dengan Fasilitas SCF dengan tenor 180 hari, beban bunga SCF ditanggung oleh Vendor atau menggunakan metode Telegraphic Transfer (TT) dengan tetap memperhitungkan bunga diskonto SCF 180 hari.
                         </td>
                     </tr>
                     <tr>
                         <td>5.4.</td>
                         <td>
                             Dokumen tagihan harus melampirkan:<br>
-                            - Kwitansi Pembayaran/Invoice, Copy SP3, Berita Acara Opname  Pekerjaan, Lembar Kendali, Rekapitulasi SPTB dan  Copy SPTB warna hijau.
+                            - Kwitansi Pembayaran/Invoice, Faktur Pajak, Copy SP3, Berita Acara Opname  Pekerjaan, Lembar Kendali, Rekapitulasi SPTB dan  Copy SPTB warna hijau.
                         </td>
                     </tr>
                 </table>
@@ -314,7 +314,7 @@
                     <tr>
                         <td>6.2.</td>
                         <td>
-                            Keterlambatan penyelesaian pekerjaan sesuai item 3.1 dikenakan denda keterlambatan 0.5 %  (setengah persen  ) per  hari dan maksimal 5 % (lima persen) terhadap nilai pekerjaan.
+                            Keterlambatan penyelesaian pekerjaan sesuai item 3.1 dikenakan denda keterlambatan 0.5 %  (setengah persen  ) per  hari dan maksimal 5 % (lima persen) terhadap sisa nilai pekerjaan.
                         </td>
                     </tr>
                 </table>

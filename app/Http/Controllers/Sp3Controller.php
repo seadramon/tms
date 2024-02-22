@@ -1140,7 +1140,7 @@ class Sp3Controller extends Controller
     {
         $noSp3 = str_replace('|', '/', $noSp3);
 
-        $data = Sp3::with('unitkerja')->find($noSp3);
+        $data = Sp3::with('unitkerja', 'pic.employee')->find($noSp3);
         $detail = $data->sp3D;
         $sp3pics = $data->pic;
 
