@@ -414,8 +414,10 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="height: 100px"></td>
-                        <td style="height: 100px"></td>
+                        <td style="height: auto; min-height: 100px;"></td>
+                        <td style="height: auto; min-height: 100px;">
+                            <img alt="Logo" src="data:image/png;base64, {{ $data->manajer->signature_base_64 }}" class="logo" height="50px;"/><br>
+                        </td>
                     </tr>
                     <tr>
                         <td style="padding-left: 35px;" class="tebal">
