@@ -1155,7 +1155,7 @@ class Sp3Controller extends Controller
         if (count($sp3pics) > 0) {
             $tmp = [];
             foreach ($sp3pics as $sp3pic) {
-                $tmp[] = $sp3pic->employee->first_name.' '.$sp3pic->employee->last_name;
+                $tmp[] = ($sp3pic->employee->first_name ?? '') . ' ' . ($sp3pic->employee->last_name ?? '');
             }
             $pics = implode(", ", $tmp);
         }
