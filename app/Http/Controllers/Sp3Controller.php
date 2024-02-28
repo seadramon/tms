@@ -261,7 +261,7 @@ class Sp3Controller extends Controller
                             // if($model->kd_jpekerjaan == '20'){
                             //     $route = 'sp3.v2.edit';
                             // }else{
-                            //     $route = 'sp3.edit';                                
+                            //     $route = 'sp3.edit';
                             // }
                             $list .= '<li><a class="dropdown-item" href="' . route($route, str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>';
                         }
@@ -384,7 +384,7 @@ class Sp3Controller extends Controller
             return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
         })->all();
         $ban = ["" => "---Pilih---"] + $ban + $ban_surat;
-        
+
         $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
         $ban_kontrak = TbSurat::where('no_surat', 'like', 'TP.01.03%')->get()->mapWithKeys(function($item){
             return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
@@ -646,14 +646,14 @@ class Sp3Controller extends Controller
         $npp = Npp::with(['infoPasar.region'])
             ->where('no_npp', $data->no_npp)
             ->first();
-            
+
         // $ban = Ban::where('pat_ban', session('TMP_KDWIL') ?? '0A')
         $ban = Ban::get()->pluck('no_ban', 'no_ban')->toArray();
         $ban_surat = TbSurat::where('no_surat', 'like', 'SE.01.01%')->get()->mapWithKeys(function($item){
             return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
         })->all();
         $ban = ["" => "---Pilih---"] + $ban + $ban_surat;
-        
+
         $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
         $ban_kontrak = TbSurat::where('no_surat', 'like', 'TP.01.03%')->get()->mapWithKeys(function($item){
             return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
@@ -814,7 +814,7 @@ class Sp3Controller extends Controller
             return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
         })->all();
         $ban = ["" => "---Pilih---"] + $ban + $ban_surat;
-        
+
         $kontrak = Kontrak::get()->pluck('no_kontrak', 'no_kontrak')->toArray();
         $ban_kontrak = TbSurat::where('no_surat', 'like', 'TP.01.03%')->get()->mapWithKeys(function($item){
             return [$item->no_surat => $item->no_surat . ' | ' . $item->perihal];
@@ -1110,8 +1110,13 @@ class Sp3Controller extends Controller
 
         $pph = ["0|0" => "0%"] + $pph;
 
+        $trader = DB::connection('oracle-eproc')
+					->table(DB::raw('"m_trader"'))
+					->where('vendor_id', $data->vendor_id)
+					->first();
+
         return view('pages.sp3.approve', compact(
-            'data', 'detailPesanan', 'sp3D', 'kondisiPenyerahanDipilih', 'type', 'listPic', 'pph', 'ppn'
+            'data', 'detailPesanan', 'sp3D', 'kondisiPenyerahanDipilih', 'type', 'listPic', 'pph', 'ppn',  'trader'
         ));
     }
 
@@ -1126,9 +1131,9 @@ class Sp3Controller extends Controller
             $data->app1_date = date('Y-m-d H:i:s');
         }else{
             $data->app2 = 1;
-            $data->app2_jbt = Auth::user()->position ?? '';
+            $data->app2_jbt = $request->approval_jabatan;
             $data->app2_date = date('Y-m-d H:i:s');
-            $data->app2_name = Auth::user()->name ?? '';
+            $data->app2_name = $request->approval_nama;
         }
 
         $data->save();
