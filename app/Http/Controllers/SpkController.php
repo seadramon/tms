@@ -513,7 +513,7 @@ class SpkController extends Controller
                 'spk' => $spk,
                 'pasals' => $pasals,
                 'mode' => $request->mode,
-                'pekerjaan' => $request->kdjpekerjaan,
+                'pekerjaan' => $request->kd_jpekerjaan,
             ])->render();
             $result = array('success' => true, 'html'=> $html);
 

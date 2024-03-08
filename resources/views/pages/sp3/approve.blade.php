@@ -154,10 +154,10 @@
                                 {!! Form::text('pic', implode(',', $listPic), ['class'=>'form-control', 'disabled']) !!}
                             </div>
 
-                            <div class="form-group col-lg-6">
+                            {{-- <div class="form-group col-lg-6">
                                 <label class="form-label">Spesifikasi</label>
                                 {!! Form::text('spesifikasi', 'TBC', ['class'=>'form-control', 'disabled']) !!}
-                            </div>
+                            </div> --}}
 
                             <div class="form-group col-lg-3">
                                 <label class="form-label">Tanggal Penyerahan</label>
@@ -187,6 +187,7 @@
 
                         <div class="separator separator-dashed border-primary my-10"></div>
 
+                        <h3>Detail Pekerjaan</h3>
                         <div class="hover-scroll-overlay-y h-400px px-5">
                             <table id="tabel_detail_pekerjaan" class="table table-row-bordered text-center">
                                 <thead>
@@ -210,7 +211,7 @@
 
                                         <tr class="detail_pekerjaan">
                                             <td style="width: 7%;">
-                                                {!! Form::text('unit[]', $sp3D->pat_to, ['class'=>'form-control', 'disabled']) !!}
+                                                {!! Form::text('unit[]', $sp3D->pat->ket ?? '-', ['class'=>'form-control', 'disabled']) !!}
                                             </td>
                                             <td style="width: 12%;">
                                                 {!! Form::text('kd_produk[]', $sp3D->kd_produk, ['class'=>'form-control', 'disabled']) !!}

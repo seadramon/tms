@@ -280,8 +280,8 @@ class SppController extends Controller
     {
         $jenis = [
             '' => '-Pilih Jenis-',
-            'Pesanan Wilayah' => 'Pesanan Wilayah',
-            'Pesanan Lain-lain' => 'Pesanan Lain-lain'
+            'wilayah' => 'Pesanan Wilayah',
+            'lain-lain' => 'Pesanan Lain-lain'
         ];
 
         return view('pages.spp.create', [
@@ -448,8 +448,8 @@ class SppController extends Controller
     {
         $jenis = [
             '' => '-Pilih Jenis-',
-            'Pesanan Wilayah' => 'Pesanan Wilayah',
-            'Pesanan Lain-lain' => 'Pesanan Lain-lain'
+            'wilayah' => 'Pesanan Wilayah',
+            'lain-lain' => 'Pesanan Lain-lain'
         ];
 
         $noSppb = str_replace("|", "/", $spp);

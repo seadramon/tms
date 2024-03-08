@@ -71,7 +71,7 @@ class SpmController extends Controller
 
     public function data(Request $request)
     {
-        $query = SpmH::with(['sppb', 'vendornya', 'sptbh', 'armada_rating']);
+        $query = SpmH::with(['sppb', 'vendornya', 'vendor', 'sptbh', 'armada_rating']);
         if(Auth::check()){
             $query->whereVendorId(Auth::user()->vendor_id);
         }

@@ -255,7 +255,7 @@
                     {data: 'no_sppb', name: 'no_sppb', defaultContent: '-'},
                     {data: 'sppb.no_npp', name: 'sppb.no_npp', defaultContent: '-',orderable: false, searchable: false},
                     {data: 'tgl_spm', name: 'tgl_spm', defaultContent: '-'},
-                    {data: 'vendornya.nama', name: 'vendornya.nama', defaultContent: '-',orderable: false, searchable: false},
+                    {data: 'vendor.nama', name: 'vendor.nama', defaultContent: '-'},
                     {data: 'no_pol', name: 'no_pol', defaultContent: '-'},
                     {data: 'status', name: 'status', defaultContent: '-',orderable: false, searchable: false},
                     {data: 'menu', orderable: false, searchable: false}

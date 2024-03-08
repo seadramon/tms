@@ -52,7 +52,7 @@
 
                         <div class="col-lg-6 custom-form">
                             <label class="form-label col-sm-3 required ">Jenis SPM</label>
-                            <select class="form-control" data-control="select2" data-placeholder="Pilih Jenis SPM" id="jenis_spm">
+                            <select class="form-control" data-control="select2" data-placeholder="Pilih Jenis SPM" id="jenis_spm" name="jenis_spm">
                                 <option></option>
                                 <option value="2">Stok Titipan</option>
                                 <option value="0">Stok Aktif</option>

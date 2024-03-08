@@ -44,7 +44,7 @@ class PemenuhanArmadaController extends Controller
             $vendor = Vendor::where('vendor_id', Auth::user()->vendor_id)->get()->pluck('nama', 'vendor_id')->toArray();
             $vendor_id = $vendor;
         }else{
-            $vendor = Vendor::get()->pluck('nama', 'vendor_id')->toArray();
+            $vendor = Vendor::where('sync_eproc', 1)->where('vendor_id', 'like', 'WB%')->get()->pluck('nama', 'vendor_id')->toArray();
             $vendor_id = $labelSemua + $vendor;
         }
 
