@@ -58,7 +58,7 @@ return [
         'host'           => env('EPROC_DB_HOST', ''),
         'port'           => env('EPROC_DB_PORT', '1521'),
         'database'       => env('EPROC_DB_DATABASE', ''),
-        'service_name'   => env('DB_SERVICE_NAME', 'orawb'),
+        'service_name'   => env('EPROC_SERVICE_NAME', 'orawb'),
         'username'       => env('EPROC_DB_USERNAME', ''),
         'password'       => env('EPROC_DB_PASSWORD', ''),
         'charset'        => env('DB_CHARSET', 'AL32UTF8'),

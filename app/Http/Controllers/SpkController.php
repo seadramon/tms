@@ -264,7 +264,7 @@ class SpkController extends Controller
                     //         if($model->kd_jpekerjaan == '20'){
                     //             $route = 'sp3.v2.edit';
                     //         }else{
-                    //             $route = 'sp3.edit';                                
+                    //             $route = 'sp3.edit';
                     //         }
                     //         $list .= '<li><a class="dropdown-item" href="' . route($route, str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>';
                     //     }
@@ -376,7 +376,7 @@ class SpkController extends Controller
 
             $ban = Ban::get()->pluck('no_ban', 'no_ban')->toArray();
             $ban = ["" => "---Pilih---"] + $ban;
-            $opt_ban = Ban::get()->mapWithKeys(function($item){ 
+            $opt_ban = Ban::get()->mapWithKeys(function($item){
                 return [$item->no_ban => ['data-tgl' => date('d-m-Y', strtotime($item->tgl_ban))]];
             })
             ->all();
@@ -593,7 +593,7 @@ class SpkController extends Controller
             if($request->kd_jpekerjaan == 'laut'){
                 $spk->kd_jpekerjaan = '20';
                 $spk->spesifikasi = $request->spesifikasi;
-                
+
                 $harga_include = collect(json_decode($request->harga_include))->map(function($item){ return $item->value; })->all();
                 $data_['harga_include'] = $harga_include;
             }else{
@@ -747,11 +747,11 @@ class SpkController extends Controller
             if($request->kd_jpekerjaan == 'laut'){
                 $sp3->kd_jpekerjaan = '20';
                 $sp3->spesifikasi = $request->spesifikasi;
-                
+
                 $harga_include = collect(json_decode($request->harga_include))->map(function($item){ return $item->value; })->all();
                 $data_ = $sp3->data;
                 $data_['harga_include'] = $harga_include;
-                
+
                 $sp3->data = $data_;
             }else{
                 $sp3->kd_jpekerjaan = '01';
@@ -811,7 +811,7 @@ class SpkController extends Controller
 
             foreach ($request->dokumen_asli as $key => $item) {
                 $sp3Dokumen = new Sp3Dokumen();
-    
+
                 $sp3Dokumen->no_sp3 = $noSp3;
                 $sp3Dokumen->dok_id = $key;
                 $sp3Dokumen->asli = $item;
@@ -881,12 +881,17 @@ class SpkController extends Controller
         $data = Spk::with(['vendor', 'spk_d', 'unitkerja', 'jenisPekerjaan', 'spk_pasal'])->find($noSpk);
 
         $npp = Npp::find($data->no_npp);
-// dd($npp);
+        // return view('pages.spk.export-pdf', ['data' => $data,'npp' => $npp]);
+        $modify_params = [
+            "<PEKERJAAN>" => $data->jenisPekerjaan->ket,
+            "<NAMA PROYEK>" => $npp->nama_proyek,
+            "<LOKASI PROYEK>" => ($npp->infoPasar->region->kabupaten_name ?? '') . ', ' . ($npp->infoPasar->region->kecamatan_name ?? ''),
+        ];
         $pdf = Pdf::loadView('pages.spk.export-pdf', [
             'data' => $data,
-            'npp' => $npp
+            'npp' => $npp,
+            'modify_params' => $modify_params,
         ]);
-
         $filename = "SPK";
 
         return $pdf->setPaper('a4', 'portrait')
