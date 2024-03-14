@@ -137,36 +137,38 @@
                     <td style="width: 2%">I.</td>
                     <td style="width: 20%">Nama</td>
                     <td style="width: 3%">:</td>
-                    <td style="width: 75%">PIC</td>
+                    <td style="width: 75%">{{ $data->pihak1_data->full_name }}</td>
                 </tr>
                 <tr>
                     <td style="width: 2%">&nbsp;</td>
                     <td style="width: 20%">Jabatan</td>
                     <td style="width: 3%">:</td>
-                    <td style="width: 75%">PIC</td>
+                    <td style="width: 75%">{{ $data->pihak1_jabatan }}</td>
                 </tr>
                 <tr>
                     <td style="width: 2%">&nbsp;</td>
                     <td style="width: 98%; text-align: justify;" colspan="3">
-                        Bertindak untuk dan atas nama <strong>PT WIJAYA KARYA BETON Tbk.</strong>, suatu badan hukum yang didirikan berdasarkan Akta No. 44 tanggal 11 Maret 1997, yang dibuat di hadapan Achmad Bajumi, S.H., pengganti dari Imas Fatimah, S.H., Notaris di Jakarta, yang telah beberapa kali diubah dan terakhir diubah dengan Akta Perubahan Anggaran Dasar No 09 tanggal 08 Juni 2023, dibuat dihadapan Ir Nanette Cahyanie Handari Adi Warsito, S.H., Notaris di Jakarta dan telah mendapat persetujuan dari Menteri Hukum dan Hak Asasi Manusia Republik Indonesia No. AHU-0032467.AH.01.02.TAHUN 2023 tanggal 12 Juni 2023, beralamat di Jl. D.I. Panjaitan Kav. 9 Jakarta Timur 13340, (selanjutnya disebut sebagai <strong>“PIHAK PERTAMA”</strong>).
+                        {{-- Bertindak untuk dan atas nama <strong>PT WIJAYA KARYA BETON Tbk.</strong>, suatu badan hukum yang didirikan berdasarkan Akta No. 44 tanggal 11 Maret 1997, yang dibuat di hadapan Achmad Bajumi, S.H., pengganti dari Imas Fatimah, S.H., Notaris di Jakarta, yang telah beberapa kali diubah dan terakhir diubah dengan Akta Perubahan Anggaran Dasar No 09 tanggal 08 Juni 2023, dibuat dihadapan Ir Nanette Cahyanie Handari Adi Warsito, S.H., Notaris di Jakarta dan telah mendapat persetujuan dari Menteri Hukum dan Hak Asasi Manusia Republik Indonesia No. AHU-0032467.AH.01.02.TAHUN 2023 tanggal 12 Juni 2023, beralamat di Jl. D.I. Panjaitan Kav. 9 Jakarta Timur 13340, (selanjutnya disebut sebagai <strong>“PIHAK PERTAMA”</strong>). --}}
+                        {!! $data->pihak1_ket !!}
                     </td>
                 </tr>
                 <tr>
                     <td style="width: 2%">II.</td>
                     <td style="width: 20%">Nama</td>
                     <td style="width: 3%">:</td>
-                    <td style="width: 75%">PIC</td>
+                    <td style="width: 75%">{{ $data->pihak2 }}</td>
                 </tr>
                 <tr>
                     <td style="width: 2%">&nbsp;</td>
                     <td style="width: 20%">Jabatan</td>
                     <td style="width: 3%">:</td>
-                    <td style="width: 75%">PIC</td>
+                    <td style="width: 75%">{{ $data->pihak2_jabatan }}</td>
                 </tr>
                 <tr>
                     <td style="width: 2%">&nbsp;</td>
                     <td style="width: 98%; text-align: justify;" colspan="3">
-                        Suatu [Jenis Perseroan] yang tunduk pada hukum Negara Republik Indonesia, berkedudukan di {{ !empty($data->vendor->kota)?ucwords(strtolower($data->vendor->kota)):"" }} dan beralamat di {{ !empty($data->vendor->kota)?ucwords(strtolower($data->vendor->alamat)):"" }} didirikan berdasarkan [akta pendirian beserta SK Kemenkumham] yang telah beberapa kali diubah dan terakhir kali diubah dengan [akta perubahan anggaran dasar-(jika ada) beserta SK Kemenkumham], dalam hal ini diwakili oleh {{ $data->pihak2 }} selaku {{ $data->pihak2_jabatan }} {{ $data->vendor->nama }}. Selanjutnya dalam Perjanjian disebut <strong>"PIHAK KEDUA"</strong>.
+                        {{-- Suatu [Jenis Perseroan] yang tunduk pada hukum Negara Republik Indonesia, berkedudukan di {{ !empty($data->vendor->kota)?ucwords(strtolower($data->vendor->kota)):"" }} dan beralamat di {{ !empty($data->vendor->kota)?ucwords(strtolower($data->vendor->alamat)):"" }} didirikan berdasarkan [akta pendirian beserta SK Kemenkumham] yang telah beberapa kali diubah dan terakhir kali diubah dengan [akta perubahan anggaran dasar-(jika ada) beserta SK Kemenkumham], dalam hal ini diwakili oleh {{ $data->pihak2 }} selaku {{ $data->pihak2_jabatan }} {{ $data->vendor->nama }}. Selanjutnya dalam Perjanjian disebut <strong>"PIHAK KEDUA"</strong>. --}}
+                        {!! $data->pihak2_ket !!}
                     </td>
                 </tr>
             </table>

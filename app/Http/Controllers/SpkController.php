@@ -247,6 +247,7 @@ class SpkController extends Controller
                 ->addColumn('menu', function ($model) {
                     $list = '';
                     $list .= '<li><a class="dropdown-item" href="' . route('spk.show', str_replace('/', '|', $model->no_spk)) . '">View</a></li>';
+                    $list .= '<li><a class="dropdown-item" href="' . route('spk.edit', str_replace('/', '|', $model->no_spk)) . '">Edit</a></li>';
                     $list .= '<li><a class="dropdown-item" href="' . route('spk.print-pdf', str_replace('/', '|', $model->no_spk)) . '">Print PDF</a></li>';
                     /*$list .= '<li><a class="dropdown-item" href="' . route('spk.print-excel', str_replace('/', '|', $model->no_spk)) . '">Print Excel</a></li>';*/
                     // if(Auth::check()){
@@ -528,7 +529,7 @@ class SpkController extends Controller
     public function store(Request $request, FlasherInterface $flasher)
     {
         // return response()->json($request->all());
-        // try {
+        try {
             DB::beginTransaction();
 
             Validator::make($request->all(), [
@@ -649,22 +650,22 @@ class SpkController extends Controller
             DB::commit();
 
             $flasher->addSuccess('Data has been saved successfully!');
-        // } catch(Exception $e) {
-        //     DB::rollback();
+        } catch(Exception $e) {
+            DB::rollback();
 
-        //     $flasher->addError($e->getMessage());
+            $flasher->addError($e->getMessage());
 
-        //     return redirect()->back()->withInput()->withErrors($e->getMessage());
-        // }
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
 
         return redirect()->route('spk.index');
     }
 
-    public function edit($noSp3)
+    public function edit($noSpk)
     {
-        $noSp3 = str_replace('|', '/', $noSp3);
+        $noSpk = str_replace('|', '/', $noSpk);
 
-        $data = Sp3::find($noSp3);
+        $data = Spk::find($noSpk);
 
         $vendor = Vendor::where('sync_eproc', 1)
             ->where('vendor_id', 'like', 'WB%')
@@ -694,130 +695,118 @@ class SpkController extends Controller
         ]);
     }
 
-    public function update(Request $request, FlasherInterface $flasher, $noSp3){
+    public function update(Request $request, FlasherInterface $flasher, $noSpk){
         // return response()->json($request->all());
         DB::beginTransaction();
         try {
+            DB::beginTransaction();
 
-            $noSp3 = str_replace('|', '/', $noSp3);
+            Validator::make($request->all(), [
+                'no_npp'        => 'required',
+                'vendor_id'     => 'required',
+                'kd_jpekerjaan' => 'required',
+            ])->validate();
+
+            $noSpk = str_replace('|', '/', $noSpk);
 
             if($request->isAmandemen){
-                $noSp3Sequence = sprintf('%02s', ((int)substr($noSp3, -2))+1);
+                $noSpkSequence = sprintf('%02s', ((int)substr($noSpk, -2))+1);
 
-                $newNoSp3 = str_replace(substr($noSp3, -2), $noSp3Sequence, $noSp3);
+                $newNoSpk = str_replace(substr($noSpk, -2), $noSpkSequence, $noSpk);
 
-                $sp3 = new Sp3();
+                $spk = new Spk;
             }else{
-                $newNoSp3 = $noSp3;
+                $newNoSpk = $noSpk;
 
-                $sp3 = Sp3::find($noSp3);
+                $spk = Sp3::find($noSpk);
 
                 //Delete child data
-                Sp3Pic::where('no_sp3', $noSp3)->delete();
-                Sp3D::where('no_sp3', $noSp3)->delete();
-                Sp3D2::where('no_sp3', $noSp3)->delete();
-                Sp3Dokumen::where('no_sp3', $noSp3)->delete();
+                Sp3Pic::where('no_sp3', $noSpk)->delete();
+                Sp3D::where('no_sp3', $noSpk)->delete();
+                Sp3D2::where('no_sp3', $noSpk)->delete();
+                Sp3Dokumen::where('no_sp3', $noSpk)->delete();
             }
+
 
             $vendor = Vendor::find($request->vendor_id);
 
             $pph = explode('|', $request->pph);
+            $data_ = [];
 
-            //Update or Create Sp3
-            $sp3->no_sp3 = $noSp3;
-            $sp3->no_npp = $request->no_npp;
-            $sp3->vendor_id = $vendor->vendor_id;
-            $sp3->alamat_vendor = $vendor->alamat;
-            $sp3->satuan_harsat = $request->sat_harsat;
-            $sp3->tgl_sp3 = date('Y-m-d', strtotime($request->tgl_sp3));
-            $sp3->no_ban = $request->no_ban;
-            $sp3->no_kontrak_induk = $request->no_kontrak_induk;
-            $sp3->jadwal1 = date('Y-m-d', strtotime($request->jadwal1));
-            $sp3->jadwal2 = date('Y-m-d', strtotime($request->jadwal2));
-            $sp3->rit = $request->rit;
-            $sp3->jarak_km = $request->jarak_pesanan;
-            $sp3->ppn = $request->ppn ? (float)($request->ppn / 100) : 0;
-            $sp3->pph = $pph[1];
-            $sp3->pph_id = $pph[0];
-            $sp3->keterangan = $request->keterangan;
-            $sp3->kd_material = $request->kd_material;
-            $sp3->created_by = session('TMP_NIP') ?? '12345';
-            $sp3->created_date = date('Y-m-d H:i:s');
-            $sp3->kd_pat = session('TMP_KDWIL') ?? '1A';
+            $spk->no_npp = $request->no_npp;
+            $spk->vendor_id = $vendor->vendor_id;
+            $spk->satuan_harsat = $request->sat_harsat;
+            $spk->tgl_spk = date('Y-m-d', strtotime($request->tgl_spk));
+            $spk->no_ban = $request->no_ban;
+            $spk->tgl_ban = date('Y-m-d', strtotime($request->tgl_ban));
+            $spk->jadwal1 = date('Y-m-d', strtotime($request->jadwal1));
+            $spk->jadwal2 = date('Y-m-d', strtotime($request->jadwal2));
+            $spk->ppn = $request->ppn;
+            $spk->pph = $pph[1];
+            $spk->pph_id = $pph[0];
+            $spk->pihak1 = $request->pihak1;
+            $spk->pihak1_jabatan = $request->pihak1_jabatan;
+            $spk->pihak1_ket = $request->pihak1_ket;
+            $spk->pihak2 = $request->pihak2;
+            $spk->pihak2_jabatan = $request->pihak2_jabatan;
+            $spk->pihak2_ket = $request->pihak2_ket;
+            $spk->created_by = session('TMP_NIP') ?? '12345';
+            $spk->kd_pat = session('TMP_KDWIL') ?? '1A';
             if($request->kd_jpekerjaan == 'laut'){
-                $sp3->kd_jpekerjaan = '20';
-                $sp3->spesifikasi = $request->spesifikasi;
+                $spk->kd_jpekerjaan = '20';
+                $spk->spesifikasi = $request->spesifikasi;
 
                 $harga_include = collect(json_decode($request->harga_include))->map(function($item){ return $item->value; })->all();
-                $data_ = $sp3->data;
                 $data_['harga_include'] = $harga_include;
-
-                $sp3->data = $data_;
             }else{
-                $sp3->kd_jpekerjaan = '01';
+                $spk->kd_jpekerjaan = '01';
             }
-            $sp3->save();
+            // if(strtolower($request->sat_harsat) == 'ritase'){
+                //     $data['harga_satuan_ritase'] = $request->harga_satuan_ritase;
+                // }
+            $data_['proyek'] = $request->proyek;
+            $data_['pelanggan'] = $request->pelanggan;
+            $data_['region'] = $request->region;
+            $spk->data = $data_;
+            $spk->save();
 
-            foreach($request->pic as $pic){
-                $sp3Pic = new Sp3Pic();
-                $sp3Pic->no_sp3 = $noSp3;
-                $sp3Pic->employee_id = $pic;
-                $sp3Pic->save();
-            }
+            // foreach($request->pic as $pic){
+            //     $spkPic = new Sp3Pic();
+            //     $sp3Pic->no_sp3 = $noSp3;
+            //     $sp3Pic->employee_id = $pic;
+            //     $sp3Pic->save();
+            // }
 
-            for($i=0; $i < count($request->unit); $i++){
-                $sp3D = new Sp3D();
-                $sp3D->no_sp3 = $noSp3;
-                $sp3D->no_npp = $request->no_npp;
-                $sp3D->pat_to = $request->unit[$i];
-                $sp3D->kd_produk = $request->tipe[$i];
-                $sp3D->jarak_km = str_replace(',', '', $request->jarak[$i]);
-                $sp3D->vol_awal = str_replace(',', '', $request->vol_btg[$i]);
-                $sp3D->vol_akhir = str_replace(',', '', $request->vol_btg[$i]);
-                $sp3D->vol_ton_awal = str_replace(',', '', $request->vol_ton[$i]);
-                $sp3D->vol_ton_akhir = str_replace(',', '', $request->vol_ton[$i]);
+            // foreach ($request->unit as $index => $item) {
+            //     $spk_d = new SpkD;
+            //     $spk_d->no_spk = $noSpk;
+            //     $spk_d->kd_produk = $request->tipe[$index];
+            //     $spk_d->pat_to = $item;
+            //     $spk_d->jarak = str_replace(',', '', $request->jarak[$index]);
+            //     $spk_d->vol_btg = str_replace(',', '', $request->vol_btg[$index]);
+            //     $spk_d->vol_ton = str_replace(',', '', $request->vol_ton[$index]);
+            //     $spk_d->harsat = str_replace(',', '', $request->harsat[$index]);
+            //     $spk_d->total = str_replace(',', '', $request->jumlah[$index]);
+            //     if(strtolower($request->sat_harsat) == 'tonase'){
+            //         $spk_d->satuan = $request->satuan[$index];
+            //     }else{
+            //         $spk_d->ritase = str_replace(',', '', $request->ritase[$index]);
+            //     }
+            //     if($request->kd_jpekerjaan == 'laut'){
+            //         $spk_d->port_asal = $request->pelabuhan_asal[$index] ?? null;
+            //         $spk_d->port_tujuan = $request->pelabuhan_tujuan[$index] ?? null;
+            //     }
+            //     $spk_d->save();
+            // }
 
-                if(strtolower($request->sat_harsat) == 'tonase'){
-                    $sp3D->sat_harsat = $request->satuan[$i];
-                }else{
-                    $sp3D->ritase = $request->ritase[$i] ?? null;
-                }
-                if($request->kd_jpekerjaan == 'laut'){
-                    $sp3D->port_asal = $request->pelabuhan_asal[$i] ?? null;
-                    $sp3D->port_tujuan = $request->pelabuhan_tujuan[$i] ?? null;
-                    $sp3D->site = $request->site[$i] ?? null;
-                    $sp3D->site = $request->site[$i] ?? null;
-                    $sp3D->total = str_replace(',', '', $request->jumlah[$i]);
-                }
-
-                $sp3D->harsat_awal = str_replace(',', '', $request->harsat[$i]);
-                $sp3D->harsat_akhir = str_replace(',', '', $request->harsat[$i]);
-                $sp3D->save();
-            }
-
-            $sp3D2Id = Sp3D2::max('id') ?? 0;
-
-            foreach(($request->material_tambahan ?? []) as $material){
-                $sp3D2Id++;
-
-                $sp3D2 = new Sp3D2();
-                $sp3D2->id = $sp3D2Id;
-                $sp3D2->no_sp3 = $noSp3;
-                $sp3D2->material = $material['material'];
-                $sp3D2->spesifikasi = $material['spesifikasi'];
-                $sp3D2->volume = $material['volume'];
-                $sp3D2->save();
-            }
-
-            foreach ($request->dokumen_asli as $key => $item) {
-                $sp3Dokumen = new Sp3Dokumen();
-
-                $sp3Dokumen->no_sp3 = $noSp3;
-                $sp3Dokumen->dok_id = $key;
-                $sp3Dokumen->asli = $item;
-                $sp3Dokumen->copy = $request->dokumen_copy[$key];
-                $sp3Dokumen->save();
-            }
+            // foreach ($request->pasal as $index => $pasal) {
+            //     $spk_pasal = new SpkPasal;
+            //     $spk_pasal->no_spk = $noSpk;
+            //     $spk_pasal->pasal = ($index + 1);
+            //     $spk_pasal->judul = $pasal['pasal_judul'];
+            //     $spk_pasal->keterangan = $pasal['pasal_isi'];
+            //     $spk_pasal->save();
+            // }
 
             DB::commit();
 
@@ -830,7 +819,8 @@ class SpkController extends Controller
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
 
-        return redirect()->route('sp3.index');
+        return redirect()->route('spk.index');
+
     }
 
     public function show($noSpk)
@@ -881,12 +871,12 @@ class SpkController extends Controller
         $data = Spk::with(['vendor', 'spk_d', 'unitkerja', 'jenisPekerjaan', 'spk_pasal'])->find($noSpk);
 
         $npp = Npp::find($data->no_npp);
-        // return view('pages.spk.export-pdf', ['data' => $data,'npp' => $npp]);
         $modify_params = [
             "<PEKERJAAN>" => $data->jenisPekerjaan->ket,
             "<NAMA PROYEK>" => $npp->nama_proyek,
             "<LOKASI PROYEK>" => ($npp->infoPasar->region->kabupaten_name ?? '') . ', ' . ($npp->infoPasar->region->kecamatan_name ?? ''),
         ];
+        // return view('pages.spk.export-pdf', ['data' => $data,'npp' => $npp,'modify_params' => $modify_params,]);
         $pdf = Pdf::loadView('pages.spk.export-pdf', [
             'data' => $data,
             'npp' => $npp,

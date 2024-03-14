@@ -1,3 +1,16 @@
+@php
+    $disabled = [];
+    $editable = [];
+@endphp
+@if (in_array($mode, ['edit', 'show']))
+    @php
+        $disabled = ['disabled'];
+        $editable = ['disabled'];
+        if(in_array($mode, ['edit'])){
+            $editable = [];
+        }
+    @endphp
+@endif
 <div class="card shadow-sm">
     <div class="card-header">
         <h3 class="card-title">Detail Pesanan NPP</h3>
@@ -13,7 +26,7 @@
                         <th colspan="2">Total SP3/SPK Sebelumnya</th>
                         <th colspan="2">Volume Sisa</th>
                     </tr>
-                    
+
                     <tr>
                         <th>Vol (Btg)</th>
                         <th>Vol (Ton)</th>
@@ -33,10 +46,10 @@
                             $sisaVolBtg     = $pesananVolBtg - $sp3dVolBtg;
                             $sisaVolTon     = $pesananVolTon - $sp3dVolTon;
                         @endphp
-                        
+
                         <tr>
                             <td style="text-align: left">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
-                            
+
                             <td>{{ $pesanan->vol_konfirmasi }}</td>
                             <td>{{ nominal($pesananVolTon) }}</td>
                             <td>{{ nominal($sp3dVolBtg) }}</td>
@@ -64,7 +77,7 @@
                 {!! Form::text('pelanggan', $npp->nama_pelanggan, ['class'=>'form-control', 'id'=>'pelanggan', 'readonly']) !!}
 
             </div>
-            
+
             <div class="form-group col-lg-3">
                 <label class="form-label">Tujuan</label>
                 {!! Form::text('region', $npp->infoPasar?->region?->kabupaten_name . ', ' . $npp->infoPasar?->region?->kecamatan_name, ['class'=>'form-control', 'id'=>'region', 'readonly']) !!}
@@ -74,7 +87,7 @@
                 <label class="form-label">Tanggal</label>
                 <div class="col-lg-12">
                     <div class="input-group date">
-                        {!! Form::text('tgl_spk', $spk ? date('d-m-Y', strtotime($spk->tgl_spk)) : date('d-m-Y'), ['class'=>'form-control datepicker', 'id'=>'tgl_spk']) !!}
+                        {!! Form::text('tgl_spk', $spk ? date('d-m-Y', strtotime($spk->tgl_spk)) : date('d-m-Y'), ['class'=>'form-control datepicker', 'id'=>'tgl_spk'] + $editable) !!}
                         <div class="input-group-append">
                             <span class="input-group-text" style="display: block">
                                 <i class="la la-calendar-check-o"></i>
@@ -85,7 +98,7 @@
             </div>
             <div class="form-group col-lg-6">
                 <label class="form-label">Nama Pihak Pertama</label>
-                <select class="form-control search-pihak1" name="pihak1" id="pihak1" required>
+                <select class="form-control search-pihak1" name="pihak1" id="pihak1" required @if(in_array($mode, ['show'])) disabled @endif>
                     @if (in_array($mode, ['edit', 'show']))
                         <option selected value="{{$spk->pihak1}}">{{$spk->pihak1}} - {{ $spk->employee->fullname ?? "" }}</option>
                     @endif
@@ -93,15 +106,15 @@
             </div>
             <div class="form-group col-lg-6">
                 <label class="form-label">Nama Pihak Kedua</label>
-                {!! Form::text('pihak2', $spk->pihak2 ?? $trader->pimpinan_nama ?? "", ['class'=>'form-control', 'id'=>'pihak2']) !!}
+                {!! Form::text('pihak2', $spk->pihak2 ?? $trader->pimpinan_nama ?? "", ['class'=>'form-control', 'id'=>'pihak2'] + $editable) !!}
             </div>
             <div class="form-group col-lg-6">
                 <label class="form-label">Jabatan Pihak Pertama</label>
-                {!! Form::text('pihak1_jabatan', $spk->pihak1_jabatan ?? "", ['class'=>'form-control', 'id'=>'pihak1_jabatan']) !!}
+                {!! Form::text('pihak1_jabatan', $spk->pihak1_jabatan ?? "", ['class'=>'form-control', 'id'=>'pihak1_jabatan'] + $editable) !!}
             </div>
             <div class="form-group col-lg-6">
                 <label class="form-label">Jabatan Pihak Kedua</label>
-                {!! Form::text('pihak2_jabatan', $spk->pihak2_jabatan ?? $trader->pimpinan_jabatan ?? "", ['class'=>'form-control', 'id'=>'pihak2_jabatan']) !!}
+                {!! Form::text('pihak2_jabatan', $spk->pihak2_jabatan ?? $trader->pimpinan_jabatan ?? "", ['class'=>'form-control', 'id'=>'pihak2_jabatan'] + $editable) !!}
             </div>
             <div class="form-group col-lg-6">
                 <label class="form-label">Anggaran Dasar Pihak Pertama</label>
@@ -129,7 +142,7 @@
             </div>
             <div class="form-group col-lg-6">
                 <label class="form-label">No BAN</label>
-                {!! Form::select('no_ban', $ban, $spk->no_ban ?? null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'no_ban'], $opt_ban) !!}
+                {!! Form::select('no_ban', $ban, $spk->no_ban ?? null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'no_ban'] + $editable, $opt_ban) !!}
             </div>
 
             <div class="form-group col-lg-6">
@@ -138,11 +151,10 @@
             </div>
             <div class="form-group col-lg-6">
                 <label class="form-label">PIC</label>
-                <select class="form-control search-pic" name="pic[]" id="pic" multiple required>
+                <select class="form-control search-pic" name="pic[]" id="pic" multiple required  @if(in_array($mode, ['show'])) disabled @endif>
                     @if (in_array($mode, ['edit', 'show']))
                         @foreach (($spk->pic ?? []) as $item)
-                            <option selected value="{{$item->employee_id}}">{{$item->employee_id}} - {{$item->employee->fullname}}</option>
-                            
+                            <option selected value="{{$item->employee_id}}">{{$item->employee_id}} - {{$item->employee->fullname}}</
                         @endforeach
                     @endif
                 </select>
@@ -150,7 +162,7 @@
 
             <div class="form-group col-lg-6">
                 <label class="form-label">Spesifikasi</label>
-                {!! Form::select('spesifikasi', $spesifikasi, $spk->spesifikasi ?? null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'spesifikasi', 'required']) !!}
+                {!! Form::select('spesifikasi', $spesifikasi, $spk->spesifikasi ?? null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'spesifikasi', 'required'] + $editable) !!}
             </div>
 
             {{-- <div class="form-group col-lg-6">
@@ -160,7 +172,7 @@
                 <label class="form-label">Tanggal Penyerahan</label>
                 <div class="col-lg-12">
                     <div class="input-group date">
-                        {!! Form::text('jadwal1', $spk ? date('d-m-Y', strtotime($spk->jadwal1)) : null, ['class'=>'form-control datepicker', 'id'=>'jadwal1']) !!}
+                        {!! Form::text('jadwal1', $spk ? date('d-m-Y', strtotime($spk->jadwal1)) : null, ['class'=>'form-control datepicker', 'id'=>'jadwal1'] + $editable) !!}
                         <div class="input-group-append">
                             <span class="input-group-text" style="display: block">
                                 <i class="la la-calendar-check-o"></i>
@@ -174,7 +186,7 @@
                 <label class="form-label">&nbsp;</label>
                 <div class="col-lg-12">
                     <div class="input-group date">
-                        {!! Form::text('jadwal2', $spk ? date('d-m-Y', strtotime($spk->jadwal2)) : null, ['class'=>'form-control datepicker', 'id'=>'jadwal2']) !!}
+                        {!! Form::text('jadwal2', $spk ? date('d-m-Y', strtotime($spk->jadwal2)) : null, ['class'=>'form-control datepicker', 'id'=>'jadwal2'] + $editable) !!}
                         <div class="input-group-append">
                             <span class="input-group-text" style="display: block">
                                 <i class="la la-calendar-check-o"></i>
@@ -229,23 +241,23 @@
                     @if (in_array($mode, ['edit', 'show']))
                         @foreach ($spk->spk_d as $item)
                             <tr>
-                                <td><input name="unit[]" class="unit" type="hidden" value="{{ $item->pat_to }}">{{ $item->pat->ket }}</td> 
+                                <td><input name="unit[]" class="unit" type="hidden" value="{{ $item->pat_to }}">{{ $item->pat->ket }}</td>
                                 @if ($pekerjaan == 'laut')
-                                    <td><input name="pelabuhan_asal[]" class="pelabuhan_asal" type="hidden" value="{{ $item->port_asal }}">{{ $item->port_asal }}</td> 
-                                    <td><input name="pelabuhan_tujuan[]" class="pelabuhan_tujuan" type="hidden" value="{{ $item->port_tujuan }}">{{ $item->port_tujuan }}</td> 
-                                    <td><input name="site[]" class="site" type="hidden" value="{{ $item->site }}">{{ $item->site }}</td> 
+                                    <td><input name="pelabuhan_asal[]" class="pelabuhan_asal" type="hidden" value="{{ $item->port_asal }}">{{ $item->port_asal }}</td>
+                                    <td><input name="pelabuhan_tujuan[]" class="pelabuhan_tujuan" type="hidden" value="{{ $item->port_tujuan }}">{{ $item->port_tujuan }}</td>
+                                    <td><input name="site[]" class="site" type="hidden" value="{{ $item->site }}">{{ $item->site }}</td>
                                 @endif
-                                <td><input name="tipe[]" class="tipe" type="hidden" value="{{ $item->kd_produk }}">{{ $item->kd_produk }}<br>{{ $item->produk->tipe }}</td> 
-                                <td><input name="jarak[]" class="jarak" type="hidden" value="{{ $item->jarak }}">{{ $item->jarak }}</td> 
-                                <td><input name="vol_btg[]" class="vol_btg" type="hidden" value="{{ $item->vol_btg }}">{{ $item->vol_btg }}</td> 
-                                <td><input name="vol_ton[]" class="vol_ton" type="hidden" value="{{ $item->vol_ton }}">{{ $item->vol_ton }}</td> 
+                                <td><input name="tipe[]" class="tipe" type="hidden" value="{{ $item->kd_produk }}">{{ $item->kd_produk }}<br>{{ $item->produk->tipe }}</td>
+                                <td><input name="jarak[]" class="jarak" type="hidden" value="{{ $item->jarak }}">{{ $item->jarak }}</td>
+                                <td><input name="vol_btg[]" class="vol_btg" type="hidden" value="{{ $item->vol_btg }}">{{ $item->vol_btg }}</td>
+                                <td><input name="vol_ton[]" class="vol_ton" type="hidden" value="{{ $item->vol_ton }}">{{ $item->vol_ton }}</td>
                                 @if ($sat_harsat == 'tonase')
-                                    <td><input name="satuan[]" class="satuan" type="hidden" value="{{ $item->satuan }}">{{ $item->satuan }}</td> 
+                                    <td><input name="satuan[]" class="satuan" type="hidden" value="{{ $item->satuan }}">{{ $item->satuan }}</td>
                                 @else
-                                    <td><input name="ritase[]" class="ritase" type="hidden" value="{{ $item->ritase }}">{{ $item->ritase }}</td> 
+                                    <td><input name="ritase[]" class="ritase" type="hidden" value="{{ $item->ritase }}">{{ $item->ritase }}</td>
                                 @endif
-                                <td><input name="harsat[]" class="harsat" type="hidden" value="{{ $item->harsat }}">{{ number_format($item->harsat, 2) }}</td> 
-                                <td><input name="jumlah[]" class="input-jumlah" type="hidden" value="{{ $item->total }}">{{ number_format($item->total, 2) }}</td> 
+                                <td><input name="harsat[]" class="harsat" type="hidden" value="{{ $item->harsat }}">{{ number_format($item->harsat, 2) }}</td>
+                                <td><input name="jumlah[]" class="input-jumlah" type="hidden" value="{{ $item->total }}">{{ number_format($item->total, 2) }}</td>
                                 <td>
                                     @if ($mode != 'show')
                                         <button class="btn btn-danger btn-sm delete_pekerjaan me-1 mb-1" style="padding: 5px 6px;"><span class="bi bi-trash"></span></button><button class="btn btn-warning btn-sm edit_pekerjaan" style="padding: 5px 6px;"><span class="bi bi-pencil-square"></span></button>
@@ -253,7 +265,7 @@
                                 </td>
                             </tr>
                         @endforeach
-                    @endif              
+                    @endif
                 </tbody>
                 <tfoot>
                     <tr>
@@ -280,12 +292,12 @@
 
         <div class="form-group">
             <label class="form-label">Harga Termasuk</label>
-            {!! Form::text('harga_include', collect($spk->data['harga_include'] ?? [])->implode(','), ['class'=>'form-control', 'id' => "harga_include"]) !!}
+            {!! Form::text('harga_include', collect($spk->data['harga_include'] ?? [])->implode(','), ['class'=>'form-control', 'id' => "harga_include"] + $editable) !!}
         </div>
 
         <div class="separator separator-dashed border-primary my-10"></div>
 
-        
+
         <div id="pasal" data-index="{{ $spk ? $spk->spk_pasal->count() : 0 }}">
             <div class="form-group">
                 <div class="accordion" id="kt_accordion__">
@@ -350,7 +362,7 @@
                                     </div>
                                 </div>
                             @endforeach
-                        @else    
+                        @else
                             <div data-repeater-item>
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="kt_accordion_1_header_1">
@@ -366,7 +378,7 @@
                                             </div>
                                             <div class="form-group col-12" data-bs-theme="light">
                                                 <textarea name="pasal_isi" class="ckeditor" id="">
-                                                
+
                                                 </textarea>
                                             </div>
                                             <div class="form-group col-12">
@@ -555,7 +567,14 @@
             'TableOfContents',
             'PasteFromOfficeEnhanced',
             'CaseChange'
-        ]
+        ],
+        format_p: {
+            element: 'p',
+            style: {
+                'margin-top': '0px',
+                'margin-bottom': '0px',
+            }
+        }
     }
     @if(in_array($mode, ['edit', 'show']) || $pasals->count() > 0)
         edit_ = true;
@@ -570,9 +589,9 @@
 
         var input1 = document.querySelector("#harga_include");
         new Tagify(input1);
-        
+
         $('.form-select-solid').select2();
-        
+
         if($("#kd_jpekerjaan").val() == 'darat'){
             $("#spesifikasi").parent().addClass('hidden');
         }else{
@@ -588,7 +607,7 @@
 
         show: function () {
             $(this).slideDown();
-            
+
             var index = parseInt($("#pasal").attr('data-index')) + 1;
             $(this).find('.accordion-header').attr('id', 'pasal-header-' + index);
             $(this).find('.accordion-button').attr('data-bs-target', '#pasal-body-' + index);
@@ -677,11 +696,11 @@
     $('#ppn, #pph').on('change', function(){
         calculateTotal();
     });
-    
+
     $('#no_ban').on('change', function(){
         $("#tgl_ban").val($("#no_ban option:selected").attr('data-tgl'));
     });
-    
+
     $('#pihak1').on('change', function(){
         $("#pihak1_jabatan").val($("#pihak1").select2('data')[0].jabatan);
     });
@@ -716,7 +735,7 @@
         $('#modal_pekerjaan').modal('toggle');
         // calculateTotal();
     });
-    
+
     function calculateTotal(){
         var sum = 0;
         $('.input-jumlah').each(function() {

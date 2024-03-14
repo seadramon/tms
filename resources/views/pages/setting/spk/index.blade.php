@@ -7,7 +7,7 @@
 @section('content')
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-		
+
 	<!--begin::Post-->
 	<div class="post d-flex flex-column-fluid" id="kt_post">
 		<!--begin::Container-->
@@ -75,7 +75,7 @@
 														</div>
 														<div class="form-group col-12" data-bs-theme="light">
 															<textarea name="pasal_isi" class="ckeditor" id="">
-															
+
 															</textarea>
 														</div>
 														<div class="form-group col-12">
@@ -113,7 +113,7 @@
 	<!--end::Post-->
 </div>
 <!--end::Content-->
-	
+
 @endsection
 
 @section('js')
@@ -122,7 +122,7 @@
 	<script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/super-build/ckeditor.js"></script>
 	<script type="text/javascript">
 		var empty_ = true;
-		
+
 		var option = {
 			// https://ckeditor.com/docs/ckeditor5/latest/features/toolbar/toolbar.html#extended-toolbar-configuration-format
 			toolbar: {
@@ -271,19 +271,30 @@
 				'TableOfContents',
 				'PasteFromOfficeEnhanced',
 				'CaseChange'
-			]
+			],
+            format_tags: 'p;;h1;h2;h3;h4;h5;h6;h7;pre;address;div',
+            format_p: {
+                element: 'p',
+                name: 'p',
+                attributes: { 'class': 'editorTitle1' },
+                style: {
+                    'margin-top': '0px',
+                    'margin-bottom': '0px',
+                }
+            }
 		}
-		$(document).ready(function(){
+
+        $(document).ready(function(){
 			@if($spk->count() > 0)
 				initCkEditExisting();
 				empty_ = false;
 			@endif
 			$('#pasal').repeater({
 				initEmpty: empty_,
-	
+
 				show: function () {
 					$(this).slideDown();
-					
+
 					var index = parseInt($("#pasal").attr('data-index')) + 1;
 					$(this).find('.accordion-header').attr('id', 'pasal-header-' + index);
 					$(this).find('.accordion-button').attr('data-bs-target', '#pasal-body-' + index);
@@ -297,7 +308,7 @@
 					$("#pasal").attr('data-index', index);
 					reOrganizeItemPasal();
 				},
-	
+
 				hide: function (deleteElement) {
 					$(this).slideUp(deleteElement);
 					reOrganizeItemPasal();

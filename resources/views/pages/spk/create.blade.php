@@ -15,17 +15,22 @@
     <div class="row g-5 g-xl-8">
         <!--begin::Col-->
         <div class="col-12 mb-md-5 mb-xl-10">
+            @php
+                $disabled = [];
+                $editable = [];
+            @endphp
             @if (in_array($mode, ['edit', 'show']))
-                {!! Form::model($data, ['route' => ['spk.update', $data->no_spk], 'class' => 'form', 'method' => 'put', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}  
+                {!! Form::model($data, ['route' => ['spk.update', str_replace('/', '|', $data->no_spk)], 'class' => 'form', 'method' => 'put', 'enctype' => 'multipart/form-data', 'id' => 'form-edit']) !!}
                 @method('PUT')
                 @php
                     $disabled = ['disabled'];
+                    $editable = ['disabled'];
+                    if(in_array($mode, ['edit'])){
+                        $editable = [];
+                    }
                 @endphp
             @else
                 {!! Form::open(['url' => route('spk.store'), 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
-                @php
-                    $disabled = [];
-                @endphp
             @endif
 
             <div id="box1" style="margin-bottom: 20px">
@@ -33,7 +38,7 @@
             </div>
 
             <div id="box2">
-                
+
             </div>
         </div>
         <!--end::Col-->
@@ -54,11 +59,11 @@
 <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/super-build/ckeditor.js"></script>
 <script type="text/javascript">
     var target = document.querySelector("#kt_body");
-            
+
     var blockUI = new KTBlockUI(target, {
         message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Loading data...</div>',
     });
-    
+
     $(document).ready(function() {
         $("#alert-box1").hide();
         @if(in_array($mode, ['edit', 'show']))
@@ -85,7 +90,7 @@
             },
         }
     });
-    
+
     $('#buat_draft').on('click', function(event){
         event.preventDefault();
         if(!$('#no_npp').val() || !$('#vendor_id').val() || !$('#kd_jpekerjaan').val()){
@@ -99,15 +104,15 @@
             return false;
         }else{
             let data = {
-                '_token': '{{ csrf_token() }}', 
-                'no_npp': $('#no_npp').val(), 
-                'spk': $('#no_spk').val(), 
-                'vendor_id': $('#vendor_id').val(), 
-                'sat_harsat': $('#sat_harsat').val(), 
+                '_token': '{{ csrf_token() }}',
+                'no_npp': $('#no_npp').val(),
+                'spk': $('#no_spk').val(),
+                'vendor_id': $('#vendor_id').val(),
+                'sat_harsat': $('#sat_harsat').val(),
                 'kd_jpekerjaan': $('#kd_jpekerjaan').val(),
                 'mode': "{{$mode}}"
             };
-            
+
             $.ajax({
                 url: "{{ route('spk.get-data-box2') }}",
                 type: "POST",
@@ -131,8 +136,8 @@
             });
         }
     });
-    
-    
+
+
         // $('.form-select-solid').select2();
 </script>
 @endsection

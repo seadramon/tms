@@ -37,12 +37,12 @@ class Spk extends Model
     {
         return $this->belongsTo(JenisPekerjaan::class, 'kd_jpekerjaan', 'kd_jpekerjaan');
     }
-    
+
     public function spk_d()
     {
         return $this->hasMany(SpkD::class, 'no_spk', 'no_spk');
     }
-    
+
     public function spk_pasal()
     {
         return $this->hasMany(SpkPasal::class, 'no_spk', 'no_spk');
@@ -51,5 +51,10 @@ class Spk extends Model
     public function unitkerja()
     {
     	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
+    }
+
+    public function pihak1_data()
+    {
+        return $this->belongsTo(Personal::class, 'pihak1', 'employee_id');
     }
 }
