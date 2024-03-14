@@ -13,7 +13,7 @@
                         <th colspan="2">Total SP3/SPK Sebelumnya</th>
                         <th colspan="2">Volume Sisa</th>
                     </tr>
-                    
+
                     <tr>
                         <th>Vol (Btg)</th>
                         <th>Vol (Ton)</th>
@@ -33,7 +33,7 @@
                             $sisaVolBtg     = $pesananVolBtg - $sp3dVolBtg;
                             $sisaVolTon     = $pesananVolTon - $sp3dVolTon;
                         @endphp
-                        
+
                         <tr>
                             <td style="text-align: left">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
                             <td>{{ $pesanan->vol_konfirmasi }}</td>
@@ -45,7 +45,7 @@
                             <input type="hidden" id="pesanan_vol_btg_max_{{ $key }}" data-produk="{{$pesanan->kd_produk_konfirmasi}}" row-id={{ $key }} value="{{ (float)$pesanan->vol_konfirmasi ?? 0 }}">
                             <input type="hidden" class="pesanan_kd_produk" row-id={{ $key }} value="{{ $pesanan->produk?->kd_produk }}">
                         </tr>
-    
+
                     @endforeach
                 </tbody>
             </table>
@@ -66,7 +66,7 @@
                 {!! Form::text('pelanggan', $npp->nama_pelanggan, ['class'=>'form-control', 'id'=>'pelanggan', 'readonly']) !!}
 
             </div>
-            
+
             <div class="form-group col-lg-3">
                 <label class="form-label">Tujuan</label>
                 {!! Form::text('region', $npp->infoPasar?->region?->kabupaten_name . ', ' . $npp->infoPasar?->region?->kecamatan_name, ['class'=>'form-control', 'id'=>'region', 'readonly']) !!}
@@ -211,28 +211,35 @@
                 <tbody id="tbody-pekerjaan">
                     @if (in_array($mode, ['edit', 'show']))
                         @foreach ($sp3->sp3D as $item)
+                            @php
+                                $total = $item->total;
+                                if($total == null && $item->sat_harsat != null){
+                                    $vol = $item->sat_harsat == 'ton' ? $item->vol_ton_awal : $item->vol_awal;
+                                    $total = $item->harsat_awal * $vol
+                                }
+                            @endphp
                             <tr>
-                                <td><input name="unit[]" class="unit" type="hidden" value="{{ $item->pat_to }}">{{ $item->pat->ket }}</td> 
+                                <td><input name="unit[]" class="unit" type="hidden" value="{{ $item->pat_to }}">{{ $item->pat->ket }}</td>
                                 @if ($pekerjaan == 'laut')
-                                    <td><input name="pelabuhan_asal[]" class="pelabuhan_asal" type="hidden" value="{{ $item->port_asal }}">{{ $item->port_asal }}</td> 
-                                    <td><input name="pelabuhan_tujuan[]" class="pelabuhan_tujuan" type="hidden" value="{{ $item->port_tujuan }}">{{ $item->port_tujuan }}</td> 
-                                    <td><input name="site[]" class="site" type="hidden" value="{{ $item->site }}">{{ $item->site }}</td> 
+                                    <td><input name="pelabuhan_asal[]" class="pelabuhan_asal" type="hidden" value="{{ $item->port_asal }}">{{ $item->port_asal }}</td>
+                                    <td><input name="pelabuhan_tujuan[]" class="pelabuhan_tujuan" type="hidden" value="{{ $item->port_tujuan }}">{{ $item->port_tujuan }}</td>
+                                    <td><input name="site[]" class="site" type="hidden" value="{{ $item->site }}">{{ $item->site }}</td>
                                 @endif
-                                <td><input name="tipe[]" class="tipe" type="hidden" value="{{ $item->kd_produk }}">{{ $item->kd_produk }}<br>{{ $item->produk->tipe }}</td> 
-                                <td><input name="jarak[]" class="jarak" type="hidden" value="{{ $item->jarak_km }}">{{ $item->jarak_km }}</td> 
-                                <td><input name="vol_btg[]" class="vol_btg" type="hidden" value="{{ $item->vol_awal }}">{{ $item->vol_awal }}</td> 
-                                <td><input name="vol_ton[]" class="vol_ton" type="hidden" value="{{ $item->vol_ton_awal }}">{{ $item->vol_ton_awal }}</td> 
+                                <td><input name="tipe[]" class="tipe" type="hidden" value="{{ $item->kd_produk }}">{{ $item->kd_produk }}<br>{{ $item->produk->tipe }}</td>
+                                <td><input name="jarak[]" class="jarak" type="hidden" value="{{ $item->jarak_km }}">{{ $item->jarak_km }}</td>
+                                <td><input name="vol_btg[]" class="vol_btg" type="hidden" value="{{ $item->vol_awal }}">{{ $item->vol_awal }}</td>
+                                <td><input name="vol_ton[]" class="vol_ton" type="hidden" value="{{ $item->vol_ton_awal }}">{{ $item->vol_ton_awal }}</td>
                                 @if ($sat_harsat == 'tonase')
-                                    <td><input name="satuan[]" class="satuan" type="hidden" value="{{ $item->sat_harsat }}">{{ $item->sat_harsat }}</td> 
+                                    <td><input name="satuan[]" class="satuan" type="hidden" value="{{ $item->sat_harsat }}">{{ $item->sat_harsat }}</td>
                                 @else
-                                    <td><input name="ritase[]" class="ritase" type="hidden" value="{{ $item->ritase }}">{{ $item->ritase }}</td> 
+                                    <td><input name="ritase[]" class="ritase" type="hidden" value="{{ $item->ritase }}">{{ $item->ritase }}</td>
                                 @endif
-                                <td><input name="harsat[]" class="harsat" type="hidden" value="{{ $item->harsat_awal }}">{{ number_format($item->harsat_awal, 2) }}</td> 
-                                <td><input name="jumlah[]" class="input-jumlah" type="hidden" value="{{ $item->total }}">{{ number_format($item->total, 2) }}</td> 
+                                <td><input name="harsat[]" class="harsat" type="hidden" value="{{ $item->harsat_awal }}">{{ number_format($item->harsat_awal, 2) }}</td>
+                                <td><input name="jumlah[]" class="input-jumlah" type="hidden" value="{{ $item->total }}">{{ number_format($item->total, 2) }}</td>
                                 <td><button class="btn btn-danger btn-sm delete_pekerjaan me-1 mb-1" style="padding: 5px 6px;"><span class="bi bi-trash"></span></button><button class="btn btn-warning btn-sm edit_pekerjaan" style="padding: 5px 6px;"><span class="bi bi-pencil-square"></span></button></td>
                             </tr>
                         @endforeach
-                    @endif              
+                    @endif
                 </tbody>
                 <tfoot>
                     <tr>
@@ -285,7 +292,7 @@
                                 </div>
                             </div>
                         @endforeach
-                    @else    
+                    @else
                         <div data-repeater-item>
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -310,7 +317,7 @@
                     @endif
                 </div>
             </div>
-        
+
             <div class="form-group" style="margin-top: 20px">
                 <div class="col-md-3">
                     <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
@@ -338,7 +345,7 @@
 
         <div class="form-group">
             <label class="form-label">Dokumen Tagihan harus melampirkan :</label>
-            
+
             <table class="table">
                 <thead>
                     <tr>
@@ -364,7 +371,7 @@
                             <td>
                                 {!! Form::number('dokumen_copy['.$i.']', (in_array($mode, ['edit', 'show']) && ($dokumen[$i] ?? false)) ? $dokumen[$i]->first()->asli : null, ['class'=>'form-control']) !!}
                             </td>
-                            
+
                             <th>&nbsp;</th>
 
                             <th>{{ $documents[$i+1] }}</th>
@@ -402,7 +409,7 @@
         table-layout: fixed;
     }
     tfoot, thead {
-        width: calc( 100% - 10px ); 
+        width: calc( 100% - 10px );
     }
     table {
         width: 100%;
@@ -420,9 +427,9 @@
 
         var input1 = document.querySelector("#harga_include");
         new Tagify(input1);
-        
+
         $('.form-select-solid').select2();
-        
+
         if($("#kd_jpekerjaan").val() == 'darat'){
             $("#spesifikasi").parent().addClass('hidden');
         }else{
@@ -516,7 +523,7 @@
         $('#modal_pekerjaan').modal('toggle');
         // calculateTotal();
     });
-    
+
     function calculateTotal(){
         var sum = 0;
         $('.input-jumlah').each(function() {
