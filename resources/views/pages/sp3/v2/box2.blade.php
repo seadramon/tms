@@ -215,7 +215,7 @@
                                 $total = $item->total;
                                 if($total == null && $item->sat_harsat != null){
                                     $vol = $item->sat_harsat == 'ton' ? $item->vol_ton_awal : $item->vol_awal;
-                                    $total = $item->harsat_awal * $vol
+                                    $total = $item->harsat_awal * $vol;
                                 }
                             @endphp
                             <tr>
@@ -235,7 +235,7 @@
                                     <td><input name="ritase[]" class="ritase" type="hidden" value="{{ $item->ritase }}">{{ $item->ritase }}</td>
                                 @endif
                                 <td><input name="harsat[]" class="harsat" type="hidden" value="{{ $item->harsat_awal }}">{{ number_format($item->harsat_awal, 2) }}</td>
-                                <td><input name="jumlah[]" class="input-jumlah" type="hidden" value="{{ $item->total }}">{{ number_format($item->total, 2) }}</td>
+                                <td><input name="jumlah[]" class="input-jumlah" type="hidden" value="{{ $total }}">{{ number_format($total, 2) }}</td>
                                 <td><button class="btn btn-danger btn-sm delete_pekerjaan me-1 mb-1" style="padding: 5px 6px;"><span class="bi bi-trash"></span></button><button class="btn btn-warning btn-sm edit_pekerjaan" style="padding: 5px 6px;"><span class="bi bi-pencil-square"></span></button></td>
                             </tr>
                         @endforeach

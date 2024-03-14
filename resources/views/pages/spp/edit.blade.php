@@ -41,25 +41,25 @@
 							<div class="col-lg-6">
 								<div class="form-group">
 									<label class="fs-6 fw-bold mt-2 mb-3">Jenis</label>
-									{!! Form::text('jns_sppb', 'AUTO', ['class'=>'form-control form-control-solid', 'id'=>'jns_sppb', 'readonly']) !!}
-								</div>	
+                                    {!! Form::select('jenis', $jenis, $data->jns_sppb, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'jenis', 'disabled']) !!}
+								</div>
 							</div>
 
 							<div class="col-lg-6">
 								<div class="form-group">
 									<label class="fs-6 fw-bold mt-2 mb-3">NO SPP</label>
 									{!! Form::text('no_spp', $data->no_sppb, ['class'=>'form-control form-control-solid', 'id'=>'no_spp_input', 'readonly']) !!}
-								</div>	
+								</div>
 							</div>
 
 							<div class="col-lg-9">
-								<?php 
+								<?php
 								$nama_proyek = !empty($npp->nama_proyek)?$npp->nama_proyek:'';
 								?>
 								<div class="form-group">
 									<label class="fs-6 fw-bold mt-2 mb-3">NPP</label>
 									<input type="text" class="form-control form-control-solid" name="captionnpp" value="{{ $data->no_npp.' | '.$nama_proyek }}" readonly="">
-								</div>	
+								</div>
 							</div>
 
 							<div class="col-lg-3">
@@ -92,7 +92,7 @@
 		display: flex;
 	}
 	.custom-label {
-		display: flex; 
+		display: flex;
 		align-items: center;
 		margin-bottom: 0px;
 	}
@@ -101,13 +101,13 @@
 @section('js')
 <script type="text/javascript">
 
-$( document ).ready(function() {	
+$( document ).ready(function() {
 	$("#daterange").daterangepicker({
 		locale: {
             format: 'DD-MM-YYYY'
 		}
 	});
-	
+
 
 	$(".select2spprb").select2({
 		ajax: {

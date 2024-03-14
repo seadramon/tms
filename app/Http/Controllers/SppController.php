@@ -151,7 +151,7 @@ class SppController extends Controller
                 }
                 $list = '';
                 if(Auth::check()){
-                    
+
                 }else{
                     if(in_array('view', $action)){
                         $list .= '<li><a class="dropdown-item" href="'. route('spp.show', ['spp' => $noSppb]) .'">View</a></li>';
@@ -187,7 +187,7 @@ class SppController extends Controller
     public function dataSpprb(Request $request)
     {
         $noNpp = !empty($request->no_npp)?$request->no_npp:null;
-        
+
         $query = VSpprbRi::with(['produk', 'pat'])
         ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
         ->select('v_spprb_ri.pat_to', 'v_spprb_ri.spprblast', 'v_spprb_ri.kd_produk', 'v_spprb_ri.vol_spprb', 'spprb_h.jadwal1',
@@ -250,7 +250,7 @@ class SppController extends Controller
             //         case $model->st_wf == 1 && $model->app1 == 1:
             //             $a = '<i class="fa fa-square" style="color:green; font-size:20px;"></i>';
             //             break;
-                    
+
             //     }
 
             //     if ($model->app2 == 1) {
@@ -280,8 +280,8 @@ class SppController extends Controller
     {
         $jenis = [
             '' => '-Pilih Jenis-',
-            'wilayah' => 'Pesanan Wilayah',
-            'lain-lain' => 'Pesanan Lain-lain'
+            '0' => 'Pesanan Wilayah',
+            '1' => 'Pesanan Lain-lain'
         ];
 
         return view('pages.spp.create', [
@@ -347,7 +347,8 @@ class SppController extends Controller
                 'npp' => $sqlNpp,
                 'jarak' => $sp3,
                 'noSpprb' => 'xxxxx', // NO SPPRB STILL HARDCODE
-                'sp3D' => $sp3D
+                'sp3D' => $sp3D,
+                'jns_sppb' => $request->jenis,
             ])->render();
         } catch(Exception $e) {
             return response()->json(['result' => $e->getMessage()])->setStatusCode(500, 'ERROR');
@@ -368,7 +369,7 @@ class SppController extends Controller
                 if (!empty($request->jadwal)) {
                     $jadwal = explode(" - ", $request->jadwal);
                 }
-       
+
                 $vspprbri = VSpprbRi::where('v_spprb_ri.no_npp', $request->no_npp)->first();
 
                 $data = new SppbH;
@@ -379,6 +380,7 @@ class SppController extends Controller
                 $data->rit = $request->rit;
                 $data->jarak_km = $request->jarak_km;
                 $data->catatan = $request->catatan;
+                $data->jns_sppb = $request->jns_sppb ?? 0;
                 $data->jadwal1 = !empty($jadwal[0]) ? date('Y-m-d', strtotime($jadwal[0])) : date('Y-m-d', strtotime('-3 day', time()));
                 $data->jadwal2 = !empty($jadwal[1]) ? date('Y-m-d', strtotime($jadwal[1])) : date('Y-m-d');
                 $data->tgl_sppb = date('Y-m-d');
@@ -448,8 +450,8 @@ class SppController extends Controller
     {
         $jenis = [
             '' => '-Pilih Jenis-',
-            'wilayah' => 'Pesanan Wilayah',
-            'lain-lain' => 'Pesanan Lain-lain'
+            '0' => 'Pesanan Wilayah',
+            '1' => 'Pesanan Lain-lain'
         ];
 
         $noSppb = str_replace("|", "/", $spp);
@@ -504,7 +506,7 @@ class SppController extends Controller
 
         if (count($pesanans) > 0) {
             foreach ($pesanans as $pesanan) {
-                
+
                 $volm3 = !empty($pesanan->vol_m3)?$pesanan->vol_m3:1;
                 $pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
                 // $pesananVolBtg  = $pesanan->vSpprbRi->vol_spprb ?? 0;
@@ -566,6 +568,11 @@ class SppController extends Controller
             ->unique()
             ->all();
 
+        $arrData['jenis'] = [
+            '' => '-Pilih Jenis-',
+            '0' => 'Pesanan Wilayah',
+            '1' => 'Pesanan Lain-lain'
+        ];
         return view('pages.spp.edit',  $arrData);
     }
 
@@ -609,11 +616,11 @@ class SppController extends Controller
                     ->first();
             }
         }
-        
+
         //RUTE Data
         $pat = Pat::where('kd_pat','LIKE','2%')->orwhere('kd_pat','LIKE','4%')->orwhere('kd_pat','LIKE','5%')->get();
         $muat = VPotensiMuat::with('pat')->where('no_npp',$arrData['no_npp'])->get();
-        
+
         $arrData['lokasi_muat'] = VSpprbRi::with(['produk', 'pat'])
             ->join('spprb_h', 'spprb_h.no_spprb', '=', 'v_spprb_ri.spprblast')
             ->select('v_spprb_ri.pat_to')
@@ -682,6 +689,11 @@ class SppController extends Controller
 
         $arrData['pat'] = $pat;
         $arrData['muat'] = $collection_table;
+        $arrData['jenis'] = [
+            '' => '-Pilih Jenis-',
+            '0' => 'Pesanan Wilayah',
+            '1' => 'Pesanan Lain-lain'
+        ];
         // return response()->json($collection_table);
         // return view('pages.potensi-detail-armada.create', ['pat' => $pat, 'muat' => $collection_table, 'trmaterial' => $trmaterial]);
         // return response()->json($arrData);
@@ -691,7 +703,11 @@ class SppController extends Controller
     public function amandemen($spp)
     {
         $arrData = $this->editData($spp, 'amandemen');
-
+        $arrData['jenis'] = [
+            '' => '-Pilih Jenis-',
+            '0' => 'Pesanan Wilayah',
+            '1' => 'Pesanan Lain-lain'
+        ];
         return view('pages.spp.edit',  $arrData);
     }
 

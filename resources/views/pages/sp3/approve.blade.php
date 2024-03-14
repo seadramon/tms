@@ -146,7 +146,7 @@
 
                             <div class="form-group col-lg-6">
                                 <label class="form-label">Jabatan</label>
-                                {!! Form::text('jabatan', 'TBC', ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('jabatan', $trader->pimpinan_jabatan, ['class'=>'form-control', 'disabled']) !!}
                             </div>
 
                             <div class="form-group col-lg-6">

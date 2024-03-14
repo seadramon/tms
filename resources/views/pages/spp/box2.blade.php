@@ -26,7 +26,7 @@
 				<tbody>
 					@if (count($tblPesanan) > 0)
 						@foreach($tblPesanan as $pesanan)
-							<?php 
+							<?php
 								$volm3 = !empty($pesanan->vol_m3)?$pesanan->vol_m3:1;
 								$pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
                             	$pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
@@ -59,19 +59,19 @@
 			</table>
 		</div>
 	</div>
-
+    {!! Form::hidden('jns_sppb', $jns_sppb, ['class'=>'form-control', 'id'=>'jns_sppb']) !!}
 	<div class="col-lg-12">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Proyek</label>
 			{!! Form::text('nama_proyek', $npp->nama_proyek, ['class'=>'form-control', 'id'=>'nama_proyek']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Pelanggan</label>
 			{!! Form::text('nama_pelanggan', $npp->nama_pelanggan, ['class'=>'form-control', 'id'=>'nama_pelanggan']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6 hidden">
@@ -79,14 +79,14 @@
 			<label class="fs-6 fw-bold mt-2 mb-3">Lokasi Muat</label>
 			{!! Form::text('pat', $npp->pat, ['class'=>'form-control', 'id'=>'pat']) !!}
 			{!! Form::hidden('pat_singkatan', $npp->singkatan, ['class'=>'form-control', 'id'=>'pat_singkatan']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Tujuan</label>
 			{!! Form::text('tujuan', $npp->kab.', '.$npp->kec, ['class'=>'form-control', 'id'=>'tujuan']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6">
@@ -94,21 +94,21 @@
 			<label class="fs-6 fw-bold mt-2 mb-3">NPP</label>
 			{!! Form::text('no_npp', $npp->no_npp, ['class'=>'form-control', 'id'=>'no_npp']) !!}
 			{!! Form::hidden('no_spprb', $noSpprb, ['class'=>'form-control', 'id'=>'no_spprb']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Estimasi Total Ritase</label>
 			{!! Form::text('rit', null, ['class'=>'form-control', 'id'=>'rit']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Jarak (KM)</label>
 			{!! Form::text('jarak_km', null, ['class'=>'form-control', 'id'=>'jarak_km']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<!-- Detail Pekerjaan -->
@@ -134,7 +134,7 @@
 					@if (count($tblPesanan) > 0)
 						<?php $i = 1; ?>
 						@foreach($tblPesanan as $pesanan)
-						<?php 
+						<?php
 							$volm3 = !empty($pesanan->vol_m3)?$pesanan->vol_m3:1;
 							$pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
                         	$pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
@@ -148,26 +148,26 @@
 							}
 						?>
 							<tr>
-								<td style="width: 5%">{{ $i }}</td>							
+								<td style="width: 5%">{{ $i }}</td>
 								<td style="text-align: left;width: 20%;">{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk_konfirmasi}}</td>
 								<td style="width: 15%">
 									<input type="text" name="rencana[{{$i}}][kd_produk]" value="{{$pesanan->kd_produk_konfirmasi}}" class="form-control" readonly>
-								</td>							
+								</td>
 								<td style="width: 15%">
 									<input type="number" max="{{ $sisaBtg }}" name="rencana[{{$i}}][saat_ini]" class="form-control saat-ini decimal" onkeyup="sdSaatIni({{$sppVolBtg}}, {{$i}})" id="id-saatini-{{$i}}">
-								</td>				
+								</td>
 								<td style="width: 15%">
 									<input type="number" name="rencana[{{$i}}][sd_saat_ini]" id="id-sdsaatini-{{$i}}" class="form-control" readonly>
-								</td>			
+								</td>
 								<td style="width: 15%">
 									<input type="text" name="rencana[{{$i}}][ket]" class="form-control">
-								</td>							
+								</td>
 								<td style="width: 5%">
 									<input class="form-check-input" name="rencana[{{$i}}][segmental]" type="checkbox" value="1" id="flexCheckDefault"/>
-								</td>							
+								</td>
 								<td style="width: 10%">
 									<input type="number" name="rencana[{{$i}}][jml_segmen]" class="form-control decimal">
-								</td>							
+								</td>
 							</tr>
 
 							<?php $i++; ?>
@@ -187,14 +187,14 @@
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Rencana Pengiriman</label>
 			{!! Form::text('jadwal', null, ['class'=>'form-control', 'id'=>'daterange']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-12">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Keterangan</label>
 			{!! Form::textarea('catatan', null, ['class'=>'form-control', 'id'=>'daterange', 'rows' => '5']) !!}
-		</div>	
+		</div>
 	</div>
 </div>
 
@@ -204,11 +204,11 @@
             format: 'DD-MM-YYYY'
 		}
 	});
-	
+
 	function sdSaatIni(vol, urutan) {
 		let saatIni = $("#id-saatini-" + urutan).val();
 		let hitungan = parseInt(vol) + parseInt(saatIni);
-	
+
 		$("#id-sdsaatini-" + urutan).val(hitungan);
 	}
 </script>

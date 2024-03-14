@@ -19,7 +19,7 @@
             }
 
             table.content {
-                table-layout: auto; 
+                table-layout: auto;
                 width:100%;
                 border-collapse: collapse;
             }
@@ -149,7 +149,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
+                    <?php
                     $total_jml_harga = 0;
                     ?>
                     @if (count($detail) > 0)
@@ -165,19 +165,23 @@
                             <td></td>
                         </tr>
                         @php
-                            $i = 1; 
+                            $i = 1;
                             $total_vol_akhir = 0;
                             $total_vol_ton_akhir = 0;
                         @endphp
-                        <?php 
+                        <?php
                         ?>
 
                         @foreach($detail as $row)
-                            <?php 
+                            <?php
                                 $total_vol_akhir +=  $row->vol_akhir;
                                 $total_vol_ton_akhir += $row->vol_ton_akhir;
-                                $jml_harga = $row->vol_ton_akhir * $row->harsat_akhir;
-
+                                // $jml_harga = $row->vol_ton_akhir * $row->harsat_akhir;
+                                $jml_harga = $row->total;
+                                if($jml_harga == null && $row->sat_harsat != null){
+                                    $vol = $row->sat_harsat == 'ton' ? $row->vol_ton_akhir : $row->vol_akhir;
+                                    $jml_harga = $row->harsat_akhir * $vol;
+                                }
                                 $total_jml_harga += $jml_harga;
                             ?>
                             <tr>
@@ -189,7 +193,7 @@
                                 <td class="right">{{ number_format($row->harsat_akhir) }}</td>
                                 <td class="right">{{ number_format($jml_harga) }}</td>
                                 <td>{{ !empty($vspprbRi)?$vspprbRi->no_spprb:'' }}</td>
-                                <td class="right">{{ $row->jarak_km }}</td>   
+                                <td class="right">{{ $row->jarak_km }}</td>
                             </tr>
                             <?php $i++; ?>
                         @endforeach
@@ -339,7 +343,7 @@
                     <tr>
                         <td>7.3.</td>
                         <td>
-                            Armada yang di gunakan adalah kendaraan umum dengan menggunakan tanda nomor kendaraan dasar kuning dan tulisan hitam, apabila mengabaikan hal ini akan menjadi resiko Vendor. 
+                            Armada yang di gunakan adalah kendaraan umum dengan menggunakan tanda nomor kendaraan dasar kuning dan tulisan hitam, apabila mengabaikan hal ini akan menjadi resiko Vendor.
                         </td>
                     </tr>
                 </table>
@@ -406,7 +410,7 @@
                         <td width="70%" style="padding-left: 35px;">
                             Setuju melaksanakan,<br>
                             {{ !empty($data->vendor) ? reFormatCompanyName($data->vendor->nama) : '' }}
-                            
+
                         </td>
                         <td width="30%">
                             PT. Wijaya Karya Beton, Tbk<br>
