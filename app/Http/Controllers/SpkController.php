@@ -39,6 +39,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SpkExport;
 use App\Models\Setting;
+use App\Models\SpkPic;
 
 class SpkController extends Controller
 {
@@ -469,7 +470,7 @@ class SpkController extends Controller
             $site = ["" => "---Pilih---"] + $site;
 
             if(in_array($request->mode, ['edit', 'show'])){
-                $spk = Spk::find($request->spk);
+                $spk = Spk::with('pic')->find($request->spk);
             }else{
                 $spk = null;
             }
@@ -609,12 +610,12 @@ class SpkController extends Controller
             $spk->data = $data_;
             $spk->save();
 
-            // foreach($request->pic as $pic){
-            //     $spkPic = new Sp3Pic();
-            //     $sp3Pic->no_sp3 = $noSp3;
-            //     $sp3Pic->employee_id = $pic;
-            //     $sp3Pic->save();
-            // }
+            foreach($request->pic as $pic){
+                $spkPic = new SpkPic();
+                $spkPic->no_spk = $noSpk;
+                $spkPic->employee_id = $pic;
+                $spkPic->save();
+            }
 
             foreach ($request->unit as $index => $item) {
                 $spk_d = new SpkD;
@@ -699,8 +700,6 @@ class SpkController extends Controller
         // return response()->json($request->all());
         DB::beginTransaction();
         try {
-            DB::beginTransaction();
-
             Validator::make($request->all(), [
                 'no_npp'        => 'required',
                 'vendor_id'     => 'required',
@@ -715,16 +714,16 @@ class SpkController extends Controller
                 $newNoSpk = str_replace(substr($noSpk, -2), $noSpkSequence, $noSpk);
 
                 $spk = new Spk;
+                $spk->no_spk = $newNoSpk;
             }else{
                 $newNoSpk = $noSpk;
 
-                $spk = Sp3::find($noSpk);
+                $spk = Spk::find($noSpk);
 
                 //Delete child data
-                Sp3Pic::where('no_sp3', $noSpk)->delete();
-                Sp3D::where('no_sp3', $noSpk)->delete();
-                Sp3D2::where('no_sp3', $noSpk)->delete();
-                Sp3Dokumen::where('no_sp3', $noSpk)->delete();
+                SpkD::where('no_spk', $noSpk)->delete();
+                SpkPasal::where('no_spk', $noSpk)->delete();
+                SpkPic::where('no_spk', $noSpk)->delete();
             }
 
 
@@ -770,43 +769,43 @@ class SpkController extends Controller
             $spk->data = $data_;
             $spk->save();
 
-            // foreach($request->pic as $pic){
-            //     $spkPic = new Sp3Pic();
-            //     $sp3Pic->no_sp3 = $noSp3;
-            //     $sp3Pic->employee_id = $pic;
-            //     $sp3Pic->save();
-            // }
+            foreach($request->pic as $pic){
+                $spkPic = new SpkPic();
+                $spkPic->no_spk = $noSpk;
+                $spkPic->employee_id = $pic;
+                $spkPic->save();
+            }
 
-            // foreach ($request->unit as $index => $item) {
-            //     $spk_d = new SpkD;
-            //     $spk_d->no_spk = $noSpk;
-            //     $spk_d->kd_produk = $request->tipe[$index];
-            //     $spk_d->pat_to = $item;
-            //     $spk_d->jarak = str_replace(',', '', $request->jarak[$index]);
-            //     $spk_d->vol_btg = str_replace(',', '', $request->vol_btg[$index]);
-            //     $spk_d->vol_ton = str_replace(',', '', $request->vol_ton[$index]);
-            //     $spk_d->harsat = str_replace(',', '', $request->harsat[$index]);
-            //     $spk_d->total = str_replace(',', '', $request->jumlah[$index]);
-            //     if(strtolower($request->sat_harsat) == 'tonase'){
-            //         $spk_d->satuan = $request->satuan[$index];
-            //     }else{
-            //         $spk_d->ritase = str_replace(',', '', $request->ritase[$index]);
-            //     }
-            //     if($request->kd_jpekerjaan == 'laut'){
-            //         $spk_d->port_asal = $request->pelabuhan_asal[$index] ?? null;
-            //         $spk_d->port_tujuan = $request->pelabuhan_tujuan[$index] ?? null;
-            //     }
-            //     $spk_d->save();
-            // }
+            foreach ($request->unit as $index => $item) {
+                $spk_d = new SpkD;
+                $spk_d->no_spk = $noSpk;
+                $spk_d->kd_produk = $request->tipe[$index];
+                $spk_d->pat_to = $item;
+                $spk_d->jarak = str_replace(',', '', $request->jarak[$index]);
+                $spk_d->vol_btg = str_replace(',', '', $request->vol_btg[$index]);
+                $spk_d->vol_ton = str_replace(',', '', $request->vol_ton[$index]);
+                $spk_d->harsat = str_replace(',', '', $request->harsat[$index]);
+                $spk_d->total = str_replace(',', '', $request->jumlah[$index]);
+                if(strtolower($request->sat_harsat) == 'tonase'){
+                    $spk_d->satuan = $request->satuan[$index];
+                }else{
+                    $spk_d->ritase = str_replace(',', '', $request->ritase[$index]);
+                }
+                if($request->kd_jpekerjaan == 'laut'){
+                    $spk_d->port_asal = $request->pelabuhan_asal[$index] ?? null;
+                    $spk_d->port_tujuan = $request->pelabuhan_tujuan[$index] ?? null;
+                }
+                $spk_d->save();
+            }
 
-            // foreach ($request->pasal as $index => $pasal) {
-            //     $spk_pasal = new SpkPasal;
-            //     $spk_pasal->no_spk = $noSpk;
-            //     $spk_pasal->pasal = ($index + 1);
-            //     $spk_pasal->judul = $pasal['pasal_judul'];
-            //     $spk_pasal->keterangan = $pasal['pasal_isi'];
-            //     $spk_pasal->save();
-            // }
+            foreach ($request->pasal as $index => $pasal) {
+                $spk_pasal = new SpkPasal;
+                $spk_pasal->no_spk = $noSpk;
+                $spk_pasal->pasal = ($index + 1);
+                $spk_pasal->judul = $pasal['pasal_judul'];
+                $spk_pasal->keterangan = $pasal['pasal_isi'];
+                $spk_pasal->save();
+            }
 
             DB::commit();
 

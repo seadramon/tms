@@ -32,7 +32,7 @@
             <div class="modal-body px-lg-10">
                 <!--begin::Scroll-->
                 {{-- <div class="scroll-y me-n7 pe-7" id="modal_pekerjaan_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_pekerjaan_header" data-kt-scroll-wrappers="#modal_pekerjaan_scroll" data-kt-scroll-offset="300px">
-                    
+
                 </div> --}}
                 <!--end::Scroll-->
                 <input type="hidden" id="modal_for" value="add">
@@ -61,15 +61,15 @@
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="form-label">Jarak</label>
-                        {!! Form::text('modal_jarak', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_jarak']) !!}
+                        {!! Form::text('modal_jarak', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_jarak', 'autocomplete'=>'off']) !!}
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="form-label">Vol Btg</label>
-                        {!! Form::text('modal_vol_btg', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_vol_btg']) !!}
+                        {!! Form::text('modal_vol_btg', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_vol_btg', 'autocomplete'=>'off']) !!}
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="form-label">Vol Ton</label>
-                        {!! Form::text('modal_vol_ton', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_vol_ton']) !!}
+                        {!! Form::text('modal_vol_ton', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_vol_ton', 'autocomplete'=>'off']) !!}
                     </div>
                     @if ($sat_harsat == 'tonase')
                         <div class="form-group col-lg-6">
@@ -79,12 +79,12 @@
                     @else
                         <div class="form-group col-lg-6">
                             <label class="form-label">Ritase</label>
-                            {!! Form::text('modal_ritase', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_ritase']) !!}
+                            {!! Form::text('modal_ritase', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_ritase', 'autocomplete'=>'off']) !!}
                         </div>
                     @endif
                     <div class="form-group col-lg-6">
                         <label class="form-label">Harga Satuan</label>
-                        {!! Form::text('modal_harsat', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_harsat']) !!}
+                        {!! Form::text('modal_harsat', "", ['class'=>'form-control decimal modal-text', 'id'=>'modal_harsat', 'autocomplete'=>'off']) !!}
                     </div>
                     {{-- <div class="form-group col-lg-12">
                         <label class="form-label">Jumlah</label>
@@ -125,33 +125,33 @@
             $("#modal_vol_btg").trigger('keyup');
         }
     });
-    
+
     $('#modal_pekerjaan_submit').on('click', function(e){
         e.preventDefault();
         var data_ = modalPekerjaanData();
         var temp_pekerjaan = "";
         if($("#kd_jpekerjaan").val() == 'laut'){
-            temp_pekerjaan = "<td><input name=\"pelabuhan_asal[]\" class=\"pelabuhan_asal\" type=\"hidden\" value=\"" + data_.pelabuhan_asal + "\">" + data_.pelabuhan_asal + "</td>" + 
-                "<td><input name=\"pelabuhan_tujuan[]\" class=\"pelabuhan_tujuan\" type=\"hidden\" value=\"" + data_.pelabuhan_tujuan + "\">" + data_.pelabuhan_tujuan + "</td>" + 
-                "<td><input name=\"site[]\" class=\"site\" type=\"hidden\" value=\"" + data_.site + "\">" + data_.site + "</td>"; 
+            temp_pekerjaan = "<td><input name=\"pelabuhan_asal[]\" class=\"pelabuhan_asal\" type=\"hidden\" value=\"" + data_.pelabuhan_asal + "\">" + data_.pelabuhan_asal + "</td>" +
+                "<td><input name=\"pelabuhan_tujuan[]\" class=\"pelabuhan_tujuan\" type=\"hidden\" value=\"" + data_.pelabuhan_tujuan + "\">" + data_.pelabuhan_tujuan + "</td>" +
+                "<td><input name=\"site[]\" class=\"site\" type=\"hidden\" value=\"" + data_.site + "\">" + data_.site + "</td>";
         }
-        
+
         if($("#sat_harsat").val() == 'tonase'){
             var temp_ = "<td><input name=\"satuan[]\" class=\"satuan\" type=\"hidden\" value=\"" + data_.satuan + "\">" + data_.satuan + "</td>";
         }else{
             var temp_ = "<td><input name=\"ritase[]\" class=\"ritase\" type=\"hidden\" value=\"" + data_.ritase + "\">" + data_.ritase + "</td>";
         }
-        var table_row = "<td><input name=\"unit[]\" class=\"unit\" type=\"hidden\" value=\"" + data_.unit + "\">" + data_.unit_teks + "</td>" + 
+        var table_row = "<td><input name=\"unit[]\" class=\"unit\" type=\"hidden\" value=\"" + data_.unit + "\">" + data_.unit_teks + "</td>" +
             temp_pekerjaan +
-            "<td><input name=\"tipe[]\" class=\"tipe\" type=\"hidden\" value=\"" + data_.tipe + "\">" + data_.tipe_teks.replace("|", "<br>") + "</td>" + 
-            "<td><input name=\"jarak[]\" class=\"jarak\" type=\"hidden\" value=\"" + data_.jarak + "\">" + data_.jarak + "</td>" + 
-            "<td><input name=\"vol_btg[]\" class=\"vol_btg\" type=\"hidden\" value=\"" + data_.vol_btg + "\">" + data_.vol_btg + "</td>" + 
-            "<td><input name=\"vol_ton[]\" class=\"vol_ton\" type=\"hidden\" value=\"" + data_.vol_ton + "\">" + data_.vol_ton + "</td>" + 
-            temp_ + 
-            "<td><input name=\"harsat[]\" class=\"harsat\" type=\"hidden\" value=\"" + data_.harsat + "\">" + data_.harsat + "</td>" + 
-            "<td><input name=\"jumlah[]\" class=\"input-jumlah\" type=\"hidden\" value=\"" + data_.jumlah + "\">" + currencyFormat(data_.jumlah.toString()) + "</td>" + 
+            "<td><input name=\"tipe[]\" class=\"tipe\" type=\"hidden\" value=\"" + data_.tipe + "\">" + data_.tipe_teks.replace("|", "<br>") + "</td>" +
+            "<td><input name=\"jarak[]\" class=\"jarak\" type=\"hidden\" value=\"" + data_.jarak + "\">" + data_.jarak + "</td>" +
+            "<td><input name=\"vol_btg[]\" class=\"vol_btg\" type=\"hidden\" value=\"" + data_.vol_btg + "\">" + data_.vol_btg + "</td>" +
+            "<td><input name=\"vol_ton[]\" class=\"vol_ton\" type=\"hidden\" value=\"" + data_.vol_ton + "\">" + data_.vol_ton + "</td>" +
+            temp_ +
+            "<td><input name=\"harsat[]\" class=\"harsat\" type=\"hidden\" value=\"" + data_.harsat + "\">" + data_.harsat + "</td>" +
+            "<td><input name=\"jumlah[]\" class=\"input-jumlah\" type=\"hidden\" value=\"" + data_.jumlah + "\">" + currencyFormat(data_.jumlah.toString()) + "</td>" +
             "<td><button class=\"btn btn-danger btn-sm delete_pekerjaan me-1 mb-1\" style=\"padding: 5px 6px;\"><span class=\"bi bi-trash\"></span></button><button class=\"btn btn-warning btn-sm edit_pekerjaan\" style=\"padding: 5px 6px;\"><span class=\"bi bi-pencil-square\"></span></button></td>";
-        
+
         if($("#modal_for").val() == "add"){
             $("#tbody-pekerjaan").append(
                 "<tr>" + table_row + "</tr>"

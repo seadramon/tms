@@ -154,7 +154,7 @@
                 <select class="form-control search-pic" name="pic[]" id="pic" multiple required  @if(in_array($mode, ['show'])) disabled @endif>
                     @if (in_array($mode, ['edit', 'show']))
                         @foreach (($spk->pic ?? []) as $item)
-                            <option selected value="{{$item->employee_id}}">{{$item->employee_id}} - {{$item->employee->fullname}}</
+                            <option selected value="{{$item->employee_id}}">{{$item->employee_id}} - {{$item->employee->fullname}}</option>
                         @endforeach
                     @endif
                 </select>
@@ -288,12 +288,14 @@
             </table>
         </div>
 
-        <div class="separator separator-dashed border-primary my-10"></div>
+        @if ($pekerjaan == 'laut')
+            <div class="separator separator-dashed border-primary my-10"></div>
 
-        <div class="form-group">
-            <label class="form-label">Harga Termasuk</label>
-            {!! Form::text('harga_include', collect($spk->data['harga_include'] ?? [])->implode(','), ['class'=>'form-control', 'id' => "harga_include"] + $editable) !!}
-        </div>
+            <div class="form-group">
+                <label class="form-label">Harga Termasuk</label>
+                {!! Form::text('harga_include', collect($spk->data['harga_include'] ?? [])->implode(','), ['class'=>'form-control', 'id' => "harga_include"] + $editable) !!}
+            </div>
+        @endif
 
         <div class="separator separator-dashed border-primary my-10"></div>
 

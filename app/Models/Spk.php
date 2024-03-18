@@ -48,6 +48,11 @@ class Spk extends Model
         return $this->hasMany(SpkPasal::class, 'no_spk', 'no_spk');
     }
 
+    public function pic()
+    {
+        return $this->hasMany(SpkPic::class, 'no_spk', 'no_spk');
+    }
+
     public function unitkerja()
     {
     	return $this->belongsTo(Pat::class, 'kd_pat', 'kd_pat');
