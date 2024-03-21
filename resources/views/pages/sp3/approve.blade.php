@@ -141,7 +141,7 @@
 
                             <div class="form-group col-lg-6">
                                 <label class="form-label">Nama Pihak Kedua / Vendor</label>
-                                {!! Form::text('vendor', $data->vendor?->nama, ['class'=>'form-control', 'disabled']) !!}
+                                {!! Form::text('vendor', $trader->pimpinan_nama, ['class'=>'form-control', 'disabled']) !!}
                             </div>
 
                             <div class="form-group col-lg-6">
