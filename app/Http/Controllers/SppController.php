@@ -478,6 +478,14 @@ class SppController extends Controller
         $start = date('m/d/Y', strtotime($data->jadwal1));
         $end = date('m/d/Y', strtotime($data->jadwal2));
 
+        $spp_detail = SppbD::whereHas('sppbh', function($sql) use($data) {
+            $sql->whereNoNpp($data->no_npp);
+            $sql->where('tgl_sppb', '<', date('Y-m-d H:i:s', strtotime($data->tgl_sppb)));
+            $sql->where('app2', 1);
+        })
+        ->get()
+        ->groupBy('kd_produk');
+
         return [
             'data' => $data,
             'jenis' => $jenis,
@@ -488,6 +496,7 @@ class SppController extends Controller
             'npp' => $npp,
             'no_npp' => $noNpp,
             'tipe' => $tipe,
+            'spp_detail' => $spp_detail,
             'tblPesanan' => $detailPesanan,
         ];
     }
@@ -579,6 +588,11 @@ class SppController extends Controller
     public function show($spp)
     {
         $arrData = $this->editData($spp, 'show');
+        // return response()->json($arrData['spp_detail']['BA6109AF00']->sum(function ($item) { return $item->app2_vol; }));
+        // BA6109AF00
+        // BA6113AF00
+        // BA6313AF00
+        // BA6406AF00
 
         $npp = Npp::find($arrData['no_npp']);
 
@@ -696,7 +710,7 @@ class SppController extends Controller
         ];
         // return response()->json($collection_table);
         // return view('pages.potensi-detail-armada.create', ['pat' => $pat, 'muat' => $collection_table, 'trmaterial' => $trmaterial]);
-        // return response()->json($arrData);
+        // return response()->json($arrData['spp_detail']);
         return view('pages.spp.show',  $arrData);
     }
 

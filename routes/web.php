@@ -9,6 +9,7 @@ use App\Http\Controllers\SppController;
 use App\Http\Controllers\SppApprovalController;
 use App\Http\Controllers\SptbController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BappController;
 use App\Http\Controllers\KalenderPengirimanController;
 use App\Http\Controllers\MasterDriverController;
 use App\Http\Controllers\MasterArmadaController;
@@ -45,7 +46,7 @@ use Novay\WordTemplate\WordTemplate;
 
 Route::get('template-word', function () {
 	$file = public_path('test.rtf');
-	
+
 	$array = array(
 		'[NOMOR_SURAT]' => '015/BT/SK/V/2017',
 		'[PERUSAHAAN]' => 'CV. Borneo Teknomedia',
@@ -59,7 +60,7 @@ Route::get('template-word', function () {
 	);
 
 	$nama_file = 'surat-keterangan-kerja.doc';
-	
+
 	return (new WordTemplate)->export($file, $array, $nama_file);
 });
 
@@ -100,7 +101,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	        'destroy'
 	    ])->parameters(['' => 'id']);
 	});
-	
+
 	Route::group(['prefix' => '/spk', 'as' => 'spk.'], function(){
 	    // Route::post('/destroy', [SpkController::class, 'destroy'])->name('destroy');
 	    Route::post('/data', [SpkController::class, 'data'])->name('data');
@@ -117,6 +118,13 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	        'destroy'
 	    ])->parameters(['' => 'id']);
 	});
+	Route::group(['prefix' => '/bapp', 'as' => 'bapp.'], function(){
+	    // Route::post('/destroy', [BappController::class, 'destroy'])->name('destroy');
+	    Route::post('/data', [BappController::class, 'data'])->name('data');
+		Route::post('fetch-from-sp3', [BappController::class, 'fetchFromSp3'])->name('fetch-from-sp3');
+		Route::post('fetch-terbilang', [BappController::class, 'fetchTerbilang'])->name('fetch-terbilang');
+		Route::resource('/',  BappController::class)->except(['destroy'])->parameters(['' => 'id']);
+	});
 
 	Route::group(['prefix' => '/spp', 'as' => 'spp.'], function(){
 	    Route::post('/destroy', [SppController::class, 'destroy'])->name('destroy');
@@ -125,10 +133,10 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	    Route::get('/data', [SppController::class, 'data'])->name('data');
 	    Route::get('/data-spprb', [SppController::class, 'dataSpprb'])->name('data-spprb');
 	    Route::get('/data-angkutan', [SppController::class, 'dataAngkutan'])->name('data-angkutan');
-		
+
 		Route::get('monitor-approval', [SppController::class, 'monitorApproval'])->name('monitor-approval');
 		Route::get('monitor-approval-data', [SppController::class, 'monitorApprovalData'])->name('monitor-approval-data');
-		
+
 	    Route::get('/spp-edit/{spp}', [SppController::class, 'edit'])->name('edit');
 	    Route::get('/spp-amandemen/{spp}', [SppController::class, 'amandemen'])->name('amandemen');
 	    Route::get('/spp-print/{spp}', [SppController::class, 'print'])->name('print');
@@ -287,13 +295,13 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 			'destroy', 'show'
 		])->parameters(['' => 'report-proyek-berjalan']);
 	});
-	
+
 	Route::group(['prefix' => 'report-monitoring-distribusi', 'as' => 'report-monitoring-distribusi.'], function(){
 		Route::get('/', [MonitoringDistribusiController::class, 'index'])->name('index');
 		Route::get('/export-excel/{minggu1}/{minggu2}/{kd_pat}', [MonitoringDistribusiController::class, 'exportExcel'])->name('export-excel');
 		Route::get('/export-pdf/{minggu1}/{minggu2}/{kd_pat}', [MonitoringDistribusiController::class, 'exportPdf'])->name('export-pdf');
 	});
-	
+
 	Route::controller(RoleController::class)->prefix('setting-akses-menu')->name('setting.akses.menu.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/data', 'data')->name('data');
@@ -329,7 +337,7 @@ Route::group(['prefix' => '/vendor', 'as' => 'vendor.'], function(){
 			return view('pages.tms-vendor.home');
 		});
 
-		
+
 	});
 
 });

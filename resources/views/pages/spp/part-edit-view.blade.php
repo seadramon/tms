@@ -24,12 +24,12 @@
 				<tbody>
 					@if (count($tblPesanan) > 0)
 						@foreach($tblPesanan as $pesanan)
-							<?php 
+							<?php
 								$volm3 = !empty($pesanan->vol_m3)?$pesanan->vol_m3:1;
 								$pesananVolBtg  = $pesanan->vol_konfirmasi ?? 0;
                             	$pesananVolTon  = ((float)$pesananVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
-								$sppVolBtg = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_akhir; }) : 0;
-								$sppVolTon = ($sp3D[$pesanan->kd_produk_konfirmasi] ?? null) ? $sp3D[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->first()->vol_ton_akhir; }) : 0;
+								$sppVolBtg = ($spp_detail[$pesanan->kd_produk_konfirmasi] ?? null) ? $spp_detail[$pesanan->kd_produk_konfirmasi]->sum(function ($item) { return $item->app2_vol; }) : 0;
+								$sppVolTon = ((float)$sppVolBtg * (float)($pesanan->produk?->vol_m3 ?? 0) * 2.5) ?? 0;
 								$sisaBtg = $pesananVolBtg - $sppVolBtg;
 								$sisaTon = $pesananVolTon - $sppVolTon;
 								$persen = 0;
@@ -66,49 +66,49 @@
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Proyek</label>
 			{!! Form::text('nama_proyek', !empty($data->npp)?$data->npp->nama_proyek:null, ['class'=>'form-control form-control-solid', 'id'=>'nama_proyek', 'readonly']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Pelanggan</label>
 			{!! Form::text('nama_pelanggan', !empty($data->npp)?$data->npp->nama_pelanggan:null, ['class'=>'form-control form-control-solid', 'id'=>'nama_pelanggan', 'readonly']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6 hide">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Lokasi Muat</label>
 			{!! Form::text('pat', implode('|', $lokasi_muat ?? []), ['class'=>'form-control form-control-solid', 'id'=>'pat', 'readonly']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Tujuan</label>
 			{!! Form::text('tujuan', null, ['class'=>'form-control form-control-solid', 'id'=>'tujuan', 'readonly']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">NPP</label>
 			{!! Form::text('no_npp', null, ['class'=>'form-control form-control-solid', 'id'=>'no_npp', 'readonly']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Estimasi Total Ritase</label>
 			{!! Form::text('rit', null, ['class'=>'form-control form-control-solid', 'id'=>'rit', 'readonly']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Jarak (KM)</label>
 			{!! Form::text('jarak_km', null, ['class'=>'form-control form-control-solid', 'id'=>'jarak_km', 'readonly']) !!}
-		</div>	
+		</div>
 	</div>
 <?php //dd($dtlRencana); ?>
 		<!-- Detail Pekerjaan -->
@@ -136,23 +136,23 @@
 						<?php $i = 1; ?>
 						@foreach($data->detail as $pesanan)
 							<tr>
-								<td>{{ $i }}</td>							
+								<td>{{ $i }}</td>
 								<td>{{ $pesanan->produk->tipe }} {{$pesanan->kd_produk}}</td>
 								<td>
 									{{$pesanan->kd_produk}}
-								</td>							
+								</td>
 								<td>
 									{{ $pesanan->vol }}
-								</td>				
+								</td>
 								<td>
 									{{ isset($dtlRencana[$pesanan->kd_produk])?$dtlRencana[$pesanan->kd_produk]['sppVolBtg']:0 + $pesanan->vol }}
-								</td>	
+								</td>
 								<td>
 									{{ $pesanan->ket }}
-								</td>							
+								</td>
 								<td>
 									<input class="form-check-input" name="rencana[{{$i}}][segmental]" type="checkbox" value="{{ !empty($pesanan->segmental)?1:0 }}" {{!empty($pesanan->segmental)?"checked":""}} id="flexCheckDefault"  disabled />
-								</td>							
+								</td>
 								<td>
 									{{ $pesanan->jml_segmen }}
 								</td>
@@ -164,7 +164,7 @@
 								</td>
 								<td>
 									{{ $pesanan->app3_vol }}
-								</td>							
+								</td>
 							</tr>
 
 							<?php $i++; ?>
@@ -185,7 +185,7 @@
 	<div class="col-lg-12 mb-3">
 		<div class="row">
 			<div class="col-lg-2 mb-2">
-				1. Uang Muka	
+				1. Uang Muka
 			</div>
 			<div class="col-lg-2 mb-2">
 				@if ($data->chk_tanpa_dp > 0)
@@ -207,7 +207,7 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-2 mb-2">
-				3. Progress Distribusi		
+				3. Progress Distribusi
 			</div>
 			<div class="col-lg-2 mb-2">
 				{{ ($data->chk_distribusi > 0)?"Sudah dibayar":"Belum dibayar"}}
@@ -215,38 +215,38 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-2 mb-2">
-				3. Progress Distribusi		
+				3. Progress Distribusi
 			</div>
 			<div class="col-lg-2 mb-2">
 				{{ ($data->chk_distribusi > 0)?"Sudah dibayar":"Belum dibayar"}}
 			</div>
 		</div>
 	</div>
-	
-	
+
+
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Rencana Pengiriman</label>
 			{!! Form::text('jadwal', date('d-m-Y', strtotime($start)) . ' - ' . date('d-m-Y', strtotime($end)), ['class'=>'form-control form-control-solid', 'id'=>'daterange', 'disabled']) !!}
-		</div>	
+		</div>
 	</div>
 
 	<div class="col-lg-12">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Catatan Pelaksana</label>
 			{!! Form::textarea('catatan', null, ['class'=>'form-control form-control-solid', 'id'=>'daterange', 'rows' => '5', 'readonly']) !!}
-		</div>	
+		</div>
 	</div>
 	<div class="col-lg-12">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Catatan KSDM</label>
 			{!! Form::textarea('catatan_app1', null, ['class'=>'form-control form-control-solid', 'id'=>'catatan', 'rows' => '5', 'readonly']) !!}
-		</div>	
+		</div>
 	</div>
 	<div class="col-lg-12">
 		<div class="form-group">
 			<label class="fs-6 fw-bold mt-2 mb-3">Catatan PEO</label>
 			{!! Form::textarea('catatan_app2', null, ['class'=>'form-control form-control-solid', 'id'=>'catatan', 'rows' => '5', 'readonly']) !!}
-		</div>	
+		</div>
 	</div>
 </div>

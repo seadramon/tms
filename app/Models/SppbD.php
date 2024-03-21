@@ -16,6 +16,11 @@ class SppbD extends Model
 	public $incrementing = false;
 	public $timestamps = false;
 
+	public function sppbh()
+	{
+		return $this->belongsTo(SppbH::class, 'no_sppb', 'no_sppb');
+	}
+
 	public function produk()
 	{
 		return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
@@ -24,7 +29,7 @@ class SppbD extends Model
     public function spmd(){
         return $this->belongsTo(SpmD::class, 'kd_produk', 'kd_produk');
     }
-    
+
 	public function master_produk(){
         return $this->belongsTo(VMasterProduk::class, 'kd_produk', 'kd_produk');
     }
