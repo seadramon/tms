@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SpkExport;
+use App\Models\Bapp;
+use App\Models\BappD;
 use App\Models\SpkPic;
 use Illuminate\Support\Str;
 
@@ -40,8 +42,13 @@ class BappController extends Controller
             $pat = $labelSemua + $pat;
         }
 
-        $muat = Pat::where('kd_pat', 'like', '2%')->get()->pluck('ket', 'kd_pat')->toArray();
-        $muat = $labelSemua + $muat;
+        if(Auth::check()){
+            $vendor = Vendor::where('vendor_id', Auth::user()->vendor_id)->get()->pluck('nama', 'vendor_id')->toArray();
+            $vendor_id = $vendor;
+        }else{
+            $vendor = Vendor::where('sync_eproc', 1)->where('vendor_id', 'like', 'WB%')->get()->pluck('nama', 'vendor_id')->toArray();
+            $vendor_id = $labelSemua + $vendor;
+        }
 
         $periode = [];
 
@@ -79,22 +86,15 @@ class BappController extends Controller
             '12' => 'Desember'
         ];
 
-        $jenisPekerjaan = JenisPekerjaan::get()
-            ->pluck('ket', 'kd_jpekerjaan')
-            ->toArray();
-
-        $jenisPekerjaan = ["" => "Semua"] + $jenisPekerjaan;
-
-        return view('pages.spk.index', compact(
-            'pat', 'periode', 'status', 'rangeCutOff', 'monthCutOff', 'muat', 'jenisPekerjaan'
+        return view('pages.bapp.index', compact(
+            'pat', 'periode', 'status', 'rangeCutOff', 'monthCutOff', 'vendor_id'
         ));
     }
 
     public function data(Request $request)
     {
         //
-        $query = Spk::with('vendor', 'spk_d', 'unitkerja')
-            ->select('spk_h.no_spk', 'spk_h.tgl_spk', 'spk_h.app1', 'spk_h.app2', 'spk_h.no_npp', 'spk_h.vendor_id', 'spk_h.kd_pat', 'spk_h.jadwal1', 'spk_h.jadwal2', 'spk_h.kd_jpekerjaan');
+        $query = Bapp::with('vendor')->select('*');
 
         if($request->pat){
             $query->where('kd_pat', $request->pat);
@@ -114,161 +114,43 @@ class BappController extends Controller
             }
             $query->whereBetween('spk_h.tgl_spk', [date('Y-m-d 00:00:00', strtotime($awal)), date('Y-m-d 23:59:59', strtotime($akhir))]);
         }
-        if($request->pekerjaan){
-            $query->where('kd_jpekerjaan', $request->pekerjaan);
+        if($request->vendor){
+            $query->where('vendor_id', $request->vendor_id);
         }
-        // if($request->status){
-        //     if($request->status == 'aktif'){
-        //         $query->where('app1', 1)->whereRaw('v_sp3_ri.vol_sp3 > v_sp3_ri.vol_sptb');
-        //     }elseif ($request->status == 'selesai') {
-        //         $query->where('app1', 1)->whereRaw('v_sp3_ri.vol_sp3 <= v_sp3_ri.vol_sptb');
-        //     }elseif ($request->status == 'belum_verifikasi') {
-        //         $query->where('app1', '<>', 1);
-        //     }
-        // }
 
         if(Auth::check()){
-            $query->where('spk_h.vendor_id', Auth::user()->vendor_id)->where('app1', 1);
+            $query->where('bapp_h1.vendor_id', Auth::user()->vendor_id);
         }
 
         return DataTables::eloquent($query)
-                ->editColumn('tgl_spk', function ($model) {
-                    return date('d-m-Y', strtotime($model->tgl_spk));
+                ->editColumn('tgl_bapp', function ($model) {
+                    return date('d-m-Y', strtotime($model->tgl_bapp));
                 })
-                ->addColumn('approval', function ($model) {
+                ->addColumn('status', function ($model) {
                     $teks = '';
-                    if(Auth::check()){
-                        if($model->app2 == 1){
-                            $teks .= '<span class="badge badge-light-success mr-2 mb-2">Confirmed&nbsp;<i class="fas fa-check text-success"></i></span>';
-                        }else{
-                            $teks .= '<span class="badge badge-light-warning mr-2 mb-2">To Be Confirmed</i></span>';
-                        }
-                    }else{
-                        if($model->app1 == 1){
-                            $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
-                        }
-                        if($model->app2 == 1){
-                            $teks .= '<span class="badge badge-light-success mr-2 mb-2">Vendor&nbsp;<i class="fas fa-check text-success"></i></span>';
-                        }
-                    }
-                    return $teks;
-                })
-                ->addColumn('custom', function ($model) {
-                    if(Auth::check()){
-                        return $model->unitkerja->ket ?? '-';
-                    }else{
-                        return $model->vendor->nama ?? '-';
-                    }
-                })
-                ->addColumn('progress_vol', function ($model) {
-                    $vol_sptb = SptbD::whereHas('sptbh',function($sql) use ($model) {
-                        $sql->where('no_npp', $model->no_npp);
-                        $sql->whereHas('spmh',function($sql) use ($model) {
-                            $sql->where('vendor_id', $model->vendor_id);
-                        });
-                    })->sum('vol');
-                    $vol_sp3 = $model->spk_d->sum('vol_akhir');
-                    $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100, 2);
-                    if($vol >= 100){
-                        $vol = 100;
-                        $badge = 'success';
-                    }elseif($vol >= 75){
-                        $badge = 'warning';
-                    }else{
-                        $badge = 'dark';
-                    }
-                    return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
-                })
-                ->addColumn('progress_rp', function ($model) {
-                    $sp3d = $model->spk_d->groupBy(function($item){ return $item->kd_produk . '_' . $item->pat_to; });
-                    $vol_sptb = SptbD::with('sptbh')->whereHas('sptbh',function($sql) use ($model) {
-                        $sql->where('no_npp', $model->no_npp);
-                        $sql->whereHas('spmh',function($sql) use ($model) {
-                            $sql->where('vendor_id', $model->vendor_id);
-                        });
-                    })
-                    ->get()
-                    ->sum(function($item) use($sp3d) {
-                        $key = $item->kd_produk . '_' . $item->sptbh->kd_pat;
-                        return $item->vol * ($sp3d[$key][0]->harsat_akhir ?? 0);
-                    });
-                    $vol_sp3 = $model->spk_d->sum(function($item) { return intval($item->vol_akhir) * intval($item->harsat_akhir); });
-                    $vol = $vol_sp3 == 0 ? 0 : round($vol_sptb / $vol_sp3 * 100, 2);
-                    if($vol >= 100){
-                        $vol = 100;
-                        $badge = 'success';
-                    }elseif($vol >= 75){
-                        $badge = 'warning';
-                    }else{
-                        $badge = 'dark';
-                    }
-                    return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $vol . '%</span>';
-                })
-                ->addColumn('progress_wkt', function ($model) {
-                    $ret = 0;
-                    if (!is_null($model->jadwal1) && !is_null($model->jadwal2)) {
-                        $a = differenceDate($model->jadwal1, date('Y-m-d'));
-                        $b = differenceDate($model->jadwal1, $model->jadwal2);
-
-                        if ($b > 0) {
-                            $ret = round(($a / $b) * 100, 2);
-                        }
-                    }
-                    if($ret > 100){
-                        $ret = 100;
-                    }
-                    if($ret < 0){
-                        $ret = 0;
-                    }
-
-                    if($ret >= 100){
-                        $ret = 100;
-                        $badge = 'success';
-                    }elseif($ret >= 75){
-                        $badge = 'warning';
-                    }else{
-                        $badge = 'dark';
-                    }
-                    return '<span class="badge badge-square badge-' . $badge . ' me-10 mb-10 badge-outline">' . $ret . '%</span>';
-                })
-                ->addColumn('menu', function ($model) {
-                    $list = '';
-                    $list .= '<li><a class="dropdown-item" href="' . route('spk.show', str_replace('/', '|', $model->no_spk)) . '">View</a></li>';
-                    $list .= '<li><a class="dropdown-item" href="' . route('spk.edit', str_replace('/', '|', $model->no_spk)) . '">Edit</a></li>';
-                    $list .= '<li><a class="dropdown-item" href="' . route('spk.print-pdf', str_replace('/', '|', $model->no_spk)) . '">Print PDF</a></li>';
-                    /*$list .= '<li><a class="dropdown-item" href="' . route('spk.print-excel', str_replace('/', '|', $model->no_spk)) . '">Print Excel</a></li>';*/
                     // if(Auth::check()){
-                    //     $list .= '<li><a class="dropdown-item" href="'.route('sp3.print', str_replace('/', '|', $model->no_sp3)).'">Print</a></li>';
-                    //     $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
-                    //     if($model->app1 == 1 && in_array($model->app2, [null, 0])){
-                    //         $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
+                    //     if($model->app2 == 1){
+                    //         $teks .= '<span class="badge badge-light-success mr-2 mb-2">Confirmed&nbsp;<i class="fas fa-check text-success"></i></span>';
+                    //     }else{
+                    //         $teks .= '<span class="badge badge-light-warning mr-2 mb-2">To Be Confirmed</i></span>';
                     //     }
                     // }else{
-                    //     $action = json_decode(session('TMS_ACTION_MENU'));
-                    //     if(in_array('view', $action)){
-                    //         $list .= '<li><a class="dropdown-item" href="' . url('sp3', str_replace('/', '|', $model->no_sp3)) . '">View</a></li>';
+                    //     if($model->app1 == 1){
+                    //         $teks .= '<span class="badge badge-light-success mr-2 mb-2">MUnit&nbsp;<i class="fas fa-check text-success"></i></span>';
                     //     }
-                    //     if(in_array('edit', $action) && $model->app1 != 1){
-                    //         if($model->kd_jpekerjaan == '20'){
-                    //             $route = 'sp3.v2.edit';
-                    //         }else{
-                    //             $route = 'sp3.edit';
-                    //         }
-                    //         $list .= '<li><a class="dropdown-item" href="' . route($route, str_replace('/', '|', $model->no_sp3)) . '">Edit</a></li>';
-                    //     }
-                    //     if(in_array('amandemen', $action) && $model->app1 == 1){
-                    //         $list .= '<li><a class="dropdown-item" href="' . route('sp3.amandemen', str_replace('/', '|', $model->no_sp3)) . '">Amandemen</a></li>';
-                    //     }
-                    //     if(in_array('print', $action)){
-                    //         $list .= '<li><a class="dropdown-item" href="'.route('sp3.print', str_replace('/', '|', $model->no_sp3)).'">Print</a></li>';
-                    //     }
-                    //     if(in_array('approve1', $action) && $model->app1 == 0){
-                    //         $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['first', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
-                    //     }
-                    //     if(in_array('approve2', $action) && $model->app1 == 1){
-                    //         $list .= '<li><a class="dropdown-item" href="' . route('sp3.get-approve', ['second', str_replace('/', '|', $model->no_sp3)]) . '">Approve</a></li>';
+                    //     if($model->app2 == 1){
+                    //         $teks .= '<span class="badge badge-light-success mr-2 mb-2">Vendor&nbsp;<i class="fas fa-check text-success"></i></span>';
                     //     }
                     // }
+                    return $teks;
+                })
+
+                ->addColumn('menu', function ($model) {
+                    $list = '';
+                    $list .= '<li><a class="dropdown-item" href="' . route('spk.show', str_replace('/', '|', $model->no_bapp)) . '">View</a></li>';
+                    // $list .= '<li><a class="dropdown-item" href="' . route('spk.edit', str_replace('/', '|', $model->no_bapp)) . '">Edit</a></li>';
+                    // $list .= '<li><a class="dropdown-item" href="' . route('spk.print-pdf', str_replace('/', '|', $model->no_bapp)) . '">Print PDF</a></li>';
+
                     $edit = '<div class="btn-group">
                                 <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Action
@@ -355,4 +237,86 @@ class BappController extends Controller
         return response()->json($result, $code);
     }
 
+    public function store(Request $request, FlasherInterface $flasher)
+    {
+        // return response()->json($request->all());
+        // try {
+            DB::beginTransaction();
+
+            Validator::make($request->all(), [
+                'no_npp'        => 'required',
+                'sp3'     => 'required',
+                'pihak_pertama'     => 'required',
+            ])->validate();
+
+            // $vendor = Vendor::find($request->vendor_id);
+
+            $noDokumen = 'TP.03.01/WB-' . (session('TMP_KDWIL') ?? '1A');
+
+            $msNoDokumen = MsNoDokumen::where('tahun', date('Y'))->where('no_dokumen', $noDokumen);
+
+            if($msNoDokumen->exists()){
+                $msNoDokumen = $msNoDokumen->first();
+
+                $newSequence = sprintf('%04s', ((int)$msNoDokumen->seq + 1));
+
+                $msNoDokumen->update([
+                    'seq'           =>  $newSequence,
+                    'updated_by'    => session('TMP_NIP') ?? '12345',
+                    'updated_date'  => date('Y-m-d H:i:s'),
+                ]);
+            }else{
+                $newSequence = '0001';
+
+                $msNoDokumenData = new MsNoDokumen();
+                $msNoDokumenData->tahun = date('Y');
+                $msNoDokumenData->no_dokumen = $noDokumen;
+                $msNoDokumenData->seq = $newSequence;
+                $msNoDokumenData->created_by = session('TMP_NIP') ?? '12345';
+                $msNoDokumenData->created_date = date('Y-m-d H:i:s');
+                $msNoDokumenData->save();
+            }
+
+            $no_bapp = $noDokumen . '.' . $newSequence . '/' . date('Y') . '';
+            $no_npp = explode(' | ', $request->no_npp);
+
+            $bapp = new Bapp;
+            $bapp->no_bapp = $no_bapp;
+            $bapp->no_sp3 = $request->sp3;
+            $bapp->tgl_bapp = date('Y-m-d', strtotime($request->tgl_bapp));
+            $bapp->created_by = Auth::check() ? Auth::user()->id : 1;
+            $bapp->catatan = $request->catatan;
+            $bapp->jumlah = str_replace(',', '', $request->jumlah);
+            $bapp->vendor_id = Auth::check() ? Auth::user()->vendor_id : 'WBI075';
+            $bapp->save();
+
+            foreach($request->sp3_produk as $produk){
+                $bapp_d = new BappD;
+                $bapp_d->no_bapp = $bapp->no_bapp;
+                $bapp_d->no_sp3 = $request->sp3;
+                $bapp_d->kd_produk = $produk;
+                $bapp_d->satuan = $request->sp3_satuan[$produk];
+                $bapp_d->sp3_vol_btg = $request->sp3_btg[$produk];
+                $bapp_d->sp3_vol_ton = $request->sp3_ton[$produk];
+                $bapp_d->harsat = $request->sp3_harsat[$produk];
+                $bapp_d->lalu_vol_btg = $request->lalu_btg[$produk];
+                $bapp_d->lalu_vol_ton = $request->lalu_ton[$produk];
+                $bapp_d->vol_btg = $request->saatini_btg[$produk];
+                $bapp_d->vol_ton = $request->saatini_ton[$produk];
+                $bapp_d->save();
+            }
+
+            DB::commit();
+
+            $flasher->addSuccess('Data has been saved successfully!');
+        // } catch(Exception $e) {
+        //     DB::rollback();
+
+        //     $flasher->addError($e->getMessage());
+
+        //     return redirect()->back()->withInput()->withErrors($e->getMessage());
+        // }
+
+        return redirect()->route('bapp.index');
+    }
 }

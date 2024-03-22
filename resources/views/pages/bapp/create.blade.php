@@ -66,6 +66,12 @@
 
                         </div>
                     </div>
+                    <div class="card-footer" style="text-align: right;">
+                        <a href="{{ route('bapp.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
+                        @if ($mode != "show")
+                            <input type="submit" class="btn btn-success hidden" id="btn-sumbit" value="Simpan">
+                        @endif
+                    </div>
                 </div>
             </div>
 
@@ -151,7 +157,7 @@
                 },
                 success: function(result) {
                     $('#box2').html(result.html);
-
+                    $("#btn-sumbit").removeClass('hidden');
                     // box2();
                 },
                 error: function(result) {

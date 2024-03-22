@@ -87,30 +87,33 @@
                         @php
                             $no++;
                             $produk = $detail->produk;
-                            $total_sp3 += $detail->harsat_akhir;
+                            $satuan = ($detail->sat_harsat ?? 'ton');
+                            $jml_sp3 = ($satuan == 'ton') ? ($detail->vol_ton_akhir * $detail->harsat_akhir) : ($detail->vol_akhir * $detail->harsat_akhir);
+                            $total_sp3 += $jml_sp3;
                         @endphp
                         <tr style="vertical-align: middle;" id="tr-{{$detail->kd_produk}}" class="pake-border-v">
+                            <input type="hidden" name="sp3_produk[]" class="sp3_produk" value="{{$detail->kd_produk}}">
                             <td class="text-center">
                                 <button class="btn btn-icon btn-dark edit-saatini" style="height: 20px; width: 20px;" data-row="{{$detail->kd_produk}}" id="btn-{{$detail->kd_produk}}" type="button"><i class="fa-solid fa-pen-to-square"></i></button>
                             </td>
                             <td class="text-center">{{ $no }}</td>
                             <td>{{ ($produk->ket ?? '') }}<br>{{ ($produk->tipe ?? '') }}</td>
-                            <td style="text-align: center;">{{ ($produk->satuan ?? '') }}</td>
-                            <td style="text-align: center;">{{ $detail->vol_akhir }}<input type="hidden" name="sp3_btg" class="sp3_btg" value="{{$detail->vol_akhir}}"></td>
-                            <td style="text-align: center;">{{ $detail->vol_ton_akhir }}<input type="hidden" name="sp3_ton" class="sp3_ton" value="{{$detail->vol_ton_akhir}}"></td>
-                            <td style="text-align: right;">{{ number_format($detail->harsat_akhir) }}<input type="hidden" name="sp3_harsat" class="sp3_harsat" value="{{$detail->harsat_akhir}}"></td>
-                            <td style="text-align: right;">{{ number_format($detail->harsat_akhir) }}<input type="hidden" name="sp3_ttl" class="sp3_ttl" value="{{$detail->harsat_akhir}}"></td>
-                            <td style="text-align: center;">{{ 0 }}<input type="hidden" name="lalu_btg" class="lalu_btg" value="0"></td>
+                            <td style="text-align: center;">{{ $satuan }}<input type="hidden" name="sp3_satuan[{{$detail->kd_produk}}]" class="sp3_satuan" value="{{$satuan}}"></td>
+                            <td style="text-align: center;">{{ $detail->vol_akhir }}<input type="hidden" name="sp3_btg[{{$detail->kd_produk}}]" class="sp3_btg" value="{{$detail->vol_akhir}}"></td>
+                            <td style="text-align: center;">{{ $detail->vol_ton_akhir }}<input type="hidden" name="sp3_ton[{{$detail->kd_produk}}]" class="sp3_ton" value="{{$detail->vol_ton_akhir}}"></td>
+                            <td style="text-align: right;">{{ number_format($detail->harsat_akhir) }}<input type="hidden" name="sp3_harsat[{{$detail->kd_produk}}]" class="sp3_harsat" value="{{$detail->harsat_akhir}}"></td>
+                            <td style="text-align: right;">{{ number_format($jml_sp3) }}<input type="hidden" name="sp3_ttl[{{$detail->kd_produk}}]" class="sp3_ttl" value="{{$jml_sp3}}"></td>
+                            <td style="text-align: center;">{{ 0 }}<input type="hidden" name="lalu_btg[{{$detail->kd_produk}}]" class="lalu_btg" value="0"></td>
                             <td style="text-align: center;">{{ 0 }}</td>
-                            <td style="text-align: center;">{{ 0 }}<input type="hidden" name="lalu_ton" class="lalu_ton" value="0"></td>
+                            <td style="text-align: center;">{{ 0 }}<input type="hidden" name="lalu_ton[{{$detail->kd_produk}}]" class="lalu_ton" value="0"></td>
                             <td style="text-align: center;">{{ 0 }}</td>
-                            <td style="text-align: right;">{{ number_format(0) }}<input type="hidden" name="lalu_harga" class="lalu_harga" value="0"></td>
+                            <td style="text-align: right;">{{ number_format(0) }}<input type="hidden" name="lalu_harga[{{$detail->kd_produk}}]" class="lalu_harga" value="0"></td>
                             <td style="text-align: right;">{{ 0 }}</td>
-                            <td style="text-align: center;" class="saatini_btg1">{{ 0 }}<input type="hidden" name="saatini_btg" value="0"></td>
+                            <td style="text-align: center;" class="saatini_btg1">{{ 0 }}<input type="hidden" name="saatini_btg[{{$detail->kd_produk}}]" value="0"></td>
                             <td style="text-align: center;" class="saatini_btg2">{{ 0 }}</td>
-                            <td style="text-align: center;" class="saatini_ton1">{{ 0 }}<input type="hidden" name="saatini_ton" value="0"></td>
+                            <td style="text-align: center;" class="saatini_ton1">{{ 0 }}<input type="hidden" name="saatini_ton[{{$detail->kd_produk}}]" value="0"></td>
                             <td style="text-align: center;" class="saatini_ton2">{{ 0 }}</td>
-                            <td style="text-align: right;" class="saatini_harga1">{{ number_format(0) }}<input type="hidden" name="saatini_harga" value="0"></td>
+                            <td style="text-align: right;" class="saatini_harga1">{{ number_format(0) }}<input type="hidden" name="saatini_harga[{{$detail->kd_produk}}]" value="0"></td>
                             <td style="text-align: center;" class="saatini_harga2">{{ 0 }}%</td>
                             <td style="text-align: center;" class="sd_saatini_btg1">{{ 0 }}</td>
                             <td style="text-align: center;" class="sd_saatini_btg2">{{ 0 }}</td>
@@ -225,7 +228,7 @@
         var lalu = parseFloat($("#lalu_total1").text().replace(/[^0-9\.]/g,''));
 
         var saatini = 0;
-        $("[name=saatini_harga]").each(function(el){
+        $("[name^=saatini_harga]").each(function(el){
             var h = parseFloat($(this).val());
             saatini += h;
         });
