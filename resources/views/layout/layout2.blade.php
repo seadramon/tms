@@ -37,9 +37,9 @@
 	<!--begin::Body-->
 	<body data-kt-name="metronic" id="kt_body" class="page-loading-enabled page-loading header-tablet-and-mobile-fixed aside-enabled">
 		<!--begin::Theme mode setup on page load-->
-		
+
 		<!--end::Theme mode setup on page load-->
-		
+
 		<!--begin::loader-->
 		<div class="page-loader flex-column">
 			<img alt="Logo" class="h-100px" src="{{ asset('content/TMS - full version.png') }}" />
@@ -83,7 +83,7 @@
 										<!--end::Description-->
 										<!--begin::Label-->
 										<div class="d-flex align-items-center text-success fs-9">
-										<span class="bullet bullet-dot bg-success me-1"></span>online</div>
+										<span class="bullet bullet-dot bg-success me-1"></span>{{session('TMP_NIP')}}</div>
 										<!--end::Label-->
 									</div>
 									<!--end::Info-->
@@ -273,7 +273,7 @@
 				var val = $(this).val().replace(",","");
 				var formated = currencyFormat(val);
 				if(formated != ""){
-					$(this).val(formated); 
+					$(this).val(formated);
 				}
 			});
 			function currencyFormat(val){
@@ -301,15 +301,15 @@
 				if(decimals > 0){
 					text += sep + n.toFixed(decimals).split(sep)[1];
 				}
-		
+
 				return text;
 			}
 			function reFormat(val, decimal = true){
 				val = val.toString();
 				if(val.split('.').length > 1 && decimal){
-					return format(val, '.', val.split('.')[1].length); 
+					return format(val, '.', val.split('.')[1].length);
 				}else{
-					return format(val, '.', 0); 
+					return format(val, '.', 0);
 				}
 			}
 

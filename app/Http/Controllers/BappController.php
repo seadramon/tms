@@ -240,7 +240,7 @@ class BappController extends Controller
     public function store(Request $request, FlasherInterface $flasher)
     {
         // return response()->json($request->all());
-        // try {
+        try {
             DB::beginTransaction();
 
             Validator::make($request->all(), [
@@ -288,6 +288,9 @@ class BappController extends Controller
             $bapp->catatan = $request->catatan;
             $bapp->jumlah = str_replace(',', '', $request->jumlah);
             $bapp->vendor_id = Auth::check() ? Auth::user()->vendor_id : 'WBI075';
+            $bapp->pihak1 = $request->pihak_pertama;
+            $bapp->pihak2 = $request->pihak_kedua;
+            $bapp->pihak2_jabatan = $request->pihak_kedua_jabatan;
             $bapp->save();
 
             foreach($request->sp3_produk as $produk){
@@ -309,13 +312,13 @@ class BappController extends Controller
             DB::commit();
 
             $flasher->addSuccess('Data has been saved successfully!');
-        // } catch(Exception $e) {
-        //     DB::rollback();
+        } catch(Exception $e) {
+            DB::rollback();
 
-        //     $flasher->addError($e->getMessage());
+            $flasher->addError($e->getMessage());
 
-        //     return redirect()->back()->withInput()->withErrors($e->getMessage());
-        // }
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
 
         return redirect()->route('bapp.index');
     }
