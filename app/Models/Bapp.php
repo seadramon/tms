@@ -33,6 +33,11 @@ class Bapp extends Model
         return $this->belongsTo(Personal::class, 'pihak1', 'employee_id');
     }
 
+    public function sp3()
+    {
+        return $this->belongsTo(Sp3::class, 'no_sp3', 'no_sp3');
+    }
+
     public function vendor()
     {
     	return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');

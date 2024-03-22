@@ -28,11 +28,12 @@
                     if(in_array($mode, ['edit'])){
                         $editable = [];
                     }
-                @endphp
+                    @endphp
             @else
-                {!! Form::open(['url' => route('bapp.store'), 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
+            {!! Form::open(['url' => route('bapp.store'), 'class' => 'form', 'method' => 'post', 'enctype' => 'multipart/form-data']) !!}
             @endif
 
+            <input type="hidden" name="no_bapp" id="no_bapp" value="{{ $data->no_bapp ?? '' }}">
             <div id="box1" style="margin-bottom: 20px">
                 <div class="card shadow-sm">
                     <div class="card-header">
@@ -55,12 +56,14 @@
                         <div class="form-group row">
                             <div class="col-lg-6 custom-form">
                                 <label class="form-label col-sm-3 custom-label">No. SP3 / SPK</label>
-                                {!! Form::select('sp3', $sp3, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'sp3'] + $disabled) !!}
+                                {!! Form::select('sp3', $sp3, $data->no_sp3 ?? null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'sp3'] + $disabled) !!}
                             </div>
-                            <div class="col-lg-2 custom-form">
-                                <label class="form-label col-sm-3 custom-label">&nbsp;</label>
-                                <button class="form-control btn btn-primary" id="fetch">Ambil Data</button>
-                            </div>
+                            @if (!in_array($mode, ['edit', 'show']))
+                                <div class="col-lg-2 custom-form">
+                                    <label class="form-label col-sm-3 custom-label">&nbsp;</label>
+                                    <button class="form-control btn btn-primary" id="fetch">Ambil Data</button>
+                                </div>
+                            @endif
                         </div>
                         <div id="box2">
 
@@ -101,8 +104,8 @@
 
     $(document).ready(function() {
         $("#alert-box1").hide();
-        @if(in_array($mode, ['edit', 'show']))
-            $('#buat_draft').trigger('click')
+        @if(in_array($mode, ['show']))
+            fetchData();
         @endif
     });
 
@@ -138,36 +141,40 @@
 
             return false;
         }else{
-            let data = {
-                '_token': '{{ csrf_token() }}',
-                'sp3': $('#sp3').val(),
-                'mode': "{{$mode}}"
-            };
-
-            $.ajax({
-                url: "{{ route('bapp.fetch-from-sp3') }}",
-                type: "POST",
-                data: data,
-                dataType: 'json',
-                beforeSend: function() {
-                    blockUI.block();
-                },
-                complete: function() {
-                    blockUI.release();
-                },
-                success: function(result) {
-                    $('#box2').html(result.html);
-                    $("#btn-sumbit").removeClass('hidden');
-                    // box2();
-                },
-                error: function(result) {
-                    blockUI.release();
-                    alert(result.responseJSON.message)
-                }
-            });
+            fetchData()
         }
     });
 
+    function fetchData(){
+        let data = {
+            '_token': '{{ csrf_token() }}',
+            'sp3': $('#sp3').val(),
+            'no_bapp': $('#no_bapp').val(),
+            'mode': "{{$mode}}"
+        };
+
+        $.ajax({
+            url: "{{ route('bapp.fetch-from-sp3') }}",
+            type: "POST",
+            data: data,
+            dataType: 'json',
+            beforeSend: function() {
+                blockUI.block();
+            },
+            complete: function() {
+                blockUI.release();
+            },
+            success: function(result) {
+                $('#box2').html(result.html);
+                $("#btn-sumbit").removeClass('hidden');
+                // box2();
+            },
+            error: function(result) {
+                blockUI.release();
+                alert(result.responseJSON.message)
+            }
+        });
+    }
 
         // $('.form-select-solid').select2();
 </script>

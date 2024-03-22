@@ -23,6 +23,10 @@ class BappD extends Model
         'data' => 'array',
     ];
 
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
+    }
     // public function spk_d()
     // {
     //     return $this->hasMany(SpkD::class, 'no_bapp', 'no_bapp');

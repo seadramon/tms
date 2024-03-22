@@ -92,39 +92,14 @@
             var harga = data_.vol_btg * harsat;
         }
 
-        $("#tr-" + kode).find('td.saatini_btg1').html(currencyFormat(data_.vol_btg) + "<input type=\"hidden\" name=\"saatini_btg[" + kode + "]\" value=\"" +data_.vol_btg + "\">");
+        $("#tr-" + kode).find('td.saatini_btg1').html(currencyFormat(data_.vol_btg) + "<input type=\"hidden\" name=\"saatini_btg[" + kode + "]\" class=\"saatini_btg\" value=\"" +data_.vol_btg + "\">");
         $("#tr-" + kode).find('td.saatini_btg2').html(currencyFormat((data_.vol_btg / data_.vol_btg_sp3 * 100).toFixed(0)) + "%");
-        $("#tr-" + kode).find('td.saatini_ton1').html(currencyFormat(data_.vol_ton) + "<input type=\"hidden\" name=\"saatini_ton[" + kode + "]\" value=\"" +data_.vol_ton + "\">");
+        $("#tr-" + kode).find('td.saatini_ton1').html(currencyFormat(data_.vol_ton) + "<input type=\"hidden\" name=\"saatini_ton[" + kode + "]\" class=\"saatini_ton\" value=\"" +data_.vol_ton + "\">");
         $("#tr-" + kode).find('td.saatini_ton2').html(currencyFormat((data_.vol_ton / data_.vol_ton_sp3 * 100).toFixed(0)) + "%");
-        $("#tr-" + kode).find('td.saatini_harga1').html(currencyFormat(harga.toString()) + "<input type=\"hidden\" name=\"saatini_harga[" + kode + "]\" value=\"" + harga + "\">");
+        $("#tr-" + kode).find('td.saatini_harga1').html(currencyFormat(harga.toString()) + "<input type=\"hidden\" name=\"saatini_harga[" + kode + "]\" class=\"saatini_harga\" value=\"" + harga + "\">");
         $("#tr-" + kode).find('td.saatini_harga2').html(currencyFormat((harga / ttl_sp3 * 100).toFixed(0)) + "%");
 
-        var lalu_btg = parseFloat($("#tr-" + kode).find('input.lalu_btg').val());
-        var lalu_ton = parseFloat($("#tr-" + kode).find('input.lalu_ton').val());
-        var lalu_harga = parseFloat($("#tr-" + kode).find('input.lalu_harga').val());
-
-        // update s/d
-        var sd_btg = (parseFloat(data_.vol_btg) + lalu_btg);
-        var sd_ton = (parseFloat(data_.vol_ton) + lalu_ton).toFixed(2);
-        var sd_harga = (harga + lalu_harga);
-        $("#tr-" + kode).find('td.sd_saatini_btg1').html(currencyFormat(sd_btg.toString()));
-        $("#tr-" + kode).find('td.sd_saatini_btg2').html(currencyFormat((sd_btg / data_.vol_btg_sp3 * 100).toFixed(0)) + "%");
-        $("#tr-" + kode).find('td.sd_saatini_ton1').html(currencyFormat(sd_ton.toString()));
-        $("#tr-" + kode).find('td.sd_saatini_ton2').html(currencyFormat((sd_ton / data_.vol_ton_sp3 * 100).toFixed(0)) + "%");
-        $("#tr-" + kode).find('td.sd_saatini_harga1').html(currencyFormat(sd_harga.toString()));
-        $("#tr-" + kode).find('td.sd_saatini_harga2').html(currencyFormat((sd_harga / ttl_sp3 * 100).toFixed(0)) + "%");
-
-        // update sisa
-        var ss_btg = data_.vol_btg_sp3 - sd_btg;
-        var ss_ton = (data_.vol_ton_sp3 - sd_ton).toFixed(2);
-        var ss_harga = ttl_sp3 - sd_harga;
-        $("#tr-" + kode).find('td.ss_saatini_btg1').html(currencyFormat(ss_btg.toString()));
-        $("#tr-" + kode).find('td.ss_saatini_btg2').html(currencyFormat((ss_btg / data_.vol_btg_sp3 * 100).toFixed(0)) + "%");
-        $("#tr-" + kode).find('td.ss_saatini_ton1').html(currencyFormat(ss_ton.toString()));
-        $("#tr-" + kode).find('td.ss_saatini_ton2').html(currencyFormat((ss_ton / data_.vol_ton_sp3 * 100).toFixed(0)) + "%");
-        $("#tr-" + kode).find('td.ss_saatini_harga1').html(currencyFormat(ss_harga.toString()));
-        $("#tr-" + kode).find('td.ss_saatini_harga2').html(currencyFormat((ss_harga / ttl_sp3 * 100).toFixed(0)) + "%");
-
+        calculateSisa();
         calculateTotal();
         $('#modal_saatini').modal('toggle');
     });

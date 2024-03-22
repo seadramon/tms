@@ -147,7 +147,7 @@ class BappController extends Controller
 
                 ->addColumn('menu', function ($model) {
                     $list = '';
-                    $list .= '<li><a class="dropdown-item" href="' . route('spk.show', str_replace('/', '|', $model->no_bapp)) . '">View</a></li>';
+                    $list .= '<li><a class="dropdown-item" href="' . route('bapp.show', str_replace('/', '|', $model->no_bapp)) . '">View</a></li>';
                     // $list .= '<li><a class="dropdown-item" href="' . route('spk.edit', str_replace('/', '|', $model->no_bapp)) . '">Edit</a></li>';
                     // $list .= '<li><a class="dropdown-item" href="' . route('spk.print-pdf', str_replace('/', '|', $model->no_bapp)) . '">Print PDF</a></li>';
 
@@ -188,6 +188,10 @@ class BappController extends Controller
     {
         $code = 200;
         try {
+            $data = null;
+            if(in_array($request->mode, ['show'])){
+                $data = Bapp::with('bapp_d.produk', 'pihak1_data.jabatan', 'sp3.npp')->find($request->no_bapp);
+            }
             $sp3 = Sp3::with('pic', 'sp3D.produk')->find($request->sp3);
             $npp = Npp::with(['infoPasar.region'])
                 ->where('no_npp', $sp3->no_npp)
@@ -211,12 +215,15 @@ class BappController extends Controller
                         ->table(DB::raw('"m_trader"'))
                         ->where('vendor_id', $sp3->vendor_id)
                         ->first();
+
+
             $html = view('pages.bapp.create_form', [
                 'sp3' => $sp3,
                 'npp' => $npp,
                 'personal' => $personal,
                 'opt_personal' => $opt_personal,
                 'trader' => $trader,
+                'data' => $data,
                 'mode' => $request->mode,
             ])->render();
             $result = array('success' => true, 'html'=> $html);
@@ -321,5 +328,25 @@ class BappController extends Controller
         }
 
         return redirect()->route('bapp.index');
+    }
+
+    public function show($no_bapp)
+    {
+        $no_bapp = str_replace('|', '/', $no_bapp);
+
+        $data = Bapp::find($no_bapp);
+
+        $sp3 = Sp3::where('no_sp3', $data->no_sp3)
+            ->get()
+            ->mapWithKeys(function($item){
+                return [$item->no_sp3 => $item->no_sp3];
+            })
+            ->all();
+
+        return view('pages.bapp.create', [
+            'mode' => "show",
+            'data' => $data,
+            'sp3' => $sp3
+        ]);
     }
 }
