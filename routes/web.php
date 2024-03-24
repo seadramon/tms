@@ -120,6 +120,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 	});
 	Route::group(['prefix' => '/bapp', 'as' => 'bapp.'], function(){
 	    // Route::post('/destroy', [BappController::class, 'destroy'])->name('destroy');
+	    Route::get('/printPdf/{no_bapp}', [BappController::class, 'printPdf'])->name('print');
 	    Route::post('/data', [BappController::class, 'data'])->name('data');
 		Route::post('fetch-from-sp3', [BappController::class, 'fetchFromSp3'])->name('fetch-from-sp3');
 		Route::post('fetch-terbilang', [BappController::class, 'fetchTerbilang'])->name('fetch-terbilang');

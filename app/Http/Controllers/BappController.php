@@ -148,6 +148,7 @@ class BappController extends Controller
                 ->addColumn('menu', function ($model) {
                     $list = '';
                     $list .= '<li><a class="dropdown-item" href="' . route('bapp.show', str_replace('/', '|', $model->no_bapp)) . '">View</a></li>';
+                    $list .= '<li><a target="_blank" class="dropdown-item" href="' . route('bapp.print', str_replace('/', '|', $model->no_bapp)) . '">Print</a></li>';
                     // $list .= '<li><a class="dropdown-item" href="' . route('spk.edit', str_replace('/', '|', $model->no_bapp)) . '">Edit</a></li>';
                     // $list .= '<li><a class="dropdown-item" href="' . route('spk.print-pdf', str_replace('/', '|', $model->no_bapp)) . '">Print PDF</a></li>';
 
@@ -348,5 +349,29 @@ class BappController extends Controller
             'data' => $data,
             'sp3' => $sp3
         ]);
+    }
+
+    public function printPdf($no_bapp)
+    {
+        $no_bapp = str_replace('|', '/', $no_bapp);
+
+        $data = Bapp::find($no_bapp);
+// dd($data->vendor);
+        $sp3 = Sp3::where('no_sp3', $data->no_sp3)
+            ->get()
+            ->mapWithKeys(function($item){
+                return [$item->no_sp3 => $item->no_sp3];
+            })
+            ->all();
+
+        $pdf = Pdf::loadView('pages.bapp.export-pdf', [
+            'data' => $data,
+            'sp3' => $sp3,
+            // 'modify_params' => $modify_params,
+        ]);
+        $filename = "BAPP";
+
+        return $pdf->setPaper('a4', 'landscape')
+            ->stream($filename . '.pdf');
     }
 }
